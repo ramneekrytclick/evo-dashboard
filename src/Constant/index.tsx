@@ -60,10 +60,12 @@ export const ProfileIntroTitle: string = "Profile Intro";
 export const Followers: string = "Followers";
 export const FollowingsTitle: string = "Followings";
 export const LatestPhotosTitle: string = "Latest Photos";
+export const ProfilePhotoTitle: string = "Profile Photo";
 export const FriendsTitle: string = "Friends";
 export const PepoleKnownTitle: string = "Pepole You May Know";
 export const ViewedProfileTitle: string = "Viewed Your Profile";
 export const ActivityLogTitle: string = "Activity Log";
+export const AboutTitle: string = "About";
 
 //Search Result
 export const SearchPagesTitle: string = "Search Pages"
@@ -205,6 +207,16 @@ export const OrdersStatusHeading: string = "Order Status";
 export const MonthlySaleHeading: string = "Monthly Sales";
 export const UsesHeading: string = "Uses";
 
+//Manager
+export const ManagerTitle: string = "Manager";
+export const ManagerListTitle: string = "Manager List";
+export const ManagerCreateTitle: string = "Manager Create";
+export const ManagerName: string = "Manager Name";
+export const ManagerTitleText: string = "Manager Title";
+export const ManagerDOB: string = "Manager DOB";
+export const workingModeTitle: string = "Working Mode";
+export const ManagerCardsTitle: string = "Manager Cards";
+
 //Project
 export const ProjectTitle: string = "Project";
 export const ProjectListTitle: string = "Project List";
@@ -225,6 +237,8 @@ export const ActualFileUpload: string = " actually uploaded.)";
 //Dashboard
 export const DashboardTitle: string = "Dashboard";
 export const EcommerceDashboardTitle: string = "Ecommerce Dashboard";
+export const AdminDashboardTitle: string = "Admin Dashboard";
+
 export const TopCategoriesHeading: string = "Top Categories";
 export const TrackOrderHeading: string = "Track Order";
 export const ProductSalesHeading: string = "Product Sales";
@@ -243,6 +257,7 @@ export const Pinned: string = "Pinned";
 //Dashboard
 export const DefaultDashboardTitle: string = "Default Dashboard";
 export const DefaultTitle: string = "Default";
+export const AdminTitle: string = "Admin";
 export const Schedules: string = "Schedule"
 export const TransactionHistoryHeading: string = "Transaction History"
 export const TopSellingProductHeading: string = "Top Selling Product"
@@ -1172,6 +1187,7 @@ export const AccountType: string = "Select the type of account";
 export const AccountName: string = "Account Name";
 export const ProjectDescription: string = " Select a project and write a description for it";
 export const ContactDetails: string = "Contact details";
+
 export const OrganizationName: string = "Organization Name";
 export const JoinOrganizationType: string = "Join organization type";
 export const OrganizationDescription: string = "Organization description";
