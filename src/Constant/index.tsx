@@ -42,6 +42,18 @@ export const BecomeMemberTitle: string = "Become Member";
 export const SimplePricingTitle: string = "Simple Pricing Card";
 export const Purchase: string = "Purchase";
 
+//Course
+export const CourseTitle: string = "Course";
+export const CourseDetails: string = "Course Details";
+export const EnrollNow: string = "Enroll Now";
+export const CoursePrice: string = "Course Price";
+export const CourseDuration: string = "Course Duration";
+export const CourseLanguage: string = "Course Language";
+export const PromoCodes: string = "Promo Codes";
+export const AssignMentors: string = "Assign Mentors";
+export const AssignManagers: string = "Assign Managers";
+// export const AssignBatches: string = "Assign Batches";
+
 // Product
 export const ECommerceTitle: string = "ECommerce";
 export const ProductTitle: string = "Product"
@@ -49,6 +61,7 @@ export const STEP = 5;
 export const MIN = 10;
 export const MAX = 100;
 export const Dollar: string = "$";
+export const Rupees:string = "Rs."
 
 //Product Page
 export const ProductPageTitle: string = "Product Page";
@@ -70,6 +83,15 @@ export const AboutTitle: string = "About";
 //Search Result
 export const SearchPagesTitle: string = "Search Pages"
 export const SearchWebsiteTitle: string = "Search Website"
+
+//Add-Courses
+export const AddCourseTitle: string = "Add-Course";
+export const CourseForm: string = "Course Form";
+export const CourseTitleLabel: string = "Course Title";
+export const AddMentor: string = "Add Instructor";
+export const CreateNewMentor: string = "Create New Instructor";
+export const AddManager:string = "Add Manager";
+export const CreateNewManager: string = "Create New Manager";
 
 //Add-Product
 export const AddProductTitle: string = "Add-Product";
