@@ -1,9 +1,10 @@
-import { newManagerInitialValue, newManagerValidation } from "@/Data/Admin/Users/Manager/Manager";
+import { newManagerInitialValue, newManagerValidation, workingModeInputData } from "@/Data/Admin/Users/Manager/Manager";
 import { ManagerInitialValue } from "@/Types/Manager.type";
 import { Form, Formik } from "formik"
-import DetailsSection from "./DetailSection";
-import AboutSection from "./AboutSection";
-import ButtonSection from "./ButtonSection";
+import DetailsSection from "../../CommonComponents/DetailSection";
+import ButtonSection from "../../CommonComponents/ButtonSection";
+import CommonSelectDropdown from "@/Components/Forms/FormControls/BaseInputs/Common/CommonSelectDropdown";
+import { workingModeTitle } from "@/Constant";
 
 const CreateNewManagerForm = () => {
     const managerSubmit = (values: ManagerInitialValue)=>{
@@ -16,7 +17,7 @@ const CreateNewManagerForm = () => {
             {()=>(
                 <Form className="theme-form">
                     <DetailsSection/>
-                    <AboutSection/>
+                    <CommonSelectDropdown title={workingModeTitle} inputClass='btn-square digits custom-scrollbar' options={workingModeInputData} />
                     <ButtonSection/>
                 </Form>
             )}

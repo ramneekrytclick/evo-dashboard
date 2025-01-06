@@ -43,12 +43,12 @@ export const MenuList: MenuItem[] | undefined = [
             "type": "sub",
             "children": [
               {
-                "path": "/users/mentors/all",
+                "path": "/users/mentors/mentor_list",
                 "title": "View All",
                 "type": "link"
               },
               {
-                "path": "/users/mentors/create",
+                "path": "/users/mentors/mentor_create",
                 "title": "Create New",
                 "type": "link"
               }
@@ -60,12 +60,12 @@ export const MenuList: MenuItem[] | undefined = [
             "type": "sub",
             "children": [
               {
-                "path": "/users/creators/all",
+                "path": "/users/creators/creator_list",
                 "title": "View All",
                 "type": "link"
               },
               {
-                "path": "/users/creators/create",
+                "path": "/users/creators/creator_create",
                 "title": "Create New",
                 "type": "link"
               }
@@ -77,12 +77,12 @@ export const MenuList: MenuItem[] | undefined = [
             "type": "sub",
             "children": [
               {
-                "path": "/users/students/all",
+                "path": "/users/students/student_list",
                 "title": "View All",
                 "type": "link"
               },
               {
-                "path": "/users/students/create",
+                "path": "/users/students/test",
                 "title": "Create New",
                 "type": "link"
               }

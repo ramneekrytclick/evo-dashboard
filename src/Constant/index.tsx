@@ -207,6 +207,7 @@ export const OrdersStatusHeading: string = "Order Status";
 export const MonthlySaleHeading: string = "Monthly Sales";
 export const UsesHeading: string = "Uses";
 
+
 //Manager
 export const ManagerTitle: string = "Manager";
 export const ManagerListTitle: string = "Manager List";
@@ -216,7 +217,15 @@ export const ManagerTitleText: string = "Manager Title";
 export const ManagerDOB: string = "Manager DOB";
 export const workingModeTitle: string = "Working Mode";
 export const ManagerCardsTitle: string = "Manager Cards";
-
+export const MentorTitle: string = "Mentor";
+export const MentorListTitle: string = "Mentor List";
+export const MentorCreateTitle: string = "Mentor Create";
+export const MentorName: string = "Mentor Name";
+export const MentorTitleText: string = "Mentor Title";
+export const MentorDOB: string = "Mentor DOB";
+export const DOBTitle:string = "DOB";
+export const TimeAvailability:string = "Time Availability";
+export const MentorCardsTitle:string = "Mentor Cards";
 //Project
 export const ProjectTitle: string = "Project";
 export const ProjectListTitle: string = "Project List";

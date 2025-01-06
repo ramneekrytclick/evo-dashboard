@@ -1,3 +1,4 @@
+"use client"
 import { Add, Cancel } from '@/Constant'
 import Link from 'next/link'
 import React from 'react'
