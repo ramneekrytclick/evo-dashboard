@@ -17,130 +17,18 @@ export const MenuList: MenuItem[] | undefined = [
 			{
         "title": "Team",
         "id": 2,
-        "icon": "group",
+        "icon": "user",
         "type": "link",
 		"path": "/admin/team"
-        // "children": [
-        //   {
-        //     // "path": "/users/managers",
-        //     "title": "Managers",
-        //     "type": "sub",
-        //     "children": [
-        //       {
-        //         "path": "/admin/users/managers/manager_list",
-        //         "title": "View All",
-        //         "type": "link"
-        //       },
-        //       {
-        //         "path": "/admin/users/managers/manager_create",
-        //         "title": "Create New",
-        //         "type": "link"
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     // "path": "/users/mentors",
-        //     "title": "Mentors",
-        //     "type": "sub",
-        //     "children": [
-        //       {
-        //         "path": "/admin/users/mentors/mentor_list",
-        //         "title": "View All",
-        //         "type": "link"
-        //       },
-        //       {
-        //         "path": "/admin/users/mentors/mentor_create",
-        //         "title": "Create New",
-        //         "type": "link"
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     // "path": "/users/creators",
-        //     "title": "Creators",
-        //     "type": "sub",
-        //     "children": [
-        //       {
-        //         "path": "/admin/users/creators/creator_list",
-        //         "title": "View All",
-        //         "type": "link"
-        //       },
-        //       {
-        //         "path": "/admin/users/creators/creator_create",
-        //         "title": "Create New",
-        //         "type": "link"
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     // "path": "/users/students",
-        //     "title": "Students",
-        //     "type": "sub",
-        //     "children": [
-        //       {
-        //         "path": "/admin/users/students/student_list",
-        //         "title": "View All",
-        //         "type": "link"
-        //       },
-        //       {
-        //         "path": "/admin/users/students/test",
-        //         "title": "Create New",
-        //         "type": "link"
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     // "path": "/users/employers",
-        //     "title": "Employers",
-        //     "type": "sub",
-        //     "children": [
-        //       {
-        //         "path": "/admin/users/employers/all",
-        //         "title": "View All",
-        //         "type": "link"
-        //       },
-        //       {
-        //         "path": "/admin/users/employers/create",
-        //         "title": "Create New",
-        //         "type": "link"
-        //       }
-        //     ]
-        //   }
-        // ]
-      }
+			}
 ,      
 			{
 				title: "Courses",
 				id: 3,
-				icon: "project",
-				type: "sub",
+				icon: "learning",
+				type: "link",
 				lanClass: "lan-6",
-				children: [
-					{
-						path: "/admin/courses/all",
-						title: "All Courses",
-						type: "link",
-						lanClass: "lan-7",
-					},
-					{
-						path: "/admin/courses/course_create",
-						title: "Create Course",
-						type: "link",
-						lanClass: "lan-7",
-					},
-					{
-						path: "/admin/courses/categories",
-						title: "Categories",
-						type: "link",
-						lanClass: "lan-7",
-					},
-					{
-						path: "/admin/courses/batches",
-						title: "Batches",
-						type: "link",
-						lanClass: "lan-7",
-					},
-				],
+				path:"/admin/courses"
 			},
 			{
 				path: "/content-approval",

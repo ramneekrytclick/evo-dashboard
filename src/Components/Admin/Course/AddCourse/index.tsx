@@ -7,7 +7,7 @@ import CommonCardHeader from '@/CommonComponent/CommonCardHeader';
 import CourseFormNav from './CourseFormNav';
 import CourseTabContents from './CourseTabContents';
 
-const AddProductContainer = () => {
+const AddCourseContainer = () => {
     const [steps, setSteps] = useState(1);
     const activeCallBack = useCallback((tab: number) => {
         setSteps(tab);
@@ -33,4 +33,4 @@ const AddProductContainer = () => {
         </>
     )
 }
-export default AddProductContainer;
+export default AddCourseContainer;

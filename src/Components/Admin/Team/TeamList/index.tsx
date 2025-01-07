@@ -18,7 +18,7 @@ const TeamPageContainer = () => {
                     <Col sm={12}>
                         <Card>
                             <CardBody>
-                                <TeamListHeader linkTitle={addUserTitle}/>
+                                <TeamListHeader/>
                                 <TeamListTable/>
                             </CardBody>
                         </Card>
