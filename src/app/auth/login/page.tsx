@@ -1,4 +1,5 @@
 "use client";
+import { fetchUserData } from "@/app/ApiData/UserApiData";
 import UserForm from "@/Components/Auth/UserForm";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -11,7 +12,7 @@ const UserLogin = () => {
 
   useEffect(() => {
     if (session) {
-      router.push("/dashboard/ecommerce");
+      router.push("/dashboard/default");
     }
   }, [session, router]);
 

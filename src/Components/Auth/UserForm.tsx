@@ -10,6 +10,7 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png"
 import imageTwo from "../../../public/assets/images/logo/logo.png"
 import { UserSocialApp } from "./UserSocialApp";
+import { login } from "@/app/api/auth/auth";
 
 const UserForm = () => {
   const [show, setShow] = useState(false);
@@ -32,6 +33,10 @@ const UserForm = () => {
     } else {     
       toast.error("Invalid Credentaial...");
     }
+    // const signInData = {email,password}
+    // console.log(signInData);
+    // const response = await login(signInData)
+    // console.log(response.data);
   };
 
   return (

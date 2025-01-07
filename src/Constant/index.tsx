@@ -1545,3 +1545,9 @@ export const LeftAndRightAddon = 'Left & Right Addon';
 export const SolidStyle = 'Solid style';
 export const FlatStyle = 'Flat style';
 export const RaiseStyle = 'Raise style';
+
+
+export const TeamTitle = "Team"
+export const addUserTitle = "Add User"
+export const roleTitle= "Role"
+export const createUserTitle = "Create User"

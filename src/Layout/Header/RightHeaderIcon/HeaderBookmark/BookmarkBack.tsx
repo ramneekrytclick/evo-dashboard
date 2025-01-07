@@ -13,7 +13,7 @@ export const BookmarkBack = () => {
   const { linkItemsArray } = useAppSelector((store) => store.headerBookMark);
   const [searchedItems, setSearchedItems] = useState<(BookmarkedDataType)[]>([]);
   const [searchWord, setSearchWord] = useState("");
-  console.log(linkItemsArray) 
+  // console.log(linkItemsArray) 
 
   const searchItems = (e: string) => {
     let copyArray = [...linkItemsArray];
