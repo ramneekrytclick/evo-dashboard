@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import FilterComponent from "@/Components/Applications/ECommerce/Common/FilterComponent";
+
 import { TeamListType, UserProps } from "@/Types/Team.type";
 import DataTable from "react-data-table-component";
 import { teamListColumns } from "@/Data/Admin/Team/TeamList";
 import axios from "axios";
 import { sampleTeamListTableData } from "./SampleData";
+import FilterComponent from "./FilterComponent";
 const TeamListTable = () => {
     const [teamListTableData,setTeamListTableData]=useState<UserProps[]>([]);
     const fetchData =async ()=>{
