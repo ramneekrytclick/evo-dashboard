@@ -14,13 +14,10 @@ const CourseTabContents: React.FC<CourseTabContentProp> = ({ steps, activeCallBa
                 <TabPane tabId={1}>
                     <AddCourseDetails activeCallBack={activeCallBack} />
                 </TabPane>
-                <TabPane tabId={3}>
-                    <CourseCategories activeCallBack={activeCallBack} />
-                </TabPane>
-                <TabPane tabId={4}>
+                <TabPane tabId={2}>
                     <SellingPrice activeCallBack={activeCallBack} />
                 </TabPane>
-                <TabPane tabId={5}>
+                <TabPane tabId={3}>
                     <AdvanceSection activeCallBack={activeCallBack}/>
                 </TabPane>
             </TabContent>

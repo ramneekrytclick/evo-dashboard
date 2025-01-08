@@ -6,15 +6,15 @@ import { PriceLearning, PromoCodes } from '@/Constant';
 import SVG from '@/CommonComponent/SVG';
 
 const SellingPrice: React.FC<ActiveCallbackProp> = ({ activeCallBack }) => {
-    const [formData, setFormData] = useState({ initialCost: "", sellingPrice: "", currency: "", stocks: "", })
-    const { initialCost, sellingPrice, currency, stocks } = formData;
+    const [formData, setFormData] = useState({ initialCost: "", promocode:"" })
+    const { initialCost, promocode } = formData;
     const updateFormData = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     };
     const handleNextButton = () => {
-        if (initialCost !== "" && sellingPrice !== "" && currency !== "" && stocks !== "") {
-            activeCallBack(5);
+        if (initialCost !== "") {
+            activeCallBack(3);
         } else {
             return toast.error("Please fill out details before moving on to the next step");
         }
@@ -29,7 +29,7 @@ const SellingPrice: React.FC<ActiveCallbackProp> = ({ activeCallBack }) => {
                     </Col>
                     <Col sm={6}>
                         <Label>{PromoCodes} <span className="txt-danger">{'*'}</span></Label>
-                        <Input type="number" name='initialCost' value={initialCost} onChange={updateFormData} />
+                        <Input type="text" name='promocode' value={promocode} onChange={updateFormData} />
                     </Col>
                     
 

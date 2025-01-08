@@ -23,16 +23,16 @@ export const AuthProvider = ({ children }:{children:ReactNode}) => {
             }
         }
     },[])
-    useEffect(()=>{
-      if (user){
-        console.log("Redirecting...Logged In as:",user);
-        router.push("/admin");
-      }
-      else {
-        console.log("Redirecting...Logged Out");
-        router.push("/login");
-      }
-    },[user,router])
+    // useEffect(()=>{
+    //   if (user){
+    //     console.log("Redirecting...Logged In as:",user);
+    //     router.push("/admin");
+    //   }
+    //   else {
+    //     console.log("Redirecting...Logged Out");
+    //     router.push("/login");
+    //   }
+    // },[user,router])
     const login = (token:string) => {
         localStorage.setItem("token", token);
         const decoded = jwtDecode(token);

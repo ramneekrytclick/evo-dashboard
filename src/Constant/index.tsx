@@ -100,6 +100,7 @@ export const AddProductTitle: string = "Add-Product";
 export const ProductForm: string = "Product Form";
 export const ProductTitleLabel: string = "Product Title";
 export const AddCategory: string = "Add Category";
+export const AddSubCategory: string = "Add Subcategory";
 export const CreateNewCategory: string = "Create New Category";
 export const CategoryName: string = "Category Name";
 export const Add: string = "Add";
