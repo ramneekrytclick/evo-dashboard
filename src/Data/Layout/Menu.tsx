@@ -9,26 +9,41 @@ export const MenuList: MenuItem[] | undefined = [
 		Items: [
 			{
 				path: "/dashboard/admin",
-        id:1,
+				id: 1,
 				icon: "home",
 				title: "Dashboard",
 				type: "link",
 			},
 			{
-        "title": "Team",
-        "id": 2,
-        "icon": "user",
-        "type": "link",
-		"path": "/admin/team"
-			}
-,      
+				title: "Team",
+				id: 2,
+				icon: "user",
+				type: "link",
+				path: "/admin/team",
+			},
 			{
 				title: "Courses",
 				id: 3,
 				icon: "learning",
 				type: "link",
 				lanClass: "lan-6",
-				path:"/admin/courses"
+				path: "/admin/courses",
+			},
+			{
+				title:"Mentors",
+				id: 4,
+				icon: "user",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/mentors",
+			},
+			{
+				title:"Students",
+				id: 5,
+				icon: "user",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/students",
 			},
 			{
 				path: "/content-approval",
@@ -109,105 +124,104 @@ export const MenuList: MenuItem[] | undefined = [
 		Items: [
 			{
 				path: "/dashboard/admin",
-        id:1,
+				id: 1,
 				icon: "home",
 				title: "Dashboard",
 				type: "link",
 			},
 			{
-        "title": "Users",
-        "id": 2,
-        "icon": "user",
-        "type": "sub",
-        "children": [
-          {
-            // "path": "/users/managers",
-            "title": "Managers",
-            "type": "sub",
-            "children": [
-              {
-                "path": "/admin/users/managers/manager_list",
-                "title": "View All",
-                "type": "link"
-              },
-              {
-                "path": "/admin/users/managers/manager_create",
-                "title": "Create New",
-                "type": "link"
-              }
-            ]
-          },
-          {
-            // "path": "/users/mentors",
-            "title": "Mentors",
-            "type": "sub",
-            "children": [
-              {
-                "path": "/admin/users/mentors/mentor_list",
-                "title": "View All",
-                "type": "link"
-              },
-              {
-                "path": "/admin/users/mentors/mentor_create",
-                "title": "Create New",
-                "type": "link"
-              }
-            ]
-          },
-          {
-            // "path": "/users/creators",
-            "title": "Creators",
-            "type": "sub",
-            "children": [
-              {
-                "path": "/admin/users/creators/creator_list",
-                "title": "View All",
-                "type": "link"
-              },
-              {
-                "path": "/admin/users/creators/creator_create",
-                "title": "Create New",
-                "type": "link"
-              }
-            ]
-          },
-          {
-            // "path": "/users/students",
-            "title": "Students",
-            "type": "sub",
-            "children": [
-              {
-                "path": "/admin/users/students/student_list",
-                "title": "View All",
-                "type": "link"
-              },
-              {
-                "path": "/admin/users/students/test",
-                "title": "Create New",
-                "type": "link"
-              }
-            ]
-          },
-          {
-            // "path": "/users/employers",
-            "title": "Employers",
-            "type": "sub",
-            "children": [
-              {
-                "path": "/admin/users/employers/all",
-                "title": "View All",
-                "type": "link"
-              },
-              {
-                "path": "/admin/users/employers/create",
-                "title": "Create New",
-                "type": "link"
-              }
-            ]
-          }
-        ]
-      }
-,      
+				title: "Users",
+				id: 2,
+				icon: "user",
+				type: "sub",
+				children: [
+					{
+						// "path": "/users/managers",
+						title: "Managers",
+						type: "sub",
+						children: [
+							{
+								path: "/admin/users/managers/manager_list",
+								title: "View All",
+								type: "link",
+							},
+							{
+								path: "/admin/users/managers/manager_create",
+								title: "Create New",
+								type: "link",
+							},
+						],
+					},
+					{
+						// "path": "/users/mentors",
+						title: "Mentors",
+						type: "sub",
+						children: [
+							{
+								path: "/admin/users/mentors/mentor_list",
+								title: "View All",
+								type: "link",
+							},
+							{
+								path: "/admin/users/mentors/mentor_create",
+								title: "Create New",
+								type: "link",
+							},
+						],
+					},
+					{
+						// "path": "/users/creators",
+						title: "Creators",
+						type: "sub",
+						children: [
+							{
+								path: "/admin/users/creators/creator_list",
+								title: "View All",
+								type: "link",
+							},
+							{
+								path: "/admin/users/creators/creator_create",
+								title: "Create New",
+								type: "link",
+							},
+						],
+					},
+					{
+						// "path": "/users/students",
+						title: "Students",
+						type: "sub",
+						children: [
+							{
+								path: "/admin/users/students/student_list",
+								title: "View All",
+								type: "link",
+							},
+							{
+								path: "/admin/users/students/test",
+								title: "Create New",
+								type: "link",
+							},
+						],
+					},
+					{
+						// "path": "/users/employers",
+						title: "Employers",
+						type: "sub",
+						children: [
+							{
+								path: "/admin/users/employers/all",
+								title: "View All",
+								type: "link",
+							},
+							{
+								path: "/admin/users/employers/create",
+								title: "Create New",
+								type: "link",
+							},
+						],
+					},
+				],
+			},
 			{
 				title: "Courses",
 				id: 3,

@@ -52,6 +52,7 @@ export const CourseLanguage: string = "Course Language";
 export const PromoCodes: string = "Promo Codes";
 export const AssignMentors: string = "Assign Mentors";
 export const AssignManagers: string = "Assign Managers";
+export const AddMentorTitle: string = "Add Mentors"
 // export const AssignBatches: string = "Assign Batches";
 
 // Product
