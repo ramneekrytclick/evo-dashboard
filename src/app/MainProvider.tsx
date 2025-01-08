@@ -5,6 +5,7 @@ import { RootLayoutProps } from "@/Types/Layout.type";
 import React, { ErrorInfo } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { Provider } from "react-redux";
+import { AuthProvider } from "./AuthProvider";
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -44,7 +45,9 @@ class ErrorBoundary extends React.Component<RootLayoutProps, ErrorBoundaryState>
 const MainProvider: React.FC<RootLayoutProps> = ({ children }) => {
   return (
     <Provider store={Store}>
-      <ErrorBoundary>{children}</ErrorBoundary>
+      <AuthProvider>
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </AuthProvider>
     </Provider>
   );
 };
