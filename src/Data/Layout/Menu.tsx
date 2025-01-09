@@ -60,29 +60,29 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Blog Approval",
 				type: "link",
 			},
+			// {
+			// 	title: "Job Portal",
+			// 	id: 5,
+			// 	icon: "learning",
+			// 	type: "sub",
+			// 	lanClass: "lan-8",
+			// 	children: [
+			// 		{
+			// 			path: "/admin/employer",
+			// 			title: "Employers",
+			// 			type: "link",
+			// 			lanClass: "lan-9",
+			// 		},
+			// 		{
+			// 			path: "/admin/job-approval",
+			// 			title: "Job Campaigns",
+			// 			type: "link",
+			// 			lanClass: "lan-9",
+			// 		},
+			// 	],
+			// },
 			{
-				title: "Job Portal",
-				id: 5,
-				icon: "learning",
-				type: "sub",
-				lanClass: "lan-8",
-				children: [
-					{
-						path: "/jobs/employers",
-						title: "Employers",
-						type: "link",
-						lanClass: "lan-9",
-					},
-					{
-						path: "/jobs/campaigns",
-						title: "Job Campaigns",
-						type: "link",
-						lanClass: "lan-9",
-					},
-				],
-			},
-			{
-				path: "/announcements",
+				path: "/admin/announcements",
 				icon: "faq",
 				title: "Announcements",
 				type: "link",

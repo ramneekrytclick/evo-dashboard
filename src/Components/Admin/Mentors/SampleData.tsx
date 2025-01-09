@@ -1,4 +1,6 @@
-export const sampleMentorsData = [
+import { MentorProps } from "@/Types/Mentor.type";
+
+export const sampleMentorsData :MentorProps[] = [
     {
         id: 1,
         name: "John Doe",
@@ -11,7 +13,7 @@ export const sampleMentorsData = [
         address: "123 Elm Street, Springfield, IL, USA",
         education: "B.Tech in Computer Science, University of Springfield",
         assignedCourses: [
-            { courseId: 1, courseName: "Full Stack Web Development" },
+            { id: 1, courseName: "Full Stack Web Development",category:{_id:12,name:"New"},subcategory:{categoryId:12,name:"sub"} },
         ],
         timeAvailability: {
             monday: "9 AM - 5 PM",

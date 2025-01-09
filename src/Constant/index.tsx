@@ -1574,3 +1574,7 @@ export const BlogsApprovalTitle = "Blogs-Approval"
 export const AddBlogTitle = "Add Blog"
 export const createBlogTitle = "Create Blog"
 export const approveBlogTitle = "Approve Blog"
+
+export const AnnouncementsTitle = "Announcements"
+export const AddAnnouncementTitle = "Add Announcement"
+export const createAnnouncementTitle = "Create Announcement"
