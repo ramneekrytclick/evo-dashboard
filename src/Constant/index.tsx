@@ -1564,3 +1564,7 @@ export const AddStudentTitle = "Add Student"
 export const CreatorTitle = "Creator"
 export const AddCreatorTitle = "Add Creator"
 export const createCreatorTitle = "Create Creator"
+
+export const EmployerTitle = "Employer"
+export const AddEmployerTitle = "Add Employer"
+export const createEmployerTitle = "Create Employer"

@@ -22,14 +22,6 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/team",
 			},
 			{
-				title: "Courses",
-				id: 3,
-				icon: "learning",
-				type: "link",
-				lanClass: "lan-6",
-				path: "/admin/courses",
-			},
-			{
 				title:"Mentors",
 				id: 4,
 				icon: "user",
@@ -44,6 +36,22 @@ export const MenuList: MenuItem[] | undefined = [
 				type: "link",
 				lanClass: "lan-6",
 				path: "/admin/students",
+			},
+			{
+				title: "Employer",
+				id: 6,
+				icon: "learning",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/employer",
+			},
+			{
+				title: "Courses",
+				id: 3,
+				icon: "to-do",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/courses",
 			},
 			{
 				path: "/content-approval",

@@ -1,11 +1,12 @@
-import { studentFilterOptions } from '@/Data/Admin/Students/Student';
+import { courseFilterOptions } from '@/Data/Admin/Courses/Course';
+import { employerFilterOptions } from '@/Data/Admin/Employers/Employer';
 import React from 'react'
 import { Col, Input, Row } from 'reactstrap'
 
-const StudentListBody = () => {
+const EmployerListBody = () => {
     return (
         <Row className="row-cols-xl-5 row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-2 g-3">
-            {studentFilterOptions.map((item, index) => (
+            {employerFilterOptions.map((item, index) => (
                 <Col key={index}>
                     <Input type="select">
                         <option value=''>{item.name}</option>
@@ -18,4 +19,4 @@ const StudentListBody = () => {
         </Row>
     )
 }
-export default StudentListBody;
+export default EmployerListBody;

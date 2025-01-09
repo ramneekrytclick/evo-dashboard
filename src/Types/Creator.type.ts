@@ -1,4 +1,4 @@
-import { BatchDetails, CourseDetailsProps } from "./Course.type";
+import { BatchProps, CourseProps } from "./Course.type";
 
 export interface AddCreatorFormProps{
     name: string;
@@ -11,7 +11,7 @@ export interface AddCreatorFormProps{
 		address: string;
 		education: string;
 		skills: string;
-		assignedCourses: CourseDetailsProps[];
-		assignedBatches: BatchDetails[];
+		assignedCourses: CourseProps[];
+		assignedBatches: BatchProps[];
 		password: string;
 }
