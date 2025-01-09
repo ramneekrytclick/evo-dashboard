@@ -9,14 +9,9 @@ import {
 	Label,
 	Row,
 } from "reactstrap";
-import { AddUserFormProps, UserInitialValue } from "@/Types/Team.type";
+import { AddUserFormProps } from "@/Types/Team.type";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { addUserTitle, createUserTitle, EmailAddress, Name, Password, roleTitle } from "@/Constant";
-import { ErrorMessage, Formik } from "formik";
-import {
-	newUserInitialValue,
-	newUserValidation,
-} from "@/Data/Admin/Team/NewUserForm";
 import { createNewUser } from "@/app/api/admin/team";
 
 const AddUserForm = () => {

@@ -3,6 +3,7 @@ import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { AdminTitle, MentorTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import MentorListHeader from "./MentorListHeader";
+import MentorListTable from "./MentorListTable";
 
 const MentorPageContainer = () => {
 	return (
@@ -18,7 +19,7 @@ const MentorPageContainer = () => {
                         <Card>
                             <CardBody>
                                 <MentorListHeader/>
-                                {/* <MentorListTable/> */}
+                                <MentorListTable/>
                             </CardBody>
                         </Card>
                     </Col>

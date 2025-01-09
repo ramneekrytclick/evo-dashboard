@@ -1,3 +1,5 @@
+import { CourseDetailsProps } from "./Course.type";
+
 export type MentorListData = {
     id?: number | string;
     name: string;
@@ -8,11 +10,10 @@ export type MentorListData = {
     photo: string; // URL or path to the photo
     about: string;
     address: string;
-    workingMode: "In-office" | "WFH"; // Restricted to two valid options
     education: string;
-    expertise: string; // Area of expertise, e.g., "Data Science"
-    assignedBatches?: string[]; // Optional array of batch names
-    courses?: string[]; // Optional array of course names
+    assignedCourses?: CourseDetailsProps[]; // Optional array of batch names
+    batchAssignments?: string[]; // Optional array of course names
+    timeAvailability:string;
     password: string; // Password field, should be handled securely
 };
 

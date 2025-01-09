@@ -95,6 +95,7 @@ export const AddMentor: string = "Add Instructor";
 export const CreateNewMentor: string = "Create New Instructor";
 export const AddManager:string = "Add Manager";
 export const CreateNewManager: string = "Create New Manager";
+export const AddCreator:string = "Add Creator";
 
 //Add-Product
 export const AddProductTitle: string = "Add-Product";
@@ -1555,3 +1556,7 @@ export const TeamTitle = "Team"
 export const addUserTitle = "Add User"
 export const roleTitle= "Role"
 export const createUserTitle = "Create User"
+
+
+export const StudentTitle = "Student"
+export const AddStudentTitle = "Add Student"

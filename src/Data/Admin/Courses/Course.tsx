@@ -81,6 +81,13 @@ export const courseTableColumns: TableColumn<CourseDetailsProps>[] = [
         cell: (row) => `${row.courseName}`,
     },
     {
+        name:"Description",
+        selector: (row) => row["description"],
+        sortable: true,
+        center: false,
+        cell: (row) => `${row.description}`,
+    },
+    {
         name: "Category",
         selector: (row) => `${row.category}`,
         sortable: true,
@@ -106,7 +113,7 @@ export const courseTableColumns: TableColumn<CourseDetailsProps>[] = [
     },
     {
         name: "Price",
-        selector: (row) => `₹${row.price.toLocaleString()}`,
+        selector: (row) => `₹${row.price?.toLocaleString()}`,
         sortable: true,
         center: false,
     },

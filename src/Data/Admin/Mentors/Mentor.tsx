@@ -32,17 +32,17 @@ export const mentorTableColumns: TableColumn<MentorListData>[] = [
         sortable: true,
         center: false,
     },
-    {
-        name: "Photo",
-        center: true,
-        cell: (row) => (
-            <img
-                src={row.photo}
-                alt={row.name}
-                style={{ width: "50px", height: "50px", borderRadius: "50%" }}
-            />
-        ),
-    },
+    // {
+    //     name: "Photo",
+    //     center: true,
+    //     cell: (row) => (
+    //         <img
+    //             src={row.photo}
+    //             alt={row.name}
+    //             style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+    //         />
+    //     ),
+    // },
     {
         name: "About",
         selector: (row) => row.about,
