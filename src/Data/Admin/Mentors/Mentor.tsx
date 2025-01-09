@@ -1,7 +1,7 @@
-import { MentorListData } from "@/Types/Mentor.type";
+import { MentorProps } from "@/Types/Mentor.type";
 import { TableColumn } from "react-data-table-component";
 
-export const mentorTableColumns: TableColumn<MentorListData>[] = [
+export const mentorTableColumns: TableColumn<MentorProps>[] = [
     {
         name: "Name",
         selector: (row) => row.name,

@@ -45,9 +45,17 @@ const TeamListHeader = () => {
 						{addUserTitle}
 					</DropdownToggle>
 					<DropdownMenu>
-						<DropdownItem>{AddManager}</DropdownItem>
+						<DropdownItem>
+							<Link href={"/admin/managers/add_manager"}>
+							{AddManager}
+						</Link>
+						</DropdownItem>
 						<DropdownItem divider />
-						<DropdownItem>{AddCreator}</DropdownItem>
+						<DropdownItem>
+							<Link href={"/admin/creators/add_creator"}>
+							{AddCreator}
+						</Link>	
+						</DropdownItem>
 					</DropdownMenu>
 				</UncontrolledDropdown>
 			</div>

@@ -1,87 +1,86 @@
 import { InputType } from "reactstrap/types/lib/Input";
+import { Category, Subcategory } from "./Category.type";
+import { StudentProps } from "./Student.type";
+import { MentorProps } from "./Mentor.type";
 
-// Step and Navigation for Forms
+export interface CourseProps {
+    id: number; 
+    courseName: string; 
+    category: Category; 
+    subcategory: Subcategory; 
+    description: string; 
+    duration: string;
+    mentorAssigned: string; 
+    managerAssigned: string;
+    batchesAvailable: BatchProps[]; 
+    promoCodes: PromoCodeProps[]; 
+    price: number; 
+}
+
 export interface CourseFormNavProps {
-    steps: number; // Current step in the form navigation
-    setSteps: (step: number) => void; // Function to update the current step
+    steps: number;
+    setSteps: (step: number) => void; 
 }
-
-// Course Details Interface
-export interface CourseDetailsProps {
-    id: number; // Unique identifier for the course
-    courseName: string; // Name of the course
-    category: string; // Main category of the course
-    subcategory: string; // Subcategory under the main category
-    description: string; // Detailed description of the course
-    duration: string; // Duration of the course
-    mentorAssigned: string; // Mentor assigned to the course
-    managerAssigned: string; // Manager overseeing the course
-    batchesAvailable: BatchDetails[]; // List of available batches
-    promoCodes: PromoCodeDetails[]; // List of applicable promo codes
-    price: number; // Price of the course
-}
-export interface CourseTagProp {
-    title: string; // Text for the course tag
-}
-
 export interface CourseTabContentProp {
     activeCallBack: (tab: number) => void;
     steps: number
 }
 
 // Batch Details Interface
-export interface BatchDetails {
-    batchId: number; // Unique identifier for the batch
-    batchName: string; // Name of the batch
-    startDate: string; // Start date of the batch
-    endDate: string; // End date of the batch
-    capacity: number; // Maximum capacity of the batch
-    enrolledStudents: number; // Current number of enrolled students
+export interface BatchProps {
+    id: number; 
+    name: string;
+    courseId:number;
+    startDate: string;
+    endDate: string;
+    capacity: number; 
+    students?: StudentProps[];
+    mentors?: MentorProps[];
+    promoCodes?: PromoCodeProps[];
 }
 
-// Promo Code Details Interface
-export interface PromoCodeDetails {
-    code: string; // Promo code string
-    discountPercentage: number; // Discount percentage
-    expiryDate: string; // Expiry date of the promo code
-    isActive: boolean; // Promo code activation status
+export interface PromoCodeProps {
+    code: string;
+    discountPercentage: number; 
+    expiryDate: string;
+    applicableTo: string;
+    usageLimit: string;
+    category: Category;
 }
 
-// Form Group Common Properties
 export interface FormGroupCommonProp {
-    type: InputType; // Input type (text, email, number, etc.)
-    placeholder?: string; // Placeholder text for the input
-    formClass?: string; // Custom class for the input form
-    rows?: number; // Number of rows for textarea inputs
+    type: InputType; 
+    placeholder?: string; 
+    formClass?: string;
+    rows?: number; 
 }
 
-// Select Common Properties
 export interface SelectCommonProp {
-    data: string[]; // Array of options for the dropdown
-    size: number; // Size of the dropdown
-    selectClass?: string; // Custom class for the select component
+    data: string[]; 
+    size: number; 
+    selectClass?: string;
 }
 
 // Course Form Values Interface
 export interface CourseFormValues {
-    courseName: string; // Course name
-    category: string; // Course category
-    subcategory: string; // Course subcategory
-    description: string; // Course description
-    duration: string; // Course duration
-    mentorAssigned: string; // Assigned mentor
-    managerAssigned: string; // Assigned manager
-    batchesAvailable: BatchDetails[]; // Array of batch details
-    promoCodes: PromoCodeDetails[]; // Array of promo codes
-    price: number; // Course price
+    courseName: string; 
+    category: string; 
+    subcategory: string;
+    description: string;
+    duration: string;
+    mentorAssigned: string; 
+    managerAssigned: string;
+    batchesAvailable: BatchProps[]; 
+    promoCodes: PromoCodeProps[];
+    price: number;
 }
 
 // Course CRUD Operations
 export interface CourseCRUDOperations {
-    createCourse: (data: CourseFormValues) => Promise<void>; // Function to create a new course
-    readCourses: () => Promise<CourseDetailsProps[]>; // Function to fetch all courses
-    updateCourse: (data: Partial<CourseFormValues> & { id: number }) => Promise<void>; // Function to update an existing course
-    deleteCourse: (id: number) => Promise<void>; // Function to delete a course
+    createCourse: (data: CourseFormValues) => Promise<void>;
+    readCourses: () => Promise<CourseProps[]>; 
+    updateCourse: (data: Partial<CourseFormValues> & { id: number }) => Promise<void>;
+    deleteCourse: (id: number) => Promise<void>;
 }
 
 // Filter Interface for Courses

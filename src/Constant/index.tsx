@@ -1560,3 +1560,7 @@ export const createUserTitle = "Create User"
 
 export const StudentTitle = "Student"
 export const AddStudentTitle = "Add Student"
+
+export const CreatorTitle = "Creator"
+export const AddCreatorTitle = "Add Creator"
+export const createCreatorTitle = "Create Creator"

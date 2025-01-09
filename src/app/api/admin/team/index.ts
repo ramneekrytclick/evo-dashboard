@@ -1,3 +1,4 @@
+import { AddCreatorFormProps } from "@/Types/Creator.type";
 import { AddUserFormProps } from "@/Types/Team.type";
 import axios from "axios";
 
@@ -20,4 +21,16 @@ export const createNewUser =async(data:AddUserFormProps)=>{
         console.log(error);
     }
     
+}
+
+export const createNewCreator =async(data:AddCreatorFormProps)=>{
+    console.log(data);
+    try {
+        const response =await apiClient.post('/admin/create-creator',data);
+        console.log(response);
+        return response;
+        }
+        catch (error){
+            console.log(error);
+            }
 }

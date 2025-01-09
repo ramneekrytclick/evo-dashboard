@@ -1,29 +1,29 @@
-import { CourseDetailsProps } from "./Course.type";
+import { CourseProps } from "./Course.type";
 
-export type MentorListData = {
+export type MentorProps = {
     id?: number | string;
     name: string;
-    dob: string; // Date of birth in YYYY-MM-DD format
+    dob: string;
     username: string;
     email: string;
     contactNumber: string;
-    photo: string; // URL or path to the photo
+    photo: string;
     about: string;
     address: string;
     education: string;
-    assignedCourses?: CourseDetailsProps[]; // Optional array of batch names
-    batchAssignments?: string[]; // Optional array of course names
+    assignedCourses?: CourseProps[]; 
+    batchAssignments?: string[]; 
     timeAvailability:string;
-    password: string; // Password field, should be handled securely
+    password: string; 
 };
 
 export interface MentorType {
     activeTab: string;
-    createdFormData: MentorListData[];
+    createdFormData: MentorProps[];
 }
 
 export interface MentorCommonType {
-    item: MentorListData;
+    item: MentorProps;
 }
 
 export interface MentorInitialValue {
@@ -37,8 +37,8 @@ export interface MentorInitialValue {
     address: string;
     workingMode: "In-office" | "WFH";
     education: string;
-    expertise: string; // Area of expertise
-    assignedBatches: string[]; // Optional but included in initial value as an empty array
-    courses: string[]; // Optional but included in initial value as an empty array
+    expertise: string;
+    assignedBatches: string[]; 
+    courses: string[];
     password: string;
 }

@@ -1,4 +1,6 @@
-export interface StudentDetails {
+import { CourseProps } from "./Course.type";
+
+export interface StudentProps {
     name: string;
     dob: string;
     email: string;
@@ -7,7 +9,7 @@ export interface StudentDetails {
     guardianName: string;
     address: string;
     education: string;
-    coursesEnrolled: string;
+    coursesEnrolled: CourseProps[];
     interests: string;
     languagesPreferred: string;
     wannaBe: string;
