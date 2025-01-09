@@ -24,12 +24,12 @@ const UserForm = () => {
       email,   
       password,  
       redirect: false,
-      callbackUrl: "/dashboard/ecommerce",
+      callbackUrl: "/admin/dashboard",
     });
   
     if (result?.ok) {
       toast.success("successfully Logged in Rediract......")
-      router.push("/dashboard/ecommerce");
+      router.push("/admin/dashboard");
     } else {     
       toast.error("Invalid Credentaial...");
     }

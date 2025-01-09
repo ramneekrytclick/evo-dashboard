@@ -8,7 +8,7 @@ export const MenuList: MenuItem[] | undefined = [
 			"Dashboard, Users, Courses,Content Approval, Job Portal, Announcements, ",
 		Items: [
 			{
-				path: "/dashboard/admin",
+				path: "/admin/dashboard",
 				id: 1,
 				icon: "home",
 				title: "Dashboard",

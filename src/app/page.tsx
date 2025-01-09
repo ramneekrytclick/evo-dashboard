@@ -4,9 +4,9 @@ import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
-  // useEffect(() => {
-  //   router.push("/auth/login");
-  // }, [router]);
+  useEffect(() => {
+    router.push("/auth/login");
+  }, [router]);
 
   return <></>;
 }
