@@ -5,7 +5,8 @@ import DataTable from "react-data-table-component";
 import { teamListColumns } from "@/Data/Admin/Team/TeamList";
 import axios from "axios";
 import { sampleTeamListTableData } from "./SampleData";
-import FilterComponent from "./FilterComponent";
+import FilterComponent from "@/CommonComponent/FilterComponent";
+
 const TeamListTable = () => {
     const [teamListTableData,setTeamListTableData]=useState<UserProps[]>([]);
     const fetchData =async ()=>{

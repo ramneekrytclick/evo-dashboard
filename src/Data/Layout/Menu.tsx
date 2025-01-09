@@ -54,14 +54,15 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/courses",
 			},
 			{
-				path: "/content-approval",
+				id: 4,
+				path: "/admin/blog-approval",
 				icon: "table",
-				title: "Content Approval",
+				title: "Blog Approval",
 				type: "link",
 			},
 			{
 				title: "Job Portal",
-				id: 4,
+				id: 5,
 				icon: "learning",
 				type: "sub",
 				lanClass: "lan-8",

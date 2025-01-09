@@ -1,13 +1,14 @@
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { CourseTitleLabel } from "@/Constant";
 import { Card, CardBody } from "reactstrap";
-import FilterComponent from "./FilterComponent";
+
 import { useEffect, useState } from "react";
-import { CourseDetailsProps } from "@/Types/Course.type";
+import { CourseProps } from "@/Types/Course.type";
 import DataTable from "react-data-table-component";
 import { sampleCoursesData } from "./SampleData";
 import { courseTableColumns } from "@/Data/Admin/Courses/Course";
 import { getCourses } from "@/app/api/admin/course";
+import FilterComponent from "@/CommonComponent/FilterComponent";
 
 const CourseListTable = () => {
     const [filterText, setFilterText] = useState('');
@@ -22,8 +23,8 @@ const CourseListTable = () => {
     useEffect(()=>{
         fetchCourses();
     },[])
-        const filteredItems: CourseDetailsProps[] = courses.filter(
-            (item: CourseDetailsProps) => {
+        const filteredItems: CourseProps[] = courses.filter(
+            (item: CourseProps) => {
                 return Object.values(item).some((value) =>
                     value && value.toString().toLowerCase().includes(filterText.toLowerCase())
                 );
