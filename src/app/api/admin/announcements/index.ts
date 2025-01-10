@@ -1,15 +1,5 @@
-import axios from "axios";
-
-const URL = process.env.NEXT_PUBLIC_BASE_URL;
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-const token = localStorage.getItem("token");
-const apiClient = axios.create({
-	baseURL: URL,
-	headers: { "x-api-key": apiKey, Authorization: `Bearer ${token}` },
-});
-console.log(token);
-
-export interface formattedDataProps {
+import { apiClient } from "@/utils/api";
+export interface announcementAPIProps {
 	title: string;
 	message: string;
 	media: string;
@@ -18,7 +8,7 @@ export interface formattedDataProps {
 	visibilityEnd: Date;
 }
 
-export const createAnnouncement = async (formattedData: formattedDataProps) => {
+export const createAnnouncement = async (formattedData: announcementAPIProps) => {
 	console.log(formattedData);
 	try {
 		const response = await apiClient.post(
@@ -41,7 +31,7 @@ export const getAnnouncements = async () => {
 	}
 };
 
-export const updateAnnouncement = async (formattedData:formattedDataProps, id:string) => {
+export const updateAnnouncement = async (formattedData:announcementAPIProps, id:string) => {
 	try {
 		const response = await apiClient.put(
 			`/admin/announcements/${id}`,

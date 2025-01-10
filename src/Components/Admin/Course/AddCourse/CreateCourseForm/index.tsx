@@ -10,10 +10,11 @@ const CreateCourseForm = () => {
         setSteps(tab);
     }, []);
     const requirements = "name,category,subcategory,description,duration,mentorAssigned,managerAssigned,batchesAvailable,promoCodes,realPrice,discountedPrice"
+    
     return (
         <>
-            <CourseFormNav steps={steps} setSteps={setSteps} />
-            <CourseTabContents steps={steps} activeCallBack={activeCallBack}/>
+                    <CourseFormNav steps={steps} setSteps={setSteps} />
+                    <CourseTabContents steps={steps} activeCallBack={activeCallBack} />
         </>
     );
 }

@@ -76,7 +76,7 @@ export const announcementFilterOptions = [
     },
     {
       name: "Created By",
-      selector: (row) => row.createdBy,
+      selector: (row) => row.createdBy?.name,
       sortable: false,
       center: false,
     },

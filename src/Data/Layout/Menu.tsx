@@ -87,42 +87,42 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Announcements",
 				type: "link",
 			},
-			{
-				path: "/promo-codes",
-				icon: "others",
-				title: "Promo Codes",
-				type: "link",
-			},
-			{
-				path: "/paths",
-				icon: "button",
-				title: "Paths & Roadmaps",
-				type: "link",
-			},
-			{
-				path: "/analytics",
-				icon: "charts",
-				title: "Analytics",
-				type: "link",
-			},
-			{
-				path: "/tickets",
-				icon: "support-tickets",
-				title: "Tickets & Feedback",
-				type: "link",
-			},
-			{
-				path: "/logs",
-				icon: "to-do",
-				title: "Logs & Activity",
-				type: "link",
-			},
-			{
-				path: "/settings",
-				icon: "knowledgebase",
-				title: "Settings",
-				type: "link",
-			},
+			// {
+			// 	path: "/promo-codes",
+			// 	icon: "others",
+			// 	title: "Promo Codes",
+			// 	type: "link",
+			// },
+			// {
+			// 	path: "/paths",
+			// 	icon: "button",
+			// 	title: "Paths & Roadmaps",
+			// 	type: "link",
+			// },
+			// {
+			// 	path: "/analytics",
+			// 	icon: "charts",
+			// 	title: "Analytics",
+			// 	type: "link",
+			// },
+			// {
+			// 	path: "/tickets",
+			// 	icon: "support-tickets",
+			// 	title: "Tickets & Feedback",
+			// 	type: "link",
+			// },
+			// {
+			// 	path: "/logs",
+			// 	icon: "to-do",
+			// 	title: "Logs & Activity",
+			// 	type: "link",
+			// },
+			// {
+			// 	path: "/settings",
+			// 	icon: "knowledgebase",
+			// 	title: "Settings",
+			// 	type: "link",
+			// },
 		],
 	}
 ];

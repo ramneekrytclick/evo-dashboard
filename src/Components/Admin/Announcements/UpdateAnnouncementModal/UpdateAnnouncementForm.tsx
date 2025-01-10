@@ -1,5 +1,4 @@
-import { formattedDataProps, updateAnnouncement } from "@/app/api/admin/announcements";
-import CommonModal from "@/CommonComponent/CommonModal";
+import { announcementAPIProps, updateAnnouncement } from "@/app/api/admin/announcements";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { FormEvent, useState } from "react";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
@@ -31,7 +30,7 @@ const UpdateAnnouncementForm = ({
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
 		const { title, message, media, targetRoles, visibilityStart, visibilityEnd } = formData
-		const formattedData:formattedDataProps={
+		const formattedData:announcementAPIProps={
 			title:title,
 			message:message,
 			media:media,
@@ -41,7 +40,9 @@ const UpdateAnnouncementForm = ({
 		}
 		try {
 			const response = await updateAnnouncement(formattedData,values._id);
-			alert(response.message);
+			console.log(response);
+			alert(response.data.message);
+			toggle();
 		}
 		catch (error) {
 			console.error(error);
@@ -50,7 +51,7 @@ const UpdateAnnouncementForm = ({
     }
     const handleCheckboxChange = (role: string) => {
 		setFormData((prevState) => {
-			const updatedAudience = prevState.targetRoles.includes(role)
+			const updatedAudience = prevState.targetRoles?.includes(role)
 				? prevState.targetRoles.filter((r) => r !== role)
 				: [...prevState.targetRoles, role];
 			return { ...prevState, targetRoles: updatedAudience };
@@ -109,7 +110,7 @@ const UpdateAnnouncementForm = ({
 									<Input
 										id={item}
 										type="checkbox"
-                                        checked={formData.targetRoles.includes(item)}
+                                        checked={formData.targetRoles?.includes(item)}
 										onChange={() => {
 											handleCheckboxChange(item.toLowerCase());
 										}}
@@ -133,7 +134,7 @@ const UpdateAnnouncementForm = ({
 						<Input
 							className="digits"
 							type="date"
-							defaultValue={formData.visibilityStart?.toDateString()}
+							// defaultValue={formData.visibilityStart?.toString()}
 							onChange={(e) => {
 								setFormData({
 									...formData,
@@ -151,7 +152,7 @@ const UpdateAnnouncementForm = ({
 						<Input
 							className="digits"
 							type="date"
-							defaultValue={formData.visibilityEnd?.toDateString()}
+							// defaultValue={formData.visibilityEnd.toString()}
 							onChange={(e) => {
 								setFormData({
 									...formData,

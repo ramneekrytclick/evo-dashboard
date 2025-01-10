@@ -1,10 +1,10 @@
 export interface Category {
     name:string;
-    _id?:number;
+    _id?:string;
 }
 
 export interface Subcategory {
-    _id?:number;
+    _id?:string;
     name: string;
-    categoryId:number;
+    categoryId:string;
 }

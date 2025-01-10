@@ -29,8 +29,8 @@ const AnnouncementsListTable = () => {
 		try {
 			const data = await getAnnouncements();
 			console.log(data);
-			
-            setAnnouncementsData(data?.announcements);
+
+			setAnnouncementsData(data?.announcements);
 		} catch (error) {
 			console.error("Failed to fetch announcements:", error);
 			setAnnouncementsData([]);
@@ -57,9 +57,8 @@ const AnnouncementsListTable = () => {
 				<div
 					className="table-responsive custom-scrollbar user-datatable mt-3"
 					aria-busy={loading}>
-					{loading ? (
-						<div className="text-center">Loading...</div>
-					) : (
+					{loading ? <div>Loading..</div> : 
+					(
 						<DataTable
 							data={filteredItems}
 							columns={announcementTableColumns}
@@ -68,7 +67,8 @@ const AnnouncementsListTable = () => {
 							fixedHeaderScrollHeight="40vh"
 							className="display"
 						/>
-					)}
+					)
+					}
 				</div>
 			</CardBody>
 		</Card>

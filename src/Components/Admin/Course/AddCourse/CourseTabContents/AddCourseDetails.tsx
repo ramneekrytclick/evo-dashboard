@@ -1,15 +1,25 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { toast } from "react-toastify";
 import { AddCategory, AddSubCategory, CourseTitleLabel } from "@/Constant";
 import SVG from "@/CommonComponent/SVG";
-import { ActiveCallbackProp } from "@/Types/Forms.type";
 import {
 	addCategoryItem,
 	courseSubCategoryItem,
 } from "@/Data/Admin/Courses/Course";
+import { CourseFormProps } from "@/Types/Course.type";
 
-const AddCourseDetails: React.FC<ActiveCallbackProp> = ({ activeCallBack }) => {
+interface AddCourseDetailsProps {
+	activeCallBack: (tab: number) => void;
+	data: CourseFormProps;
+	setData: (data: CourseFormProps) => void;
+}
+
+const AddCourseDetails: React.FC<AddCourseDetailsProps> = ({
+	activeCallBack,
+	data,
+	setData,
+}) => {
 	const [formData, setFormData] = useState({
 		courseTitle: "",
 		category: "",
@@ -29,6 +39,9 @@ const AddCourseDetails: React.FC<ActiveCallbackProp> = ({ activeCallBack }) => {
 			);
 		}
 	};
+	useEffect(()=>{
+		setData({...data,courseName:formData.courseTitle,category:formData.category,subcategory:formData.category});
+	},[formData])
 	return (
 		<div className="sidebar-body">
 			<Form>

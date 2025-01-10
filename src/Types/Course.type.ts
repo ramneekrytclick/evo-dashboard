@@ -26,6 +26,18 @@ export interface CourseTabContentProp {
     steps: number
 }
 
+export interface CourseFormProps{
+    courseName: string; 
+    category: Category; 
+    subcategory: Subcategory; 
+    description: string; 
+    duration: string;
+    mentorAssigned: string; 
+    managerAssigned: string;
+    price:string;
+    promoCodes:string[]
+}
+
 // Batch Details Interface
 export interface BatchProps {
     id: number; 

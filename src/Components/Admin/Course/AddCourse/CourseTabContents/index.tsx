@@ -1,27 +1,68 @@
-import React from 'react'
-import { Col, TabContent, TabPane } from 'reactstrap'
-import { CourseTabContentProp } from '@/Types/Course.type'
+import React, { FormEvent, useState } from "react";
+import { Col, Form, TabContent, TabPane } from "reactstrap";
+import { CourseFormProps, CourseTabContentProp } from "@/Types/Course.type";
 
-import CourseCategories from './CourseCategories'
-import AddCourseDetails from './AddCourseDetails'
-import SellingPrice from './SellingPrice'
-import AdvanceSection from './AdvanceSection'
+import AddCourseDetails from "./AddCourseDetails";
+import SellingPrice from "./SellingPrice";
+import AdvanceSection from "./AdvanceSection";
+import { createCourse } from "@/app/api/admin/course";
 
-const CourseTabContents: React.FC<CourseTabContentProp> = ({ steps, activeCallBack }) => {
-    return (
-        <Col xxl={9} xl={8} className="box-col-8 position-relative">
-            <TabContent activeTab={steps}>
-                <TabPane tabId={1}>
-                    <AddCourseDetails activeCallBack={activeCallBack} />
-                </TabPane>
-                <TabPane tabId={2}>
-                    <SellingPrice activeCallBack={activeCallBack} />
-                </TabPane>
-                <TabPane tabId={3}>
-                    <AdvanceSection activeCallBack={activeCallBack}/>
-                </TabPane>
-            </TabContent>
-        </Col>
-    )
-}
-export default CourseTabContents
+const CourseTabContents: React.FC<CourseTabContentProp> = ({
+	steps,
+	activeCallBack,
+}) => {
+	const [data, setData] = useState<CourseFormProps>({
+		courseName: "",
+		category: { _id: "", name: "" },
+		subcategory: { _id: "", categoryId: "", name: "" },
+		description: "",
+		duration: "",
+		mentorAssigned: "",
+		managerAssigned: "",
+		price:"",
+		promoCodes:[""]
+	});
+	const handleSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+		try {
+			const response = await createCourse(data);
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	return (
+		<Col
+			xxl={9}
+			xl={8}
+			className="box-col-8 position-relative">
+			<Form onSubmit={handleSubmit}>
+				<TabContent activeTab={steps}>
+					<TabPane tabId={1}>
+						<AddCourseDetails
+							activeCallBack={activeCallBack}
+							data={data}
+							setData={setData}
+						/>
+					</TabPane>
+					<TabPane tabId={2}>
+						<SellingPrice
+							activeCallBack={activeCallBack}
+							data={data}
+							setData={setData}
+						/>
+					</TabPane>
+					<TabPane tabId={3}>
+						<AdvanceSection
+							activeCallBack={activeCallBack}
+							data={data}
+							setData={setData}
+							submitFunction={handleSubmit}
+						/>
+					</TabPane>
+				</TabContent>
+			</Form>
+		</Col>
+	);
+};
+export default CourseTabContents;

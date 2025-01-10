@@ -1,11 +1,16 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Button, Col, Form, Input, Label, Row } from 'reactstrap';
 import { toast } from 'react-toastify';
-import { ActiveCallbackProp } from '@/Types/ECommerce.type';
 import { PriceLearning, PromoCodes } from '@/Constant';
 import SVG from '@/CommonComponent/SVG';
+import { CourseFormProps } from '@/Types/Course.type';
 
-const SellingPrice: React.FC<ActiveCallbackProp> = ({ activeCallBack }) => {
+interface SellingPriceProps {
+    activeCallBack: (tab: number) => void;
+    data:CourseFormProps;
+    setData:(data:CourseFormProps)=>void
+}
+const SellingPrice: React.FC<SellingPriceProps> = ({ activeCallBack,data,setData }) => {
     const [formData, setFormData] = useState({ initialCost: "", promocode:"" })
     const { initialCost, promocode } = formData;
     const updateFormData = (event: ChangeEvent<HTMLInputElement>) => {
@@ -19,6 +24,9 @@ const SellingPrice: React.FC<ActiveCallbackProp> = ({ activeCallBack }) => {
             return toast.error("Please fill out details before moving on to the next step");
         }
     };
+    useEffect(()=>{
+		setData({...data,price:formData.initialCost,promoCodes:formData.promocode.split('')});
+    },[formData])
     return (
         <div className="sidebar-body">
             <Form className="price-wrapper">
