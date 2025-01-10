@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <div className={`page-header ${toggleSidebar ? "close_icon" : ""}`}>
       <Row className='header-wrapper m-0'>
-        <HeaderLogo />
+        {/* <HeaderLogo /> */}
         <SearchInput />
         <RightHeaderIcon />
       </Row>

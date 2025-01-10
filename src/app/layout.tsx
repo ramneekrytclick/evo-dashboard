@@ -4,9 +4,6 @@ import "../../src/index.scss";
 import { Lexend, Roboto } from "next/font/google";
 import { detectLanguage } from "./i18n/server";
 import { I18nProvider } from "./i18n/i18n-context";
-import SessionWrapper from "@/CommonComponent/SessionWrapper";
-import { getServerSession } from "next-auth";
-import { authoption } from "./api/auth/[...nextauth]/authOption";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "@/CommonComponent/ErrorBoundry";
@@ -27,7 +24,6 @@ const roboto = Roboto({
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const lng = await detectLanguage();
-  const session = await getServerSession(authoption);
 
   return (
     <I18nProvider language={lng}>
@@ -43,10 +39,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <body suppressHydrationWarning={true} className={lexend.className || roboto.className}>
           <ErrorBoundary>
             <NoSsr>
-              <SessionWrapper session={session}>
                 <MainProvider>{children}</MainProvider>
                 <ToastContainer />
-              </SessionWrapper>
             </NoSsr>
           </ErrorBoundary>
         </body>

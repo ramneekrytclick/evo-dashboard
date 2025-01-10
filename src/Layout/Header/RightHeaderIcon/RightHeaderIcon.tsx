@@ -16,11 +16,11 @@ const RightHeaderIcon = () => {
         <ResponsiveSearchInput />
         <Language />
         <ZoomInOut />
-        <Notifications />
-        <HeaderBookmark />
+        {/* <Notifications /> */}
+        {/* <HeaderBookmark /> */}
         <DarkMode />
-        <HeaderMessage />
-        <HeaderCart />
+        {/* <HeaderMessage /> */}
+        {/* <HeaderCart /> */}
         <UserProfile />
       </ul>
     </Col>

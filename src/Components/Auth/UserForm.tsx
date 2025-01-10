@@ -29,9 +29,6 @@ const UserForm = () => {
   
     if (result?.ok) {
       toast.success("successfully Logged in Rediract......")
-      console.log('====================================');
-      console.log(result);
-      console.log('====================================');
       router.push("/admin/dashboard");
     } else {     
       toast.error("Invalid Credentaial...");

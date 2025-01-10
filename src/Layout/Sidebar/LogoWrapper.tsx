@@ -12,7 +12,7 @@ export const LogoWrapper = () => {
   return (
     <>
       <div className="logo-wrapper">
-        <Link href={`/dashboard/default`}>
+        <Link href={`/admin/dashboard`}>
           <Image className="img-fluid" src={`${ImagePath}/logo/logo.png`} width={121} height={38} alt="" />
         </Link>
         <div className="toggle-sidebar" onClick={() => dispatch(setToggleSidebar(!toggleSidebar))}>
@@ -20,7 +20,7 @@ export const LogoWrapper = () => {
         </div>
       </div>
       <div className="logo-icon-wrapper">
-        <Link href={`/dashboard/default`}>
+        <Link href={`/admin/dashboard`}>
           <Image className="img-fluid" src={`${ImagePath}/logo/logo-icon.png`} width={32} height={32} alt="" />
         </Link>
       </div>
