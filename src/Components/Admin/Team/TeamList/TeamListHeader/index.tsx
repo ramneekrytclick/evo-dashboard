@@ -1,4 +1,10 @@
-import { AddCreator, AddManager, AddMentorTitle, addUserTitle, Href } from "@/Constant";
+import {
+	AddCreator,
+	AddManager,
+	AddMentorTitle,
+	addUserTitle,
+	Href,
+} from "@/Constant";
 import { TeamListHeaderProp } from "@/Types/Team.type";
 import Link from "next/link";
 import { useState } from "react";
@@ -41,20 +47,17 @@ const TeamListHeader = () => {
 				<UncontrolledDropdown>
 					<DropdownToggle
 						color="primary"
+						className="pe-5"
 						caret>
-						{addUserTitle}
+						{"Add"}
 					</DropdownToggle>
 					<DropdownMenu>
 						<DropdownItem>
-							<Link href={"/admin/managers/add_manager"}>
-							{AddManager}
-						</Link>
+							<Link href={"/admin/managers/add_manager"}>{AddManager}</Link>
 						</DropdownItem>
 						<DropdownItem divider />
 						<DropdownItem>
-							<Link href={"/admin/creators/add_creator"}>
-							{AddCreator}
-						</Link>	
+							<Link href={"/admin/creators/add_creator"}>{AddCreator}</Link>
 						</DropdownItem>
 					</DropdownMenu>
 				</UncontrolledDropdown>

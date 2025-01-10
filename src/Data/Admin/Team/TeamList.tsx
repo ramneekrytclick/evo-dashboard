@@ -5,32 +5,32 @@ import { TableColumn } from "react-data-table-component";
 import { Badge, FormGroup, Input } from "reactstrap";
 
 export const teamListColumns: TableColumn<TeamListType>[] = [
-	{
-		name: "",
-		cell: () => (
-			<FormGroup check>
-				<Input
-					className="checkbox-primary"
-					type="checkbox"
-				/>
-			</FormGroup>
-		),
-		sortable: false,
-		width: "3%",
-	},
+	// {
+	// 	name: "",
+	// 	cell: () => (
+	// 		<FormGroup check>
+	// 			<Input
+	// 				className="checkbox-primary"
+	// 				type="checkbox"
+	// 			/>
+	// 		</FormGroup>
+	// 	),
+	// 	sortable: false,
+	// 	width: "3%",
+	// },
 	{
 		name: "Name",
 		selector: (row) => row.name,
 		sortable: true,
 		cell: (row) => <p>{row.name}</p>,
-		width: "25%",
+		width: "33%",
 	},
 	{
 		name: "Email",
 		selector: (row) => row.email,
 		sortable: true,
 		cell: (row) => <p className="f-light">{row.email}</p>,
-		width: "30%",
+		width: "50%",
 	},
 	{
 		name: "Role",
@@ -53,18 +53,18 @@ export const teamListColumns: TableColumn<TeamListType>[] = [
 		),
 		width: "15%",
 	},
-	{
-		name: "Action",
-		cell: (row) => (
-			<div className="product-action">
-				<Link href={`/app/team/edit/${row.name}`}>
-					<SVG iconId="edit-content" />
-				</Link>
-				<SVG iconId="trash1" />
-			</div>
-		),
-		sortable: false,
-	},
+	// {
+	// 	name: "Action",
+	// 	cell: (row) => (
+	// 		<div className="product-action">
+	// 			<Link href={`/app/team/edit/${row.name}`}>
+	// 				<SVG iconId="edit-content" />
+	// 			</Link>
+	// 			<SVG iconId="trash1" />
+	// 		</div>
+	// 	),
+	// 	sortable: false,
+	// },
 ];
 
 export const userNavData = [

@@ -11,97 +11,105 @@ import {
 } from "reactstrap";
 import { AddUserFormProps } from "@/Types/Team.type";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
-import { addUserTitle, createUserTitle, EmailAddress, Name, Password, roleTitle } from "@/Constant";
+import {
+	addUserTitle,
+	createUserTitle,
+	EmailAddress,
+	Name,
+	Password,
+	roleTitle,
+} from "@/Constant";
 import { createNewUser } from "@/app/api/admin/team";
+import { useRouter } from "next/navigation";
 
 const AddUserForm = () => {
-	// const handleSubmit = (values: UserInitialValue) => {
-	// 	console.log(values);
-	// };
-	const [formData, setFormData]=useState<AddUserFormProps>({name:"",email:"",password:"",role:"manager"})
-	const handleSubmit = (e:FormEvent) =>{
+	const router =useRouter();
+	const [formData, setFormData] = useState<AddUserFormProps>({
+		name: "",
+		email: "",
+		password: "",
+		role: "Manager",
+	});
+	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		createNewUser(formData)
-	}
+		try{
+			const response = createNewUser(formData);
+			console.log(response);
+			alert("User Created Successfully!")
+		}
+		catch(error) {
+			alert("Error creating user");
+		}
+		finally{
+			router.push("/admin/team")
+		}
+		
+	};
 	return (
 		<Col sm={12}>
 			<Card>
 				<CommonCardHeader
 					headClass="pb-0"
 					title={addUserTitle}
-					// span={basicFormSubTitle}
 				/>
 				<CardBody>
 					<div className="card-wrapper border rounded-3">
-						{/* <Formik
-							initialValues={newUserInitialValue}
-							validationSchema={newUserValidation}
-							onSubmit={handleSubmit}> */}
-							<Form onSubmit={handleSubmit}>
-								<Row className="g-3">
-									<Col md={12}>
-										<Label>{Name}</Label>
-										<Input
-											name="name"
-											type="text"
-											placeholder="Enter Your Name"
-											onChange={(e) => setFormData({...formData,name:e.target.value})}
-										/>
-										{/* <ErrorMessage
-											name="name"
-											component="span"
-											className="text-danger"
-										/> */}
-									</Col>
-									<Col md={12}>
-										<Label>{EmailAddress}</Label>
-										<Input
-											name="email"
-											type="email"
-											placeholder="Enter Your Email"
-											onChange={(e) => setFormData({...formData,email:e.target.value})}
-										/>
-										{/* <ErrorMessage
-											name="email"
-											component="span"
-											className="text-danger"
-										/> */}
-									</Col>
-									<Col md={12}>
-										<Label>{Password}</Label>
-										<Input
-											name="password"
-											type="password"
-											placeholder="Enter Your Password"
-											onChange={(e) => setFormData({...formData,password:e.target.value})}
-										/>
-										{/* <ErrorMessage
-											name="password"
-											component="span"
-											className="text-danger"
-										/> */}
-									</Col>
-									<Col md={12}>
-                                        <Label>{roleTitle}</Label>
-										<Input
-											type="select"
-											name="select"
-											bsSize={"sm"}
-											onChange={(e)=> setFormData({...formData,role:e.target.value})}
-											>
-											<option value="manager">{"Manager"}</option>
-											<option value="creator">{"Creator"}</option>
-											<option value="mentor">{"Mentor"}</option>
-											<option value="student">{"Student"}</option>
-											<option value="admin">{"Admin"}</option>
-										</Input>
-									</Col>
-									<Col xs={12}>
-										<Button color="primary">{createUserTitle}</Button>
-									</Col>
-								</Row>
-							</Form>
-						{/* </Formik> */}
+						<Form onSubmit={handleSubmit}>
+							<Row className="g-3">
+								<Col md={12}>
+									<Label>{Name}</Label>
+									<Input
+										name="name"
+										type="text"
+										placeholder="Enter Your Name"
+										onChange={(e) =>
+											setFormData({ ...formData, name: e.target.value })
+										}
+									/>
+								</Col>
+								<Col md={12}>
+									<Label>{EmailAddress}</Label>
+									<Input
+										name="email"
+										type="email"
+										placeholder="Enter Your Email"
+										onChange={(e) =>
+											setFormData({ ...formData, email: e.target.value })
+										}
+									/>
+								</Col>
+								<Col md={12}>
+									<Label>{Password}</Label>
+									<Input
+										name="password"
+										type="password"
+										placeholder="Enter Your Password"
+										onChange={(e) =>
+											setFormData({ ...formData, password: e.target.value })
+										}
+									/>
+								</Col>
+								<Col md={12}>
+									<Label>{roleTitle}</Label>
+									<Input
+										type="select"
+										name="select"
+										bsSize={"sm"}
+										onChange={(e) =>
+											setFormData({ ...formData, role: e.target.value })
+										}>
+										<option value="Manager">{"Manager"}</option>
+										<option value="Creator">{"Creator"}</option>
+										<option value="Mentor">{"Mentor"}</option>
+										<option value="Student">{"Student"}</option>
+										<option value="Admin">{"Admin"}</option>
+									</Input>
+								</Col>
+								<Col xs={12}>
+									<Button color="primary">{createUserTitle}</Button>
+								</Col>
+							</Row>
+						</Form>
 					</div>
 				</CardBody>
 			</Card>
