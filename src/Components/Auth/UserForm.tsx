@@ -29,20 +29,19 @@ const UserForm = () => {
   
     if (result?.ok) {
       toast.success("successfully Logged in Rediract......")
+      console.log('====================================');
+      console.log(result);
+      console.log('====================================');
       router.push("/admin/dashboard");
     } else {     
       toast.error("Invalid Credentaial...");
     }
-    // const signInData = {email,password}
-    // console.log(signInData);
-    // const response = await login(signInData)
-    // console.log(response.data);
   };
 
   return (
     <div>
       <div>
-        <Link className="logo" href="/dashboard/default">
+        <Link className="logo" href="/admin/dashboard">
           <Image priority width={100} height={34} className="img-fluid for-light" src={imageOne} alt="login page" />
           <Image priority width={100} height={34} className="img-fluid for-dark" src={imageTwo} alt="login page" />
         </Link>
