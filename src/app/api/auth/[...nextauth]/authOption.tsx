@@ -18,16 +18,24 @@ export const authoption: NextAuthOptions = {
       name: "Credentials",
       credentials: {},
       async authorize(credentials: any) {    
+        // const user = {
+        //   email: "Test123@gmail.com",
+        //   password: "Test@123",
+        // };
+        // if (
+        //   isDeepStrictEqual(user, {
+        //     email: credentials?.email,
+        //     password: credentials?.password,
+        //   })
+        // ) {
+        //   return user as any;
+        // }
+        // return null;
         const user = {
           email: "Test123@gmail.com",
           password: "Test@123",
-        };
-        if (
-          isDeepStrictEqual(user, {
-            email: credentials?.email,
-            password: credentials?.password,
-          })
-        ) {
+        }
+        if(credentials?.email==user.email,credentials?.password==user.password){
           return user as any;
         }
         return null;
