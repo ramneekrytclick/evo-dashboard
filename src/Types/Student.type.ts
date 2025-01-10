@@ -9,9 +9,9 @@ export interface StudentProps {
     guardianName: string;
     address: string;
     education: string;
-    coursesEnrolled: CourseProps[];
-    interests: string;
-    languagesPreferred: string;
+    coursesEnrolled: CourseProps[]|string[];
+    interests: string|string[];
+    languagesPreferred: string|string[];
     wannaBe: string;
     experience: string;
     batch: string;

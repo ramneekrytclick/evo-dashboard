@@ -6,13 +6,13 @@ import { MentorProps } from "./Mentor.type";
 export interface CourseProps {
     id: number; 
     courseName: string; 
-    category: Category; 
-    subcategory: Subcategory; 
+    category: Category|string; 
+    subcategory: Subcategory|string; 
     description: string; 
     duration: string;
     mentorAssigned: string; 
     managerAssigned: string;
-    batchesAvailable: BatchProps[]; 
+    batchesAvailable: BatchProps[]|string[]; 
     promoCodes: PromoCodeProps[]; 
     price: number; 
 }

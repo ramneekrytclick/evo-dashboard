@@ -8,7 +8,7 @@ export interface IAnnouncement {
     visibilityStart: Date; 
     targetRoles: ('Mentor' | 'Manager' | 'Creator' | 'Students' | 'Employers')[];
     visibilityEnd: Date; 
-    createdBy: string; 
+    createdBy: string|{name:string}; 
     createdAt?: Date;
     updatedAt?: Date;
   }

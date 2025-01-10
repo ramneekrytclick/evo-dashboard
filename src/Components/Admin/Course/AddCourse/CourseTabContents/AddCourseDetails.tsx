@@ -40,7 +40,7 @@ const AddCourseDetails: React.FC<AddCourseDetailsProps> = ({
 		}
 	};
 	useEffect(()=>{
-		setData({...data,courseName:formData.courseTitle,category:formData.category,subcategory:formData.category});
+		// setData({...data,courseName:formData.courseTitle,category:formData.category,subcategory:formData.category});
 	},[formData])
 	return (
 		<div className="sidebar-body">

@@ -22,7 +22,7 @@ const DeleteAnnouncementModal = ({id}:{id:string}) => {
     const handleDelete = async ()=>{
         try{
             const response = await deleteAnnouncement(id);
-            alert(response.message);
+            alert(response);
         }        
         catch(error){
             console.error(error);

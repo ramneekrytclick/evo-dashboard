@@ -1,7 +1,5 @@
-import { mentorListData } from "@/Data/Admin/Users/Mentor/Mentor";
 import { Button, Col, FormGroup, Input, Label, Row } from "reactstrap";
 import { AssignManagers, AssignMentors } from "@/Constant";
-import { managerListData } from "@/Data/Admin/Users/Manager/Manager";
 import SVG from "@/CommonComponent/SVG";
 import { CourseFormProps } from "@/Types/Course.type";
 import { FormEvent } from "react";
@@ -26,14 +24,14 @@ const AdvanceSection: React.FC<AdvanceSectionProps> = ({
 					xl={4}>
 					<div className="card-wrapper border rounded-3 checkbox-checked">
 						<h6 className="sub-title">{AssignMentors}</h6>
-						{mentorListData.map((item) => (
+						{/* {mentorListData.map((item) => (
 							<FormGroup
 								key={item.id}
 								check>
 								<Input type="checkbox" />
 								<Label check>{item.name}</Label>
 							</FormGroup>
-						))}
+						))} */}
 					</div>
 				</Col>
 				<Col
@@ -41,14 +39,14 @@ const AdvanceSection: React.FC<AdvanceSectionProps> = ({
 					xl={4}>
 					<div className="card-wrapper border rounded-3 checkbox-checked">
 						<h6 className="sub-title">{AssignManagers}</h6>
-						{managerListData.map((item) => (
+						{/* {managerListData.map((item) => (
 							<FormGroup
 								key={item.id}
 								check>
 								<Input type="checkbox" />
 								<Label check>{item.name}</Label>
 							</FormGroup>
-						))}
+						))} */}
 					</div>
 				</Col>
 			</Row>

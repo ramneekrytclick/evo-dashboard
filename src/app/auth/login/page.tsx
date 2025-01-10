@@ -1,5 +1,4 @@
 // "use client";
-import { fetchUserData } from "@/app/ApiData/UserApiData";
 import { useAuth } from "@/app/AuthProvider";
 import UserForm from "@/Components/Auth/UserForm";
 import { useSession } from "next-auth/react";

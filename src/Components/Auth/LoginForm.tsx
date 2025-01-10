@@ -22,24 +22,25 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
 import { UserSocialApp } from "./UserSocialApp";
-import { getLoginToken} from "@/app/api/login/auth";
 import { useAuth } from "@/app/AuthProvider";
 
 const UserForm = () => {
 	const [show, setShow] = useState(false);
-  const [email, setEmail] = useState("rittik@ample.com");
-    const [password, setPassword] = useState("12345678");
+	const [email, setEmail] = useState("rittik@ample.com");
+	const [password, setPassword] = useState("12345678");
 	const router = useRouter();
-	const {login}= useAuth();
-  const formSubmitHandle = async (event: React.FormEvent<HTMLFormElement>) => {
+	const { login } = useAuth();
+	const formSubmitHandle = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const loginData = { email, password };
-		console.log("Form submitted: ", loginData);
-		const tokenResponse = await getLoginToken(loginData);
-		const token = tokenResponse.token;
-		console.log("Response Token:", token);
-    toast("Logging In...")
-		login(token);
+		// const loginData = { email, password };
+		// console.log("Form submitted: ", loginData);
+		// // const tokenResponse = await getLoginToken(loginData);
+
+		// // const token = tokenResponse.token;
+
+		// console.log("Response Token:", token);
+		// toast("Logging In...");
+		// login(token);
 	};
 
 	return (

@@ -1,6 +1,6 @@
 import {
+	announcementAPIProps,
 	createAnnouncement,
-	formattedDataProps,
 } from "@/app/api/admin/announcements";
 import { FormEvent, useState } from "react";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
@@ -57,7 +57,7 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 		// 	mediaUrl = data.url; // Assume response includes uploaded URL
 		// }
 
-		const formattedData: formattedDataProps = {
+		const formattedData: announcementAPIProps = {
 			title: formData.title,
 			message: formData.message,
 			media: mediaUrl || "",

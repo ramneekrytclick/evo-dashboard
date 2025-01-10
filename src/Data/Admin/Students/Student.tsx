@@ -101,7 +101,7 @@ export const studentTableColumns: TableColumn<StudentProps>[] = [
         center: false,
         cell: (row) => (
             <ul className="action">
-                <li className="edit">
+                {/* <li className="edit">
                     <a href={`/students/edit/${row.id}`}>
                         <i className="icon-pencil-alt" />
                     </a>
@@ -110,7 +110,7 @@ export const studentTableColumns: TableColumn<StudentProps>[] = [
                     <a href={`/students/delete/${row.id}`}>
                         <i className="icon-trash" />
                     </a>
-                </li>
+                </li> */}
             </ul>
         ),
     },

@@ -1,5 +1,4 @@
 import { courseFilterOptions } from '@/Data/Admin/Courses/Course';
-import { productListBodyData } from '@/Data/Applications/ECommerce/ProductList';
 import React from 'react'
 import { Col, Input, Row } from 'reactstrap'
 

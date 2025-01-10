@@ -9,8 +9,8 @@ export const sampleCoursesData = [
         mentorAssigned: "John Doe",
         managerAssigned: "Sarah Connor",
         batchesAvailable: [
-            { batchId: 101, batchName: "Batch A", startDate: "2025-02-01", endDate: "2025-07-31" },
-            { batchId: 102, batchName: "Batch B", startDate: "2025-03-01", endDate: "2025-08-31" },
+            { id: 101, name: "Batch A", startDate: "2025-02-01", endDate: "2025-07-31" },
+            { id: 102, name: "Batch B", startDate: "2025-03-01", endDate: "2025-08-31" },
         ],
         promoCodes: [
             { code: "NEWYEAR2025", discountPercentage: 10, expiryDate: "2025-01-31" },
@@ -28,7 +28,7 @@ export const sampleCoursesData = [
         mentorAssigned: "Jane Smith",
         managerAssigned: "David Williams",
         batchesAvailable: [
-            { batchId: 201, batchName: "Batch C", startDate: "2025-03-15", endDate: "2025-06-14" },
+            { id: 201, name: "Batch C", startDate: "2025-03-15", endDate: "2025-06-14" },
         ],
         promoCodes: [
             { code: "STUDENT50", discountPercentage: 50, expiryDate: "2025-04-30" },
@@ -45,7 +45,7 @@ export const sampleCoursesData = [
         mentorAssigned: "Alice Brown",
         managerAssigned: "Emily Johnson",
         batchesAvailable: [
-            { batchId: 301, batchName: "Batch D", startDate: "2025-01-15", endDate: "2025-12-31" },
+            { id: 301, name: "Batch D", startDate: "2025-01-15", endDate: "2025-12-31" },
         ],
         promoCodes: [
             { code: "FREESHIP", discountPercentage: 0, expiryDate: "2025-12-31" },

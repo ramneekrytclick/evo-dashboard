@@ -39,9 +39,9 @@ const UpdateAnnouncementForm = ({
 			visibilityEnd:visibilityEnd,
 		}
 		try {
-			const response = await updateAnnouncement(formattedData,values._id);
+			const response = await updateAnnouncement(formattedData,values._id!);
 			console.log(response);
-			alert(response.data.message);
+			alert(response);
 			toggle();
 		}
 		catch (error) {

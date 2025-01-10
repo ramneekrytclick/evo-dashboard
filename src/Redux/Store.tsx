@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import BookmarkSlice from "./Reducers/BookmarkSlice";
 import ChatSlice from "./Reducers/ChatSlice";
-import ContactSlice from "./Reducers/ContactSlice";
+// import ContactSlice from "./Reducers/ContactSlice";
 import FilterReducer from "./Reducers/ECommerce/FilterReducer";
 import ProductReducer from "./Reducers/ECommerce/ProductReducer";
 import FileManagerSlice from "./Reducers/FileManagerSlice";
@@ -23,7 +23,7 @@ const Store = configureStore({
     chat: ChatSlice,
     project: ProjectSlice,
     bookmark: BookmarkSlice,
-    contact: ContactSlice,
+    // contact: ContactSlice,
     todos: TodoSlice,
     tasks: TasksSlice,
     product: ProductReducer,

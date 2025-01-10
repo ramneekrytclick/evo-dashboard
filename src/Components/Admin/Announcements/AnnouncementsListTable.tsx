@@ -5,7 +5,6 @@ import { AnnouncementsTitle } from "@/Constant";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Card, CardBody } from "reactstrap";
-import { sampleAnnouncementsData } from "./SampleData";
 import { announcementTableColumns } from "@/Data/Admin/Announcements/Announcement";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { getAnnouncements } from "@/app/api/admin/announcements";

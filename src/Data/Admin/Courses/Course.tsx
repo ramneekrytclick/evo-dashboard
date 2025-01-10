@@ -1,5 +1,4 @@
-import { CustomNameImage } from "@/Data/Tables/DataTables/BasicInit";
-import { CourseDetailsProps } from "@/Types/Course.type";
+import {  CourseProps } from "@/Types/Course.type";
 import { TableColumn } from "react-data-table-component";
 
 export const addCourseNav = [
@@ -72,7 +71,7 @@ export const courseFilterOptions = [
     },
 ];
 
-export const courseTableColumns: TableColumn<CourseDetailsProps>[] = [
+export const courseTableColumns: TableColumn<CourseProps>[] = [
     {
         name: "Course Name",
         selector: (row) => row["courseName"],

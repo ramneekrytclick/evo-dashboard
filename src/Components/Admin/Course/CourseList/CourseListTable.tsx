@@ -12,11 +12,9 @@ import FilterComponent from "@/CommonComponent/FilterComponent";
 
 const CourseListTable = () => {
     const [filterText, setFilterText] = useState('');
-    const [courses,setCourses]=useState(sampleCoursesData);
+    const [courses,setCourses]=useState([]);
     const fetchCourses = async ()=>{
         const response = await getCourses();
-        console.log(response.courses);
-        
         setCourses(response.courses);
         return response;
     }
