@@ -1,29 +1,54 @@
-import {
-	createAnnouncement,
-	formattedDataProps,
-} from "@/app/api/admin/announcements";
+import { formattedDataProps, updateAnnouncement } from "@/app/api/admin/announcements";
+import CommonModal from "@/CommonComponent/CommonModal";
+import { IAnnouncement } from "@/Types/Announcement.type";
 import { FormEvent, useState } from "react";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 
+interface UpdateAnnouncementFormProps {
+	toggle: () => void;
+	values: IAnnouncement;
+}
 interface formDataProps {
 	title: string;
 	message: string;
-	media: {} | Blob;
+	media: string;
 	targetRoles: string[];
-	visibilityStart: Date | null;
-	visibilityEnd: Date | null;
+	visibilityStart: Date ;
+	visibilityEnd: Date ;
 }
-const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
+const UpdateAnnouncementForm = ({
+	toggle,
+	values,
+}: UpdateAnnouncementFormProps) => {
 	const [formData, setFormData] = useState<formDataProps>({
-		title: "",
-		message: "",
-		media: {},
-		targetRoles: [],
-		visibilityStart: new Date(),
-		visibilityEnd: new Date(),
-	});
-
-	const handleCheckboxChange = (role: string) => {
+        title:values.title,
+        message: values.message,
+        media: values.media||"",
+        targetRoles: values.targetRoles,
+        visibilityStart: values.visibilityStart,
+        visibilityEnd: values.visibilityEnd,
+    });
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+		const { title, message, media, targetRoles, visibilityStart, visibilityEnd } = formData
+		const formattedData:formattedDataProps={
+			title:title,
+			message:message,
+			media:media,
+			targetRoles:targetRoles,
+			visibilityStart:visibilityStart,
+			visibilityEnd:visibilityEnd,
+		}
+		try {
+			const response = await updateAnnouncement(formattedData,values._id);
+			alert(response.message);
+		}
+		catch (error) {
+			console.error(error);
+			alert("Error Updating")
+		}
+    }
+    const handleCheckboxChange = (role: string) => {
 		setFormData((prevState) => {
 			const updatedAudience = prevState.targetRoles.includes(role)
 				? prevState.targetRoles.filter((r) => r !== role)
@@ -34,47 +59,9 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		console.log(e.target.files);
-
-		if (e.target.files && e.target.files[0]) {
-			setFormData({ ...formData, media: e.target.files[0] });
-		}
-	};
-	
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
-
-		// Create FormData for the media file (if any)
-		let mediaUrl = "";
-		// if (formData.media) {
-		// 	const mediaData = new FormData();
-		// 	mediaData.append("file", formData.media);
-		// 	// Example: Upload the file and get the URL
-		// 	const response = await fetch("/upload", {
-		// 		method: "POST",
-		// 		body: mediaData,
-		// 	});
-		// 	const data = await response.json();
-		// 	mediaUrl = data.url; // Assume response includes uploaded URL
+		// if (e.target.files && e.target.files[0]) {
+		// 	setFormData({ ...formData, media: e.target.files[0] });
 		// }
-
-		const formattedData: formattedDataProps = {
-			title: formData.title,
-			message: formData.message,
-			media: mediaUrl || "",
-			targetRoles: formData.targetRoles,
-			visibilityStart: new Date(),
-			visibilityEnd: new Date(),
-		};
-
-		try {
-			const response = await createAnnouncement(formattedData);
-			console.log("Function response:", response);
-			alert("Announcement created successfully!");
-			toggle();
-		} catch (error) {
-			console.error("Failed to create announcement:", error);
-			alert("Error creating announcement.");
-		}
 	};
 	return (
 		<Form onSubmit={handleSubmit}>
@@ -85,6 +72,7 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 						id="title"
 						type="text"
 						placeholder="Enter Title"
+                        value={formData.title}
 						onChange={(e) => {
 							setFormData({ ...formData, title: e.target.value });
 						}}
@@ -96,6 +84,7 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 						id="message"
 						type="text"
 						placeholder="Enter Message"
+                        value={formData.message}
 						onChange={(e) => {
 							setFormData({ ...formData, message: e.target.value });
 						}}
@@ -120,6 +109,7 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 									<Input
 										id={item}
 										type="checkbox"
+                                        checked={formData.targetRoles.includes(item)}
 										onChange={() => {
 											handleCheckboxChange(item.toLowerCase());
 										}}
@@ -147,7 +137,7 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 							onChange={(e) => {
 								setFormData({
 									...formData,
-									visibilityStart: e.target.valueAsDate,
+									visibilityStart: e.target.valueAsDate||new Date(),
 								});
 							}}
 						/>
@@ -165,18 +155,18 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 							onChange={(e) => {
 								setFormData({
 									...formData,
-									visibilityEnd: e.target.valueAsDate,
+									visibilityEnd: e.target.valueAsDate||new Date(),
 								});
 							}}
 						/>
 					</Col>
 				</Col>
 				<Col md={12}>
-					<Button color="primary">{"Create"}</Button>
+					<Button color="primary">{"Update"}</Button>
 				</Col>
 			</Row>
 		</Form>
 	);
 };
 
-export default CreateAnnouncementForm;
+export default UpdateAnnouncementForm;

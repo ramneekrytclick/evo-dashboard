@@ -10,7 +10,7 @@ import { useState } from "react";
 import { Filter } from "react-feather";
 import { Card, CardBody, Collapse } from "reactstrap";
 import AnnouncementsListBody from "./AnnouncementsListBody";
-import AnnouncementModal from "./CreateAnnouncement/AnnouncementModal";
+import CreateAnnouncementModal from "./CreateAnnouncement/CreateAnnouncementModal";
 
 const AnnouncementsListHeader = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -31,7 +31,7 @@ const AnnouncementsListHeader = () => {
 						)}
 					</a>
 				</div>
-				<AnnouncementModal />
+				<CreateAnnouncementModal />
 				{/* <Link className="btn btn-primary" href={'/admin/announcements/create-announcement'}>
                     <i className="fa fa-plus me-2" /> {createAnnouncementTitle}
                 </Link> */}

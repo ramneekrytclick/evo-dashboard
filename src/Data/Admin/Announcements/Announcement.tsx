@@ -1,3 +1,4 @@
+import UpdateAnnouncementModal from "@/Components/Admin/Announcements/UpdateAnnouncementModal";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { TableColumn } from "react-data-table-component";
 
@@ -84,16 +85,8 @@ export const announcementFilterOptions = [
       center: false,
       cell: (row) => (
         <ul className="action">
-          <li className="edit">
-            <a href={`/announcements/edit/${row._id}`}>
-              <i className="icon-pencil-alt" />
-            </a>
-          </li>
-          <li className="delete">
-            <a href={`/announcements/delete/${row._id}`}>
-              <i className="icon-trash" />
-            </a>
-          </li>
+          <UpdateAnnouncementModal values={row}/>
+          <UpdateAnnouncementModal values={row}/>
         </ul>
       ),
     },

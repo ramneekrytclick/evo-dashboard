@@ -28,6 +28,8 @@ const AnnouncementsListTable = () => {
 	const fetchAnnouncements = async (): Promise<void> => {
 		try {
 			const data = await getAnnouncements();
+			console.log(data);
+			
             setAnnouncementsData(data?.announcements);
 		} catch (error) {
 			console.error("Failed to fetch announcements:", error);

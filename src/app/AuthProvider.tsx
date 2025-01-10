@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }:{children:ReactNode}) => {
     const router = useRouter();
     const [user, setUser] = useState<DecodedToken|null>(null);
     useEffect(()=>{
+        localStorage.setItem("token", process.env.NEXT_PUBLIC_ADMIN_TOKEN||"");
         const token = localStorage.getItem('token');
         if(token){
             try {

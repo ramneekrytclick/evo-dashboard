@@ -1,0 +1,37 @@
+"use client"
+import { createAnnouncementTitle, CrocsLogin } from "@/Constant";
+import React, { useState } from "react";
+import { Button } from "reactstrap";
+import CommonModal from "../../../../../CommonComponent/CommonModal";
+import CreateAnnouncementForm from "./CreateAnnouncementForm";
+
+const CreateAnnouncementModal = () => {
+	const [modal, setModal] = useState(false);
+	const toggle = () => {
+		setModal(!modal);
+	};
+	const ModalData = {
+		isOpen: modal,
+		toggler: toggle,
+		bodyClass: "dark-sign-up social-profile text-start",
+	};
+
+	return (
+		<>
+			<Button
+				color="primary"
+				onClick={toggle}>
+				<i className="fa fa-plus me-2" />
+				{createAnnouncementTitle}
+			</Button>
+			<CommonModal modalData={ModalData}>
+				<div className="modal-toggle-wrapper">
+					<h3 className="mb-3">{createAnnouncementTitle}</h3>
+					{/* <p>{"Fill in your information below to continue."}</p> */}
+					<CreateAnnouncementForm toggle={toggle} />
+				</div>
+			</CommonModal>
+		</>
+	);
+};
+export default CreateAnnouncementModal;

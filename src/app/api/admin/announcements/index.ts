@@ -1,6 +1,4 @@
-import { useAuth } from "@/app/AuthProvider";
-import { GetAnnouncementsResponse } from "@/Types/Announcement.type";
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios from "axios";
 
 const URL = process.env.NEXT_PUBLIC_BASE_URL;
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
@@ -15,7 +13,7 @@ export interface formattedDataProps {
 	title: string;
 	message: string;
 	media: string;
-	targetAudience: string[];
+	targetRoles: string[];
 	visibilityStart: Date;
 	visibilityEnd: Date;
 }
@@ -33,14 +31,24 @@ export const createAnnouncement = async (formattedData: formattedDataProps) => {
 	}
 };
 
-export const getAnnouncements =
-	async (): Promise<GetAnnouncementsResponse | null> => {
-		try {
-			const response: AxiosResponse<GetAnnouncementsResponse> =
-				await apiClient.get("/admin/announcements");
-			return response.data;
-		} catch (error) {
-			console.error("Error fetching announcements:", error);
-			return null;
-		}
-	};
+export const getAnnouncements = async () => {
+	try {
+		const response = await apiClient.get("/admin/announcements");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching announcements:", error);
+		return null;
+	}
+};
+
+export const updateAnnouncement = async (formattedData:formattedDataProps, id:string) => {
+	try {
+		const response = await apiClient.put(
+			`/admin/announcements/${id}`,
+			formattedData
+		);
+		return response;
+	} catch (error) {
+		return error;
+	}
+};
