@@ -1,4 +1,20 @@
-import { CourseProps } from "./Course.type";
+import { BatchProps, CourseProps } from "./Course.type";
+
+export interface AddMentorFormProps{
+    name: string;
+        dob: string;
+        username: string;
+        email: string;
+        contactNumber: string;
+        photo: string;
+        about: string;
+        address: string;
+        education: string;
+        assignedCourses:CourseProps[],
+        batchAssignments:string[],
+        timeAvailability:string,
+        password: string;
+}
 
 export type MentorProps = {
     id?: number | string;

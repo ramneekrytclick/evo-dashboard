@@ -11,12 +11,12 @@ import {
 	Row,
 } from "reactstrap";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
-import { createCreatorTitle, Name, Password, EmailAddress, AddCreatorTitle } from "@/Constant";
-import { AddCreatorFormProps } from "@/Types/Creator.type";
-import { createNewCreator } from "@/app/api/admin/team/creator";
+import { Name, Password, EmailAddress, createMentorTitle, AddMentorTitle } from "@/Constant";
+import { createNewMentor } from "@/app/api/admin/mentors";
+import { AddMentorFormProps } from "@/Types/Mentor.type";
 
-const AddCreatorForm = () => {
-	const [formData, setFormData] = useState<AddCreatorFormProps>({
+const AddMentorForm = () => {
+	const [formData, setFormData] = useState<AddMentorFormProps>({
 		name: "",
 		dob: "",
 		username: "",
@@ -26,15 +26,17 @@ const AddCreatorForm = () => {
 		about: "",
 		address: "",
 		education: "",
-		skills: "",
 		assignedCourses: [],
-		assignedBatches: [],
+        batchAssignments:[],
+        timeAvailability:"",
 		password: "",
 	});
 
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
-		const data = createNewCreator(formData);
+		const data = createNewMentor(formData);
+        console.log(data);
+
 	};
 
 	return (
@@ -42,7 +44,7 @@ const AddCreatorForm = () => {
 			<Card>
 				<CommonCardHeader
 					headClass="pb-0"
-					title={AddCreatorTitle}
+					title={AddMentorTitle}
 				/>
 				<CardBody>
 					<div className="card-wrapper border rounded-3">
@@ -53,7 +55,7 @@ const AddCreatorForm = () => {
 									<Input
 										name="name"
 										type="text"
-										placeholder="Enter Your Name"
+										placeholder="Enter Name"
 										onChange={(e) => setFormData({ ...formData, name: e.target.value })}
 									/>
 								</Col>
@@ -62,7 +64,7 @@ const AddCreatorForm = () => {
 									<Input
 										name="dob"
 										type="date"
-										placeholder="Enter Your Date of Birth"
+										placeholder="Enter Date of Birth"
 										onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
 									/>
 								</Col>
@@ -71,7 +73,7 @@ const AddCreatorForm = () => {
 									<Input
 										name="username"
 										type="text"
-										placeholder="Enter Your Username"
+										placeholder="Enter Username"
 										onChange={(e) => setFormData({ ...formData, username: e.target.value })}
 									/>
 								</Col>
@@ -80,7 +82,7 @@ const AddCreatorForm = () => {
 									<Input
 										name="email"
 										type="email"
-										placeholder="Enter Your Email"
+										placeholder="Enter Email"
 										onChange={(e) => setFormData({ ...formData, email: e.target.value })}
 									/>
 								</Col>
@@ -89,7 +91,7 @@ const AddCreatorForm = () => {
 									<Input
 										name="contactNumber"
 										type="text"
-										placeholder="Enter Your Contact Number"
+										placeholder="Enter Contact Number"
 										onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
 									/>
 								</Col>
@@ -107,7 +109,7 @@ const AddCreatorForm = () => {
 									<Input
 										name="about"
 										type="textarea"
-										placeholder="Write something about yourself"
+										placeholder="About..."
 										onChange={(e) => setFormData({ ...formData, about: e.target.value })}
 									/>
 								</Col>
@@ -116,7 +118,7 @@ const AddCreatorForm = () => {
 									<Input
 										name="address"
 										type="text"
-										placeholder="Enter Your Address"
+										placeholder="Enter Address"
 										onChange={(e) => setFormData({ ...formData, address: e.target.value })}
 									/>
 								</Col>
@@ -125,17 +127,17 @@ const AddCreatorForm = () => {
 									<Input
 										name="education"
 										type="textarea"
-										placeholder="Enter Your Educational Background"
+										placeholder="Enter Educational Background"
 										onChange={(e) => setFormData({ ...formData, education: e.target.value })}
 									/>
 								</Col>
 								<Col md={12}>
-									<Label>Skills</Label>
+									<Label>Time Availability</Label>
 									<Input
-										name="skills"
+										name="time"
 										type="textarea"
-										placeholder="List Your Skills"
-										onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+										placeholder="List Time Availability"
+										onChange={(e) => setFormData({ ...formData, timeAvailability: e.target.value })}
 									/>
 								</Col>
 								<Col md={12}>
@@ -143,12 +145,12 @@ const AddCreatorForm = () => {
 									<Input
 										name="password"
 										type="password"
-										placeholder="Enter Your Password"
+										placeholder="Enter Password"
 										onChange={(e) => setFormData({ ...formData, password: e.target.value })}
 									/>
 								</Col>
 								<Col xs={12}>
-									<Button color="primary">{createCreatorTitle}</Button>
+									<Button color="primary">{createMentorTitle}</Button>
 								</Col>
 							</Row>
 						</Form>
@@ -159,4 +161,4 @@ const AddCreatorForm = () => {
 	);
 };
 
-export default AddCreatorForm;
+export default AddMentorForm;

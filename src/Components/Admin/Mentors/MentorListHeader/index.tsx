@@ -19,7 +19,7 @@ const MentorListHeader = () => {
                         {isFilterOpen ? <i className='icon-close filter-close' /> : <Filter className='filter-icon' />}
                     </a>
                 </div>
-                <Link className="btn btn-primary" href={'/admin/mentors/add_Mentor'}>
+                <Link className="btn btn-primary" href={'/admin/mentors/add_mentor'}>
                     <i className="fa fa-plus me-2" /> {AddMentorTitle}
                 </Link>
             </div>
