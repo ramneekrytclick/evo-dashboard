@@ -52,3 +52,13 @@ export const updateAnnouncement = async (formattedData:formattedDataProps, id:st
 		return error;
 	}
 };
+
+export const deleteAnnouncement = async (id:string)=>{
+	try {
+		const response = await apiClient.delete(`/admin/announcements/${id}`);
+		return response;
+	}
+	catch (error) {
+		return error;
+	}
+}

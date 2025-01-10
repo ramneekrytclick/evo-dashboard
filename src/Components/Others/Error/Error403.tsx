@@ -17,9 +17,8 @@ const Error403Container = () => {
           <Col md={8} className='offset-md-2'>
             <h3>{"Sorry, Something Goes Wrong"}</h3>
             <p className='sub-content'>{"The page you are attempting to reach is currently not available. This may be because the page does not exist or has been moved."}</p>
-            <Button tag='a' color='primary' onClick={() => router.push('/dashboard/default')}>
-              {BackToHomePage}
-            </Button>
+            <Button tag="a" color="primary" onClick={() => router.push('/admin/dashboard')}>{BackToHomePage}</Button>
+
           </Col>
         </Container>
       </div>

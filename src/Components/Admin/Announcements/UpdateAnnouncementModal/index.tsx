@@ -1,5 +1,5 @@
 "use client"
-import { createAnnouncementTitle, CrocsLogin } from "@/Constant";
+import { updateAnnoucementTitle } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 
@@ -30,7 +30,7 @@ const UpdateAnnouncementModal = ({values}:{values:IAnnouncement}) => {
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createAnnouncementTitle}</h3>
+					<h3 className="mb-3">{updateAnnoucementTitle}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
 					<UpdateAnnouncementForm toggle={toggle} values={values}/>
 				</div>
