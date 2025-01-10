@@ -14,7 +14,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ mainTitle, parent, title }) =
           <Col sm={6} className="p-0">
             <Breadcrumb>
               <BreadcrumbItem>
-                <Link href={`/dashboard/default`}>
+                <Link href={`/admin/dashboard`}>
                   <SVG iconId="stroke-home" className="stroke-icon" />
                 </Link>
               </BreadcrumbItem>

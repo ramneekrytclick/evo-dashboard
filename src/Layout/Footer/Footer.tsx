@@ -8,7 +8,7 @@ const Footer = () => {
       <Container fluid>
         <Row>
           <Col md={6} className="p-0 footer-copyright">
-            <p className="mb-0">Copyright 2024 © Crocs theme by pixelstrap.</p>
+            <p className="mb-0">Copyright 2025 © Evo.</p>
           </Col>
           <Col md={6} className="p-0">
             <p className="heart mb-0">Hand crafted &amp; made with
