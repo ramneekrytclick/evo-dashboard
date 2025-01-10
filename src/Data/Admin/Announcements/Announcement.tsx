@@ -41,7 +41,14 @@ export const announcementFilterOptions = [
       sortable: true,
       center: false,
       cell: (row) => (
-        <div style={{ maxWidth: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+        <div
+          style={{
+            maxWidth: "300px",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
           {row.message}
         </div>
       ),
@@ -61,20 +68,14 @@ export const announcementFilterOptions = [
     },
     {
       name: "Target Audience",
-      selector: (row) => row.targetAudience.join(", "),
+      selector: (row) => row.targetRoles?.join(", "),
       sortable: false,
       center: false,
     },
     {
-      name: "Visibility Start",
-      selector: (row) => new Date(row.visibilityStart).toLocaleDateString(),
-      sortable: true,
-      center: false,
-    },
-    {
-      name: "Visibility End",
-      selector: (row) => new Date(row.visibilityEnd).toLocaleDateString(),
-      sortable: true,
+      name: "Created By",
+      selector: (row) => row.createdBy,
+      sortable: false,
       center: false,
     },
     {
@@ -84,12 +85,12 @@ export const announcementFilterOptions = [
       cell: (row) => (
         <ul className="action">
           <li className="edit">
-            <a href={`/announcements/edit/${row.id}`}>
+            <a href={`/announcements/edit/${row._id}`}>
               <i className="icon-pencil-alt" />
             </a>
           </li>
           <li className="delete">
-            <a href={`/announcements/delete/${row.id}`}>
+            <a href={`/announcements/delete/${row._id}`}>
               <i className="icon-trash" />
             </a>
           </li>
@@ -97,4 +98,3 @@ export const announcementFilterOptions = [
       ),
     },
   ];
-  
