@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import isEqual from "lodash/isEqual";
+import { isDeepStrictEqual } from "util";
 
 export const authoption: NextAuthOptions = {
   session: {
@@ -23,7 +23,7 @@ export const authoption: NextAuthOptions = {
           password: "Test@123",
         };
         if (
-          isEqual(user, {
+          isDeepStrictEqual(user, {
             email: credentials?.email,
             password: credentials?.password,
           })
