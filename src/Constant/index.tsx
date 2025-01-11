@@ -97,6 +97,7 @@ export const CreateNewMentor: string = "Create New Instructor";
 export const AddManager:string = "Add Manager";
 export const CreateNewManager: string = "Create New Manager";
 export const AddCreator:string = "Add Creator";
+export const CreateManagerTitle:string = "Create Manager"
 
 //Add-Product
 export const AddProductTitle: string = "Add-Product";

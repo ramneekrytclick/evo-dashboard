@@ -39,3 +39,16 @@ export interface ManagerInitialValue {
     assignedCreators: string[]; // Optional but included in initial value as an empty array
     password: string;
 }
+
+export interface AddManagerFormProps{
+    name:string,
+      username:string,
+      email:string,
+      password:string,
+      dob:string,
+      contactNumber:string,
+      photo:string,
+      about:string,
+      address:string,
+      workingMode:string,
+	}

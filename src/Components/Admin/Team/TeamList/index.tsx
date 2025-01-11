@@ -1,6 +1,6 @@
 "use client"
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { addUserTitle, AdminTitle, ManagerCardsTitle, ManagerTitle, TeamTitle } from "@/Constant";
+import { AdminTitle, TeamTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import TeamListHeader from "./TeamListHeader";
 import TeamListTable from "./TeamListTable";

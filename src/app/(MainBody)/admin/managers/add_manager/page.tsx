@@ -1,8 +1,8 @@
+import AddManagerContainer from "@/Components/Admin/Manager";
+
 const AddManagerPage = () => {
     return (
-        <div>
-            Enter
-        </div>
+        <AddManagerContainer/>
     );
 }
 
