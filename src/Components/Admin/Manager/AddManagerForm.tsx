@@ -20,8 +20,10 @@ import {
 } from "@/Constant";
 import { AddManagerFormProps } from "@/Types/Manager.type";
 import { createNewManager } from "@/app/api/admin/managers";
+import { useRouter } from "next/navigation";
 
 const AddManagerForm = () => {
+	const router = useRouter();
 	const [formData, setFormData] = useState<AddManagerFormProps>({
 		name: "",
 		username: "",
@@ -35,9 +37,20 @@ const AddManagerForm = () => {
 		workingMode: "WFH",
 	});
 
-	const handleSubmit = (e: FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		const data = createNewManager(formData);
+		try{
+			const data = await createNewManager(formData);
+			if (data) {
+				alert("Manager Created!")
+			}
+		}
+		catch(error){
+			console.log(error)
+		}
+		finally{
+			router.push("/admin/team")
+		}
 	};
 
 	return (
