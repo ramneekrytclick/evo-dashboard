@@ -5,24 +5,11 @@ import { TableColumn } from "react-data-table-component";
 import { Badge, FormGroup, Input } from "reactstrap";
 
 export const teamListColumns: TableColumn<TeamListType>[] = [
-	// {
-	// 	name: "",
-	// 	cell: () => (
-	// 		<FormGroup check>
-	// 			<Input
-	// 				className="checkbox-primary"
-	// 				type="checkbox"
-	// 			/>
-	// 		</FormGroup>
-	// 	),
-	// 	sortable: false,
-	// 	width: "3%",
-	// },
 	{
 		name: "Name",
 		selector: (row) => row.name,
 		sortable: true,
-		cell: (row) => <p>{row.name}</p>,
+		cell: (row) => <p style={{fontWeight:700}}>{row.name}</p>,
 		width: "33%",
 	},
 	{
@@ -39,6 +26,8 @@ export const teamListColumns: TableColumn<TeamListType>[] = [
 		cell: (row) => (
 			<Badge
 				color=""
+				pill
+				style={{fontSize: 13}}
 				className={`badge-${
 					row.role.toLowerCase() === "admin"
 						? "primary"

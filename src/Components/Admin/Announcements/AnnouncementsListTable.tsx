@@ -15,7 +15,7 @@ const AnnouncementsListTable = () => {
 		[]
 	);
 	const [loading, setLoading] = useState(true);
-	const filteredItems: IAnnouncement[] = announcementsData.filter(
+	const filteredItems: IAnnouncement[] = announcementsData?.filter(
 		(item: IAnnouncement) => {
 			return Object.values(item).some(
 				(value) =>
