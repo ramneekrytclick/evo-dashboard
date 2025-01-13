@@ -28,7 +28,7 @@ const TeamListHeader = () => {
 	return (
 		<div className="list-product-header">
 			<div>
-				<div className="light-box">
+				{/* <div className="light-box">
 					<a
 						href={Href}
 						onClick={handleFilterToggle}>
@@ -38,11 +38,11 @@ const TeamListHeader = () => {
 							<Filter className="filter-icon" />
 						)}
 					</a>
-				</div>
+				</div> */}
 				<Link
 					className="btn btn-primary"
 					href={"/admin/team/add_user"}>
-					<i className="fa fa-plus me-2" /> {addUserTitle}
+					<i className="fa fa-plus me-2 py-1" /> {addUserTitle}
 				</Link>
 				<UncontrolledDropdown>
 					<DropdownToggle

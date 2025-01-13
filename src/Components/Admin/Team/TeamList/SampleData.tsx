@@ -1,24 +1,6 @@
 export const sampleTeamListTableData = {
     "users": [
         {
-            "_id": "6756c5bc9c7762e80074afe0",
-            "name": "prashant",
-            "email": "john12@example.com",
-            "role": "Manager"
-        },
-        {
-            "_id": "6756cd9587f26a6e64e90923",
-            "name": "prashant",
-            "email": "john123@example.com",
-            "role": "Manager"
-        },
-        {
-            "_id": "6756e2e31e8180a20ae4307b",
-            "name": "prashant",
-            "email": "john1234@example.com",
-            "role": "Manager"
-        },
-        {
             "_id": "6756e4f633045d93b7456f3a",
             "name": "prashant",
             "email": "john11234@example.com",
