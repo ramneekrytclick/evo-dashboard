@@ -1,6 +1,5 @@
 import { MentorDataProps } from "@/Types/Mentor.type";
 import { TableColumn } from "react-data-table-component";
-import { Badge } from "reactstrap";
 
 export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 	{
@@ -14,13 +13,6 @@ export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 		selector: (row) => row.email,
 		sortable: true,
 		center: false,
-	},
-	{
-		name: "Evo Score",
-		selector: (row) => row.evoScore.toString(),
-		sortable: true,
-		center: false,
-		cell: (row) => <Badge color="primary">{row.evoScore}</Badge>,
 	},
 	{
 		name: "Status",
@@ -64,21 +56,7 @@ export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 	{
 		name: "Action",
 		sortable: false,
-		center: true,
-		cell: (row) => (
-			<ul className="action">
-				<li className="edit">
-					<a href={`/mentors/edit/${row.name}`}>
-						<i className="icon-pencil-alt" />
-					</a>
-				</li>
-				<li className="delete">
-					<a href={`/mentors/delete/${row.name}`}>
-						<i className="icon-trash" />
-					</a>
-				</li>
-			</ul>
-		),
+		center: false,
 	},
 ];
 

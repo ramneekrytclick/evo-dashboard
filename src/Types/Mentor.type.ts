@@ -14,12 +14,20 @@ export interface AddMentorFormProps {
 		institute: string;
 		year: number;
 	}[];
-	assignedCourses: CourseProps[];
+	assignedCourses: string[];
+	assignedBatches:string[],
 	batchAssignments: string[];
 	timeAvailability: string;
 	password: string;
 }
 export interface MentorDataProps {
+	_id:string;
+	username:string;
+	dob:string;
+	contactNumber: string;
+	photo: string;
+	about: string;
+	address: string;
 	assignedBatches: string[]; // Array of assigned batch IDs
 	assignedCourses: string[]; // Array of assigned course IDs
 	assignmentsSubmitted: any[]; // Array of submitted assignments (define type if known)

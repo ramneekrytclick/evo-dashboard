@@ -54,6 +54,8 @@ export const AssignMentors: string = "Assign Mentors";
 export const AssignManagers: string = "Assign Managers";
 export const AddMentorTitle: string = "Add Mentor"
 export const createMentorTitle:string = "Create Mentor"
+export const updateMentorTitle:string = "Update Mentor"
+export const deleteMentorConfirmTitle:string = "Delete Mentor?"
 // export const AssignBatches: string = "Assign Batches";
 
 // Product
@@ -1583,3 +1585,4 @@ export const createAnnouncementTitle = "Create Announcement"
 export const updateAnnoucementTitle = "Update Announcement"
 export const deleteAnnoucementTitle = "Delete Announcement"
 export const deleteAnnoucementConfirmTitle = "Confirm Delete Announcement?"
+

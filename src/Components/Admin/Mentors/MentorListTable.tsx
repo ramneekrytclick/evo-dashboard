@@ -2,10 +2,12 @@ import FilterComponent from "@/CommonComponent/FilterComponent";
 import { mentorTableColumns } from "@/Data/Admin/Mentors/Mentor";
 import { MentorDataProps } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
-import DataTable from "react-data-table-component";
+import DataTable, { TableColumn } from "react-data-table-component";
 import { Card, CardBody } from "reactstrap";
 import { sampleMentorsData } from "./SampleData";
 import { getMentors } from "@/app/api/admin/mentors";
+import UpdateMentorModal from "./UpdateMentorModal";
+import DeleteMentorModal from "./DeleteMentorModal";
 
 const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -44,7 +46,19 @@ const MentorListTable = () => {
 				{/* <div className="table-responsive custom-scrollbar user-datatable mt-3"> */}
 					<DataTable
 						data={filteredItems}
-						columns={mentorTableColumns}
+						columns={mentorTableColumns.map((column:TableColumn<MentorDataProps>) =>
+							column.name === "Action"
+								? {
+										...column,
+										cell: (row) => (
+											<ul className="action">
+												<UpdateMentorModal values={row} fetchData={fetchData} />
+												<DeleteMentorModal id={row._id!} fetchData={fetchData} />
+											</ul>
+										),
+								  }
+								: column
+						)}
 						striped={true}
 						fixedHeader
 						fixedHeaderScrollHeight="40vh"
