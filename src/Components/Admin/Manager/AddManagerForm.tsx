@@ -165,7 +165,7 @@ const AddManagerForm = () => {
 										name="select"
 										onChange={(e)=>{setFormData({...formData,workingMode:e.target.value})}}
 										bsSize={"sm"}>
-											{["WFH","In-Office"].map((item,index)=>
+											{["WFH","In-office"].map((item,index)=>
 												<option value={item} key={index}>{item}</option>
 											)}
 									</Input>
