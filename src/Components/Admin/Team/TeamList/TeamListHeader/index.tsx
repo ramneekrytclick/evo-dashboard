@@ -44,7 +44,17 @@ const TeamListHeader = () => {
 					href={"/admin/team/add_user"}>
 					<i className="fa fa-plus me-2 py-1" /> {addUserTitle}
 				</Link>
-				<UncontrolledDropdown>
+				<Link
+					className="btn btn-primary"
+					href={"/admin/managers/add_manager"}>
+					<i className="fa fa-plus me-2 py-1" /> {AddManager}
+				</Link>
+				<Link
+					className="btn btn-primary"
+					href={"/admin/creators/add_creator"}>
+					<i className="fa fa-plus me-2 py-1" /> {AddCreator}
+				</Link>
+				{/* <UncontrolledDropdown>
 					<DropdownToggle
 						color="primary"
 						className="pe-5"
@@ -60,7 +70,7 @@ const TeamListHeader = () => {
 							<Link href={"/admin/creators/add_creator"}>{AddCreator}</Link>
 						</DropdownItem>
 					</DropdownMenu>
-				</UncontrolledDropdown>
+				</UncontrolledDropdown> */}
 			</div>
 			<Collapse className={isFilterOpen ? "show" : ""}>
 				<Card className="list-product-body">

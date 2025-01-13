@@ -9,7 +9,7 @@ export interface AddCreatorFormProps{
 		photo: string;
 		about: string;
 		address: string;
-		education: string;
+		education: {degree:string,institute:string,year:number};
 		skills: string;
 		assignedCourses: CourseProps[];
 		assignedBatches: BatchProps[];

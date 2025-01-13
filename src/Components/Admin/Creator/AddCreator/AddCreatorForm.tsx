@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { FormEvent, useState } from "react";
 import {
 	Button,
@@ -11,11 +11,19 @@ import {
 	Row,
 } from "reactstrap";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
-import { createCreatorTitle, Name, Password, EmailAddress, AddCreatorTitle } from "@/Constant";
+import {
+	createCreatorTitle,
+	Name,
+	Password,
+	EmailAddress,
+	AddCreatorTitle,
+} from "@/Constant";
 import { AddCreatorFormProps } from "@/Types/Creator.type";
 import { createNewCreator } from "@/app/api/admin/team/creator";
+import { useRouter } from "next/navigation";
 
 const AddCreatorForm = () => {
+	const router = useRouter();
 	const [formData, setFormData] = useState<AddCreatorFormProps>({
 		name: "",
 		dob: "",
@@ -25,16 +33,27 @@ const AddCreatorForm = () => {
 		photo: "",
 		about: "",
 		address: "",
-		education: "",
+		education: { degree: "", institute: "", year: 0 },
 		skills: "",
 		assignedCourses: [],
 		assignedBatches: [],
 		password: "",
 	});
 
-	const handleSubmit = (e: FormEvent) => {
+	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		const data = createNewCreator(formData);
+		try {
+			const data = await createNewCreator(formData);
+			if (data) {
+				alert("Creator Created!")				
+			}
+		}
+		catch(error){
+			console.log(error)
+		}
+		finally{
+			router.push("/admin/team")
+		}
 	};
 
 	return (
@@ -54,7 +73,9 @@ const AddCreatorForm = () => {
 										name="name"
 										type="text"
 										placeholder="Enter Your Name"
-										onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, name: e.target.value })
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -63,7 +84,9 @@ const AddCreatorForm = () => {
 										name="dob"
 										type="date"
 										placeholder="Enter Your Date of Birth"
-										onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, dob: e.target.value })
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -72,7 +95,9 @@ const AddCreatorForm = () => {
 										name="username"
 										type="text"
 										placeholder="Enter Your Username"
-										onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, username: e.target.value })
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -81,7 +106,9 @@ const AddCreatorForm = () => {
 										name="email"
 										type="email"
 										placeholder="Enter Your Email"
-										onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, email: e.target.value })
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -90,7 +117,12 @@ const AddCreatorForm = () => {
 										name="contactNumber"
 										type="text"
 										placeholder="Enter Your Contact Number"
-										onChange={(e) => setFormData({ ...formData, contactNumber: e.target.value })}
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												contactNumber: e.target.value,
+											})
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -99,7 +131,12 @@ const AddCreatorForm = () => {
 										name="photo"
 										type="file"
 										accept="image/*"
-										onChange={(e) => setFormData({ ...formData, photo: e.target.files?.[0]?.name || "" })}
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												photo: e.target.files?.[0]?.name || "",
+											})
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -108,7 +145,9 @@ const AddCreatorForm = () => {
 										name="about"
 										type="textarea"
 										placeholder="Write something about yourself"
-										onChange={(e) => setFormData({ ...formData, about: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, about: e.target.value })
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -117,16 +156,60 @@ const AddCreatorForm = () => {
 										name="address"
 										type="text"
 										placeholder="Enter Your Address"
-										onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, address: e.target.value })
+										}
 									/>
 								</Col>
-								<Col md={12}>
-									<Label>Education</Label>
+								<Col md={4}>
+									<Label>Education Degree</Label>
 									<Input
-										name="education"
-										type="textarea"
-										placeholder="Enter Your Educational Background"
-										onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+										name="degree"
+										type="text"
+										placeholder="Enter Degree (e.g., B.Tech)"
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												education: {
+													...formData.education,
+													degree: e.target.value,
+												},
+											})
+										}
+									/>
+								</Col>
+								<Col md={4}>
+									<Label>Institute</Label>
+									<Input
+										name="institute"
+										type="text"
+										placeholder="Enter Institute Name"
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												education: {
+													...formData.education,
+													institute: e.target.value,
+												},
+											})
+										}
+									/>
+								</Col>
+								<Col md={4}>
+									<Label>Year of Completion</Label>
+									<Input
+										name="year"
+										type="number"
+										placeholder="Enter Year of Completion"
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												education: {
+													...formData.education,
+													year: Number(e.target.value),
+												},
+											})
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -135,7 +218,9 @@ const AddCreatorForm = () => {
 										name="skills"
 										type="textarea"
 										placeholder="List Your Skills"
-										onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, skills: e.target.value })
+										}
 									/>
 								</Col>
 								<Col md={12}>
@@ -144,7 +229,9 @@ const AddCreatorForm = () => {
 										name="password"
 										type="password"
 										placeholder="Enter Your Password"
-										onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+										onChange={(e) =>
+											setFormData({ ...formData, password: e.target.value })
+										}
 									/>
 								</Col>
 								<Col xs={12}>
