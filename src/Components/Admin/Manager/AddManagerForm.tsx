@@ -19,7 +19,7 @@ import {
 	CreateManagerTitle,
 } from "@/Constant";
 import { AddManagerFormProps } from "@/Types/Manager.type";
-import { createNewManager } from "@/app/api/admin/managers";
+import { createNewManager } from "@/app/api/admin/team/manager";
 import { useRouter } from "next/navigation";
 
 const AddManagerForm = () => {
