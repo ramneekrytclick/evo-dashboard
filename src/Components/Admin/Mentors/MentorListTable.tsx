@@ -4,7 +4,6 @@ import { MentorDataProps } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { Card, CardBody } from "reactstrap";
-import { sampleMentorsData } from "./SampleData";
 import { getMentors } from "@/app/api/admin/mentors";
 import UpdateMentorModal from "./UpdateMentorModal";
 import DeleteMentorModal from "./DeleteMentorModal";

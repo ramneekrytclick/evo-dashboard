@@ -280,7 +280,7 @@ importers:
         specifier: ^20
         version: 20.17.12
       '@types/react':
-        specifier: ^18
+        specifier: ^18.3.18
         version: 18.3.18
       '@types/react-calendar-timeline':
         specifier: ^0.28.6

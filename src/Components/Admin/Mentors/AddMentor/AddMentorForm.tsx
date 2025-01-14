@@ -1,5 +1,4 @@
 "use client";
-import { FormEvent, useState } from "react";
 import {
 	Button,
 	Card,
@@ -15,11 +14,12 @@ import {
 	Password,
 	EmailAddress,
 	createMentorTitle,
-	AddMentorTitle,
 } from "@/Constant";
 import { createNewMentor } from "@/app/api/admin/mentors";
 import { AddMentorFormProps } from "@/Types/Mentor.type";
 import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
+import { useState } from "react";
 
 const AddMentorForm = () => {
 	const router = useRouter();
@@ -37,6 +37,7 @@ const AddMentorForm = () => {
 		batchAssignments: [],
 		timeAvailability: "",
 		password: "",
+		assignedBatches:[]
 	});
 
 	const handleSubmit = async (e: FormEvent) => {
@@ -283,3 +284,4 @@ const AddMentorForm = () => {
 };
 
 export default AddMentorForm;
+
