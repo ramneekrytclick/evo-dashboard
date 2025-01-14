@@ -14,27 +14,26 @@ export const studentTableColumns: TableColumn<StudentProps>[] = [
 		sortable: true,
 	},
 	{
-		name: "Role",
-		selector: (row: any) => row.role || "N/A",
-		sortable: true,
-	},
-	{
 		name: "Evo Score",
 		selector: (row: any) => row.evoScore || 0,
 		sortable: true,
+		cell: (row: any) => {
+			return (
+				<span className="text-center  w-100 py-1">
+				<span className="text-center bg-dark rounded-3 px-2 py-1">
+					{row.evoScore}
+					</span>
+				</span>
+			);
+		},
 	},
 	{
 		name: "Status",
 		selector: (row: any) => (
-			<Badge color={row.status === "Approved" ? "success" : "danger"}>
+			<Badge className="py-1" color={row.status === "Approved" ? "success" : "danger"}>
 				{row.status || "N/A"}
 			</Badge>
 		),
-		sortable: true,
-	},
-	{
-		name: "Time Availability",
-		selector: (row: any) => row.timeAvailability || "Not Set",
 		sortable: true,
 	},
 	{
