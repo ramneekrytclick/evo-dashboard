@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<DecodedToken | null>(null);
 	const fetchToken = async () => {
 		const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+		const URL = process.env.NEXT_PUBLIC_BASE_URL;
 		const response = await axios.post(
 			`${URL}admin/login`,
 			{
