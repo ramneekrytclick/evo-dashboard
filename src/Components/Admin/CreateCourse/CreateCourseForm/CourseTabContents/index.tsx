@@ -13,15 +13,15 @@ const CourseTabContents: React.FC<CourseTabContentProp> = ({
 	activeCallBack,
 }) => {
 	const [data, setData] = useState<CourseFormProps>({
-		name: "",
-		category: { _id: "", name: "" },
-		subcategory: { _id: "", categoryId: "", name: "" },
-		description: "",
-		duration: "",
-		mentorAssigned: "",
-		managerAssigned: "",
-		realPrice: "",
-		promoCodes: [""],
+		name:"",
+		description:"",
+		category:{_id:"",name:""},
+		subcategory:{_id:"",categoryId:"",name:""},
+		duration:"",
+		mentorAssigned:"",
+		managerAssigned:"",
+		realPrice:"",
+		promoCodes:[]
 	});
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
