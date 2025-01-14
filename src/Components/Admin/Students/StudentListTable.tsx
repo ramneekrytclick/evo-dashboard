@@ -27,7 +27,7 @@ const StudentListTable = () => {
         try {
             const response = await getStudents();
 			const data = response.students;
-			console.log(data);
+			// console.log(data);
 			
 			setStudentList(data);
         } catch (error) {

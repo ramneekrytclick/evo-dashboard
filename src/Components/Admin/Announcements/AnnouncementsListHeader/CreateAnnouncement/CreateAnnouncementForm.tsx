@@ -33,7 +33,7 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 	};
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(e.target.files);
+		// console.log(e.target.files);
 
 		if (e.target.files && e.target.files[0]) {
 			setFormData({ ...formData, media: e.target.files[0] });
@@ -68,7 +68,7 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 
 		try {
 			const response = await createAnnouncement(formattedData);
-			console.log("Function response:", response);
+			// console.log("Function response:", response);
 			alert("Announcement created successfully!");
 			toggle();
 		} catch (error) {

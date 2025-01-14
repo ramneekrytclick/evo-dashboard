@@ -15,8 +15,8 @@ const UpdateMentorForm = ({ toggle, values }: UpdateMentorFormProps) => {
     e.preventDefault();
     try {
       const response = await updateMentor(values._id!, formData);
-      console.log("DATA: ",formData)
-      console.log(response);
+      // console.log("DATA: ",formData)
+      // console.log(response);
       alert("Mentor updated successfully!");
       toggle();
     } catch (error) {

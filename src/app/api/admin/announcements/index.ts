@@ -9,7 +9,7 @@ export interface announcementAPIProps {
 }
 
 export const createAnnouncement = async (formattedData: announcementAPIProps) => {
-	console.log(formattedData);
+	// console.log(formattedData);
 	try {
 		const response = await apiClient.post(
 			"/admin/announcements",

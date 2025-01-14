@@ -24,7 +24,7 @@ const MentorListTable = () => {
         try {
             const response = await getMentors();
             const data = response.mentors;
-            console.log(data);
+            // console.log(data);
             setMentorTableData(data);
         } catch (error) {
             console.log(error);

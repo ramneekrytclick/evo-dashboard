@@ -27,13 +27,13 @@ const CourseTabContents: React.FC<CourseTabContentProp> = ({
 		e.preventDefault();
 		try {
 			const response = await createCourse(data);
-			console.log(response);
+			// console.log(response);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 	useEffect(()=>{
-		console.log(data);
+		// console.log(data);
 	},[data])
 	return (
 		<Col

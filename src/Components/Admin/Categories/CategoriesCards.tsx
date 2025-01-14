@@ -11,7 +11,7 @@ const CategoriesCards = () => {
 		try {
 			const response = await getCategories();
 			setCategories(response.categories);
-			console.log(response);
+			// console.log(response);
 		} catch (error) {
 			console.log(error);
 		}

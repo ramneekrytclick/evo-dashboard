@@ -40,7 +40,7 @@ const UpdateAnnouncementForm = ({
 		}
 		try {
 			const response = await updateAnnouncement(formattedData,values._id!);
-			console.log(response);
+			// console.log(response);
 			alert(response);
 			toggle();
 		}
@@ -59,7 +59,7 @@ const UpdateAnnouncementForm = ({
 	};
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(e.target.files);
+		// console.log(e.target.files);
 		// if (e.target.files && e.target.files[0]) {
 		// 	setFormData({ ...formData, media: e.target.files[0] });
 		// }
