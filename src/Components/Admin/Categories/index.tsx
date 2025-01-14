@@ -1,7 +1,6 @@
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { AdminTitle, CategoriesTitle, CategoriesTitleLearning } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import CategoriesHeader from "./CategoriesHeader/page";
 import CategoriesCards from "./CategoriesCards";
 
 const CategoryContainer = () => {

@@ -1,3 +1,4 @@
+import { Category } from "@/Types/Category.type";
 import { apiClient } from "@/utils/api"
 
 export const getCategories = async ()=>{
@@ -6,6 +7,15 @@ export const getCategories = async ()=>{
         return response.data;
     }
     catch (error){
+        console.error(error);
+    }
+}
+
+export const createCategory = async (data:Category)=>{
+    try {
+        const response = await apiClient.post("/admin/create-category",data)
+        return response.data;
+    } catch (error) {
         console.error(error);
     }
 }

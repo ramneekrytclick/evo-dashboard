@@ -4,6 +4,7 @@ import { Category } from "@/Types/Category.type";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
+import CreateCategoryModal from "./CreateCategoryModal";
 
 const CategoriesCards = () => {
 	const [categories, setCategories] = useState([]);
@@ -20,20 +21,25 @@ const CategoriesCards = () => {
 		fetchCategories();
 	}, []);
 	return (
-		<Row className="g-sm-4 g-3">
-			{categories.map((item: Category) => (
-				<Col
-					xl={4}
-					md={6}
-					key={item._id}>
-					<div className="prooduct-details-box d-flex gap-3">
-						<div className="d-flex gap-3">
-							<Link href={`subcategories/${item._id}`}>{item.name}</Link>
+		<Col>
+			<Row sm={6} className="ms-1 mb-4">
+				<CreateCategoryModal fetchData={fetchCategories} />
+			</Row>
+			<Row className="g-sm-4 g-3">
+				{categories.map((item: Category) => (
+					<Col
+						xl={2}
+						md={3}
+						key={item._id}>
+						<div className="prooduct-details-box d-flex gap-3">
+							<div className="d-flex gap-3">
+								<Link href={`subcategories/${item._id}`}>{item.name}</Link>
+							</div>
 						</div>
-					</div>
-				</Col>
-			))}
-		</Row>
+					</Col>
+				))}
+			</Row>
+		</Col>
 	);
 };
 

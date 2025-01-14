@@ -1,38 +1,44 @@
-"use client"
+"use client";
 import { getSubcategories } from "@/app/api/admin/subcategories";
 import { Subcategory } from "@/Types/Category.type";
 import { useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
+import CreateSubcategoryModal from "./CreateSubcategoryModal";
 
-const SubcategoriesCards = ({id}:{id:string}) => {
-    const [subcategories, setSubcategories] = useState([]);
-    const fetchSubcategories =async ()=>{
-        try {
-            const response = await getSubcategories(id);
-            setSubcategories(response.subcategories);
-        } catch (error) {
-            console.error(error)
-        }
-    }
-    useEffect(()=>{
-        fetchSubcategories();
-    },[])
-    return (
-        <Row className="g-sm-4 g-3">
-			{subcategories.map((item: Subcategory) => (
-				<Col
-					xl={4}
-					md={6}
-					key={item._id}>
-					<div className="prooduct-details-box d-flex gap-3">
-						<div className="d-flex gap-3">
-							{item.name}
+const SubcategoriesCards = ({ id }: { id: string }) => {
+	const [subcategories, setSubcategories] = useState([]);
+	const fetchSubcategories = async () => {
+		try {
+			const response = await getSubcategories(id);
+			setSubcategories(response.subcategories);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+	useEffect(() => {
+		fetchSubcategories();
+	}, []);
+	return (
+		<Col>
+			<Row
+				sm={6}
+				className="ms-1 mb-4">
+				<CreateSubcategoryModal fetchData={fetchSubcategories} id={id}/>
+			</Row>
+			<Row className="g-sm-4 g-3">
+				{subcategories.map((item: Subcategory) => (
+					<Col
+						xl={4}
+						md={6}
+						key={item._id}>
+						<div className="prooduct-details-box d-flex gap-3">
+							<div className="d-flex gap-3">{item.name}</div>
 						</div>
-					</div>
-				</Col>
-			))}
-		</Row>
-    );
-}
+					</Col>
+				))}
+			</Row>
+		</Col>
+	);
+};
 
 export default SubcategoriesCards;
