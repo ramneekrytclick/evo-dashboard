@@ -27,20 +27,20 @@ export interface CourseTabContentProp {
 }
 
 export interface CourseFormProps{
-    courseName: string; 
+    name: string; 
     category: Category; 
     subcategory: Subcategory; 
     description: string; 
     duration: string;
     mentorAssigned: string; 
     managerAssigned: string;
-    price:string;
+    realPrice:string;
     promoCodes:string[]
 }
 
 // Batch Details Interface
 export interface BatchProps {
-    id: number; 
+    id: string; 
     name: string;
     courseId:number;
     startDate: string;
@@ -52,6 +52,7 @@ export interface BatchProps {
 }
 
 export interface PromoCodeProps {
+    _id:string;
     code: string;
     discountPercentage: number; 
     expiryDate: string;

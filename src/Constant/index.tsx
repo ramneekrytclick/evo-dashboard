@@ -1603,3 +1603,5 @@ export const createSubcategoryTitle = "Create Subcategory"
 export const updateSubcategoryTitle = "Update Subcategory"
 export const deleteSubcategoryTitle = "Delete Subcategory"
 export const deleteSubcategoryConfirmTitle = "Confirm Delete Subcategory?"
+
+export const AddDescription = "Add Description"

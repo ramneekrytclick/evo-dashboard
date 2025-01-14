@@ -17,7 +17,6 @@ const CategoryContainer = () => {
                     <Col sm={12}>
                         <Card>
                             <CardBody>
-                                <CategoriesHeader/>
                                 <CategoriesCards/> 
                             </CardBody>
                         </Card>
