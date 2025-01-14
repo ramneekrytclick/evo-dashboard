@@ -14,13 +14,13 @@ const StudentListHeader = () => {
     return (
         <div className="list-product-header">
             <div>
-                <div className="light-box">
+                {/* <div className="light-box">
                     <a href={Href} onClick={handleFilterToggle}>
                         {isFilterOpen ? <i className='icon-close filter-close' /> : <Filter className='filter-icon' />}
                     </a>
-                </div>
+                </div> */}
                 <Link className="btn btn-primary" href={'/admin/students/add_student'}>
-                    <i className="fa fa-plus me-2" /> {AddStudentTitle}
+                    <i className="fa fa-plus me-2 py-1" /> {AddStudentTitle}
                 </Link>
             </div>
             <Collapse className={isFilterOpen ? "show" : ""}>

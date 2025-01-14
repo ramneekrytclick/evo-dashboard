@@ -1,13 +1,13 @@
-"use client"
-import { deleteMentorConfirmTitle, ImagePath } from "@/Constant";
+import { deleteStudentConfirmTitle, ImagePath } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 
 import CommonModal from "@/CommonComponent/CommonModal";
 import Image from "next/image";
-import { deleteMentor } from "@/app/api/admin/mentors";
+import { deleteStudent } from "@/app/api/admin/students";
 
-const DeleteMentorModal = ({id,fetchData}:{id:string,fetchData:()=>Promise<void>}) => {
+
+const DeleteStudentModal = ({id,fetchData}:{id:string,fetchData:()=>Promise<void>}) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
 		setModal(!modal);
@@ -20,7 +20,7 @@ const DeleteMentorModal = ({id,fetchData}:{id:string,fetchData:()=>Promise<void>
 	};
     const handleDelete = async ()=>{
         try{
-            const response = await deleteMentor(id);
+            const response = await deleteStudent(id);
             alert(response);
             toggle();
             fetchData();
@@ -40,7 +40,7 @@ const DeleteMentorModal = ({id,fetchData}:{id:string,fetchData:()=>Promise<void>
 			</Button>
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper text-center">
-					<h3 className="mb-3">{deleteMentorConfirmTitle}</h3>
+					<h3 className="mb-3">{deleteStudentConfirmTitle}</h3>
 					<Image width={100} height={100} src={`${ImagePath}/gif/danger.gif`} alt="error" />
 					<div className="block text-center">
 						<Button outline className="me-2" color="danger" onClick={toggle}>Close</Button>
@@ -51,4 +51,4 @@ const DeleteMentorModal = ({id,fetchData}:{id:string,fetchData:()=>Promise<void>
 		</>
 	);
 };
-export default DeleteMentorModal;
+export default DeleteStudentModal;

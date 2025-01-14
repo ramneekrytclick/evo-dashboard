@@ -1,6 +1,7 @@
 import { CourseProps } from "./Course.type";
 
 export interface StudentProps {
+    _id:string;
     name: string;
     dob: string;
     email: string;
