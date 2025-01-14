@@ -14,9 +14,13 @@ const CourseListTable = () => {
     const [filterText, setFilterText] = useState('');
     const [courses,setCourses]=useState([]);
     const fetchCourses = async ()=>{
-        const response = await getCourses();
-        setCourses(response.courses);
-        return response;
+        try {
+            const response = await getCourses();
+            setCourses(response.courses);
+            return response;
+        } catch (error) {
+            console.error(error);
+        }
     }
     useEffect(()=>{
         fetchCourses();
