@@ -1,8 +1,8 @@
-import AddStudentForm from "@/Components/Admin/Students/AddStudent/AddStudentForm";
+import AddStudentContainer from "@/Components/Admin/Students/AddStudent/page";
 
 const AddStudentPage = () => {
     return (
-        <AddStudentForm/>
+        <AddStudentContainer/>
     );
 }
 

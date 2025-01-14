@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { AddMentorTitle, MentorTitle } from "@/Constant";
+import { AddStudentTitle,  StudentTitle } from "@/Constant";
 import { Container, Row } from "reactstrap";
 import AddStudentForm from "./AddStudentForm";
 
@@ -7,7 +7,7 @@ import AddStudentForm from "./AddStudentForm";
 const AddStudentContainer = () => {
     return (
         <>
-             <Breadcrumbs mainTitle={AddMentorTitle} parent={MentorTitle} title={AddMentorTitle} />
+             <Breadcrumbs mainTitle={AddStudentTitle} parent={StudentTitle} title={AddStudentTitle} />
             <Container fluid>
                 <Row>
                     <AddStudentForm/>

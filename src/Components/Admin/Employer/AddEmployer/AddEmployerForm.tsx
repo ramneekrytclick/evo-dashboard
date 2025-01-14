@@ -11,38 +11,29 @@ import {
 	Row,
 } from "reactstrap";
 import { useRouter } from "next/navigation";
-import { StudentProps } from "@/Types/Student.type";
-import { createStudent } from "@/app/api/admin/students";
+import { EmployerProps } from "@/Types/Employer.type";
+import { createEmployer } from "@/app/api/admin/employers";
 
-const AddStudentForm = () => {
+const AddEmployerForm = () => {
 	const router = useRouter();
-	const [formData, setFormData] = useState<StudentProps>({
+	const [formData, setFormData] = useState<EmployerProps>({
 		_id: "",
 		name: "",
-		dob: "",
 		email: "",
+		password: "",
 		contactNumber: "",
 		photo: "",
-		guardianName: "",
+		industry: "",
 		address: "",
-		education: "",
-		coursesEnrolled: [],
-		interests: [],
-		languagesPreferred: [],
-		wannaBe: "",
-		experience: "",
-		batch: "",
-		roadmapEnrolled: "",
-		password: "",
-		resume: "",
+		companySize: "",
 	});
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
-            const response = await createStudent(formData);
+			const response = await createEmployer(formData);
 			console.log(response);
-			router.push("/admin/students");
+			router.push("/admin/employers");
 		} catch (error) {
 			console.error(error);
 		}
@@ -59,19 +50,9 @@ const AddStudentForm = () => {
 									<Label>Name</Label>
 									<Input
 										type="text"
-										placeholder="Enter Name"
+										placeholder="Enter Employer Name"
 										onChange={(e) =>
 											setFormData({ ...formData, name: e.target.value })
-										}
-									/>
-								</Col>
-								<Col md={12}>
-									<Label>Date of Birth</Label>
-									<Input
-										type="date"
-										placeholder="Enter Date of Birth"
-										onChange={(e) =>
-											setFormData({ ...formData, dob: e.target.value })
 										}
 									/>
 								</Col>
@@ -82,6 +63,16 @@ const AddStudentForm = () => {
 										placeholder="Enter Email"
 										onChange={(e) =>
 											setFormData({ ...formData, email: e.target.value })
+										}
+									/>
+								</Col>
+								<Col md={12}>
+									<Label>Password</Label>
+									<Input
+										type="password"
+										placeholder="Enter Password"
+										onChange={(e) =>
+											setFormData({ ...formData, password: e.target.value })
 										}
 									/>
 								</Col>
@@ -99,14 +90,27 @@ const AddStudentForm = () => {
 									/>
 								</Col>
 								<Col md={12}>
-									<Label>Guardian Name</Label>
+									<Label>Photo</Label>
 									<Input
 										type="text"
-										placeholder="Enter Guardian Name"
+										placeholder="Enter Photo URL"
 										onChange={(e) =>
 											setFormData({
 												...formData,
-												guardianName: e.target.value,
+												photo: e.target.value,
+											})
+										}
+									/>
+								</Col>
+								<Col md={12}>
+									<Label>Industry</Label>
+									<Input
+										type="text"
+										placeholder="Enter Industry"
+										onChange={(e) =>
+											setFormData({
+												...formData,
+												industry: e.target.value,
 											})
 										}
 									/>
@@ -125,33 +129,20 @@ const AddStudentForm = () => {
 									/>
 								</Col>
 								<Col md={12}>
-									<Label>Wanna Be</Label>
+									<Label>Company Size</Label>
 									<Input
 										type="text"
-										placeholder="What does the student aspire to be?"
+										placeholder="Enter Company Size"
 										onChange={(e) =>
 											setFormData({
 												...formData,
-												wannaBe: e.target.value,
-											})
-										}
-									/>
-								</Col>
-								<Col md={12}>
-									<Label>Password</Label>
-									<Input
-										type="password"
-										placeholder="Enter Password"
-										onChange={(e) =>
-											setFormData({
-												...formData,
-												password: e.target.value,
+												companySize: e.target.value,
 											})
 										}
 									/>
 								</Col>
 								<Col xs={12}>
-									<Button color="primary">Create Student</Button>
+									<Button color="primary">Create Employer</Button>
 								</Col>
 							</Row>
 						</Form>
@@ -162,4 +153,4 @@ const AddStudentForm = () => {
 	);
 };
 
-export default AddStudentForm;
+export default AddEmployerForm;

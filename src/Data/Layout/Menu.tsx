@@ -38,12 +38,12 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/students",
 			},
 			{
-				title: "Employer",
+				title: "Employers",
 				id: 6,
 				icon: "learning",
 				type: "link",
 				lanClass: "lan-6",
-				path: "/admin/employer",
+				path: "/admin/employers",
 			},
 			{
 				title: "Create Course",
