@@ -32,7 +32,7 @@ const UpdateEmployerModal = ({values,fetchData}:{values:EmployerProps,fetchData:
 				<div className="modal-toggle-wrapper">
 					<h3 className="mb-3">{updateEmployerTitle}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<UpdateEmployerForm toggle={toggle} values={values}/>
+					<UpdateEmployerForm toggle={toggle} values={values} fetchData={fetchData}/>
 				</div>
 			</CommonModal>
 		</>

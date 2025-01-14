@@ -6,18 +6,18 @@ import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 interface UpdateEmployerFormProps {
   toggle: () => void;
   values: EmployerProps;
+  fetchData:()=>Promise<void>
 }
 
-const UpdateEmployerForm = ({ toggle, values }: UpdateEmployerFormProps) => {
+const UpdateEmployerForm = ({ toggle, values,fetchData }: UpdateEmployerFormProps) => {
   const [formData, setFormData] = useState<EmployerProps>(values);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       const response = await updateEmployer(values._id, formData);
-      console.log("DATA: ", formData);
-      console.log(response);
       alert("Employer updated successfully!");
+      fetchData();
       toggle();
     } catch (error) {
       console.error(error);
