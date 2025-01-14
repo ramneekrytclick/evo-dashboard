@@ -111,19 +111,5 @@ export const employerTableColumns: TableColumn<any>[] = [
         name: "Action",
         sortable: false,
         center: false,
-        cell: (row) => (
-            <ul className="action">
-                <li className="edit">
-                    <a href={`/employers/edit/${row.id}`}>
-                        <i className="icon-pencil-alt" />
-                    </a>
-                </li>
-                <li className="delete">
-                    <a href={`/employers/delete/${row.id}`}>
-                        <i className="icon-trash" />
-                    </a>
-                </li>
-            </ul>
-        ),
     },
 ];

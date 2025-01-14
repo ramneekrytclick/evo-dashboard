@@ -1,4 +1,5 @@
 import CommonModal from "@/CommonComponent/CommonModal";
+import Link from "next/link";
 import { Fragment, useState } from "react";
 import { Button, CardLink } from "reactstrap";
 
@@ -29,7 +30,9 @@ const BlogModal = ({ item }: BlogModalProps) => {
 			<CardLink
 				color="info"
 				onClick={toggle}>
-				{item.title}
+					<Link href={""}>
+					{item.title}
+					</Link>
 			</CardLink>
 			<CommonModal modalData={data}>
 				<Fragment>
@@ -39,8 +42,8 @@ const BlogModal = ({ item }: BlogModalProps) => {
 					</div> */}
 					<p className="modal-padding-space">{item.text}</p>
 					<div className="text-center">
-						<Button outline color="danger">Reject</Button>
-						<Button color="success">Approve</Button>
+						<Button color="danger" className="mx-2">Reject</Button>
+						<Button color="success" className="mx-2">Approve</Button>
 					</div>
 				</Fragment>
 			</CommonModal>

@@ -14,13 +14,13 @@ const EmployerListHeader = () => {
     return (
         <div className="list-product-header">
             <div>
-                <div className="light-box">
+                {/* <div className="light-box">
                     <a href={Href} onClick={handleFilterToggle}>
                         {isFilterOpen ? <i className='icon-close filter-close' /> : <Filter className='filter-icon' />}
                     </a>
-                </div>
+                </div> */}
                 <Link className="btn btn-primary" href={'/admin/employers/add_employer'}>
-                    <i className="fa fa-plus me-2" /> {AddEmployerTitle}
+                    <i className="fa fa-plus me-2 py-1" /> {AddEmployerTitle}
                 </Link>
             </div>
             <Collapse className={isFilterOpen ? "show" : ""}>

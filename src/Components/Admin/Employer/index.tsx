@@ -1,11 +1,9 @@
 "use client"
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { AdminTitle, EmployerTitle, StudentTitle } from "@/Constant";
+import { AdminTitle, EmployerTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import EmployerListHeader from "./EmployerListHeader";
 import EmployerListTable from "./EmployerListTable";
-// import StudentListHeader from "./StudentListHeader";
-// import StudentListTable from "./StudentListTable";
 
 const EmployerPageContainer = () => {
 	return (

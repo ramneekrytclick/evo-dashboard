@@ -80,6 +80,7 @@ export const blogTableColumns: TableColumn<BlogProps>[] = [
 		cell: (row) => (
 			<Badge
 				color=""
+				style={{fontSize:"12px"}}
 				className={`badge-${
 					row.status === "Approved"
 						? "success"

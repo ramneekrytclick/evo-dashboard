@@ -1,4 +1,4 @@
-import EmployerPageContainer from "@/Components/Admin/EmployerPageContainer";
+import EmployerPageContainer from "@/Components/Admin/Employer";
 
 const EmployerPage = () => {
     return (

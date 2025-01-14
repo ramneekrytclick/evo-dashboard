@@ -1573,10 +1573,6 @@ export const CreatorTitle = "Creator"
 export const AddCreatorTitle = "Add Creator"
 export const createCreatorTitle = "Create Creator"
 
-export const EmployerTitle = "Employer"
-export const AddEmployerTitle = "Add Employer"
-export const createEmployerTitle = "Create Employer"
-
 export const BlogsTitle = "Blogs"
 export const BlogsApprovalTitle = "Blogs-Approval"
 export const AddBlogTitle = "Add Blog"
@@ -1605,3 +1601,9 @@ export const deleteSubcategoryTitle = "Delete Subcategory"
 export const deleteSubcategoryConfirmTitle = "Confirm Delete Subcategory?"
 
 export const AddDescription = "Add Description"
+
+export const EmployerTitle = "Employer"
+export const AddEmployerTitle = "Add Employer"
+export const createEmployerTitle = "Create Employer" 
+export const deleteEmployerConfirmTitle:string = "Delete Employer?"
+export const updateEmployerTitle:string = "Update Employer"
