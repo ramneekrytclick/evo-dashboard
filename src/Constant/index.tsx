@@ -1564,6 +1564,7 @@ export const createUserTitle = "Create User"
 
 export const StudentTitle = "Student"
 export const AddStudentTitle = "Add Student"
+export const createStudentTitle = "Create Student" 
 export const deleteStudentConfirmTitle:string = "Delete Student?"
 export const updateStudentTitle:string = "Update Student"
 

@@ -1,6 +1,16 @@
 import { StudentProps } from "@/Types/Student.type";
 import { apiClient } from "@/utils/api";
 
+
+export const createStudent = async (data:StudentProps)=>{
+    try {
+        const response = await apiClient.post(`/admin/create-student`,data);
+        return response.data;
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
 export const getStudents = async () => {
 	try {
 		const response = await apiClient.get("/admin/students");
