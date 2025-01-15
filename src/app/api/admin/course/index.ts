@@ -1,7 +1,7 @@
+import { CourseProps } from "@/Types/Course.type";
 import { apiClient } from "@/utils/api";
 
-export interface courseAPIProps {}
-export const createCourse = async (data: courseAPIProps) => {
+export const createCourse = async (data: CourseProps) => {
 	try {
 		const response = await apiClient.post("/admin/create-course", data);
 		return response.data;
@@ -20,9 +20,9 @@ export const getCourses = async () => {
 	}
 };
 
-export const updateCourse = async (data: courseAPIProps, id: string) => {
+export const updateCourse = async ( id: string,data: CourseProps) => {
 	try {
-		const response = await apiClient.put(`/admin//update-course/${id}`, data);
+		const response = await apiClient.put(`/admin/update-course`, {courseId:id,updateData:data});
 		return response.data;
 	} catch (error) {
 		console.error("Error updating course:", error);

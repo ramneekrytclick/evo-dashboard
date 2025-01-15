@@ -89,7 +89,6 @@ export const SearchPagesTitle: string = "Search Pages"
 export const SearchWebsiteTitle: string = "Search Website"
 
 //Add-Courses
-export const AddCourseTitle: string = "Add-Course";
 export const CourseForm: string = "Course Form";
 export const CourseTitleLabel: string = "Course Title";
 export const CoursesLabel: string = "Courses";
@@ -1622,3 +1621,11 @@ export const updateLessonTitle = "Update Lesson"
 export const deleteLessonTitle = "Delete Lesson"
 export const deleteLessonConfirmTitle = "Confirm Delete Lesson?"
 export const CreateLessonsFormTitle = "Create-Lesson Form"
+
+export const CoursesTitle = "Courses"
+export const AddCourseTitle = "Add Course"
+export const createCourseTitle = "Create Course"
+export const updateCourseTitle = "Update Course"
+export const deleteCourseTitle = "Delete Course"
+export const deleteCourseConfirmTitle = "Confirm Delete Course?"
+export const CreateCourseFormTitle = "Create-Course Form"

@@ -4,14 +4,14 @@ import { StudentProps } from "./Student.type";
 import { MentorProps } from "./Mentor.type";
 
 export interface CourseProps {
-    _id: string; 
+    _id?: string; 
     name: string; 
     category: Category|string; 
     subcategory: Subcategory|string; 
     description: string; 
     duration: string;
-    mentorAssigned: string; 
-    managerAssigned: string;
+    mentorAssigned: {name:string,id:string,email:string}; 
+    managerAssigned: {name:string,id:string,email:string}; 
     batchesAvailable: BatchProps[]|string[]; 
     promoCodes: PromoCodeProps[]; 
     price: number; 
