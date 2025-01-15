@@ -40,9 +40,10 @@ export interface CourseFormProps{
 
 // Batch Details Interface
 export interface BatchProps {
-    id: string; 
+    _id: string; 
+    batchStatus:string;
     name: string;
-    courseId:number;
+    courseId:string;
     startDate: string;
     endDate: string;
     capacity: number; 
