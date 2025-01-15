@@ -31,8 +31,8 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 						xl={4}
 						md={6}
 						key={item._id}>
-						<div className="prooduct-details-box d-flex gap-3">
-							<div className="d-flex gap-3">{item.name}</div>
+						<div className="d-flex gap-3 bg-light p-3 rounded-3 border-b-info">
+							<div className="d-flex gap-3 text-success pe-none">{item.name}</div>
 						</div>
 					</Col>
 				))}

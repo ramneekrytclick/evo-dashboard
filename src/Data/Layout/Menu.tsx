@@ -97,6 +97,12 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Announcements",
 				type: "link",
 			},
+			{
+				path: "/admin/promo-codes",
+				icon: "others",
+				title: "Promo Codes",
+				type: "link",
+			},
 		],
 		// {
 		// 	title: "Job Portal",
@@ -119,12 +125,7 @@ export const MenuList: MenuItem[] | undefined = [
 		// 		},
 		// 	],
 		// },
-		// {
-		// 	path: "/promo-codes",
-		// 	icon: "others",
-		// 	title: "Promo Codes",
-		// 	type: "link",
-		// },
+		
 		// {
 		// 	path: "/paths",
 		// 	icon: "button",

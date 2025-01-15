@@ -31,9 +31,9 @@ const CategoriesCards = () => {
 						xl={2}
 						md={3}
 						key={item._id}>
-						<div className="prooduct-details-box d-flex gap-3">
+						<div className="d-flex gap-3 bg-light p-3 rounded-3 border-b-info">
 							<div className="d-flex gap-3">
-								<Link href={`subcategories/${item._id}`}>{item.name}</Link>
+								<Link href={`subcategories/${item._id}`} >{item.name}</Link>
 							</div>
 						</div>
 					</Col>

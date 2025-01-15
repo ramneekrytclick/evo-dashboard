@@ -1,11 +1,15 @@
 "use client"
-import { createCategoryTitle } from "@/Constant";
+import { updateAnnoucementTitle } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
-import CommonModal from "@/CommonComponent/CommonModal"
-import CreateCategoryForm from "./CreateCategoryForm";
 
-const CreateCategoryModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
+
+import CommonModal from "@/CommonComponent/CommonModal";
+import { PromoCodeProps } from "@/Types/Course.type";
+import UpdatePromocodeForm from "./UpdatePromocodeForm";
+
+
+const UpdatePromocodeModal = ({values,fetchData}:{values:PromoCodeProps,fetchData:()=>Promise<void>}) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
 		setModal(!modal);
@@ -19,21 +23,20 @@ const CreateCategoryModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
 	return (
 		<>
 			<Button
-				color="primary"
+				color="success"
 				className="me-2 px-2"
 				onClick={toggle}>
 				{/* <i className="fa fa-plus me-2" /> */}
-				<i className="fa fa-plus me-2 py-1" /> Create New Category
+				<i className="icon-pencil-alt" />
 			</Button>
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createCategoryTitle}</h3>
-					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<CreateCategoryForm fetchData={fetchData} toggle={toggle}/>
+					<h3 className="mb-3">{updateAnnoucementTitle}</h3>
+					<UpdatePromocodeForm toggle={toggle} values={values} fetchData={fetchData}/>
 				</div>
 			</CommonModal>
 		</>
 	);
 };
-export default CreateCategoryModal;
+export default UpdatePromocodeModal;

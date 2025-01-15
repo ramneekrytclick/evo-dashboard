@@ -1,11 +1,12 @@
 import CommonModal from "@/CommonComponent/CommonModal";
-import { createSubcategoryTitle } from "@/Constant";
+import { createPromoCodeTitle } from "@/Constant";
 import { useState } from "react";
 import { Button } from "reactstrap";
-import CreateSubcategoryForm from "./CreateSubcategoryForm";
+import CreatePromocodeForm from "./CreatePromocodeForm";
 
 
-const CreateSubcategoryModal = ({fetchData,id}:{fetchData:()=>Promise<void>,id:string}) => {
+
+const CreatePromocodeModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
     const [modal, setModal] = useState(false);
 	const toggle = () => {
 		setModal(!modal);
@@ -22,18 +23,19 @@ const CreateSubcategoryModal = ({fetchData,id}:{fetchData:()=>Promise<void>,id:s
 				color="primary"
 				className="me-2 px-2"
 				onClick={toggle}>
-				<i className="fa fa-plus me-2 py-1" /> Create New Subcategory
+				{/* <i className="fa fa-plus me-2" /> */}
+				<i className="fa fa-plus me-2 py-1" /> Create New Promocode
 			</Button>
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createSubcategoryTitle}</h3>
+					<h3 className="mb-3">{createPromoCodeTitle}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<CreateSubcategoryForm fetchData={fetchData} toggle={toggle} id={id}/>
+					<CreatePromocodeForm fetchData={fetchData} toggle={toggle} />
 				</div>
 			</CommonModal>
 		</>
 	);
 }
 
-export default CreateSubcategoryModal;
+export default CreatePromocodeModal;
