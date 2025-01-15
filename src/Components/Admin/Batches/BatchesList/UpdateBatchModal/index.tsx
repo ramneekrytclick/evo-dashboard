@@ -1,12 +1,14 @@
 "use client"
-import { createBatchTitle } from "@/Constant";
+import { updateBatchTitle } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 import CommonModal from "@/CommonComponent/CommonModal"
-import CreateBatchForm from "./CreateBatchForm";
+import { StudentProps } from "@/Types/Student.type";
 
+import { BatchProps } from "@/Types/Course.type";
+import UpdateBatchForm from "./UpdateBatchForm";
 
-const CreateBatchModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
+const UpdateBatchModal = ({values,fetchData}:{values:BatchProps,fetchData:()=>Promise<void>}) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
 		setModal(!modal);
@@ -21,20 +23,20 @@ const CreateBatchModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
 		<>
 			<Button
 				color="success"
-				className="btn btn-primary"
+				className="me-2 px-2"
 				onClick={toggle}>
 				{/* <i className="fa fa-plus me-2" /> */}
-				<i className="fa fa-plus me-2 py-1" /> Create New Batch
+				<i className="icon-pencil-alt" />
 			</Button>
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createBatchTitle}</h3>
+					<h3 className="mb-3">{updateBatchTitle}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<CreateBatchForm fetchData={fetchData} toggle={toggle}/>
+					<UpdateBatchForm toggle={toggle} values={values} fetchData={fetchData}/>
 				</div>
 			</CommonModal>
 		</>
 	);
 };
-export default CreateBatchModal;
+export default UpdateBatchModal;

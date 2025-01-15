@@ -15,17 +15,14 @@ const BatchesPageContainer = () => {
 			/>
 			<Container fluid>
 				<Row>
-					<Col xs={12}>
-						<Card>
-							<CommonCardHeader title={BatchesTitle} />
-							<CardBody>
-								<Row className="g-xl-5 g-3">
-									<BatchesList />
-								</Row>
-							</CardBody>
-						</Card>
-					</Col>
-				</Row>
+                    <Col sm={12}>
+                        <Card>
+                            <CardBody>
+                                <BatchesList/> 
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
 			</Container>
 		</>
 	);

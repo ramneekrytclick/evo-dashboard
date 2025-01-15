@@ -18,7 +18,6 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 		courseId: "",
 		startDate: "",
 		endDate: "",
-		capacity: 0,
 		students: [],
 		mentors: [],
 		promoCodes: [],
@@ -76,7 +75,7 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 						id="courseId"
 						name="courseId"
 						type="text"
-						value={formData.courseId}
+						value={typeof formData.courseId === "object" ? formData.courseId?._id : formData.courseId}
 						onChange={handleChange}
 						placeholder="Enter course ID"
 						required
@@ -101,18 +100,6 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 						type="date"
 						value={formData.endDate}
 						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={12}>
-					<Label htmlFor="capacity">Capacity</Label>
-					<Input
-						id="capacity"
-						name="capacity"
-						type="number"
-						value={formData.capacity}
-						onChange={handleChange}
-						placeholder="Enter batch capacity"
 						required
 					/>
 				</Col>

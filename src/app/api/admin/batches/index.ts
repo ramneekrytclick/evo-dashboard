@@ -18,3 +18,22 @@ export const createBatch = async (data:BatchProps)=>{
         console.error(error)
     }
 }
+
+export const updateBatch = async (id:string,data:BatchProps)=>{
+    try {
+        const response = await apiClient.put(`/admin/batch/update/${id}`,data);
+        return response.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const deleteBatch = async (id:string)=>{
+    try {
+        const response = await apiClient.delete(`/admin/batch/delete/${id}`);
+        return response.data
+    }
+    catch (error) {
+        console.error(error)
+    }
+}

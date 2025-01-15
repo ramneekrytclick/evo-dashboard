@@ -43,10 +43,9 @@ export interface BatchProps {
     _id: string; 
     batchStatus:string;
     name: string;
-    courseId:string;
+    courseId:string|{_id:string}|null;
     startDate: string;
     endDate: string;
-    capacity: number; 
     students?: StudentProps[];
     mentors?: MentorProps[];
     promoCodes?: PromoCodeProps[];
