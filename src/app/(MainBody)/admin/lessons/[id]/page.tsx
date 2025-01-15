@@ -1,6 +1,7 @@
+import LessonsPageContainer from "@/Components/Admin/Lesson"
 
 const LessonPage = async ({ params }: { params: Promise<{ id: string }> }) => {
-	return <div>{(await params).id} </div>;
+	return <LessonsPageContainer id={(await params).id}/>;
 };
 
 export default LessonPage;

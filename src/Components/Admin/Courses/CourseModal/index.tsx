@@ -17,7 +17,7 @@ const CourseModal = ({
 	fetchData: () => Promise<void>;
 }) => {
 	const [modal, setModal] = useState(false);
-	const router= useRouter();
+	const router = useRouter();
 	const toggle = () => {
 		setModal(!modal);
 	};
@@ -26,21 +26,29 @@ const CourseModal = ({
 		toggler: toggle,
 		bodyClass: "dark-sign-up social-profile text-start",
 	};
-	const goToLessons = ()=>{
-		router.push(`/admin/lessons/${values._id}`)
-	}
+	const goToLessons = () => {
+		router.push(`/admin/lessons/${values._id}`);
+	};
 
 	return (
 		<>
 			<ButtonGroup>
-				<Button color="primary" onClick={goToLessons}>View Lessons</Button>
-				<Button color="dark" onClick={toggle}>< Edit size={20} /></Button>
+				{/* <Button color="primary" onClick={goToLessons}>View Lessons</Button> */}
 			</ButtonGroup>
+			<Button
+				color="dark"
+				onClick={toggle}>
+				<Edit size={20} />
+			</Button>
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
 					<h3 className="mb-3">{updateCourseTitle}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<EditCourseForm toggle={toggle} values={values} fetchData={fetchData}/>
+					<EditCourseForm
+						toggle={toggle}
+						values={values}
+						fetchData={fetchData}
+					/>
 				</div>
 			</CommonModal>
 		</>

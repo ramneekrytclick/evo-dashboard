@@ -1,4 +1,4 @@
-import CreateLessonContainer from "@/Components/Admin/Lesson";
+import CreateLessonContainer from "@/Components/Admin/CreateLesson";
 
 const CreateLessonPage = () => {
     return (
