@@ -63,9 +63,17 @@ export const MenuList: MenuItem[] | undefined = [
 			},
 			{
 				title:"Batches",
+				id:11,
 				icon:"calendar",
 				type:"link",
 				path:"/admin/batches",
+			},
+			{
+				title:"Create Path",
+				icon:"maps",
+				id:12,
+				type:"link",
+				path:"/admin/paths/create-path",
 			},
 			{
 				id: 8,
