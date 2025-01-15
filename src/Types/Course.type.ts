@@ -4,8 +4,8 @@ import { StudentProps } from "./Student.type";
 import { MentorProps } from "./Mentor.type";
 
 export interface CourseProps {
-    id: number; 
-    courseName: string; 
+    _id: string; 
+    name: string; 
     category: Category|string; 
     subcategory: Subcategory|string; 
     description: string; 

@@ -54,6 +54,14 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/create-course",
 			},
 			{
+				title:"Create Lesson",
+				id: 8,
+				icon: "to-do",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/create-lesson",
+			},
+			{
 				title:"Batches",
 				icon:"calendar",
 				type:"link",
