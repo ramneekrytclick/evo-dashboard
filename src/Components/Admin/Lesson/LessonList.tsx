@@ -28,22 +28,28 @@ const LessonList = ({ id }: { id: string }) => {
 					sm={6}
 					className="xl-50 box-col-6"
 					key={index}>
-					<Card>
+					<Card className="bg-light b-t-primary text-dark">
 						<div className="blog-box blog-grid text-center product-box">
 							<div className="blog-details-main">
-								<ul className="blog-social">
+								<h1>{data.title}</h1>
+								{/* <ul className="blog-social">
 									<li>{data.title}</li>
 									<li>by: {data.title}</li>
-									{/* <li>0 Hits</li> */}
-								</ul>
+								</ul> */}
 								<hr />
-								<h6 className="blog-bottom-details">{JSON.stringify(data.description)}</h6>
+								<h6 className="blog-bottom-details">
+									{JSON.stringify(data.description)}
+								</h6>
 							</div>
 							<div className="absolute product-img py-4">
 								<div className="product-hover">
-									<UpdateLessonModal fetchData={fetchLessons} values={data} courseId={id}/>
+									<UpdateLessonModal
+										fetchData={fetchLessons}
+										values={data}
+										courseId={id}
+									/>
 								</div>
-                                </div>
+							</div>
 						</div>
 					</Card>
 				</Col>

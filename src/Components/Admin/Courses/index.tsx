@@ -1,10 +1,9 @@
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { AdminTitle, CoursesTitle, CourseSubTitle } from "@/Constant";
+import { AdminTitle, CoursesTitle } from "@/Constant";
 
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import CourseFilter from "./CourseFilter";
 import CourseCards from "./CourseCards";
-import CourseHeader from "../Students/CourseHeader";
+import CourseHeader from "./CourseHeader";
 
 const CoursesPageContainer = () => {
 	return (

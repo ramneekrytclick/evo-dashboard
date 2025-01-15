@@ -66,7 +66,7 @@ const UpdateLessonForm = ({ toggle, values, fetchData,courseId }: UpdateLessonFo
                 </Col>
                 {/* Fields for videos, quizzes, and assignments can be added here */}
                 <Col md={12} className="text-end">
-                    <Button color="secondary" type="button" onClick={toggle} disabled={loading}>
+                    <Button outline color="primary" type="button" onClick={toggle} disabled={loading}>
                         Cancel
                     </Button>
                     <Button color="primary" type="submit" disabled={loading} className="ms-2">
