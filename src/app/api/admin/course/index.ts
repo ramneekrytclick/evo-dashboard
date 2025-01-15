@@ -1,7 +1,7 @@
-import { CourseProps } from "@/Types/Course.type";
+import { CourseFormProps, CourseProps } from "@/Types/Course.type";
 import { apiClient } from "@/utils/api";
 
-export const createCourse = async (data: CourseProps) => {
+export const createCourse = async (data: CourseFormProps) => {
 	try {
 		const response = await apiClient.post("/admin/create-course", data);
 		return response.data;
