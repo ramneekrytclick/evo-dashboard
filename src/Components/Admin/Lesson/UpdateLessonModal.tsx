@@ -1,20 +1,20 @@
-"use client";
-
-import React, { useState } from "react";
-import { Button, ButtonGroup } from "reactstrap";
-import { CourseProps } from "@/Types/Course.type";
-import { Edit } from "react-feather";
 import CommonModal from "@/CommonComponent/CommonModal";
-import { updateCourseTitle } from "@/Constant";
-import EditCourseForm from "./UpdateCourseForm";
+import { updateLessonTitle } from "@/Constant";
+import { Edit } from "react-feather";
+import { Button, ButtonGroup } from "reactstrap";
+import UpdateLessonForm from "./UpdateLessonForm";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { LessonFormProps } from "@/Types/Lesson.type";
 
-const CourseModal = ({
-	values,
+const UpdateLessonModal = ({
 	fetchData,
+	values,
+	courseId
 }: {
-	values: CourseProps;
+	values: LessonFormProps;
 	fetchData: () => Promise<void>;
+	courseId: string;
 }) => {
 	const [modal, setModal] = useState(false);
 	const router = useRouter();
@@ -26,18 +26,11 @@ const CourseModal = ({
 		toggler: toggle,
 		bodyClass: "dark-sign-up social-profile text-start",
 	};
-	const goToLessons = () => {
-		router.push(`/admin/lessons/${values._id}`);
-	};
 
 	return (
 		<>
 			<ButtonGroup>
-				<Button
-					color="primary"
-					onClick={goToLessons}>
-					View Lessons
-				</Button>
+				{/* <Button color="primary">View Lessons</Button> */}
 				<Button
 					color="dark"
 					onClick={toggle}>
@@ -46,16 +39,17 @@ const CourseModal = ({
 			</ButtonGroup>
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{updateCourseTitle}</h3>
-					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<EditCourseForm
+					<h3 className="mb-3">{updateLessonTitle}</h3>
+					<UpdateLessonForm
 						toggle={toggle}
 						values={values}
 						fetchData={fetchData}
+						courseId={courseId}
 					/>
 				</div>
 			</CommonModal>
 		</>
 	);
 };
-export default CourseModal;
+
+export default UpdateLessonModal;
