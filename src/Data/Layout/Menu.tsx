@@ -130,6 +130,37 @@ export const MenuList: MenuItem[] | undefined = [
 			},
 		],
 	},
+	{
+		title: "Employer",
+		lanClass: "lan-1",
+		Items: [
+			{
+				id: 1,
+				path: "/employer/dashboard",
+				icon: "home",
+				title: "Dashboard",
+				type: "link",
+			},
+			{
+				id: 2,
+				path: "/employer/create-job",
+				icon: "form",
+				title: "Create Job",
+			},
+			{
+				id: 3,
+				path: "/employer/students",
+				icon: "user",
+				title: "Students",
+			},
+			{
+				id: 4,
+				path: "/employer/jobs",
+				icon: "ui-kits",
+				title: "Job Applications",
+			}
+		],
+	},
 ];
 
 // {
