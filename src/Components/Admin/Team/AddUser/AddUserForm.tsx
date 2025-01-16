@@ -98,11 +98,9 @@ const AddUserForm = () => {
 										onChange={(e) =>
 											setFormData({ ...formData, role: e.target.value })
 										}>
-										<option value="Manager">{"Manager"}</option>
-										<option value="Creator">{"Creator"}</option>
-										<option value="Mentor">{"Mentor"}</option>
-										<option value="Student">{"Student"}</option>
-										<option value="Admin">{"Admin"}</option>
+										{['Admin', 'Manager', 'Creator', 'Mentor', 'Student', 'Employer', 'CourseCreator'].map((role,index)=>(
+											<option key={index} value={role}>{role}</option>
+										))}
 									</Input>
 								</Col>
 								<Col xs={12}>
