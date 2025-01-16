@@ -22,7 +22,8 @@ const UserForm = () => {
 		event.preventDefault();
 		const response = await login(email,password);
 		if (response==200) {
-			toast.success("Login Successful!")
+			console.log("Success");
+			
 		}
 		else {
 			toast.error("Invalid Credentials!")
