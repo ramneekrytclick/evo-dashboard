@@ -1,3 +1,4 @@
+import { approveBlog } from "@/app/api/admin/blogs/blog";
 import CommonModal from "@/CommonComponent/CommonModal";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -5,6 +6,7 @@ import { Button, CardLink } from "reactstrap";
 
 interface BlogModalProps {
 	item: {
+		id: string;
 		title: string;
 		text: string;
 		status: string;
@@ -16,6 +18,14 @@ const BlogModal = ({ item }: BlogModalProps) => {
 	const toggle = () => {
 		setModal(!modal);
 	};
+	const handleApprove = async()=>{
+		try {
+			const response = await approveBlog(item.id);
+			console.log(response);
+		} catch (error) {
+			console.error(error);
+		}
+	}
 	const data = {
 		isOpen: modal,
 		header: true,
@@ -41,9 +51,8 @@ const BlogModal = ({ item }: BlogModalProps) => {
 						<h3 className="mb-2">{item.title}</h3>
 					</div> */}
 					<p className="modal-padding-space">{item.text}</p>
-					<div className="text-center">
-						<Button color="danger" className="mx-2">Reject</Button>
-						<Button color="success" className="mx-2">Approve</Button>
+					<div className="text-end">
+						<Button color="success" className="mx-2" onClick={handleApprove}>Approve</Button>
 					</div>
 				</Fragment>
 			</CommonModal>

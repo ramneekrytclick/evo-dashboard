@@ -44,21 +44,20 @@ export const blogTableColumns: TableColumn<BlogProps>[] = [
 		selector: (row) => row["title"],
 		sortable: true,
 		center: false,
-		cell: (row) => <BlogModal item={{ title: row.title, text: row.content,status:row.status! }} />,
+		cell: (row) => <BlogModal item={{id:row._id!, title: row.title, text: row.content,status:row.status! }} />,
 	},
 	{
 		name: "Content",
 		selector: (row) => row["content"],
 		sortable: true,
 		center: false,
-		cell: (row) => `${row.content.substring(0, 100)}...`, // Show the first 100 characters
+		cell: (row) => `${row.content.substring(0, 100)}...`,
 	},
 	{
 		name:"Creator",
-		selector: (row) => row["creatorId"]!,
 		sortable: true,
 		center: false,
-		cell: (row) => row.creatorId,
+		cell: (row) => row.creatorId?.name,
 	},
 	// {
 	// 	name: "Category",
@@ -92,12 +91,12 @@ export const blogTableColumns: TableColumn<BlogProps>[] = [
 			</Badge>
 		),
 	},
-	// {
-	// 	name: "Created At",
-	// 	selector: (row) => new Date(row.createdAt).toLocaleDateString(),
-	// 	sortable: true,
-	// 	center: false,
-	// },
+	{
+		name: "Created At",
+		selector: (row) => new Date(row.createdAt!).toDateString(),
+		sortable: true,
+		center: false,
+	},
 	// {
 	// 	name: "Action",
 	// 	sortable: true,
