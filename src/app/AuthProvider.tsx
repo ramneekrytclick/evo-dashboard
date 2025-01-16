@@ -19,7 +19,6 @@ interface User {
 interface AuthContextType {
 	user: User | null;
 	role: string | null;
-	userEmail: string;
 	login: (email: string, password: string) => Promise<number | void>;
 	logout: () => void;
 }
@@ -27,7 +26,6 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
 	user: null,
 	role: null,
-	userEmail: "",
 	login: async () => {},
 	logout: () => {},
 });
@@ -36,7 +34,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 	const [user, setUser] = useState<User | null>(null);
 	const [role, setRole] = useState<string | null>(null);
-	const [userEmail, setEmail] = useState<string>("");
 	const login = async (email: string, password: string) => {
 		try {
 			const loginData = { email, password };
@@ -52,7 +49,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				);
 				setUser({ id: decodedToken.id, token: data.token });
 				setRole(decodedToken.role);
-				setEmail(email);
 				router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
 				Cookies.set("token", data.token, { expires: 1, path: "/" }); // Expires in 1 day
 			} else {
@@ -94,7 +90,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ user, userEmail, role, login, logout }}>
+		<AuthContext.Provider value={{ user, role, login, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);

@@ -2,17 +2,6 @@ import { MenuItem } from "@/Types/Layout.type";
 
 export const MenuList: MenuItem[] | undefined = [
 	{
-		title:"AUTH",
-		lanClass:"lan-1",
-		Items:[
-			{
-				title:"LOGIN",
-				path:"/auth/login",
-				type:"link",
-			}
-		]
-	},
-	{
 		title: "Admin",
 		lanClass: "lan-1",
 		menucontent:
@@ -121,23 +110,23 @@ export const MenuList: MenuItem[] | undefined = [
 		lanClass: "lan-1",
 		Items: [
 			{
-				id:1,
+				id: 1,
 				path: "/creator/dashboard",
 				icon: "home",
 				title: "Dashboard",
 				type: "link",
 			},
 			{
-				id:2,
-				path:"/creator/create-blog",
-				icon:"to-do",
-				title:"Create Blog"
+				id: 2,
+				path: "/creator/create-blog",
+				icon: "to-do",
+				title: "Create Blog",
 			},
 			{
-				id:3,
-				path:"/creator/my-blogs",
-				icon:"ui-kits",
-				title:"Get My Blogs"
+				id: 3,
+				path: "/creator/my-blogs",
+				icon: "ui-kits",
+				title: "Get My Blogs",
 			},
 		],
 	},
