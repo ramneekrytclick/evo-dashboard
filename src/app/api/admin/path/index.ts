@@ -1,3 +1,4 @@
+import { PathProps } from "@/Types/Path.type"
 import { apiClient } from "@/utils/api"
 
 export const getPaths=async(id:string)=>{
@@ -6,5 +7,14 @@ export const getPaths=async(id:string)=>{
         return respnonse.data
     } catch (error) {
         console.error(error)
+    }
+}
+
+export const createPath = async (data:PathProps)=>{
+    try {
+        const response = await apiClient.post(`/admin/create-path`,data);
+        return response.data
+    } catch (error) {
+        console.error(error);
     }
 }
