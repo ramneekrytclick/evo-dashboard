@@ -1,7 +1,8 @@
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { CreatorTitle, myBlogsTitle } from "@/Constant";
-import { Col } from "reactstrap";
+import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import MyBlogs from "./MyBlogs";
+import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 
 const MyBlogsContainer = () => {
 	return (
@@ -11,11 +12,20 @@ const MyBlogsContainer = () => {
 				parent={CreatorTitle}
 				title={myBlogsTitle}
 			/>
-			<Col
-				xxl={6}
-				className="box-col-60 xl-60">
-                    <MyBlogs />
-                </Col>
+			<Container fluid>
+				<Row>
+					<Col xs={12}>
+						<Card>
+							{/* <CommonCardHeader title={myBlogsTitle} /> */}
+							<CardBody>
+								<Row className="g-xl-5 g-3">
+									<MyBlogs />
+								</Row>
+							</CardBody>
+						</Card>
+					</Col>
+				</Row>
+			</Container>
 		</>
 	);
 };

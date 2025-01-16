@@ -8,5 +8,13 @@ export const submitBlog= async(data:BlogProps)=>{
     } catch (error) {
         console.error(error);
     }
+}
 
+export const getMyBlogs = async ()=>{
+    try {
+        const response = await apiClient.get("/creator/my-blogs");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
 }

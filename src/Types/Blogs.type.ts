@@ -4,4 +4,5 @@ export interface BlogProps {
     content: string;
     creatorId?: string;
     status?: string;
+    createdAt?:string;
 }

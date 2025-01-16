@@ -10,6 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { DecodedTokenProps } from "@/Types/Auth.type";
 
 interface User {
 	id: string;
@@ -44,13 +45,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			});
 			const data = res.data;
 			if (res.status === 200) {
-				const decodedToken = jwtDecode<{ id: string; role: string }>(
+				localStorage.setItem("token",data.token)
+				const decodedToken = jwtDecode<DecodedTokenProps>(
 					data.token
 				);
 				setUser({ id: decodedToken.id, token: data.token });
 				setRole(decodedToken.role);
 				router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
-				Cookies.set("token", data.token, { expires: 1, path: "/" }); // Expires in 1 day
+				Cookies.set("token", data.token, { expires: 1, path: "/" }); 
 			} else {
 				throw new Error(data.message || "Login failed");
 			}
