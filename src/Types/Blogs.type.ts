@@ -1,10 +1,7 @@
 export interface BlogProps {
-    id: string|number;
+    _id?: string;
     title: string;
     content: string;
-    creatorId: string;
-    category: string;
-    tags: string[];
-    status: string;
-    createdAt: string;
+    creatorId?: string;
+    status?: string;
 }

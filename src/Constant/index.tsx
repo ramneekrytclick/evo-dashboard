@@ -1572,11 +1572,14 @@ export const CreatorTitle = "Creator"
 export const AddCreatorTitle = "Add Creator"
 export const createCreatorTitle = "Create Creator"
 
+export const myBlogsTitle = "My Blogs"
+
 export const BlogsTitle = "Blogs"
 export const BlogsApprovalTitle = "Blogs-Approval"
 export const AddBlogTitle = "Add Blog"
 export const createBlogTitle = "Create Blog"
 export const approveBlogTitle = "Approve Blog"
+export const createBlogFormTitle = "Create Blog Form"
 
 export const AnnouncementsTitle = "Announcements"
 export const AddAnnouncementTitle = "Add Announcement"

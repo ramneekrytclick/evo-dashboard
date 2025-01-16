@@ -44,7 +44,7 @@ export const blogTableColumns: TableColumn<BlogProps>[] = [
 		selector: (row) => row["title"],
 		sortable: true,
 		center: false,
-		cell: (row) => <BlogModal item={{ title: row.title, text: row.content,status:row.status }} />,
+		cell: (row) => <BlogModal item={{ title: row.title, text: row.content,status:row.status! }} />,
 	},
 	{
 		name: "Content",
@@ -55,7 +55,7 @@ export const blogTableColumns: TableColumn<BlogProps>[] = [
 	},
 	{
 		name:"Creator",
-		selector: (row) => row["creatorId"],
+		selector: (row) => row["creatorId"]!,
 		sortable: true,
 		center: false,
 		cell: (row) => row.creatorId,
@@ -74,7 +74,7 @@ export const blogTableColumns: TableColumn<BlogProps>[] = [
 	// },
 	{
 		name: "Status",
-		selector: (row) => row["status"],
+		selector: (row) => row["status"]!,
 		sortable: true,
 		center: false,
 		cell: (row) => (
@@ -92,12 +92,12 @@ export const blogTableColumns: TableColumn<BlogProps>[] = [
 			</Badge>
 		),
 	},
-	{
-		name: "Created At",
-		selector: (row) => new Date(row.createdAt).toLocaleDateString(),
-		sortable: true,
-		center: false,
-	},
+	// {
+	// 	name: "Created At",
+	// 	selector: (row) => new Date(row.createdAt).toLocaleDateString(),
+	// 	sortable: true,
+	// 	center: false,
+	// },
 	// {
 	// 	name: "Action",
 	// 	sortable: true,
