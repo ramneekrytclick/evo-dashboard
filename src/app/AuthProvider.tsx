@@ -1,82 +1,103 @@
 "use client";
-
 import {
 	createContext,
-	ReactNode,
 	useContext,
-	useEffect,
 	useState,
+	useEffect,
+	ReactNode,
 } from "react";
 import { jwtDecode } from "jwt-decode";
-import { AuthContextType, DecodedToken } from "@/Types/AuthProvider.type";
-import { useRouter } from "next/navigation";
 import axios from "axios";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
-const AuthContext = createContext<AuthContextType | null>(null);
+interface User {
+	id: string;
+	token: string;
+}
+
+interface AuthContextType {
+	user: User | null;
+	role: string | null;
+	userEmail: string;
+	login: (email: string, password: string) => Promise<number | void>;
+	logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType>({
+	user: null,
+	role: null,
+	userEmail: "",
+	login: async () => {},
+	logout: () => {},
+});
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
-	const [user, setUser] = useState<DecodedToken | null>(null);
-	const fetchToken = async () => {
-		const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-		const URL = process.env.NEXT_PUBLIC_BASE_URL;
-		const response = await axios.post(
-			`${URL}admin/login`,
-			{
-				email: process.env.NEXT_PUBLIC_ADMIN_EMAIL,
-				password: process.env.NEXT_PUBLIC_ADMIN_PASSWORD,
-			},
-			{ headers: { "x-api-key": apiKey } }
-		);
-		localStorage.setItem("token", response.data.token);
-	};
-	useEffect(() => {
-		// localStorage.setItem("token", process.env.NEXT_PUBLIC_ADMIN_TOKEN!);
-    fetchToken();
-		const token = localStorage.getItem("token");
-		if (token) {
-			try {
-				const decoded = jwtDecode(token);
-				// console.log("DecodedToken:",decoded);
-				setUser(decoded);
-			} catch (error) {
-				console.error("Invalid token");
-				localStorage.removeItem("token");
+	const [user, setUser] = useState<User | null>(null);
+	const [role, setRole] = useState<string | null>(null);
+	const [userEmail, setEmail] = useState<string>("");
+	const login = async (email: string, password: string) => {
+		try {
+			const loginData = { email, password };
+			const URL = process.env.NEXT_PUBLIC_BASE_URL;
+			const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+			const res = await axios.post(`${URL}admin/login`, loginData, {
+				headers: { "x-api-key": apiKey },
+			});
+			const data = res.data;
+			if (res.status === 200) {
+				const decodedToken = jwtDecode<{ id: string; role: string }>(
+					data.token
+				);
+				setUser({ id: decodedToken.id, token: data.token });
+				setRole(decodedToken.role);
+				setEmail(email);
+				router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
+				Cookies.set("token", data.token, { expires: 1, path: "/" }); // Expires in 1 day
+			} else {
+				throw new Error(data.message || "Login failed");
 			}
+			return res.status;
+		} catch (error) {
+			console.error(error);
 		}
-	}, []);
-	// useEffect(()=>{
-	//   if (user){
-	//     console.log("Redirecting...Logged In as:",user);
-	//     router.push("/admin");
-	//   }
-	//   else {
-	//     console.log("Redirecting...Logged Out");
-	//     router.push("/login");
-	//   }
-	// },[user,router])
-	const login = (token: string) => {
-		localStorage.setItem("token", token);
-		const decoded = jwtDecode(token);
-		setUser(decoded);
-		return decoded;
 	};
 
 	const logout = () => {
-		localStorage.removeItem("token");
 		setUser(null);
+		setRole(null);
+		Cookies.remove("token");
+		router.push("/auth/login");
 	};
 
+	useEffect(() => {
+		const token = Cookies.get("token");
+		if (token) {
+			try {
+				const decodedToken = jwtDecode<{
+					id: string;
+					role: string;
+					exp: number;
+				}>(token);
+				if (decodedToken.exp * 1000 > Date.now()) {
+					setUser({ id: decodedToken.id, token });
+					setRole(decodedToken.role);
+				} else {
+					logout();
+				}
+			} catch (error) {
+				console.error("Token parsing error", error);
+				logout();
+			}
+		}
+	}, []);
+
 	return (
-		<AuthContext.Provider value={{ user, login, logout }}>
+		<AuthContext.Provider value={{ user, userEmail, role, login, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);
 };
-export const useAuth = () => {
-	const context = useContext(AuthContext);
-	if (!context) {
-		throw new Error("useAuth must be used within an AuthProvider");
-	}
-	return context;
-};
+
+export const useAuth = () => useContext(AuthContext);

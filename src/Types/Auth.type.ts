@@ -61,3 +61,9 @@ export interface CountdownDataProp {
   seconds: number;
   completed: boolean;
 }
+
+export interface DecodedTokenProps {
+  id: string;
+  role: string;
+  exp: number;
+}

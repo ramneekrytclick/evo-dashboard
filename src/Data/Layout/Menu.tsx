@@ -2,6 +2,17 @@ import { MenuItem } from "@/Types/Layout.type";
 
 export const MenuList: MenuItem[] | undefined = [
 	{
+		title:"AUTH",
+		lanClass:"lan-1",
+		Items:[
+			{
+				title:"LOGIN",
+				path:"/auth/login",
+				type:"link",
+			}
+		]
+	},
+	{
 		title: "Admin",
 		lanClass: "lan-1",
 		menucontent:
