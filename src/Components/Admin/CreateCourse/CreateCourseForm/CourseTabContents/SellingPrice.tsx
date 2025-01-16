@@ -107,7 +107,7 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 											type="checkbox"
 											name="promoCode"
 											value={item._id}
-											checked={promoCode.includes(item._id)} 
+											checked={promoCode.includes(item._id!)} 
 											onChange={handlePromoCodeChange}
 											className="me-2"
 										/>
