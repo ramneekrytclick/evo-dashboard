@@ -46,7 +46,7 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/employers",
 			},
 			{
-				title:"Courses",
+				title: "Courses",
 				id: 7,
 				icon: "to-do",
 				type: "link",
@@ -54,31 +54,31 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/courses",
 			},
 			{
-				title:"Create Lesson",
+				title: "Create Lesson",
 				id: 10,
-				icon: "to-do",
+				icon: "layout",
 				type: "link",
 				lanClass: "lan-6",
 				path: "/admin/create-lesson",
 			},
 			{
-				title:"Batches",
-				id:11,
-				icon:"calendar",
-				type:"link",
-				path:"/admin/batches",
+				title: "Batches",
+				id: 11,
+				icon: "calendar",
+				type: "link",
+				path: "/admin/batches",
 			},
 			{
-				title:"Create Path",
-				icon:"maps",
-				id:12,
-				type:"link",
-				path:"/admin/paths/create-path",
+				title: "Create Path",
+				icon: "maps",
+				id: 12,
+				type: "link",
+				path: "/admin/paths/create-path",
 			},
 			{
 				id: 8,
 				title: "Categories",
-				icon: "to-do",
+				icon: "widget",
 				type: "link",
 				lanClass: "lan-6",
 				path: "/admin/categories",
@@ -104,57 +104,80 @@ export const MenuList: MenuItem[] | undefined = [
 				type: "link",
 			},
 		],
-		// {
-		// 	title: "Job Portal",
-		// 	id: 5,
-		// 	icon: "learning",
-		// 	type: "sub",
-		// 	lanClass: "lan-8",
-		// 	children: [
-		// 		{
-		// 			path: "/admin/employer",
-		// 			title: "Employers",
-		// 			type: "link",
-		// 			lanClass: "lan-9",
-		// 		},
-		// 		{
-		// 			path: "/admin/job-approval",
-		// 			title: "Job Campaigns",
-		// 			type: "link",
-		// 			lanClass: "lan-9",
-		// 		},
-		// 	],
-		// },
-		
-		// {
-		// 	path: "/paths",
-		// 	icon: "button",
-		// 	title: "Paths & Roadmaps",
-		// 	type: "link",
-		// },
-		// {
-		// 	path: "/analytics",
-		// 	icon: "charts",
-		// 	title: "Analytics",
-		// 	type: "link",
-		// },
-		// {
-		// 	path: "/tickets",
-		// 	icon: "support-tickets",
-		// 	title: "Tickets & Feedback",
-		// 	type: "link",
-		// },
-		// {
-		// 	path: "/logs",
-		// 	icon: "to-do",
-		// 	title: "Logs & Activity",
-		// 	type: "link",
-		// },
-		// {
-		// 	path: "/settings",
-		// 	icon: "knowledgebase",
-		// 	title: "Settings",
-		// 	type: "link",
-		// },
+	},
+	{
+		title: "Creator",
+		lanClass: "lan-1",
+		Items: [
+			{
+				path: "/creator/dashboard",
+				icon: "home",
+				title: "Dashboard",
+				type: "link",
+			},
+			{
+				path:"/creator/create-blog",
+				icon:"to-do",
+				title:"Create Blog"
+			},
+			{
+				path:"/creator/create-blog",
+				icon:"ui-kits",
+				title:"Get My Blogs"
+			},
+		],
 	},
 ];
+
+// {
+// 	title: "Job Portal",
+// 	id: 5,
+// 	icon: "learning",
+// 	type: "sub",
+// 	lanClass: "lan-8",
+// 	children: [
+// 		{
+// 			path: "/admin/employer",
+// 			title: "Employers",
+// 			type: "link",
+// 			lanClass: "lan-9",
+// 		},
+// 		{
+// 			path: "/admin/job-approval",
+// 			title: "Job Campaigns",
+// 			type: "link",
+// 			lanClass: "lan-9",
+// 		},
+// 	],
+// },
+
+// {
+// 	path: "/paths",
+// 	icon: "button",
+// 	title: "Paths & Roadmaps",
+// 	type: "link",
+// },
+// {
+// 	path: "/analytics",
+// 	icon: "charts",
+// 	title: "Analytics",
+// 	type: "link",
+// },
+// {
+// 	path: "/tickets",
+// 	icon: "support-tickets",
+// 	title: "Tickets & Feedback",
+// 	type: "link",
+// },
+// {
+// 	path: "/logs",
+// 	icon: "to-do",
+// 	title: "Logs & Activity",
+// 	type: "link",
+// },
+// {
+// 	path: "/settings",
+// 	icon: "knowledgebase",
+// 	title: "Settings",
+// 	type: "link",
+// },
