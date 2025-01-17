@@ -25,14 +25,13 @@ const UserProfile = () => {
 			<li onClick={handleLogout}>
 				<Button
 					color={"primary"}
-					className="d-flex align-items-center"
-					>
-            Logout
-					<Badge
+					className="d-flex align-items-center">
+					Logout
+					{/* <LogOut /> */}
+					{/* <Badge
 						className={`badge-light rounded-circle btn-p-space text-dark ms-2`}
 						color="">
-						<LogOut/>
-					</Badge>
+					</Badge> */}
 				</Button>
 			</li>
 		</li>

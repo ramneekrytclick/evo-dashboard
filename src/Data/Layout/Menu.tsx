@@ -1,5 +1,17 @@
 import { MenuItem } from "@/Types/Layout.type";
 
+export const SupportMenuList: MenuItem = {
+	title:"Support",
+	Items:[
+		{
+			id: 1,
+			path: "/support/tickets",
+			icon: "ticket",
+			title: "My Tickets",
+			type: "link",
+		},
+	]
+}
 export const MenuList: MenuItem[] | undefined = [
 	{
 		title: "Admin",
@@ -103,6 +115,12 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Promo Codes",
 				type: "link",
 			},
+			{
+				path: "/support/tickets",
+				icon: "support-tickets",
+				title: "Support",
+				type: "link",
+			},
 		],
 	},
 	{
@@ -127,6 +145,12 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/creator/my-blogs",
 				icon: "ui-kits",
 				title: "Get My Blogs",
+			},
+			{
+				path: "/support/tickets",
+				icon: "support-tickets",
+				title: "Support",
+				type: "link",
 			},
 		],
 	},
@@ -158,7 +182,50 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/employer/jobs",
 				icon: "ui-kits",
 				title: "Job Applications",
-			}
+			},
+			{
+				path: "/support/tickets",
+				icon: "support-tickets",
+				title: "Support",
+				type: "link",
+			},
+		],
+	},
+	{
+		title: "Mentor",
+		lanClass: "lan-1",
+		Items: [
+			{
+				id: 1,
+				path: "/mentor/dashboard",
+				icon: "home",
+				title: "Dashboard",
+				type: "link",
+			},
+			{
+				id: 2,
+				path: "/mentor/schedule-session",
+				icon: "calendar",
+				title: "Schedule Session",
+			},
+			{
+				id: 3,
+				path: "/mentor/add-assignment",
+				icon: "form",
+				title: "Add Assignment",
+			},
+			{
+				id: 4,
+				path: "/mentor/assignments",
+				icon: "layout",
+				title: "Assignments",
+			},
+			{
+				path: "/support/tickets",
+				icon: "support-tickets",
+				title: "Support",
+				type: "link",
+			},
 		],
 	},
 ];
