@@ -9,3 +9,12 @@ export const createJob = async (data:JobProps)=>{
         console.error(error);
     }
 }
+
+export const getStudents = async ()=>{
+    try {
+        const response = await apiClient.get("/employer/students");
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+}
