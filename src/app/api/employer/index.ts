@@ -18,3 +18,13 @@ export const getStudents = async ()=>{
         console.error(error);
     }
 }
+
+export const getJobs = async ()=>{
+    try {
+        const response = await apiClient.get("/employer/jobs");
+        return response.data;
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
