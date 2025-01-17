@@ -5,9 +5,6 @@ export interface PathProps{
     name:string;
     description:string;
     courses:CourseProps[], 
-    roadmap:Suggestion[];
+    roadmapSuggestions?:string[];
 }
 
-export interface Suggestion {
-    suggestion:string;
-}

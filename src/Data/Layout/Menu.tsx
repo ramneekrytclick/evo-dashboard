@@ -69,11 +69,11 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/batches",
 			},
 			{
-				title: "Create Path",
+				title: "Paths",
 				icon: "maps",
 				id: 12,
 				type: "link",
-				path: "/admin/paths/create-path",
+				path: "/admin/paths",
 			},
 			{
 				id: 8,

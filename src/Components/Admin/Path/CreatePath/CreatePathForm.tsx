@@ -2,7 +2,7 @@
 import { getCourses } from "@/app/api/admin/course";
 import { createPath } from "@/app/api/admin/path";
 import { CourseProps } from "@/Types/Course.type";
-import { PathProps, Suggestion } from "@/Types/Path.type";
+import { PathProps } from "@/Types/Path.type";
 import { useEffect, useState } from "react";
 import ScrollBar from "react-perfect-scrollbar";
 import { toast } from "react-toastify";
@@ -19,12 +19,12 @@ import {
 
 const CreatePathForm = () => {
   const [selectedCourses, setSelectedCourses] = useState<CourseProps[]>([]);
-  const [roadmap, setRoadmap] = useState<Suggestion[]>([]);
+  const [roadmap, setRoadmap] = useState<string[]>([]);
   const [formData, setFormData] = useState<PathProps>({
     name: "",
     description: "",
     courses: [],
-    roadmap: [],
+    roadmapSuggestions: [],
   });
   const [suggestion, setSuggestion] = useState("");
   const [courses, setCourses] = useState<CourseProps[]>([]);
@@ -55,9 +55,9 @@ const CreatePathForm = () => {
 
   const addRoadmapEntry = () => {
     if (suggestion.trim()) {
-      const newRoadmap = [...roadmap, { suggestion }];
+      const newRoadmap = [...roadmap,  suggestion ];
       setRoadmap(newRoadmap);
-      setFormData({ ...formData, roadmap: newRoadmap });
+      setFormData({ ...formData, roadmapSuggestions: newRoadmap });
       setSuggestion("");
     } else {
       toast.error("Suggestion cannot be empty!");
@@ -67,7 +67,7 @@ const CreatePathForm = () => {
   const removeRoadmapEntry = (index: number) => {
     const updatedRoadmap = roadmap.filter((_, i) => i !== index);
     setRoadmap(updatedRoadmap);
-    setFormData({ ...formData, roadmap: updatedRoadmap });
+    setFormData({ ...formData, roadmapSuggestions: updatedRoadmap });
   };
 
   const handleSubmit =async () => {
@@ -167,7 +167,7 @@ const CreatePathForm = () => {
             {roadmap.map((entry, index) => (
               <li key={index} className="my-2 p-2 bg-light text-dark rounded-3">
                 <Row>
-                  <Col sm={11}>{entry.suggestion}</Col>
+                  <Col sm={11}>{entry}</Col>
                   <Col sm={1}>
                     <Button color="danger" size="sm" onClick={() => removeRoadmapEntry(index)}>
                       Remove

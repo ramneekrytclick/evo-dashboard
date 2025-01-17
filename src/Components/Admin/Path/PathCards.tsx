@@ -1,37 +1,85 @@
 "use client";
 import { getPaths } from "@/app/api/admin/path";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
+import FilterComponent from "@/CommonComponent/FilterComponent";
+import { pathTableColumns } from "@/Data/Admin/Paths/path";
+import { PathProps } from "@/Types/Path.type";
 import { useEffect, useState } from "react";
+import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
-import { Card } from "reactstrap";
+import { Card, CardBody } from "reactstrap";
+import UpdatePathModal from "./UpdatePathModal";
+import DeletePathModal from "./DeletePathModal";
 
 const PathCards = () => {
 	const [paths, setPaths] = useState([]);
+	const [filterText,setFilterText]=useState("")
 	const fetchPaths = async () => {
-		// try {
-		// 	const response = await getPaths("123");
-		// 	setPaths(response.data);
-		// } catch (error) {
-		// 	toast.error("Error in fetching paths");
-		// }
+		try {
+			const response = await getPaths();
+			setPaths(response.paths);
+			console.log(response.paths);
+			
+		} catch (error) {
+			toast.error("Error in fetching paths");
+		}
 	};
+	const filteredItems: PathProps[] = paths.filter(
+				(item: PathProps) => {
+					return Object.values(item).some(
+						(value) =>
+							value &&
+							value.toString().toLowerCase().includes(filterText.toLowerCase())
+					);
+				}
+			);
 	useEffect(() => {
 		fetchPaths();
 	}, []);
 	return (
-		<>{JSON.stringify(paths)}</>
-		// <Card className="height-equal">
-		// 	<CommonCardHeader
-		// 		title={PathTimeline}
-		// 	/>
-		// 	<CardBody className="dark-timeline mb-4">
-		// 		<ul className="square-timeline simple-list">
-		// 			<AnnualFunctionHoveringTimeline />
-		// 			<InterviewHoveringTimeline />
-		// 			<MeetupHoveringTimeline />
-		// 		</ul>
-		// 	</CardBody>
-		// </Card>
+		<>
+			<Card>
+				<CardBody>
+					<FilterComponent
+						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setFilterText(e.target.value)
+						}
+						filterText={filterText}
+					/>
+					<div className="table-responsive custom-scrollbar user-datatable mt-3">
+						<DataTable
+							data={filteredItems}
+							columns={pathTableColumns
+                                .map(
+								(column: TableColumn<PathProps>) =>
+									column.name === "Action"
+										? {
+												...column,
+												cell: (row) => (
+													<ul className="action">
+														<UpdatePathModal
+															values={row}
+															fetchData={fetchPaths}
+														/>
+														<DeletePathModal
+															id={row._id!}
+															fetchData={fetchPaths}
+														/>
+													</ul>
+												),
+										  }
+										: column
+							)
+                        }
+							striped={true}
+							fixedHeader
+							fixedHeaderScrollHeight="40vh"
+							className="display"
+						/>
+					</div>
+				</CardBody>
+			</Card>
+		</>
 	);
 };
 
