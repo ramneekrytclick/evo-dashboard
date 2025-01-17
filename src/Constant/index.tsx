@@ -1648,3 +1648,8 @@ export const updatePromoCodeTitle = "Update Promo Code"
 export const deletePromoCodeTitle = "Delete Promo Code"
 export const deletePromoCodeConfirmTitle = "Confirm Delete Promo Code?"
 export const CreatePromoCodeFormTitle = "Create-Promo-Code Form"
+
+export const createJobTitle = "Create Job"
+export const studentsTitle = "Students"
+export const jobApplicationsTitle = "Job Applications"
+export const createJobFormTitle = "Create Job Form"
