@@ -1653,3 +1653,8 @@ export const createJobTitle = "Create Job"
 export const studentsTitle = "Students"
 export const jobApplicationsTitle = "Job Applications"
 export const createJobFormTitle = "Create Job Form"
+
+export const createTicketTitle= "Create Ticket"
+export const createTicketFormTitle = "Create Ticket Form"
+export const deleteTicketTitle = "Delete Ticket"
+export const deleteTicketConfirmTitle = "Confirm Delete Ticket?"
