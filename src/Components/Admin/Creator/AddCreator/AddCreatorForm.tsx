@@ -59,11 +59,6 @@ const AddCreatorForm = () => {
 	return (
 		<Col sm={12}>
 			<Card>
-				<CommonCardHeader
-					headClass="pb-0"
-					title={AddCreatorTitle}
-				/>
-				<CardBody>
 					<div className="card-wrapper border rounded-3">
 						<Form onSubmit={handleSubmit}>
 							<Row className="g-3">
@@ -240,7 +235,6 @@ const AddCreatorForm = () => {
 							</Row>
 						</Form>
 					</div>
-				</CardBody>
 			</Card>
 		</Col>
 	);

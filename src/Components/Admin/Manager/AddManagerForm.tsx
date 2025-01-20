@@ -56,11 +56,6 @@ const AddManagerForm = () => {
 	return (
 		<Col sm={12}>
 			<Card>
-				<CommonCardHeader
-					headClass="pb-0"
-					title={AddManager}
-				/>
-				<CardBody>
 					<div className="card-wrapper border rounded-3">
 						<Form onSubmit={handleSubmit}>
 							<Row className="g-3">
@@ -187,7 +182,6 @@ const AddManagerForm = () => {
 							</Row>
 						</Form>
 					</div>
-				</CardBody>
 			</Card>
 		</Col>
 	);

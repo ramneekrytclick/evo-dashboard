@@ -18,7 +18,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ mainTitle, parent, title }) =
             <Breadcrumb>
               <BreadcrumbItem>
                 <Link href={`/${role?.toLowerCase()}/dashboard`}>
-                  <SVG iconId="stroke-home" className="stroke-icon" />
+                  <SVG iconId="stroke-home"  />
                 </Link>
               </BreadcrumbItem>
               <BreadcrumbItem>{parent}</BreadcrumbItem>

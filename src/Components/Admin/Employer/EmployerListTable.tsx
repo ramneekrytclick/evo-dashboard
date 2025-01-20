@@ -66,9 +66,10 @@ const EmployerListTable = () => {
 									: column
 						)}
 						striped={true}
-						fixedHeader
+						// fixedHeader
 						fixedHeaderScrollHeight="40vh"
-						className="display"
+						// className="display"
+						pagination
 					/>
 				</div>
 			</CardBody>

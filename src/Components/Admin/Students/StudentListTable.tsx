@@ -13,7 +13,7 @@ import DeleteStudentModal from "./DeleteStudentModal";
 
 const StudentListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [studentList,setStudentList]= useState([])
+	const [studentList, setStudentList] = useState([]);
 	const filteredItems: StudentProps[] = studentList.filter(
 		(item: StudentProps) => {
 			return Object.values(item).some(
@@ -23,20 +23,20 @@ const StudentListTable = () => {
 			);
 		}
 	);
-    const fetchData = async ()=>{
-        try {
-            const response = await getStudents();
+	const fetchData = async () => {
+		try {
+			const response = await getStudents();
 			const data = response.students;
 			// console.log(data);
-			
+
 			setStudentList(data);
-        } catch (error) {
+		} catch (error) {
 			console.error(error);
-        }
-    }
-	useEffect(()=>{
+		}
+	};
+	useEffect(() => {
 		fetchData();
-	},[])
+	}, []);
 	return (
 		<Card>
 			<CardBody>
@@ -49,23 +49,31 @@ const StudentListTable = () => {
 				<div className="table-responsive custom-scrollbar user-datatable mt-3">
 					<DataTable
 						data={filteredItems}
-						columns={studentTableColumns.map((column:TableColumn<StudentProps>) =>
-							column.name === "Action"
-								? {
-										...column,
-										cell: (row) => (
-											<ul className="action">
-												<UpdateStudentModal values={row} fetchData={fetchData} />
-												<DeleteStudentModal id={row._id!} fetchData={fetchData} />
-											</ul>
-										),
-								  }
-								: column
+						columns={studentTableColumns.map(
+							(column: TableColumn<StudentProps>) =>
+								column.name === "Action"
+									? {
+											...column,
+											cell: (row) => (
+												<ul className="action">
+													<UpdateStudentModal
+														values={row}
+														fetchData={fetchData}
+													/>
+													<DeleteStudentModal
+														id={row._id!}
+														fetchData={fetchData}
+													/>
+												</ul>
+											),
+									  }
+									: column
 						)}
 						striped={true}
-						fixedHeader
+						// fixedHeader
 						fixedHeaderScrollHeight="40vh"
-						className="display"
+						// className="display"
+						pagination
 					/>
 				</div>
 			</CardBody>

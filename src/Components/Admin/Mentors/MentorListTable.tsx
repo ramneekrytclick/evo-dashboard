@@ -10,7 +10,7 @@ import DeleteMentorModal from "./DeleteMentorModal";
 
 const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
-    const [mentorTableData,setMentorTableData]= useState<MentorDataProps[]>([]);
+	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
 	const filteredItems: MentorDataProps[] = mentorTableData.filter(
 		(item: MentorDataProps) => {
 			return Object.values(item).some(
@@ -20,19 +20,19 @@ const MentorListTable = () => {
 			);
 		}
 	);
-    const fetchData = async ()=>{
-        try {
-            const response = await getMentors();
-            const data = response.mentors;
-            // console.log(data);
-            setMentorTableData(data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    useEffect(()=>{
-        fetchData();
-    },[])
+	const fetchData = async () => {
+		try {
+			const response = await getMentors();
+			const data = response.mentors;
+			// console.log(data);
+			setMentorTableData(data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	useEffect(() => {
+		fetchData();
+	}, []);
 	return (
 		<Card>
 			<CardBody>
@@ -43,26 +43,34 @@ const MentorListTable = () => {
 					filterText={filterText}
 				/>
 				{/* <div className="table-responsive custom-scrollbar user-datatable mt-3"> */}
-					<DataTable
-						data={filteredItems}
-						columns={mentorTableColumns.map((column:TableColumn<MentorDataProps>) =>
+				<DataTable
+					data={filteredItems}
+					columns={mentorTableColumns.map(
+						(column: TableColumn<MentorDataProps>) =>
 							column.name === "Action"
 								? {
 										...column,
 										cell: (row) => (
 											<ul className="action">
-												<UpdateMentorModal values={row} fetchData={fetchData} />
-												<DeleteMentorModal id={row._id!} fetchData={fetchData} />
+												<UpdateMentorModal
+													values={row}
+													fetchData={fetchData}
+												/>
+												<DeleteMentorModal
+													id={row._id!}
+													fetchData={fetchData}
+												/>
 											</ul>
 										),
 								  }
 								: column
-						)}
-						striped={true}
-						fixedHeader
-						fixedHeaderScrollHeight="40vh"
-						className="display"
-					/>
+					)}
+					striped={true}
+					// fixedHeader
+					fixedHeaderScrollHeight="40vh"
+					// className="display"
+					pagination
+				/>
 				{/* </div> */}
 			</CardBody>
 		</Card>

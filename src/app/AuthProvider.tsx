@@ -45,14 +45,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			});
 			const data = res.data;
 			if (res.status === 200) {
-				localStorage.setItem("token",data.token)
-				const decodedToken = jwtDecode<DecodedTokenProps>(
-					data.token
-				);
+				const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
 				setUser({ id: decodedToken.id, token: data.token });
 				setRole(decodedToken.role);
+				localStorage.setItem("token", data.token);
 				router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
-				Cookies.set("token", data.token, { expires: 1, path: "/" }); 
+				Cookies.set("token", data.token, { expires: 1, path: "/" });
 			} else {
 				throw new Error(data.message || "Login failed");
 			}
