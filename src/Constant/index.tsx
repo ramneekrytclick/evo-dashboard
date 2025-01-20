@@ -1658,3 +1658,7 @@ export const createTicketTitle= "Create Ticket"
 export const createTicketFormTitle = "Create Ticket Form"
 export const deleteTicketTitle = "Delete Ticket"
 export const deleteTicketConfirmTitle = "Confirm Delete Ticket?"
+
+export const scheduleSessionTitle = "Schedule Session"
+export const addAssignmentTitle = "Add Assignment"
+export const assignmentsTitle = "Assignments"
