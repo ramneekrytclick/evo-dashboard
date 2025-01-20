@@ -34,25 +34,25 @@ export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 		sortable: true,
 		center: false,
 	},
-	{
-		name: "Languages Preferred",
-		selector: (row) => row.languagesPreferred.join(", "), // Convert the array to a comma-separated string
-		sortable: true,
-		center: false,
-	},
-	{
-		name: "Resume Skills",
-		selector: (row) => row.resume.skills.join(", "), // Convert the skills array to a string
-		sortable: true,
-		center: false,
-	},
-	{
-		name: "Progress",
-		selector: (row) =>
-			`${row.progressTracking.overallProgress}% (${row.progressTracking.completedCourses.length} completed)`,
-		sortable: true,
-		center: false,
-	},
+	// {
+	// 	name: "Languages Preferred",
+	// 	selector: (row) => row.languagesPreferred.join(", "), // Convert the array to a comma-separated string
+	// 	sortable: true,
+	// 	center: false,
+	// },
+	// {
+	// 	name: "Resume Skills",
+	// 	selector: (row) => row.resume.skills.join(", "), // Convert the skills array to a string
+	// 	sortable: true,
+	// 	center: false,
+	// },
+	// {
+	// 	name: "Progress",
+	// 	selector: (row) =>
+	// 		`${row.progressTracking.overallProgress}% (${row.progressTracking.completedCourses.length} completed)`,
+	// 	sortable: true,
+	// 	center: false,
+	// },
 	{
 		name: "Action",
 		sortable: false,
