@@ -11,7 +11,6 @@ export function middleware(request: NextRequest) {
 	const token = request.cookies.get("token")?.value;
 	const pathname = request.nextUrl.pathname;
 
-	// If token exists, decode it
 	if (token) {
 		try {
 			const { exp, role }: DecodedToken = jwtDecode(token);
@@ -25,7 +24,8 @@ export function middleware(request: NextRequest) {
 				if (
 					(pathname.startsWith("/admin") && role !== "Admin") ||
 					(pathname.startsWith("/creator") && role !== "Creator") ||
-					(pathname.startsWith("/mentor") && role !== "Mentor")
+					(pathname.startsWith("/mentor") && role !== "Mentor") ||
+					(pathname.startsWith("/manager") && role !== "Manager")
 				) {
 					return NextResponse.redirect(new URL("/403", request.url));
 				}
@@ -40,7 +40,8 @@ export function middleware(request: NextRequest) {
 		if (
 			pathname.startsWith("/admin") ||
 			pathname.startsWith("/creator") ||
-			pathname.startsWith("/mentor")
+			pathname.startsWith("/mentor") ||
+			pathname.startsWith("/manager")
 		) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}

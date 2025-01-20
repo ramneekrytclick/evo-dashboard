@@ -1,4 +1,5 @@
 import { MentorDataProps } from "@/Types/Mentor.type";
+import Link from "next/link";
 import { TableColumn } from "react-data-table-component";
 
 export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
@@ -7,6 +8,15 @@ export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 		selector: (row) => row.name,
 		sortable: true,
 		center: false,
+		cell: (row) => (
+			<>
+				<Link
+					className="text-dark fw-bold"
+					href={`/admin/mentors/${row._id}--${row.name}`}>
+					{row.name}
+				</Link>
+			</>
+		),
 	},
 	{
 		name: "Email",
