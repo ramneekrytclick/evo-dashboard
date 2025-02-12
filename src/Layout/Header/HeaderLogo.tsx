@@ -14,8 +14,8 @@ const HeaderLogo = () => {
     <Col className="header-logo-wrapper col-auto p-0">
       <div className="logo-wrapper">
         <Link href={`/dashboard/default`}>
-          <Image className="img-fluid for-light" src={`${ImagePath}/logo/logo-1.png`} alt="" width={121} height={38} />
-          <Image className="img-fluid for-dark" src={`${ImagePath}/logo/logo.png`} alt="" width={121} height={38} />
+          <Image className="img-fluid for-light" src={`${ImagePath}/logo/logo-1.png`} alt="" width={10} height={30} />
+          <Image className="img-fluid for-dark" src={`${ImagePath}/logo/logo.png`} alt="" width={10} height={30} />
         </Link>
       </div>
       <div className="toggle-sidebar">

@@ -8,7 +8,7 @@ import { AdminDashboardTitle, AdminTitle, DashboardTitle } from '@/Constant';
 const AdminDashboardContainer = () => {
     return (
         <>
-            <Breadcrumbs mainTitle={AdminDashboardTitle} parent={DashboardTitle} title={AdminTitle} />
+            <Breadcrumbs mainTitle={AdminDashboardTitle} parent={AdminTitle} title={DashboardTitle} />
             <Container fluid className="admin-dashboard">
                 <Row>
                     Here Admin Dashboard Content Will be Shown:

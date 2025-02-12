@@ -38,7 +38,7 @@ const UserForm = () => {
 					href="/admin/dashboard">
 					<Image
 						priority
-						width={100}
+						width={200}
 						height={34}
 						className="img-fluid for-light"
 						src={imageOne}
@@ -46,7 +46,7 @@ const UserForm = () => {
 					/>
 					<Image
 						priority
-						width={100}
+						width={200}
 						height={34}
 						className="img-fluid for-dark"
 						src={imageTwo}
