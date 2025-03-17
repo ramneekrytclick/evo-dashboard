@@ -25,40 +25,46 @@ const MyEnrolledCourses = () => {
 					xl={6}
 					className="box-col-6"
 					key={course._id}>
-					<Card className="course-card">
-						<CardBody>
-							<div className="d-flex">
-								<Image
-									priority
-									width={50}
-									height={50}
-									className="img-50 img-fluid m-r-20"
-									src={`${ImagePath}/job-search/${course._id}.jpg`}
-									alt={course.name}
-								/>
-								<div className="flex-grow-1">
-									<h6 className="f-w-600">
-										<Link href={Href}>{course.name}</Link>
-										<Badge
-											color="primary"
-											className="pull-right">
-											{JSON.stringify(course.category)}
-										</Badge>
-									</h6>
-									<p>{JSON.stringify(course.subcategory)}</p>
-									<p>Duration: {course.duration}</p>
-									<p>
-										Mentor: <strong>{course.mentorAssigned.name}</strong>
-									</p>
+					<Link href={`/student/course/lesson`}>
+						<Card className="course-card">
+							<CardBody>
+								<div className="d-flex">
+									<Image
+										priority
+										width={50}
+										height={50}
+										className="img-50 img-fluid m-r-20"
+										src={`${ImagePath}/job-search/${course._id}.jpg`}
+										alt={course.name}
+									/>
+									<div className="flex-grow-1">
+										<h6 className="f-w-700">
+											<Link
+												className="text-primary"
+												href={Href}>
+												{course.name}
+											</Link>
+											<Badge
+												color="primary"
+												className="pull-right">
+												{JSON.stringify(course.category)}
+											</Badge>
+										</h6>
+										<p>{JSON.stringify(course.subcategory)}</p>
+										<p>Duration: {course.duration}</p>
+										<p>
+											Mentor: <strong>{course.mentorAssigned.name}</strong>
+										</p>
+									</div>
 								</div>
-							</div>
-							<p>{course.description}</p>
-							<div>
-								<p className="mb-2">Progress</p>
-								<Progress value={Math.floor(Math.random() * 100)} />
-							</div>
-						</CardBody>
-					</Card>
+								<p>{course.description}</p>
+								<div>
+									<p className="mb-2">Progress</p>
+									<Progress value={Math.floor(Math.random() * 100)} />
+								</div>
+							</CardBody>
+						</Card>
+					</Link>
 				</Col>
 			))}
 		</>
