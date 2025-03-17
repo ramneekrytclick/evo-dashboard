@@ -1,5 +1,6 @@
 "use client";
 import { getMyBlogs } from "@/app/api/creator/blogs/blog";
+import { blogFakeData } from "@/FakeData/admin/blog";
 import { BlogProps } from "@/Types/Blogs.type";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "react-feather";
@@ -9,13 +10,14 @@ import { Card, Col, Row } from "reactstrap";
 const MyBlogs = () => {
 	const [blogs, setBlogs] = useState<BlogProps[]>([]);
 	const fetchBlogs = async () => {
-		try {
-			const response = await getMyBlogs();
-			console.log(response);
-			setBlogs(response.blogs);
-		} catch (error) {
-			toast.error("Error Fetching Blogs!");
-		}
+		// try {
+		// 	const response = await getMyBlogs();
+		// 	console.log(response);
+		// 	setBlogs(response.blogs);
+		// } catch (error) {
+		// 	toast.error("Error Fetching Blogs!");
+		// }
+		setBlogs(blogFakeData);
 	};
 	useEffect(() => {
 		fetchBlogs();
@@ -23,7 +25,7 @@ const MyBlogs = () => {
 	return (
 		<>
 			{/* {JSON.stringify(blogs)} */}
-			{blogs.map((data, index) => (
+			{blogs?.map((data, index) => (
 				<Col
 					xl={4}
 					md={6}

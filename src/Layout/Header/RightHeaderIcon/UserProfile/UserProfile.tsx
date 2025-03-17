@@ -48,6 +48,20 @@ const UserProfile = () => {
 						Employer
 					</Button>
 				</li>
+				<li onClick={() => handleClick("creator")}>
+					<Button
+						color={"success"}
+						className="d-flex align-items-center">
+						Creator
+					</Button>
+				</li>
+				<li onClick={() => handleClick("student")}>
+					<Button
+						color={"success"}
+						className="d-flex align-items-center">
+						Student
+					</Button>
+				</li>
 				<li onClick={handleLogout}>
 					<Button
 						color={"primary"}

@@ -1,8 +1,8 @@
 import { MenuItem } from "@/Types/Layout.type";
 
 export const SupportMenuList: MenuItem = {
-	title:"Support",
-	Items:[
+	title: "Support",
+	Items: [
 		{
 			id: 1,
 			path: "/support/tickets",
@@ -10,8 +10,8 @@ export const SupportMenuList: MenuItem = {
 			title: "My Tickets",
 			type: "link",
 		},
-	]
-}
+	],
+};
 export const MenuList: MenuItem[] | undefined = [
 	{
 		title: "Admin",
@@ -116,7 +116,7 @@ export const MenuList: MenuItem[] | undefined = [
 				type: "link",
 			},
 			{
-				path: "/support/tickets",
+				path: "/admin/support/tickets",
 				icon: "support-tickets",
 				title: "Support",
 				type: "link",
@@ -147,7 +147,7 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Get My Blogs",
 			},
 			{
-				path: "/support/tickets",
+				path: "/creator/support/tickets",
 				icon: "support-tickets",
 				title: "Support",
 				type: "link",
@@ -184,7 +184,7 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Job Applications",
 			},
 			{
-				path: "/support/tickets",
+				path: "/employer/support/tickets",
 				icon: "support-tickets",
 				title: "Support",
 				type: "link",
@@ -221,7 +221,7 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Assignments",
 			},
 			{
-				path: "/support/tickets",
+				path: "/mentor/support/tickets",
 				icon: "support-tickets",
 				title: "Support",
 				type: "link",
