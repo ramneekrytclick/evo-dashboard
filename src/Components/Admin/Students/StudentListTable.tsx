@@ -14,7 +14,7 @@ import DeleteStudentModal from "./DeleteStudentModal";
 const StudentListTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [studentList, setStudentList] = useState([]);
-	const filteredItems: StudentProps[] = studentList.filter(
+	const filteredItems: StudentProps[] = studentList?.filter(
 		(item: StudentProps) => {
 			return Object.values(item).some(
 				(value) =>

@@ -12,7 +12,7 @@ const EmployerListTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [employers, setEmployers] = useState([]);
 
-	const filteredItems: EmployerProps[] = employers.filter(
+	const filteredItems: EmployerProps[] = employers?.filter(
 		(item: EmployerProps) => {
 			return Object.values(item).some(
 				(value) =>

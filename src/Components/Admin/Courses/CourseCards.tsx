@@ -31,7 +31,7 @@ const CourseCards = () => {
 				style={{ width: "100%", height: "40em" }}
 				className="vertical-scroll scroll-demo text-center">
 				<Row>
-					{courses.map((data, index) => (
+					{courses?.map((data, index) => (
 						<Col
 							xl={4}
 							key={index}>
@@ -40,10 +40,10 @@ const CourseCards = () => {
 									<div className="blog-details">
 										<div className="h6 ">
 											<Link href={`/admin/lessons/${data._id}`}>
-											<span className="text-primary h2">{data.name}</span>{" "}
+												<span className="text-primary h2">{data.name}</span>{" "}
 											</Link>
 											{/* {data._id} */}
-										<h3>{data.duration}</h3>
+											<h3>{data.duration}</h3>
 										</div>
 										<div className="blog-bottom-content">
 											<ul className="blog-social">

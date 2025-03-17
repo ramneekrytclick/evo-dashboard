@@ -11,7 +11,7 @@ import DeleteMentorModal from "./DeleteMentorModal";
 const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
-	const filteredItems: MentorDataProps[] = mentorTableData.filter(
+	const filteredItems: MentorDataProps[] = mentorTableData?.filter(
 		(item: MentorDataProps) => {
 			return Object.values(item).some(
 				(value) =>

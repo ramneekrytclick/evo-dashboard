@@ -22,18 +22,20 @@ const CategoriesCards = () => {
 	}, []);
 	return (
 		<Col>
-			<Row sm={6} className="ms-1 mb-4">
+			<Row
+				sm={6}
+				className="ms-1 mb-4">
 				<CreateCategoryModal fetchData={fetchCategories} />
 			</Row>
 			<Row className="g-sm-4 g-3">
-				{categories.map((item: Category) => (
+				{categories?.map((item: Category) => (
 					<Col
 						xl={2}
 						md={3}
 						key={item._id}>
 						<div className="d-flex gap-3 bg-light p-3 rounded-3 border-b-info">
 							<div className="d-flex gap-3">
-								<Link href={`subcategories/${item._id}`} >{item.name}</Link>
+								<Link href={`subcategories/${item._id}`}>{item.name}</Link>
 							</div>
 						</div>
 					</Col>

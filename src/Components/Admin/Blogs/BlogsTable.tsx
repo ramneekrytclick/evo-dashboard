@@ -13,11 +13,15 @@ const BlogsTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [blogs, setBlogs] = useState<BlogProps[]>([]);
 	const fetchBlogs = async () => {
-		const response = await getBlogs();
-		console.log(response.blogs);
+		try {
+			const response = await getBlogs();
+			console.log(response?.blogs);
 
-		setBlogs(response.blogs);
-		return response;
+			setBlogs(response.blogs);
+			return response;
+		} catch (error) {
+			console.error(error);
+		}
 	};
 	useEffect(() => {
 		fetchBlogs();

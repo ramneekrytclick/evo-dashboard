@@ -27,14 +27,13 @@ const DetailsForm = ({
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
 	};
-    const handleNextButton = ()=>{
-        if (courseId!=="" && title!=="" && description!=="") {
-            activeCallBack(2);
-        }
-        else{
-            toast("Fill in all fields")
-        }
-    }
+	const handleNextButton = () => {
+		if (courseId !== "" && title !== "" && description !== "") {
+			activeCallBack(2);
+		} else {
+			toast("Fill in all fields");
+		}
+	};
 	useEffect(() => {
 		setData({
 			...data,
@@ -49,8 +48,7 @@ const DetailsForm = ({
 			className="needs-validation"
 			noValidate>
 			<Row className="g-3">
-				<Col
-					sm={6}>
+				<Col sm={6}>
 					<Label>
 						{"Lesson Title"}
 						<span className="txt-danger">*</span>
@@ -63,8 +61,7 @@ const DetailsForm = ({
 						onChange={updateFormData}
 					/>
 				</Col>
-				<Col
-					sm={6}>
+				<Col sm={6}>
 					<Label>
 						{Description}
 						<span className="txt-danger">*</span>
@@ -80,16 +77,17 @@ const DetailsForm = ({
 				<Col
 					xl={5}
 					sm={4}>
-					<Label>{CourseTitle}
+					<Label>
+						{CourseTitle}
 						<span className="txt-danger">*</span>
-                    </Label>
+					</Label>
 					<Input
 						type="select"
 						value={courseId}
 						name="courseId"
 						onChange={updateFormData}>
 						<option value={""}>{"Choose Course"}</option>
-						{courses.map((course, index) => {
+						{courses?.map((course, index) => {
 							return (
 								<option
 									key={index}
@@ -100,9 +98,15 @@ const DetailsForm = ({
 						})}
 					</Input>
 				</Col>
-                <Col xs={12} className="text-end">
-                    <Button color="primary" onClick={handleNextButton}>{Continue}</Button>
-                </Col>
+				<Col
+					xs={12}
+					className="text-end">
+					<Button
+						color="primary"
+						onClick={handleNextButton}>
+						{Continue}
+					</Button>
+				</Col>
 			</Row>
 		</Form>
 	);
