@@ -1,11 +1,21 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { Button, Col, Form, Input, Label, ListGroup, ListGroupItem, Row } from "reactstrap";
+import {
+	Button,
+	Col,
+	Form,
+	Input,
+	Label,
+	ListGroup,
+	ListGroupItem,
+	Row,
+} from "reactstrap";
 import { toast } from "react-toastify";
 import { PriceLearning, PromoCodes } from "@/Constant";
 import SVG from "@/CommonComponent/SVG";
 import { CourseFormProps, PromoCodeProps } from "@/Types/Course.type";
 import { getPromoCodes } from "@/app/api/admin/promo-codes";
 import ScrollBar from "react-perfect-scrollbar";
+import { promoCodesFakeData } from "@/FakeData/admin/promocodes";
 
 interface SellingPriceProps {
 	activeCallBack: (tab: number) => void;
@@ -23,7 +33,8 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 	const [formData, setFormData] = useState({ initialCost: "" });
 	const [promoCode, setPromoCode] = useState<string[]>([]);
 	const { initialCost } = formData;
-	const [promoCodes, setPromoCodes] = useState<PromoCodeProps[]>([]);
+	const [promoCodes, setPromoCodes] =
+		useState<PromoCodeProps[]>(promoCodesFakeData);
 
 	const updateFormData = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
@@ -46,12 +57,14 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 
 	const handlePromoCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const promoCodeId = e.target.value;
-	
+
 		// Check if the promoCode is already in the array
 		setPromoCode((prevPromoCodes) => {
 			if (prevPromoCodes.includes(promoCodeId)) {
 				// Remove the promoCode from the array if already selected
-				const updatedPromoCodes = prevPromoCodes.filter((id) => id !== promoCodeId);
+				const updatedPromoCodes = prevPromoCodes.filter(
+					(id) => id !== promoCodeId
+				);
 				setData({
 					...data,
 					promoCodes: updatedPromoCodes, // Update parent component's state
@@ -92,14 +105,12 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 						/>
 					</Col>
 					<Col sm={6}>
-						<Label>
-							{PromoCodes}
-						</Label>
+						<Label>{PromoCodes}</Label>
 						<ScrollBar
 							className="scroll-demo scroll-b-none"
 							style={{ width: "100%", height: "22.5em" }}>
 							<ListGroup>
-								{promoCodes.map((item, index) => (
+								{promoCodes?.map((item, index) => (
 									<ListGroupItem
 										className="list-group-item-action list-hover-primary"
 										key={index}>
@@ -107,7 +118,7 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 											type="checkbox"
 											name="promoCode"
 											value={item._id}
-											checked={promoCode.includes(item._id!)} 
+											checked={promoCode.includes(item._id!)}
 											onChange={handlePromoCodeChange}
 											className="me-2"
 										/>

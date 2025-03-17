@@ -9,6 +9,7 @@ import QuizzesForm from "./QuizzesForm";
 import { createLesson } from "@/app/api/admin/lessons/lesson";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { courseFakeData } from "@/FakeData/admin/course";
 
 interface LessonFormTabContentProps {
 	activeCallBack: (tab: number) => void;
@@ -18,7 +19,7 @@ const LessonFormTabContent = ({
 	activeCallBack,
 	steps,
 }: LessonFormTabContentProps) => {
-	const router =useRouter();
+	const router = useRouter();
 	const initialDataValue = {
 		courseId: "",
 		title: "",
@@ -26,27 +27,31 @@ const LessonFormTabContent = ({
 		videos: [],
 		quizzes: [],
 		assignments: [],
-	}
+	};
 	const [data, setData] = useState<LessonFormProps>(initialDataValue);
-	const [courses, setCourses] = useState([]);
-	const handleSubmit = async ()=>{
+	const [courses, setCourses] = useState<any[]>([]);
+	const handleSubmit = async () => {
 		try {
 			const response = await createLesson(data);
 			toast.success("Lesson created successfully");
 		} catch (error) {
-			toast("Error in creating Lesson!")
-		}
-		finally{
+			toast("Error in creating Lesson!");
+		} finally {
 			setData(initialDataValue);
-			router.push("/admin/lessons")
+			router.push("/admin/lessons");
 		}
-	}
+	};
 	const fetchCourses = async () => {
 		try {
 			const response = await getCourses();
 			setCourses(response.courses);
+			setCourses(courseFakeData);
 			return response.courses;
-		} catch (error) {}
+		} catch (error) {
+			setCourses(courseFakeData);
+			toast.error("Error fetching courses!");
+			return [];
+		}
 	};
 	useEffect(() => {
 		fetchCourses();

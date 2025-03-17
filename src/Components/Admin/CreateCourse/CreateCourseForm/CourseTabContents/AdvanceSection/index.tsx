@@ -16,6 +16,8 @@ import { getMentors } from "@/app/api/admin/mentors";
 import ScrollBar from "react-perfect-scrollbar";
 import { toast } from "react-toastify";
 import { getManagers } from "@/app/api/admin/managers";
+import { mentorFakeData } from "@/FakeData/admin/mentor";
+import { teamFakeData } from "@/FakeData/admin/team";
 
 interface AdvanceSectionProps {
 	activeCallBack: (tab: number) => void;
@@ -27,16 +29,18 @@ const AdvanceSection: React.FC<AdvanceSectionProps> = ({
 	data,
 	setData,
 }) => {
-	const [mentorsList, setMentorsList] = useState([]);
-	const [managersList, setManagersList] = useState([]);
+	const [mentorsList, setMentorsList] = useState(mentorFakeData);
+	const [managersList, setManagersList] = useState(teamFakeData);
 	const [selectedMentor, setSelectedMentor] = useState<string | null>(null);
 	const [selectedManager, setSelectedManager] = useState<string | null>(null);
 	const fetchMentors = async () => {
 		try {
 			const response = await getMentors();
 			setMentorsList(response.mentors);
+			setMentorsList(mentorFakeData);
 		} catch (error) {
 			console.log(error);
+			setMentorsList(mentorFakeData);
 		}
 	};
 	const fetchManagers = async () => {
@@ -75,7 +79,7 @@ const AdvanceSection: React.FC<AdvanceSectionProps> = ({
 	};
 
 	const handleNextButton = () => {
-		if (selectedManager&&selectedMentor) {
+		if (selectedManager && selectedMentor) {
 			activeCallBack(4);
 		} else {
 			toast.error("Please assign both Mentors and Managers.");
@@ -93,7 +97,7 @@ const AdvanceSection: React.FC<AdvanceSectionProps> = ({
 							className="scroll-demo scroll-b-none"
 							style={{ width: "100%", height: "22.5em" }}>
 							<ListGroup>
-								{mentorsList.map(({ name, _id }, index) => (
+								{mentorsList?.map(({ name, _id }, index) => (
 									<ListGroupItem
 										className="list-group-item-action list-hover-primary"
 										key={index}>

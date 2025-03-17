@@ -6,6 +6,10 @@ import SVG from "@/CommonComponent/SVG";
 import { CourseFormProps } from "@/Types/Course.type";
 import { getCategories } from "@/app/api/admin/categories";
 import { getSubcategories } from "@/app/api/admin/subcategories";
+import {
+	categoryFakeData,
+	subcategoryFakeData,
+} from "@/FakeData/admin/categorysub";
 
 interface CourseCategoriesProps {
 	activeCallBack: (tab: number) => void;
@@ -18,10 +22,8 @@ const CourseCategories: React.FC<CourseCategoriesProps> = ({
 	data,
 	setData,
 }) => {
-	const [categories, setCategories] = useState([{ _id: "", name: "" }]);
-	const [subcategories, setSubcategories] = useState([
-		{ _id: "", name: "", categoryId: "" },
-	]);
+	const [categories, setCategories] = useState(categoryFakeData);
+	const [subcategories, setSubcategories] = useState(subcategoryFakeData);
 	const [formData, setFormData] = useState({
 		category: { _id: "", name: "" },
 		subcategory: { _id: "", categoryId: "", name: "" },
@@ -81,6 +83,7 @@ const CourseCategories: React.FC<CourseCategoriesProps> = ({
 		try {
 			const response = await getCategories();
 			setCategories(response.categories);
+			setCategories(categoryFakeData);
 		} catch (error) {
 			toast.error("Failed to fetch categories.");
 		}
@@ -90,6 +93,7 @@ const CourseCategories: React.FC<CourseCategoriesProps> = ({
 		try {
 			const response = await getSubcategories(categoryId);
 			setSubcategories(response.subcategories);
+			setSubcategories(subcategoryFakeData);
 		} catch (error) {
 			toast.error("Failed to fetch subcategories.");
 		}
@@ -116,14 +120,17 @@ const CourseCategories: React.FC<CourseCategoriesProps> = ({
 			<Form>
 				<Row className="g-2 border rounded-3 py-2 px-1">
 					<Col xs={6}>
-						<Label className="m-0">{AddCategory}<span className="ms-1 my-1 txt-danger">{"*"}</span></Label>
+						<Label className="m-0">
+							{AddCategory}
+							<span className="ms-1 my-1 txt-danger">{"*"}</span>
+						</Label>
 						<Input
 							type="select"
 							name="category"
 							value={category._id} // Bind to category._id
 							onChange={handleCategoryChange}>
 							<option value="">Select a Category</option>
-							{categories.map((item) => (
+							{categories?.map((item) => (
 								<option
 									key={item._id}
 									value={item._id}>
@@ -133,7 +140,10 @@ const CourseCategories: React.FC<CourseCategoriesProps> = ({
 						</Input>
 					</Col>
 					<Col xs={6}>
-						<Label className="m-0">{AddSubCategory}<span className="ms-1 my-1 txt-danger">{"*"}</span></Label>
+						<Label className="m-0">
+							{AddSubCategory}
+							<span className="ms-1 my-1 txt-danger">{"*"}</span>
+						</Label>
 						<Input
 							type="select"
 							name="subcategory"
