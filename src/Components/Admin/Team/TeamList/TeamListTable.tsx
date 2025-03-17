@@ -5,6 +5,7 @@ import DataTable from "react-data-table-component";
 import { teamListColumns } from "@/Data/Admin/Team/TeamList";
 import FilterComponent from "@/CommonComponent/FilterComponent";
 import { getUsers } from "@/app/api/admin/team";
+import { teamFakeData } from "@/FakeData/admin/team";
 
 const TeamListTable = () => {
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
@@ -12,16 +13,22 @@ const TeamListTable = () => {
 		const data = await getUsers();
 		try {
 			const response = await data;
-			const filteredTeam = response.users.filter((user:any)=>{
+			const filteredTeam = response.users.filter((user: any) => {
 				//if user's role is Manager, Admin, Creator or Course Creator, set TeamListTableData as the filtered team
-				if(user.role === 'Manager' || user.role === 'Admin' || user.role === 'Creator' || user.role.toLowerCase() === 'coursecreator'){
+				if (
+					user.role === "Manager" ||
+					user.role === "Admin" ||
+					user.role === "Creator" ||
+					user.role.toLowerCase() === "coursecreator"
+				) {
 					return true;
 				}
 				return false;
-			})
+			});
 			setTeamListTableData(filteredTeam);
 		} catch (error) {
 			console.log(error);
+			setTeamListTableData(teamFakeData);
 		}
 	};
 	useEffect(() => {
