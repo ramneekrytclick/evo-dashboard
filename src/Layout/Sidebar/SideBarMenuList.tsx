@@ -22,7 +22,9 @@ const SidebarMenuList = () => {
 		? "Mentor"
 		: pathname.startsWith("/manager")
 		? "Manager"
-		: "Employer";
+		: pathname.startsWith("/employer")
+		? "Employer"
+		: "Student";
 	// Function to filter the menu based on user role
 	const getRoleBasedMenu = (menuList: MenuItem[]) => {
 		console.log(role);
@@ -33,8 +35,8 @@ const SidebarMenuList = () => {
 				return menuList.filter((menu) => menu.title === "Creator");
 			case "Mentor":
 				return menuList.filter((menu) => menu.title === "Mentor");
-			// case "Student":
-			// 	return menuList.filter((menu) => menu.title === "Student");
+			case "Student":
+				return menuList.filter((menu) => menu.title === "Student");
 			case "Employer":
 				return menuList.filter((menu) => menu.title === "Employer");
 			default:

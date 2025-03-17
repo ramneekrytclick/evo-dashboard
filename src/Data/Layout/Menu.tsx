@@ -228,6 +228,49 @@ export const MenuList: MenuItem[] | undefined = [
 			},
 		],
 	},
+	{
+		title: "Student",
+		lanClass: "lan-1",
+		Items: [
+			{
+				id: 1,
+				path: "/student/dashboard",
+				icon: "home",
+				title: "Dashboard",
+				type: "link",
+			},
+			{
+				id: 2,
+				path: "/student/my-courses",
+				icon: "calendar",
+				title: "My Courses",
+			},
+			{
+				id: 3,
+				path: "/student/paths",
+				icon: "maps",
+				title: "Enrolled Paths",
+			},
+			{
+				id: 4,
+				path: "/student/batches",
+				icon: "learning",
+				title: "Batches",
+			},
+			{
+				id: 4,
+				path: "/student/resume",
+				icon: "layout",
+				title: "Resume",
+			},
+			{
+				path: "/student/support/tickets",
+				icon: "support-tickets",
+				title: "Support",
+				type: "link",
+			},
+		],
+	},
 ];
 
 // {
