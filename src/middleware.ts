@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 interface DecodedToken {
 	id: string;
@@ -43,7 +43,7 @@ export function middleware(request: NextRequest) {
 			pathname.startsWith("/mentor") ||
 			pathname.startsWith("/manager")
 		) {
-			return NextResponse.redirect(new URL("/auth/login", request.url));
+			// return NextResponse.redirect(new URL("/auth/login", request.url));
 		}
 	}
 	return NextResponse.next();

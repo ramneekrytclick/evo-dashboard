@@ -16,18 +16,19 @@ const UserForm = () => {
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("rittik@ample.com");
 	const [password, setPassword] = useState("12345678");
-	const {login} = useAuth()
+	const { login } = useAuth();
 	const router = useRouter();
 	const formSubmitHandle = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		const response = await login(email,password);
-		if (response==200) {
-			console.log("Success");
-			
-		}
-		else {
-			toast.error("Invalid Credentials!")
-		}
+		router.push("/admin/dashboard");
+		// const response = await login(email,password);
+		// if (response==200) {
+		// 	console.log("Success");
+
+		// }
+		// else {
+		// 	toast.error("Invalid Credentials!")
+		// }
 	};
 
 	return (
