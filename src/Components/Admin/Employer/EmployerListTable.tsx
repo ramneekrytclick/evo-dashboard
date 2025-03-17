@@ -23,14 +23,14 @@ const EmployerListTable = () => {
 		}
 	);
 	const fetchEmployers = async () => {
-		try {
-			const response = await getEmployers();
-			setEmployers(response.employers);
-			setEmployers(employerFakeData);
-		} catch (error) {
-			console.log(error);
-			setEmployers(employerFakeData);
-		}
+		// try {
+		// 	const response = await getEmployers();
+		// 	setEmployers(response.employers);
+		// 	setEmployers(employerFakeData);
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+		setEmployers(employerFakeData);
 	};
 	useEffect(() => {
 		fetchEmployers();
