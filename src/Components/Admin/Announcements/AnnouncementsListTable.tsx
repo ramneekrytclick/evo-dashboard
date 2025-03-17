@@ -8,6 +8,7 @@ import { Card, CardBody } from "reactstrap";
 import { announcementTableColumns } from "@/Data/Admin/Announcements/Announcement";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { getAnnouncements } from "@/app/api/admin/announcements";
+import { announcementFakeData } from "@/FakeData/admin/announcements";
 
 const AnnouncementsListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -28,8 +29,8 @@ const AnnouncementsListTable = () => {
 		try {
 			const data = await getAnnouncements();
 			// console.log(data);
-
-			setAnnouncementsData(data?.announcements);
+			setAnnouncementsData(announcementFakeData);
+			// setAnnouncementsData(data?.announcements);
 		} catch (error) {
 			console.error("Failed to fetch announcements:", error);
 			setAnnouncementsData([]);
@@ -56,8 +57,9 @@ const AnnouncementsListTable = () => {
 				<div
 					className="table-responsive custom-scrollbar user-datatable mt-3"
 					aria-busy={loading}>
-					{loading ? <div>Loading..</div> : 
-					(
+					{loading ? (
+						<div>Loading..</div>
+					) : (
 						<DataTable
 							data={filteredItems}
 							columns={announcementTableColumns}
@@ -66,8 +68,7 @@ const AnnouncementsListTable = () => {
 							fixedHeaderScrollHeight="40vh"
 							className="display"
 						/>
-					)
-					}
+					)}
 				</div>
 			</CardBody>
 		</Card>

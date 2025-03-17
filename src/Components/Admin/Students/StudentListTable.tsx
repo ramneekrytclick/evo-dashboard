@@ -10,6 +10,7 @@ import { sampleStudentsData } from "./SampleData";
 import { getStudents } from "@/app/api/admin/students";
 import UpdateStudentModal from "./UpdateMentorModal";
 import DeleteStudentModal from "./DeleteStudentModal";
+import { studentFakeData } from "@/FakeData/admin/student";
 
 const StudentListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -30,6 +31,7 @@ const StudentListTable = () => {
 			// console.log(data);
 
 			setStudentList(data);
+			setStudentList(studentFakeData);
 		} catch (error) {
 			console.error(error);
 		}

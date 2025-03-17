@@ -7,6 +7,7 @@ import { Card, CardBody } from "reactstrap";
 import { getMentors } from "@/app/api/admin/mentors";
 import UpdateMentorModal from "./UpdateMentorModal";
 import DeleteMentorModal from "./DeleteMentorModal";
+import { mentorFakeData } from "@/FakeData/admin/mentor";
 
 const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -25,9 +26,11 @@ const MentorListTable = () => {
 			const response = await getMentors();
 			const data = response.mentors;
 			// console.log(data);
-			setMentorTableData(data);
+			// setMentorTableData(data);
+			setMentorTableData(mentorFakeData);
 		} catch (error) {
 			console.log(error);
+			setMentorTableData(mentorFakeData);
 		}
 	};
 	useEffect(() => {

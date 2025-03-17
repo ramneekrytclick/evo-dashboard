@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
 import CreateCategoryModal from "./CreateCategoryModal";
+import { categoryFakeData } from "@/FakeData/admin/categorysub";
 
 const CategoriesCards = () => {
 	const [categories, setCategories] = useState([]);
@@ -13,6 +14,7 @@ const CategoriesCards = () => {
 			const response = await getCategories();
 			setCategories(response.categories);
 			// console.log(response);
+			setCategories(categoryFakeData);
 		} catch (error) {
 			console.log(error);
 		}

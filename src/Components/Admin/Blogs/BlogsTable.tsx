@@ -8,6 +8,7 @@ import FilterComponent from "@/CommonComponent/FilterComponent";
 import { BlogProps } from "@/Types/Blogs.type";
 import { blogTableColumns } from "@/Data/Admin/Blogs/Blog";
 import { getBlogs } from "@/app/api/admin/blogs/blog";
+import { blogFakeData } from "@/FakeData/admin/blog";
 
 const BlogsTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -16,8 +17,8 @@ const BlogsTable = () => {
 		try {
 			const response = await getBlogs();
 			console.log(response?.blogs);
-
-			setBlogs(response.blogs);
+			setBlogs(blogFakeData);
+			// setBlogs(response.blogs);
 			return response;
 		} catch (error) {
 			console.error(error);

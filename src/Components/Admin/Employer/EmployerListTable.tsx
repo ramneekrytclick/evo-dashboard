@@ -7,6 +7,7 @@ import { employerTableColumns } from "@/Data/Admin/Employers/Employer";
 import { getEmployers } from "@/app/api/admin/employers";
 import UpdateEmployerModal from "./UpdateEmployerModal";
 import DeleteEmployerModal from "./DeleteEmployerModal";
+import { employerFakeData } from "@/FakeData/admin/employer";
 
 const EmployerListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -25,8 +26,10 @@ const EmployerListTable = () => {
 		try {
 			const response = await getEmployers();
 			setEmployers(response.employers);
+			setEmployers(employerFakeData);
 		} catch (error) {
 			console.log(error);
+			setEmployers(employerFakeData);
 		}
 	};
 	useEffect(() => {

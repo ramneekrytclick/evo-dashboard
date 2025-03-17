@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { Card, Col, Row } from "reactstrap";
 import CourseModal from "./CourseModal";
 import ScrollBar from "react-perfect-scrollbar";
+import { courseFakeData } from "@/FakeData/admin/course";
 
 const CourseCards = () => {
 	const [courses, setCourses] = useState<CourseProps[]>([]);
@@ -17,6 +18,7 @@ const CourseCards = () => {
 			console.log(response.courses);
 
 			setCourses(response.courses);
+			setCourses(courseFakeData);
 		} catch (error) {
 			console.error(error);
 			toast.error("Error in fetching courses");

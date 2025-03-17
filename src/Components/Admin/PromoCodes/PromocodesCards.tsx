@@ -8,6 +8,7 @@ import CreatePromocodeModal from "./CreatePromocodeModal";
 
 import DeletePromocodeModal from "./DeletePromocodeModal";
 import UpdatePromocodeModal from "./UpdatePromocodeModal";
+import { promoCodesFakeData } from "@/FakeData/admin/promocodes";
 
 const PromocodesCards = () => {
 	const [promocodes, setPromocodes] = useState<PromoCodeProps[]>([]);
@@ -17,7 +18,8 @@ const PromocodesCards = () => {
 	const fetchPromoCodes = async () => {
 		try {
 			const response = await getPromoCodes();
-			setPromocodes(response.promoCodes);
+			// setPromocodes(response.promoCodes);
+			setPromocodes(promoCodesFakeData);
 		} catch (error) {
 			console.error("Failed to fetch promo codes:", error);
 		}
