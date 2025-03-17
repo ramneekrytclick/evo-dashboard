@@ -14,7 +14,7 @@ import { studentFakeData } from "@/FakeData/admin/student";
 
 const StudentListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [studentList, setStudentList] = useState<any[]>([]);
+	const [studentList, setStudentList] = useState<any[]>(studentFakeData);
 	const filteredItems: StudentProps[] = studentList?.filter(
 		(item: StudentProps) => {
 			return Object.values(item).some(
@@ -30,15 +30,15 @@ const StudentListTable = () => {
 			const data = response.students;
 			// console.log(data);
 
-			setStudentList(data);
+			// setStudentList(data);
 			setStudentList(studentFakeData);
 		} catch (error) {
 			console.error(error);
 		}
 	};
-	useEffect(() => {
-		fetchData();
-	}, []);
+	// useEffect(() => {
+	// 	fetchData();
+	// }, []);
 	return (
 		<Card>
 			<CardBody>
