@@ -23,6 +23,7 @@ const CourseCards = () => {
 			console.error(error);
 			toast.error("Error in fetching courses");
 		}
+		setCourses(courseFakeData);
 	};
 	useEffect(() => {
 		fetchCourses();
