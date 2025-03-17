@@ -17,11 +17,11 @@ export const teamListColumns: TableColumn<TeamListType>[] = [
 		selector: (row) => row.email,
 		sortable: true,
 		cell: (row) => <p className="f-light">{row.email}</p>,
-		width: "50%",
+		width: "53%",
 	},
 	{
 		name: "Role",
-		selector: (row) => row.role,
+		selector: (row) => row.role.toUpperCase(),
 		sortable: true,
 		cell: (row) => (
 			<Badge
@@ -35,6 +35,8 @@ export const teamListColumns: TableColumn<TeamListType>[] = [
 						? "danger"
 						: row.role.toLowerCase() === "student"
 						? "info"
+						:row.role.toLowerCase() === "coursecreator" 
+						? "success"
 						: "secondary"
 				}`}>
 				{row.role}

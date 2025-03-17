@@ -1,5 +1,5 @@
 "use client"
-import { createAnnouncementTitle, CrocsLogin } from "@/Constant";
+import { createAnnouncementTitle, EvoLogin } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 import CommonModal from "../../../../../CommonComponent/CommonModal";

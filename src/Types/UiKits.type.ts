@@ -73,7 +73,7 @@ export interface StaticModalFormProp {
     toggle: () => void;
 }
 
-export interface CommonCrocsModalTitleType {
+export interface CommonEvoModalTitleType {
     heading: string;
     subHeading: string;
     text: string;

@@ -9,8 +9,8 @@
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Please check Crocs-next Documentation all installation steps include in Documentation
-Documentation link => https://docs.pixelstrap.net/next/crocs/document/index.html
+Please check Evo-next Documentation all installation steps include in Documentation
+Documentation link => https://docs.pixelstrap.net/next/Evo/document/index.html
 
 ## Getting Started
 

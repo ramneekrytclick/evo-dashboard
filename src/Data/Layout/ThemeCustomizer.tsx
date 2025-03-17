@@ -5,12 +5,12 @@ export const navLinkList = [
         name: "Support",
     },
     {
-        path: "https://docs.pixelstrap.net/next/crocs/document/index.html",
+        path: "https://docs.pixelstrap.net/next/Evo/document/index.html",
         image: "3.png",
         name: "Document",
     },
     {
-        path: "https://landing.pixelstrap.net/next/crocs/template/index.html",
+        path: "https://landing.pixelstrap.net/next/Evo/template/index.html",
         image: "4.png",
         name: "Check Features",
     },

@@ -1,6 +1,6 @@
 import { updateMentor } from "@/app/api/admin/mentors";
 import { AddMentorFormProps, MentorDataProps } from "@/Types/Mentor.type";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 
 interface UpdateMentorFormProps {
@@ -15,8 +15,6 @@ const UpdateMentorForm = ({ toggle, values }: UpdateMentorFormProps) => {
     e.preventDefault();
     try {
       const response = await updateMentor(values._id!, formData);
-      // console.log("DATA: ",formData)
-      // console.log(response);
       alert("Mentor updated successfully!");
       toggle();
     } catch (error) {
@@ -42,6 +40,10 @@ const UpdateMentorForm = ({ toggle, values }: UpdateMentorFormProps) => {
         : [...prevState[key], value],
     }));
   };
+
+  useEffect(()=>{
+    
+  },[])
 
   return (
     <Form onSubmit={handleSubmit}>

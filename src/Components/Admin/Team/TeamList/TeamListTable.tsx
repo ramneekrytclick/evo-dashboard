@@ -12,7 +12,14 @@ const TeamListTable = () => {
 		const data = await getUsers();
 		try {
 			const response = await data;
-			setTeamListTableData(response.users);
+			const filteredTeam = response.users.filter((user:any)=>{
+				//if user's role is Manager, Admin, Creator or Course Creator, set TeamListTableData as the filtered team
+				if(user.role === 'Manager' || user.role === 'Admin' || user.role === 'Creator' || user.role.toLowerCase() === 'coursecreator'){
+					return true;
+				}
+				return false;
+			})
+			setTeamListTableData(filteredTeam);
 		} catch (error) {
 			console.log(error);
 		}
@@ -31,7 +38,6 @@ const TeamListTable = () => {
 			);
 		}
 	);
-
 	return (
 		<div className="list-product">
 			<FilterComponent

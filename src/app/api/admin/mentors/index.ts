@@ -31,7 +31,7 @@ export const deleteMentor = async (id: string)=>{
 
 export const updateMentor = async (id:string, data: AddMentorFormProps) =>{
     try {
-        const response = await apiClient.put(`/admin/update-mentor/${id}`);
+        const response = await apiClient.put(`/admin/update-mentor/${id}`,data);
         return response.data
     }
     catch(error){

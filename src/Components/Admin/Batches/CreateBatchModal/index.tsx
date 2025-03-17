@@ -9,7 +9,7 @@ import CreateBatchForm from "./CreateBatchForm";
 const CreateBatchModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
-		setModal(!modal);
+		setModal(!modal); 
 	};
 	const ModalData = {
 		isOpen: modal,

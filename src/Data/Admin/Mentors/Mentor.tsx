@@ -8,6 +8,7 @@ export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 		selector: (row) => row.name,
 		sortable: true,
 		center: false,
+		width:"30%",
 		cell: (row) => (
 			<>
 				<Link
@@ -23,27 +24,22 @@ export const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 		selector: (row) => row.email,
 		sortable: true,
 		center: false,
+		width:"60%"
 	},
-	{
-		name: "Status",
-		selector: (row) => row.status,
-		sortable: true,
-		center: false,
-	},
-	{
-		name: "Education",
-		cell: (row) => (
-			<ul>
-				{row.education.map((edu, index) => (
-					<li key={index}>
-						{edu.degree} from {edu.institute} ({edu.year})
-					</li>
-				))}
-			</ul>
-		),
-		sortable: true,
-		center: false,
-	},
+	// {
+	// 	name: "Education",
+	// 	cell: (row) => (
+	// 		<ul>
+	// 			{row.education.map((edu, index) => (
+	// 				<li key={index}>
+	// 					{edu.degree} from {edu.institute} ({edu.year})
+	// 				</li>
+	// 			))}
+	// 		</ul>
+	// 	),
+	// 	sortable: true,
+	// 	center: false,
+	// },
 	// {
 	// 	name: "Languages Preferred",
 	// 	selector: (row) => row.languagesPreferred.join(", "), // Convert the array to a comma-separated string

@@ -1,6 +1,6 @@
 "use client"
 import { updateAnnoucementTitle, updateMentorTitle } from "@/Constant";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import CommonModal from "@/CommonComponent/CommonModal";
 import { MentorDataProps } from "@/Types/Mentor.type";

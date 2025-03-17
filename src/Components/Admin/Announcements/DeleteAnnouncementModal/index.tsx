@@ -1,5 +1,5 @@
 "use client"
-import { createAnnouncementTitle, CrocsLogin, deleteAnnoucementConfirmTitle, ImagePath } from "@/Constant";
+import { createAnnouncementTitle, EvoLogin, deleteAnnoucementConfirmTitle, ImagePath } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 
