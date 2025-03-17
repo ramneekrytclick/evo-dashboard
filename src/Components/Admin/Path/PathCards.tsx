@@ -13,7 +13,7 @@ import DeletePathModal from "./DeletePathModal";
 import { pathFakeData } from "@/FakeData/admin/path";
 
 const PathCards = () => {
-	const [paths, setPaths] = useState([]);
+	const [paths, setPaths] = useState<any[]>([]);
 	const [filterText, setFilterText] = useState("");
 	const fetchPaths = async () => {
 		try {

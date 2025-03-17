@@ -12,9 +12,7 @@ import { announcementFakeData } from "@/FakeData/admin/announcements";
 
 const AnnouncementsListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [announcementsData, setAnnouncementsData] = useState<IAnnouncement[]>(
-		[]
-	);
+	const [announcementsData, setAnnouncementsData] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
 	const filteredItems: IAnnouncement[] = announcementsData?.filter(
 		(item: IAnnouncement) => {

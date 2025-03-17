@@ -11,7 +11,7 @@ import ScrollBar from "react-perfect-scrollbar";
 import { courseFakeData } from "@/FakeData/admin/course";
 
 const CourseCards = () => {
-	const [courses, setCourses] = useState<CourseProps[]>([]);
+	const [courses, setCourses] = useState<any[]>([]);
 	const fetchCourses = async () => {
 		try {
 			const response = await getCourses();

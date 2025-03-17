@@ -14,7 +14,7 @@ import { studentFakeData } from "@/FakeData/admin/student";
 
 const StudentListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [studentList, setStudentList] = useState([]);
+	const [studentList, setStudentList] = useState<any[]>([]);
 	const filteredItems: StudentProps[] = studentList?.filter(
 		(item: StudentProps) => {
 			return Object.values(item).some(

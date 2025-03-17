@@ -15,7 +15,7 @@ import DeleteBatchModal from "./DeleteBatchModal";
 import { batchFakeData } from "@/FakeData/admin/batch";
 
 const BatchesList = () => {
-	const [batches, setBatches] = useState([]);
+	const [batches, setBatches] = useState<any[]>([]);
 	const [filterText, setFilterText] = useState("");
 	const filteredItems: BatchProps[] = batches.filter((item: BatchProps) => {
 		return Object.values(item).some(

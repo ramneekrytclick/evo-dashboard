@@ -8,7 +8,7 @@ import CreateCategoryModal from "./CreateCategoryModal";
 import { categoryFakeData } from "@/FakeData/admin/categorysub";
 
 const CategoriesCards = () => {
-	const [categories, setCategories] = useState([]);
+	const [categories, setCategories] = useState<any[]>();
 	const fetchCategories = async () => {
 		try {
 			const response = await getCategories();

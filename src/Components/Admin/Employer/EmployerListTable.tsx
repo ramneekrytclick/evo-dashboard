@@ -11,7 +11,7 @@ import { employerFakeData } from "@/FakeData/admin/employer";
 
 const EmployerListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [employers, setEmployers] = useState([]);
+	const [employers, setEmployers] = useState<any[]>([]);
 
 	const filteredItems: EmployerProps[] = employers?.filter(
 		(item: EmployerProps) => {
