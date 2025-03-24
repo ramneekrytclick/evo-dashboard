@@ -41,3 +41,17 @@ export const approveUser = async (userId: string, status: string) => {
 		console.error(error);
 	}
 };
+export const updateUserStatus = async (
+	userId: string,
+	status: "Active" | "Inactive" | "Banned"
+) => {
+	try {
+		const response = await apiClient.put(`/admin/status`, {
+			userId,
+			status,
+		});
+		return response.data;
+	} catch (error) {
+		console.error(error);
+	}
+};

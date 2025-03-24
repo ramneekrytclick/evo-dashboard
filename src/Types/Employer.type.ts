@@ -7,6 +7,7 @@ export interface EmployerProps {
 	isApproved: boolean;
 	companyName: string;
 	role: string;
+	status: string;
 }
 export interface EmployerDataProps {
 	assignedBatches: string[]; // List of batch IDs assigned

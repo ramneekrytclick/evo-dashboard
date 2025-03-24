@@ -6,13 +6,14 @@ import {
 	ModalBody,
 	ModalFooter,
 	ModalHeader,
+	Badge,
 } from "reactstrap";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { EmployerProps } from "@/Types/Employer.type";
 import FilterComponent from "@/CommonComponent/FilterComponent";
 import { getEmployers } from "@/app/api/admin/employers";
-import { approveUser } from "@/app/api/admin/team";
+import { updateUserStatus } from "@/app/api/admin/team";
 import { toast } from "react-toastify";
 
 const EmployerListTable = () => {
@@ -20,88 +21,117 @@ const EmployerListTable = () => {
 	const [employers, setEmployers] = useState<EmployerProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<EmployerProps | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
+	const [actionType, setActionType] = useState<
+		"Active" | "Inactive" | "Banned"
+	>("Active");
+
 	const toggleModal = () => setModalOpen(!modalOpen);
-	const openApproveModal = (row: EmployerProps) => {
+
+	const openStatusModal = (
+		row: EmployerProps,
+		action: "Active" | "Inactive" | "Banned"
+	) => {
 		setSelectedRow(row);
+		setActionType(action);
 		setModalOpen(true);
 	};
-	const handleAction = async (action: string) => {
+
+	const handleAction = async () => {
 		if (!selectedRow) return;
 		try {
-			await approveUser(selectedRow._id, action);
+			await updateUserStatus(selectedRow._id, actionType);
 			toggleModal();
-			toast.success(
-				`${selectedRow.name} ${action}d successfully as a ${selectedRow.role}`
-			);
+			toast.success(`${selectedRow.name} status updated to ${actionType}`);
 			fetchEmployers();
 		} catch (error) {
-			console.log("Approval error:", error);
+			console.log("Status update error:", error);
+			toast.error("Failed to update status");
 		}
 	};
+
 	const employerTableColumns: TableColumn<EmployerProps>[] = [
 		{
 			name: "Name",
-			selector: (row) => row["name"],
+			selector: (row) => row.name,
 			sortable: true,
-			center: false,
-			cell: (row) => row.name,
+			cell: (row) => <strong>{row.name}</strong>,
 		},
 		{
 			name: "Email",
-			selector: (row) => row["email"],
+			selector: (row) => row.email,
 			sortable: true,
-			center: false,
 			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
 		},
 		{
 			name: "Company",
-			selector: (row) => row["companyName"],
+			selector: (row) => row.companyName,
 			sortable: true,
-			center: false,
+		},
+		{
+			name: "Status",
+			selector: (row) => row.status,
+			cell: (row) => (
+				<Badge
+					color={
+						row.status === "Active"
+							? "success"
+							: row.status === "Inactive"
+							? "warning"
+							: "danger"
+					}
+					pill>
+					{row.status}
+				</Badge>
+			),
 		},
 		{
 			name: "Action",
 			sortable: false,
-			center: false,
 			cell: (row) => (
-				<>
+				<div className="d-flex gap-1">
 					<Button
-						onClick={() => {
-							openApproveModal(row);
-						}}
-						color={row.isApproved ? "danger" : "success"}>
-						{row.isApproved ? "Disapprove" : "Approve"}
+						color={row.status === "Active" ? "warning" : "success"}
+						size="sm"
+						onClick={() =>
+							openStatusModal(
+								row,
+								row.status === "Active" ? "Inactive" : "Active"
+							)
+						}>
+						{row.status === "Active" ? "Deactivate" : "Activate"}
 					</Button>
-				</>
+					<Button
+						color="danger"
+						size="sm"
+						onClick={() => openStatusModal(row, "Banned")}>
+						Ban
+					</Button>
+				</div>
 			),
 		},
 	];
 
-	const filteredItems: EmployerProps[] = employers?.filter(
-		(item: EmployerProps) => {
-			return Object.values(item).some(
-				(value) =>
-					value &&
-					value.toString().toLowerCase().includes(filterText.toLowerCase())
-			);
-		}
+	const filteredItems = employers.filter((item: EmployerProps) =>
+		Object.values(item).some(
+			(value) =>
+				value &&
+				value.toString().toLowerCase().includes(filterText.toLowerCase())
+		)
 	);
+
 	const fetchEmployers = async () => {
 		try {
 			const response = await getEmployers();
-			console.log("====================================");
-			console.log(response);
-			console.log("====================================");
 			setEmployers(response);
-			// setEmployers(employerFakeData);
 		} catch (error) {
 			console.log(error);
 		}
-		// setEmployers(employerFakeData);
 	};
+
 	useEffect(() => {
 		fetchEmployers();
 	}, []);
+
 	return (
 		<Card>
 			<CardBody>
@@ -115,40 +145,53 @@ const EmployerListTable = () => {
 					<DataTable
 						data={filteredItems}
 						columns={employerTableColumns}
-						striped={true}
+						striped
 						fixedHeaderScrollHeight="40vh"
 						pagination
 					/>
 				</div>
+
+				{/* Status Modal */}
+				<Modal
+					isOpen={modalOpen}
+					toggle={toggleModal}
+					centered>
+					<ModalHeader toggle={toggleModal}>Confirm Status Change</ModalHeader>
+					<ModalBody>
+						Are you sure you want to set <strong>{selectedRow?.name}</strong> as{" "}
+						<Badge
+							color={
+								actionType === "Active"
+									? "success"
+									: actionType === "Inactive"
+									? "warning"
+									: "danger"
+							}
+							pill>
+							{actionType}
+						</Badge>
+						?
+					</ModalBody>
+					<ModalFooter>
+						<Button
+							color="secondary"
+							onClick={toggleModal}>
+							Cancel
+						</Button>
+						<Button
+							color={
+								actionType === "Active"
+									? "success"
+									: actionType === "Inactive"
+									? "warning"
+									: "danger"
+							}
+							onClick={handleAction}>
+							Yes, Change Status
+						</Button>
+					</ModalFooter>
+				</Modal>
 			</CardBody>
-			<Modal
-				isOpen={modalOpen}
-				toggle={toggleModal}
-				centered>
-				<ModalHeader toggle={toggleModal}>
-					Confirm {selectedRow?.isApproved ? "Disapproval" : "Approval"}
-				</ModalHeader>
-				<ModalBody>
-					Are you sure you want to{" "}
-					{selectedRow?.isApproved ? "disapprove" : "approve"}{" "}
-					<strong>{selectedRow?.name}</strong> as a{" "}
-					<strong>{selectedRow?.role}</strong>?
-				</ModalBody>
-				<ModalFooter>
-					<Button
-						color="secondary"
-						onClick={toggleModal}>
-						Cancel
-					</Button>
-					<Button
-						color={selectedRow?.isApproved ? "danger" : "success"}
-						onClick={() => {
-							handleAction(selectedRow?.isApproved ? "disapprove" : "approve");
-						}}>
-						Yes, {selectedRow?.isApproved ? "Disapprove" : "Approve"}
-					</Button>
-				</ModalFooter>
-			</Modal>
 		</Card>
 	);
 };
