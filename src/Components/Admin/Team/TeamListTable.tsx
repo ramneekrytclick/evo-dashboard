@@ -14,6 +14,7 @@ import {
 	ModalHeader,
 } from "reactstrap";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const TeamListTable = () => {
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
@@ -52,7 +53,13 @@ const TeamListTable = () => {
 			name: "Name",
 			selector: (row) => row.name,
 			sortable: true,
-			cell: (row) => <p style={{ fontWeight: 700 }}>{row.name}</p>,
+			cell: (row) => (
+				<Link
+					className="text-dark fw-bold"
+					href={`/admin/users/${row._id}`}>
+					{row.name}
+				</Link>
+			),
 		},
 		{
 			name: "Email",

@@ -4,10 +4,12 @@ import { apiClient } from "@/utils/api";
 export const getUsers = async () => {
 	try {
 		const responseManager = await apiClient.get("/admin/role/Manager");
-		const responseEmployer = await apiClient.get("/admin/role/Employer");
+		const responsePublisher = await apiClient.get("/admin/role/Publisher");
+		const responseCreator = await apiClient.get("/admin/role/Creator");
 		const managers = responseManager.data;
-		const employers = responseEmployer.data;
-		return [...managers, ...employers];
+		const employers = responsePublisher.data;
+		const creators = responseCreator.data;
+		return [...managers, ...employers, ...creators];
 	} catch (error) {
 		console.error(error);
 	}
@@ -50,6 +52,15 @@ export const updateUserStatus = async (
 			userId,
 			status,
 		});
+		return response.data;
+	} catch (error) {
+		console.error(error);
+	}
+};
+
+export const getUserProfile = async (userId: string) => {
+	try {
+		const response = await apiClient.get(`/admin/profile/${userId}`);
 		return response.data;
 	} catch (error) {
 		console.error(error);

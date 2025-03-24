@@ -15,6 +15,7 @@ import FilterComponent from "@/CommonComponent/FilterComponent";
 import { getEmployers } from "@/app/api/admin/employers";
 import { updateUserStatus } from "@/app/api/admin/team";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const EmployerListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -54,7 +55,13 @@ const EmployerListTable = () => {
 			name: "Name",
 			selector: (row) => row.name,
 			sortable: true,
-			cell: (row) => <strong>{row.name}</strong>,
+			cell: (row) => (
+				<Link
+					className="text-dark fw-bold"
+					href={`/admin/users/${row._id}`}>
+					{row.name}
+				</Link>
+			),
 		},
 		{
 			name: "Email",

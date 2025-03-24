@@ -47,7 +47,7 @@ const MentorListTable = () => {
 				<>
 					<Link
 						className="text-dark fw-bold"
-						href={`/admin/mentors/${row._id}--${row.name}`}>
+						href={`/admin/users/${row._id}`}>
 						{row.name}
 					</Link>
 				</>
