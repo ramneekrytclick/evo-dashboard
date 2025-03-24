@@ -11,6 +11,7 @@ export interface TeamListType {
 	email: string;
 	role: string;
 	status: string;
+	isApproved: boolean;
 }
 export interface UserProps {
 	_id: string;
@@ -18,6 +19,7 @@ export interface UserProps {
 	email: string;
 	role: string;
 	status: string;
+	isApproved: boolean;
 }
 export interface AddUserFormProps {
 	name: string;

@@ -2,14 +2,8 @@ import { useEffect, useState } from "react";
 
 import { TeamListType, UserProps } from "@/Types/Team.type";
 import DataTable, { TableColumn } from "react-data-table-component";
-// import { teamListColumns } from "@/Data/Admin/Team/TeamList";
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import {
-	approveUser,
-	getPendingApprovals,
-	getUsers,
-} from "@/app/api/admin/team";
-import { teamFakeData } from "@/FakeData/admin/team";
+import { approveUser, getUsers } from "@/app/api/admin/team";
 import {
 	Badge,
 	Button,
@@ -22,7 +16,7 @@ import {
 } from "reactstrap";
 import { toast } from "react-toastify";
 
-const PendingListTable = () => {
+const TeamListTable = () => {
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<TeamListType | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -31,15 +25,12 @@ const PendingListTable = () => {
 		setSelectedRow(row);
 		setModalOpen(true);
 	};
-	const handleApproveUser = async () => {
+	const handleAction = async (action: string) => {
 		if (!selectedRow) return;
 		try {
-			await approveUser(selectedRow._id, "approve");
+			await approveUser(selectedRow._id, action);
 			toggleModal();
-			toast.success(
-				`${selectedRow.name} approved successfully as a ${selectedRow.role}`
-			);
-			fetchData(); // Refresh list
+			fetchData();
 		} catch (error) {
 			console.log("Approval error:", error);
 		}
@@ -70,12 +61,12 @@ const PendingListTable = () => {
 						row.role.toLowerCase() === "admin"
 							? "primary"
 							: row.role.toLowerCase() === "manager"
-							? "danger"
+							? "info"
 							: row.role.toLowerCase() === "student"
 							? "info"
 							: row.role.toLowerCase() === "coursecreator"
 							? "success"
-							: "secondary"
+							: "primary"
 					}`}>
 					{row.role}
 				</Badge>
@@ -85,9 +76,11 @@ const PendingListTable = () => {
 			name: "Action",
 			cell: (row) => (
 				<Button
-					color="success"
-					onClick={() => openApproveModal(row)}>
-					Approve User
+					onClick={() => {
+						openApproveModal(row);
+					}}
+					color={row.isApproved ? "danger" : "success"}>
+					{row.isApproved ? "Disapprove" : "Approve"}
 				</Button>
 			),
 			sortable: false,
@@ -95,11 +88,10 @@ const PendingListTable = () => {
 	];
 	const fetchData = async () => {
 		try {
-			const response = await getPendingApprovals();
-			setTeamListTableData(response);
+			const response = await getUsers();
+			setTeamListTableData(response ? response : []);
 		} catch (error) {
 			console.log(error);
-			// setTeamListTableData(teamFakeData);
 		}
 	};
 	useEffect(() => {
@@ -117,7 +109,7 @@ const PendingListTable = () => {
 		}
 	);
 	return (
-		<Card>
+		<Card className="list-product">
 			<CardBody>
 				<FilterComponent
 					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -135,9 +127,12 @@ const PendingListTable = () => {
 					isOpen={modalOpen}
 					toggle={toggleModal}
 					centered>
-					<ModalHeader toggle={toggleModal}>Confirm Approval</ModalHeader>
+					<ModalHeader toggle={toggleModal}>
+						Confirm {selectedRow?.isApproved ? "Disapproval" : "Approval"}
+					</ModalHeader>
 					<ModalBody>
-						Are you sure you want to approve{" "}
+						Are you sure you want to{" "}
+						{selectedRow?.isApproved ? "disapprove" : "approve"}{" "}
 						<strong>{selectedRow?.name}</strong> as a{" "}
 						<strong>{selectedRow?.role}</strong>?
 					</ModalBody>
@@ -148,9 +143,13 @@ const PendingListTable = () => {
 							Cancel
 						</Button>
 						<Button
-							color="success"
-							onClick={handleApproveUser}>
-							Yes, Approve
+							color={selectedRow?.isApproved ? "danger" : "success"}
+							onClick={() => {
+								handleAction(
+									selectedRow?.isApproved ? "disapprove" : "approve"
+								);
+							}}>
+							Yes, {selectedRow?.isApproved ? "Disapprove" : "Approve"}
 						</Button>
 					</ModalFooter>
 				</Modal>
@@ -159,4 +158,4 @@ const PendingListTable = () => {
 	);
 };
 
-export default PendingListTable;
+export default TeamListTable;

@@ -1,5 +1,7 @@
+import TeamPageContainer from "@/Components/Admin/Team";
+
 const page = () => {
-	return <div>Enter</div>;
+	return <TeamPageContainer />;
 };
 
 export default page;
