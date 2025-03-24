@@ -2,61 +2,7 @@ import SVG from "@/CommonComponent/SVG";
 import { TeamListType } from "@/Types/Team.type";
 import Link from "next/link";
 import { TableColumn } from "react-data-table-component";
-import { Badge, FormGroup, Input } from "reactstrap";
-
-export const teamListColumns: TableColumn<TeamListType>[] = [
-	{
-		name: "Name",
-		selector: (row) => row.name,
-		sortable: true,
-		cell: (row) => <p style={{fontWeight:700}}>{row.name}</p>,
-		width: "33%",
-	},
-	{
-		name: "Email",
-		selector: (row) => row.email,
-		sortable: true,
-		cell: (row) => <p className="f-light">{row.email}</p>,
-		width: "53%",
-	},
-	{
-		name: "Role",
-		selector: (row) => row.role.toUpperCase(),
-		sortable: true,
-		cell: (row) => (
-			<Badge
-				color=""
-				pill
-				style={{fontSize: 13}}
-				className={`badge-${
-					row.role.toLowerCase() === "admin"
-						? "primary"
-						: row.role.toLowerCase() === "manager"
-						? "danger"
-						: row.role.toLowerCase() === "student"
-						? "info"
-						:row.role.toLowerCase() === "coursecreator" 
-						? "success"
-						: "secondary"
-				}`}>
-				{row.role}
-			</Badge>
-		),
-		width: "15%",
-	},
-	// {
-	// 	name: "Action",
-	// 	cell: (row) => (
-	// 		<div className="product-action">
-	// 			<Link href={`/app/team/edit/${row.name}`}>
-	// 				<SVG iconId="edit-content" />
-	// 			</Link>
-	// 			<SVG iconId="trash1" />
-	// 		</div>
-	// 	),
-	// 	sortable: false,
-	// },
-];
+import { Badge, Button, FormGroup, Input } from "reactstrap";
 
 export const userNavData = [
 	{ id: 1, icon: "user", title: "Personal info" },

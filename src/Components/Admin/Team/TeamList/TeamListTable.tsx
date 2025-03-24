@@ -1,34 +1,84 @@
 import { useEffect, useState } from "react";
 
-import { UserProps } from "@/Types/Team.type";
-import DataTable from "react-data-table-component";
-import { teamListColumns } from "@/Data/Admin/Team/TeamList";
+import { TeamListType, UserProps } from "@/Types/Team.type";
+import DataTable, { TableColumn } from "react-data-table-component";
+// import { teamListColumns } from "@/Data/Admin/Team/TeamList";
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import { getUsers } from "@/app/api/admin/team";
+import {
+	approveUser,
+	getPendingApprovals,
+	getUsers,
+} from "@/app/api/admin/team";
 import { teamFakeData } from "@/FakeData/admin/team";
+import { Badge, Button } from "reactstrap";
 
 const TeamListTable = () => {
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
-	const fetchData = async () => {
-		const data = await getUsers();
+	const handleApproveUser = async (row: TeamListType) => {
+		// Approve user logic
+		console.log("Approve user");
 		try {
-			const response = await data;
-			const filteredTeam = response.users.filter((user: any) => {
-				//if user's role is Manager, Admin, Creator or Course Creator, set TeamListTableData as the filtered team
-				if (
-					user.role === "Manager" ||
-					user.role === "Admin" ||
-					user.role === "Creator" ||
-					user.role.toLowerCase() === "coursecreator"
-				) {
-					return true;
-				}
-				return false;
-			});
-			setTeamListTableData(filteredTeam);
+			const response = await approveUser(row._id, "approve");
+		} catch (error) {}
+	};
+	const teamListColumns: TableColumn<TeamListType>[] = [
+		{
+			name: "Name",
+			selector: (row) => row.name,
+			sortable: true,
+			cell: (row) => <p style={{ fontWeight: 700 }}>{row.name}</p>,
+		},
+		{
+			name: "Email",
+			selector: (row) => row.email,
+			sortable: true,
+			cell: (row) => <p className="f-light">{row.email}</p>,
+		},
+		{
+			name: "Role",
+			selector: (row) => row.role.toUpperCase(),
+			sortable: true,
+			cell: (row) => (
+				<Badge
+					color=""
+					pill
+					style={{ fontSize: 13 }}
+					className={`badge-${
+						row.role.toLowerCase() === "admin"
+							? "primary"
+							: row.role.toLowerCase() === "manager"
+							? "danger"
+							: row.role.toLowerCase() === "student"
+							? "info"
+							: row.role.toLowerCase() === "coursecreator"
+							? "success"
+							: "secondary"
+					}`}>
+					{row.role}
+				</Badge>
+			),
+		},
+		{
+			name: "Action",
+			cell: (row) => (
+				<Button
+					color="success"
+					onClick={() => {
+						handleApproveUser(row);
+					}}>
+					Approve User
+				</Button>
+			),
+			sortable: false,
+		},
+	];
+	const fetchData = async () => {
+		try {
+			const response = await getPendingApprovals();
+			setTeamListTableData(response);
 		} catch (error) {
 			console.log(error);
-			setTeamListTableData(teamFakeData);
+			// setTeamListTableData(teamFakeData);
 		}
 	};
 	useEffect(() => {
