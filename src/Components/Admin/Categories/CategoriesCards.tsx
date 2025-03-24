@@ -12,9 +12,9 @@ const CategoriesCards = () => {
 	const fetchCategories = async () => {
 		try {
 			const response = await getCategories();
-			setCategories(response.categories);
+			setCategories(response);
 			// console.log(response);
-			setCategories(categoryFakeData);
+			// setCategories(categoryFakeData);
 		} catch (error) {
 			console.log(error);
 		}

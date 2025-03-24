@@ -8,10 +8,10 @@ import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 
 interface CreateCategoryFormProps {
 	toggle: () => void;
-    fetchData: ()=>Promise<void>;
+	fetchData: () => Promise<void>;
 }
 
-const CreateCategoryForm = ({ toggle,fetchData }: CreateCategoryFormProps) => {
+const CreateCategoryForm = ({ toggle, fetchData }: CreateCategoryFormProps) => {
 	const [formData, setFormData] = useState<Category>({ name: "" });
 
 	const handleSubmit = async (e: FormEvent) => {
@@ -19,8 +19,8 @@ const CreateCategoryForm = ({ toggle,fetchData }: CreateCategoryFormProps) => {
 		try {
 			const response = await createCategory(formData);
 			console.log(response);
-			toast("Category created successfully!");
-            fetchData();
+			toast.success("Category created successfully!");
+			fetchData();
 			toggle();
 		} catch (error) {
 			console.error(error);
