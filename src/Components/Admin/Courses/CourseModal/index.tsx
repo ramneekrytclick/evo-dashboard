@@ -50,7 +50,8 @@ const CourseModal = ({
 					{/* <p>{"Fill in your information below to continue."}</p> */}
 					<EditCourseForm
 						toggle={toggle}
-						values={values}
+						id={values._id || ""}
+						wannaBeInterestId={values.wannaBeInterest}
 						fetchData={fetchData}
 					/>
 				</div>

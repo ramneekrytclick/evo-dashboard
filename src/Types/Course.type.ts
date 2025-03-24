@@ -30,14 +30,10 @@ export interface CourseTabContentProp {
 
 export interface CourseFormProps {
 	name: string;
-	category: Category;
-	subcategory: Subcategory;
 	description: string;
-	duration: string;
-	mentorAssigned: string;
-	managerAssigned: string;
-	realPrice: string;
-	promoCodes: string[];
+	categoryId: string;
+	subcategoryId: string;
+	wannaBeInterestId: string;
 }
 
 // Batch Details Interface

@@ -3,7 +3,7 @@ import { apiClient } from "@/utils/api";
 
 export const createCourse = async (data: CourseFormProps) => {
 	try {
-		const response = await apiClient.post("/admin/create-course", data);
+		const response = await apiClient.post("/courses", data);
 		return response.data;
 	} catch (error) {
 		console.error("Error creating course:", error);
@@ -15,11 +15,14 @@ export const getCourses = async () => {
 	return response.data;
 };
 
-export const updateCourse = async (id: string, data: CourseProps) => {
+export const assignWannaBeInterestToCourse = async (
+	id: string,
+	wannaBeInterestIds: string[]
+) => {
 	try {
-		const response = await apiClient.put(`/admin/update-course`, {
+		const response = await apiClient.put(`/courses/assign-wanna-be-interest`, {
 			courseId: id,
-			updateData: data,
+			wannaBeInterestIds,
 		});
 		return response.data;
 	} catch (error) {

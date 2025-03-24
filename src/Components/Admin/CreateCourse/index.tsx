@@ -2,7 +2,7 @@ import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { AddCourseTitle, CourseForm, CourseTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import CreateCourseForm from "./CreateCourseForm";
+import SimpleCreateCourseForm from "./SimpleCreateCourseForm";
 
 const CreateCourseContainer = () => {
 	return (
@@ -16,10 +16,10 @@ const CreateCourseContainer = () => {
 				<Row>
 					<Col xs={12}>
 						<Card>
-							<CommonCardHeader title={CourseForm} />
+							{/* <CommonCardHeader title={CourseForm} /> */}
 							<CardBody>
 								<Row className="g-xl-5 g-3">
-									<CreateCourseForm />
+									<SimpleCreateCourseForm />
 								</Row>
 							</CardBody>
 						</Card>
