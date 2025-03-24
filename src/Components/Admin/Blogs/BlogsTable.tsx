@@ -1,24 +1,81 @@
 "use client";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { BlogsApprovalTitle } from "@/Constant";
-import { Card, CardBody } from "reactstrap";
+import { Badge, Card, CardBody } from "reactstrap";
 import { useEffect, useState } from "react";
-import DataTable from "react-data-table-component";
+import DataTable, { TableColumn } from "react-data-table-component";
 import FilterComponent from "@/CommonComponent/FilterComponent";
 import { BlogProps } from "@/Types/Blogs.type";
-import { blogTableColumns } from "@/Data/Admin/Blogs/Blog";
 import { getBlogs } from "@/app/api/admin/blogs/blog";
-import { blogFakeData } from "@/FakeData/admin/blog";
+import BlogModal from "./BlogModal";
 
 const BlogsTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [blogs, setBlogs] = useState<BlogProps[]>([]);
+	const blogTableColumns: TableColumn<BlogProps>[] = [
+		{
+			name: "Title",
+			selector: (row) => row["title"],
+			sortable: true,
+			center: false,
+			cell: (row) => (
+				<BlogModal
+					fetchData={fetchBlogs}
+					item={{
+						id: row._id!,
+						title: row.title,
+						text: row.content,
+						status: row.status!,
+					}}
+				/>
+			),
+		},
+		{
+			name: "Content",
+			selector: (row) => row["content"],
+			sortable: true,
+			center: false,
+			cell: (row) => `${row.content.substring(0, 100)}...`,
+		},
+		{
+			name: "Creator",
+			sortable: true,
+			center: false,
+			cell: (row) => row.creator?.name,
+		},
+		{
+			name: "Status",
+			selector: (row) => row["status"]!,
+			sortable: true,
+			center: false,
+			cell: (row) => (
+				<Badge
+					color=""
+					style={{ fontSize: "12px" }}
+					className={`badge-${
+						row.status === "Approved"
+							? "success"
+							: row.status === "Pending"
+							? "warning"
+							: "danger"
+					}`}>
+					{row.status}
+				</Badge>
+			),
+		},
+		{
+			name: "Created At",
+			selector: (row) => new Date(row.createdAt!).toDateString(),
+			sortable: true,
+			center: false,
+		},
+	];
 	const fetchBlogs = async () => {
 		try {
 			const response = await getBlogs();
 			console.log(response?.blogs);
-			setBlogs(blogFakeData);
-			// setBlogs(response.blogs);
+			// setBlogs(blogFakeData);
+			setBlogs(response.blogs);
 			return response;
 		} catch (error) {
 			console.error(error);
