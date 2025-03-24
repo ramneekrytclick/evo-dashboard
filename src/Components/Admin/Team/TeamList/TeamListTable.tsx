@@ -10,16 +10,33 @@ import {
 	getUsers,
 } from "@/app/api/admin/team";
 import { teamFakeData } from "@/FakeData/admin/team";
-import { Badge, Button } from "reactstrap";
+import {
+	Badge,
+	Button,
+	Modal,
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+} from "reactstrap";
 
 const TeamListTable = () => {
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
-	const handleApproveUser = async (row: TeamListType) => {
-		// Approve user logic
-		console.log("Approve user");
+	const [selectedRow, setSelectedRow] = useState<TeamListType | null>(null);
+	const [modalOpen, setModalOpen] = useState(false);
+	const toggleModal = () => setModalOpen(!modalOpen);
+	const openApproveModal = (row: TeamListType) => {
+		setSelectedRow(row);
+		setModalOpen(true);
+	};
+	const handleApproveUser = async () => {
+		if (!selectedRow) return;
 		try {
-			const response = await approveUser(row._id, "approve");
-		} catch (error) {}
+			await approveUser(selectedRow._id, "approve");
+			toggleModal();
+			fetchData(); // Refresh list
+		} catch (error) {
+			console.log("Approval error:", error);
+		}
 	};
 	const teamListColumns: TableColumn<TeamListType>[] = [
 		{
@@ -63,9 +80,7 @@ const TeamListTable = () => {
 			cell: (row) => (
 				<Button
 					color="success"
-					onClick={() => {
-						handleApproveUser(row);
-					}}>
+					onClick={() => openApproveModal(row)}>
 					Approve User
 				</Button>
 			),
@@ -109,6 +124,28 @@ const TeamListTable = () => {
 				columns={teamListColumns}
 				pagination
 			/>
+			<Modal
+				isOpen={modalOpen}
+				toggle={toggleModal}
+				centered>
+				<ModalHeader toggle={toggleModal}>Confirm Approval</ModalHeader>
+				<ModalBody>
+					Are you sure you want to approve <strong>{selectedRow?.name}</strong>{" "}
+					as a <strong>{selectedRow?.role}</strong>?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color="secondary"
+						onClick={toggleModal}>
+						Cancel
+					</Button>
+					<Button
+						color="success"
+						onClick={handleApproveUser}>
+						Yes, Approve
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</div>
 	);
 };
