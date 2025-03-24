@@ -124,6 +124,14 @@ export const MenuList: MenuItem[] | undefined = [
 				type: "link",
 			},
 			{
+				title: "Transactions",
+				id: 4,
+				icon: "charts",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/transactions",
+			},
+			{
 				path: "/admin/support/tickets",
 				icon: "support-tickets",
 				title: "Support",
