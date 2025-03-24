@@ -11,18 +11,16 @@ export const createCourse = async (data: CourseFormProps) => {
 	}
 };
 export const getCourses = async () => {
-	try {
-		const response = await apiClient.get("/admin/courses");
-		return response.data;
-	} catch (error) {
-		console.error("Error fetching courses:", error);
-		return null;
-	}
+	const response = await apiClient.get("/courses");
+	return response.data;
 };
 
-export const updateCourse = async ( id: string,data: CourseProps) => {
+export const updateCourse = async (id: string, data: CourseProps) => {
 	try {
-		const response = await apiClient.put(`/admin/update-course`, {courseId:id,updateData:data});
+		const response = await apiClient.put(`/admin/update-course`, {
+			courseId: id,
+			updateData: data,
+		});
 		return response.data;
 	} catch (error) {
 		console.error("Error updating course:", error);

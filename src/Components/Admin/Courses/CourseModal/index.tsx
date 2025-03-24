@@ -14,7 +14,7 @@ const CourseModal = ({
 	fetchData,
 }: {
 	values: CourseProps;
-	fetchData: () => Promise<void>;
+	fetchData: () => void;
 }) => {
 	const [modal, setModal] = useState(false);
 	const router = useRouter();

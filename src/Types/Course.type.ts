@@ -15,6 +15,8 @@ export interface CourseProps {
 	batchesAvailable: BatchProps[] | string[];
 	promoCodes: PromoCodeProps[];
 	price: number;
+	wannaBeInterest: string[];
+	createdAt?: string;
 }
 
 export interface CourseFormNavProps {
@@ -58,8 +60,8 @@ export interface PromoCodeProps {
 	expiryDate: string;
 	usageLimit: number;
 	usedCount: number;
-	applicableTo?:string;
-	category:Category|null
+	applicableTo?: string;
+	category: Category | null;
 }
 export interface FormGroupCommonProp {
 	type: InputType;
