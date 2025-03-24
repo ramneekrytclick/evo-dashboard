@@ -15,16 +15,17 @@ export interface AddMentorFormProps {
 		year: number;
 	}[];
 	assignedCourses: string[];
-	assignedBatches:string[],
+	assignedBatches: string[];
 	batchAssignments: string[];
 	timeAvailability: string;
 	password: string;
 }
 export interface MentorDataProps {
-	_id:string;
-	username:string;
-	dob:string;
+	_id: string;
+	username: string;
+	dob: string;
 	contactNumber: string;
+	isApproved: boolean;
 	photo: string;
 	about: string;
 	address: string;

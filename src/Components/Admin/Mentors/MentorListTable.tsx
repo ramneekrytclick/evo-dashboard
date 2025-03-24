@@ -1,17 +1,83 @@
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import { mentorTableColumns } from "@/Data/Admin/Mentors/Mentor";
+
 import { MentorDataProps } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { Card, CardBody } from "reactstrap";
+import {
+	Button,
+	Card,
+	CardBody,
+	Modal,
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+} from "reactstrap";
 import { getMentors } from "@/app/api/admin/mentors";
 import UpdateMentorModal from "./UpdateMentorModal";
 import DeleteMentorModal from "./DeleteMentorModal";
 import { mentorFakeData } from "@/FakeData/admin/mentor";
+import Link from "next/link";
+import { approveUser } from "@/app/api/admin/team";
 
 const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
+	const [selectedRow, setSelectedRow] = useState<MentorDataProps | null>(null);
+	const [modalOpen, setModalOpen] = useState(false);
+	const toggleModal = () => setModalOpen(!modalOpen);
+	const openApproveModal = (row: MentorDataProps) => {
+		setSelectedRow(row);
+		setModalOpen(true);
+	};
+	const handleAction = async (action: string) => {
+		if (!selectedRow) return;
+		try {
+			await approveUser(selectedRow._id, action);
+			toggleModal();
+			fetchData();
+		} catch (error) {
+			console.log("Approval error:", error);
+		}
+	};
+	const mentorTableColumns: TableColumn<MentorDataProps>[] = [
+		{
+			name: "Name",
+			selector: (row) => row.name,
+			sortable: true,
+			center: false,
+			cell: (row) => (
+				<>
+					<Link
+						className="text-dark fw-bold"
+						href={`/admin/mentors/${row._id}--${row.name}`}>
+						{row.name}
+					</Link>
+				</>
+			),
+		},
+		{
+			name: "Email",
+			selector: (row) => row.email,
+			sortable: true,
+			center: false,
+		},
+		{
+			name: "Action",
+			sortable: false,
+			center: false,
+			cell: (row) => (
+				<>
+					<Button
+						onClick={() => {
+							openApproveModal(row);
+						}}
+						color={row.isApproved ? "danger" : "success"}>
+						{row.isApproved ? "Disapprove" : "Approve"}
+					</Button>
+				</>
+			),
+		},
+	];
 	const filteredItems: MentorDataProps[] = mentorTableData?.filter(
 		(item: MentorDataProps) => {
 			return Object.values(item).some(
@@ -24,13 +90,13 @@ const MentorListTable = () => {
 	const fetchData = async () => {
 		try {
 			const response = await getMentors();
-			const data = response.mentors;
+			const data = response;
 			// console.log(data);
-			// setMentorTableData(data);
-			setMentorTableData(mentorFakeData);
+			setMentorTableData(data);
+			// setMentorTableData(mentorFakeData);
 		} catch (error) {
 			console.log(error);
-			setMentorTableData(mentorFakeData);
+			// setMentorTableData(mentorFakeData);
 		}
 	};
 	useEffect(() => {
@@ -48,26 +114,7 @@ const MentorListTable = () => {
 				{/* <div className="table-responsive custom-scrollbar user-datatable mt-3"> */}
 				<DataTable
 					data={filteredItems}
-					columns={mentorTableColumns.map(
-						(column: TableColumn<MentorDataProps>) =>
-							column.name === "Action"
-								? {
-										...column,
-										cell: (row) => (
-											<ul className="action">
-												<UpdateMentorModal
-													values={row}
-													fetchData={fetchData}
-												/>
-												<DeleteMentorModal
-													id={row._id!}
-													fetchData={fetchData}
-												/>
-											</ul>
-										),
-								  }
-								: column
-					)}
+					columns={mentorTableColumns}
 					striped={true}
 					// fixedHeader
 					fixedHeaderScrollHeight="40vh"
@@ -76,6 +123,34 @@ const MentorListTable = () => {
 				/>
 				{/* </div> */}
 			</CardBody>
+			<Modal
+				isOpen={modalOpen}
+				toggle={toggleModal}
+				centered>
+				<ModalHeader toggle={toggleModal}>
+					Confirm {selectedRow?.isApproved ? "Disapproval" : "Approval"}
+				</ModalHeader>
+				<ModalBody>
+					Are you sure you want to{" "}
+					{selectedRow?.isApproved ? "disapprove" : "approve"}{" "}
+					<strong>{selectedRow?.name}</strong> as a{" "}
+					<strong>{selectedRow?.role}</strong>?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color="secondary"
+						onClick={toggleModal}>
+						Cancel
+					</Button>
+					<Button
+						color={selectedRow?.isApproved ? "danger" : "success"}
+						onClick={() => {
+							handleAction(selectedRow?.isApproved ? "disapprove" : "approve");
+						}}>
+						Yes, {selectedRow?.isApproved ? "Disapprove" : "Approve"}
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</Card>
 	);
 };

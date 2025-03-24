@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { AdminTitle, MentorTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
@@ -15,15 +15,15 @@ const MentorPageContainer = () => {
 			/>
 			<Container fluid>
 				<Row>
-                    <Col sm={12}>
-                        <Card>
-                            <CardBody>
-                                <MentorListHeader/>
-                                <MentorListTable/>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
+					<Col sm={12}>
+						<Card>
+							{/* <CardBody> */}
+							{/* <MentorListHeader /> */}
+							<MentorListTable />
+							{/* </CardBody> */}
+						</Card>
+					</Col>
+				</Row>
 			</Container>
 		</>
 	);
