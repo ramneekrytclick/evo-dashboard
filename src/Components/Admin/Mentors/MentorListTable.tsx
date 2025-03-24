@@ -112,7 +112,7 @@ const MentorListTable = () => {
 		},
 	];
 
-	const filteredItems: MentorDataProps[] = mentorTableData.filter(
+	const filteredItems: MentorDataProps[] = mentorTableData?.filter(
 		(item: MentorDataProps) =>
 			Object.values(item).some(
 				(value) =>

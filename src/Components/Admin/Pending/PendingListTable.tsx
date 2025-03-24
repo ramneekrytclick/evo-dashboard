@@ -114,7 +114,7 @@ const PendingListTable = () => {
 	}, []);
 	const [filterText, setFilterText] = useState("");
 
-	const filteredItems: UserProps[] = teamListTableData.filter(
+	const filteredItems: UserProps[] = teamListTableData?.filter(
 		(item: UserProps) => {
 			return Object.values(item).some(
 				(value) =>
@@ -123,6 +123,7 @@ const PendingListTable = () => {
 			);
 		}
 	);
+
 	return (
 		<Card>
 			<CardBody>

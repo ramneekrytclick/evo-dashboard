@@ -118,7 +118,7 @@ const EmployerListTable = () => {
 		},
 	];
 
-	const filteredItems = employers.filter((item: EmployerProps) =>
+	const filteredItems = employers?.filter((item: EmployerProps) =>
 		Object.values(item).some(
 			(value) =>
 				value &&
