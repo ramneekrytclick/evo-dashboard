@@ -2,7 +2,6 @@
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { AdminTitle, MentorTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import MentorListHeader from "./MentorListHeader";
 import MentorListTable from "./MentorListTable";
 
 const MentorPageContainer = () => {
@@ -16,12 +15,7 @@ const MentorPageContainer = () => {
 			<Container fluid>
 				<Row>
 					<Col sm={12}>
-						<Card>
-							{/* <CardBody> */}
-							{/* <MentorListHeader /> */}
-							<MentorListTable />
-							{/* </CardBody> */}
-						</Card>
+						<MentorListTable />
 					</Col>
 				</Row>
 			</Container>

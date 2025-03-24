@@ -1,8 +1,7 @@
-"use client"
+"use client";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { AdminTitle, StudentTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import StudentListHeader from "./StudentListHeader";
 import StudentListTable from "./StudentListTable";
 
 const StudentPageContainer = () => {
@@ -15,15 +14,10 @@ const StudentPageContainer = () => {
 			/>
 			<Container fluid>
 				<Row>
-                    <Col sm={12}>
-                        <Card>
-                            <CardBody>
-                                <StudentListHeader/>
-                                <StudentListTable/>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
+					<Col sm={12}>
+						<StudentListTable />
+					</Col>
+				</Row>
 			</Container>
 		</>
 	);

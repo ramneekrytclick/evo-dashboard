@@ -13,9 +13,6 @@ import {
 	ModalHeader,
 } from "reactstrap";
 import { getMentors } from "@/app/api/admin/mentors";
-import UpdateMentorModal from "./UpdateMentorModal";
-import DeleteMentorModal from "./DeleteMentorModal";
-import { mentorFakeData } from "@/FakeData/admin/mentor";
 import Link from "next/link";
 import { approveUser } from "@/app/api/admin/team";
 

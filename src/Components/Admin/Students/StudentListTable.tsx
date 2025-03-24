@@ -1,22 +1,84 @@
-import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import { StudentTitle } from "@/Constant";
-import { studentTableColumns } from "@/Data/Admin/Students/Student";
-import { StudentProps } from "@/Types/Student.type";
+
+import { MentorDataProps } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { Card, CardBody } from "reactstrap";
-import { sampleStudentsData } from "./SampleData";
-import { getStudents } from "@/app/api/admin/students";
-import UpdateStudentModal from "./UpdateMentorModal";
-import DeleteStudentModal from "./DeleteStudentModal";
-import { studentFakeData } from "@/FakeData/admin/student";
+import {
+	Button,
+	Card,
+	CardBody,
+	Modal,
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+} from "reactstrap";
 
-const StudentListTable = () => {
+import Link from "next/link";
+import { approveUser } from "@/app/api/admin/team";
+import { getStudents } from "@/app/api/admin/students";
+
+const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [studentList, setStudentList] = useState<any[]>(studentFakeData);
-	const filteredItems: StudentProps[] = studentList?.filter(
-		(item: StudentProps) => {
+	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
+	const [selectedRow, setSelectedRow] = useState<MentorDataProps | null>(null);
+	const [modalOpen, setModalOpen] = useState(false);
+	const toggleModal = () => setModalOpen(!modalOpen);
+	const openApproveModal = (row: MentorDataProps) => {
+		setSelectedRow(row);
+		setModalOpen(true);
+	};
+	const handleAction = async (action: string) => {
+		if (!selectedRow) return;
+		try {
+			await approveUser(selectedRow._id, action);
+			toggleModal();
+			fetchData();
+		} catch (error) {
+			console.log("Approval error:", error);
+		}
+	};
+	const mentorTableColumns: TableColumn<MentorDataProps>[] = [
+		{
+			name: "Name",
+			selector: (row) => row.name,
+			sortable: true,
+			center: false,
+			cell: (row) => (
+				<>
+					<Link
+						className="text-dark fw-bold"
+						href={`/admin/mentors/${row._id}--${row.name}`}>
+						{row.name}
+					</Link>
+				</>
+			),
+		},
+		{
+			name: "Email",
+			selector: (row) => row.email,
+			sortable: true,
+			center: false,
+		},
+		{
+			name: "Action",
+			sortable: true,
+			center: false,
+			cell: (row) => (
+				<>
+					Certificate option
+					{/* <Button
+						onClick={() => {
+							openApproveModal(row);
+						}}
+						color={row.isApproved ? "danger" : "success"}>
+						{row.isApproved ? "Disapprove" : "Approve"}
+					</Button> */}
+				</>
+			),
+		},
+	];
+	const filteredItems: MentorDataProps[] = mentorTableData?.filter(
+		(item: MentorDataProps) => {
 			return Object.values(item).some(
 				(value) =>
 					value &&
@@ -27,18 +89,18 @@ const StudentListTable = () => {
 	const fetchData = async () => {
 		try {
 			const response = await getStudents();
-			const data = response.students;
+			const data = response;
 			// console.log(data);
-
-			// setStudentList(data);
-			setStudentList(studentFakeData);
+			setMentorTableData(data);
+			// setMentorTableData(mentorFakeData);
 		} catch (error) {
-			console.error(error);
+			console.log(error);
+			// setMentorTableData(mentorFakeData);
 		}
 	};
-	// useEffect(() => {
-	// 	fetchData();
-	// }, []);
+	useEffect(() => {
+		fetchData();
+	}, []);
 	return (
 		<Card>
 			<CardBody>
@@ -48,39 +110,48 @@ const StudentListTable = () => {
 					}
 					filterText={filterText}
 				/>
-				<div className="table-responsive custom-scrollbar user-datatable mt-3">
-					<DataTable
-						data={filteredItems}
-						columns={studentTableColumns.map(
-							(column: TableColumn<StudentProps>) =>
-								column.name === "Action"
-									? {
-											...column,
-											cell: (row) => (
-												<ul className="action">
-													<UpdateStudentModal
-														values={row}
-														fetchData={fetchData}
-													/>
-													<DeleteStudentModal
-														id={row._id!}
-														fetchData={fetchData}
-													/>
-												</ul>
-											),
-									  }
-									: column
-						)}
-						striped={true}
-						// fixedHeader
-						fixedHeaderScrollHeight="40vh"
-						// className="display"
-						pagination
-					/>
-				</div>
+				{/* <div className="table-responsive custom-scrollbar user-datatable mt-3"> */}
+				<DataTable
+					data={filteredItems}
+					columns={mentorTableColumns}
+					striped={true}
+					// fixedHeader
+					fixedHeaderScrollHeight="40vh"
+					// className="display"
+					pagination
+				/>
+				{/* </div> */}
 			</CardBody>
+			<Modal
+				isOpen={modalOpen}
+				toggle={toggleModal}
+				centered>
+				<ModalHeader toggle={toggleModal}>
+					Confirm {selectedRow?.isApproved ? "Disapproval" : "Approval"}
+				</ModalHeader>
+				<ModalBody>
+					Are you sure you want to{" "}
+					{selectedRow?.isApproved ? "disapprove" : "approve"}{" "}
+					<strong>{selectedRow?.name}</strong> as a{" "}
+					<strong>{selectedRow?.role}</strong>?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color="secondary"
+						onClick={toggleModal}>
+						Cancel
+					</Button>
+					<Button
+						color={selectedRow?.isApproved ? "danger" : "success"}
+						onClick={() => {
+							handleAction(selectedRow?.isApproved ? "disapprove" : "approve");
+						}}>
+						Yes, {selectedRow?.isApproved ? "Disapprove" : "Approve"}
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</Card>
 	);
 };
 
-export default StudentListTable;
+export default MentorListTable;
