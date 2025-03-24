@@ -97,6 +97,14 @@ export const MenuList: MenuItem[] | undefined = [
 			},
 			{
 				id: 8,
+				title: "WannaBeInterests",
+				icon: "button",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/wanna-be-interests",
+			},
+			{
+				id: 8,
 				title: "Categories",
 				icon: "widget",
 				type: "link",
