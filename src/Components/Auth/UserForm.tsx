@@ -3,32 +3,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
-import axios from "axios";
-import { DecodedTokenProps } from "@/Types/Auth.type";
 import { useAuth } from "@/app/AuthProvider";
 
 const UserForm = () => {
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("rittik@ample.com");
 	const [password, setPassword] = useState("12345678");
+	const [role, setRole] = useState("admin");
 	const { login } = useAuth();
 	const router = useRouter();
+
 	const formSubmitHandle = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		router.push("/admin/dashboard");
-		// const response = await login(email,password);
-		// if (response==200) {
-		// 	console.log("Success");
 
-		// }
-		// else {
-		// 	toast.error("Invalid Credentials!")
-		// }
+		try {
+			const response = await login(email, password, role);
+
+			if (response?.status === 200) {
+				toast.success("Login successful!");
+				router.push("/admin/dashboard"); // or route based on role
+			}
+		} catch (error: any) {
+			const errorMsg =
+				error?.response?.data?.message ||
+				error?.message ||
+				"Something went wrong during login.";
+			toast.error(errorMsg);
+		}
 	};
 
 	return (
@@ -55,29 +60,32 @@ const UserForm = () => {
 					/>
 				</Link>
 			</div>
+
 			<div className="login-main">
 				<Form
 					className="theme-form"
 					onSubmit={formSubmitHandle}>
 					<h4>Sign In to Your Account</h4>
 					<p>Enter your email & password to login</p>
+
 					<FormGroup>
 						<Label className="col-form-label">Email Address</Label>
 						<Input
 							type="email"
 							value={email}
-							onChange={(event) => setEmail(event.target.value)}
+							onChange={(e) => setEmail(e.target.value)}
 							placeholder="Enter your email"
 							required
 						/>
 					</FormGroup>
+
 					<FormGroup>
 						<Label className="col-form-label">Password</Label>
 						<div className="form-input position-relative">
 							<Input
 								type={show ? "text" : "password"}
 								value={password}
-								onChange={(event) => setPassword(event.target.value)}
+								onChange={(e) => setPassword(e.target.value)}
 								placeholder="Enter your password"
 								required
 							/>
@@ -88,6 +96,22 @@ const UserForm = () => {
 							</div>
 						</div>
 					</FormGroup>
+
+					<FormGroup>
+						<Label className="col-form-label">Select Role</Label>
+						<Input
+							type="select"
+							value={role}
+							onChange={(e) => setRole(e.target.value)}
+							required>
+							<option value="admin">Admin</option>
+							<option value="mentor">Mentor</option>
+							<option value="publisher">Publisher</option>
+							<option value="manager">Manager</option>
+							<option value="course-creator">Course Creator</option>
+						</Input>
+					</FormGroup>
+
 					<div className="form-group mb-0">
 						<div className="checkbox p-0">
 							<Input
@@ -105,6 +129,7 @@ const UserForm = () => {
 							href="/forgot-password">
 							Forgot Password?
 						</Link>
+
 						<div className="text-end mt-3">
 							<Button
 								type="submit"

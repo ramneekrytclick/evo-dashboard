@@ -20,7 +20,7 @@ interface User {
 interface AuthContextType {
 	user: User | null;
 	role: string | null;
-	login: (email: string, password: string) => Promise<number | void>;
+	login: (email: string, password: string, role: string) => Promise<any>;
 	logout: () => void;
 }
 
@@ -35,34 +35,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 	const [user, setUser] = useState<User | null>(null);
 	const [role, setRole] = useState<string | null>(null);
-	const login = async (email: string, password: string) => {
+	const login = async (email: string, password: string, role: string) => {
 		try {
 			const loginData = { email, password };
 			const URL = process.env.NEXT_PUBLIC_BASE_URL;
 			const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-			const res = await axios.post(`${URL}admin/login`, loginData, {
+
+			const res = await axios.post(`${URL}${role}/login`, loginData, {
 				headers: { "x-api-key": apiKey },
 			});
+
 			const data = res.data;
-			if (res.status === 200) {
-				const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
-				setUser({ id: decodedToken.id, token: data.token });
-				setRole(decodedToken.role);
-				localStorage.setItem("token", data.token);
-				router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
-				Cookies.set("token", data.token, { expires: 1, path: "/" });
-			} else {
-				throw new Error(data.message || "Login failed");
-			}
-			return res.status;
-		} catch (error) {
-			console.error(error);
+			const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
+
+			// Save token & user data
+			setUser({ id: decodedToken.id, token: data.token });
+			setRole(decodedToken.role);
+
+			localStorage.setItem("token", data.token);
+			Cookies.set("token", data.token, { expires: 1, path: "/" });
+
+			// Optional: You can redirect here, or let frontend do it
+			// router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
+
+			return {
+				status: res.status,
+				token: data.token,
+				role: decodedToken.role,
+			};
+		} catch (error: any) {
+			const message =
+				error?.response?.data?.message ||
+				error?.message ||
+				"Login failed. Please try again.";
+			throw new Error(message);
 		}
 	};
 
 	const logout = () => {
 		setUser(null);
-		localStorage.removeItem("token")
+		localStorage.removeItem("token");
 		setRole(null);
 		Cookies.remove("token");
 		router.push("/auth/login");
