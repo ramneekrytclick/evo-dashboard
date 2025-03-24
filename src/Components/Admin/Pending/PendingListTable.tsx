@@ -20,7 +20,7 @@ import {
 } from "reactstrap";
 import { toast } from "react-toastify";
 
-const TeamListTable = () => {
+const PendingListTable = () => {
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<TeamListType | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -154,4 +154,4 @@ const TeamListTable = () => {
 	);
 };
 
-export default TeamListTable;
+export default PendingListTable;

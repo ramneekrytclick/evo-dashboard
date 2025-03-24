@@ -1,9 +1,5 @@
-import TeamPageContainer from "@/Components/Admin/Team/TeamList";
+const page = () => {
+	return <div>Enter</div>;
+};
 
-const TeamPage = () => {
-    return (
-       <TeamPageContainer/>
-    );
-}
-
-export default TeamPage;
+export default page;

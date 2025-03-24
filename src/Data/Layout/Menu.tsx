@@ -27,11 +27,11 @@ export const MenuList: MenuItem[] | undefined = [
 				type: "link",
 			},
 			{
-				title: "Team",
+				title: "New User Approvals",
 				id: 2,
-				icon: "user",
+				icon: "project",
 				type: "link",
-				path: "/admin/team",
+				path: "/admin/pending",
 			},
 			{
 				title: "Mentors",
@@ -56,6 +56,14 @@ export const MenuList: MenuItem[] | undefined = [
 				type: "link",
 				lanClass: "lan-6",
 				path: "/admin/employers",
+			},
+			{
+				title: "Team",
+				id: 4,
+				icon: "user",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/team",
 			},
 			{
 				title: "Courses",
