@@ -18,6 +18,7 @@ import {
 	ModalFooter,
 	ModalHeader,
 } from "reactstrap";
+import { toast } from "react-toastify";
 
 const TeamListTable = () => {
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
@@ -33,6 +34,9 @@ const TeamListTable = () => {
 		try {
 			await approveUser(selectedRow._id, "approve");
 			toggleModal();
+			toast.success(
+				`${selectedRow.name} approved successfully as a ${selectedRow.role}`
+			);
 			fetchData(); // Refresh list
 		} catch (error) {
 			console.log("Approval error:", error);

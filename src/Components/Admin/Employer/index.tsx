@@ -1,29 +1,23 @@
-"use client"
+"use client";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { AdminTitle, EmployerTitle } from "@/Constant";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import EmployerListHeader from "./EmployerListHeader";
+import { AdminTitle } from "@/Constant";
+import { Col, Container, Row } from "reactstrap";
 import EmployerListTable from "./EmployerListTable";
 
 const EmployerPageContainer = () => {
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={EmployerTitle}
+				mainTitle={"Employers"}
 				parent={AdminTitle}
-				title={EmployerTitle}
+				title={"Employers"}
 			/>
 			<Container fluid>
 				<Row>
-                    <Col sm={12}>
-                        <Card>
-                            <CardBody>
-                                <EmployerListHeader/>
-                                <EmployerListTable/> 
-                            </CardBody>
-                        </Card>
-                    </Col>
-                </Row>
+					<Col sm={12}>
+						<EmployerListTable />
+					</Col>
+				</Row>
 			</Container>
 		</>
 	);

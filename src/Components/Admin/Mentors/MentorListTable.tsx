@@ -15,6 +15,7 @@ import {
 import { getMentors } from "@/app/api/admin/mentors";
 import Link from "next/link";
 import { approveUser } from "@/app/api/admin/team";
+import { toast } from "react-toastify";
 
 const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -30,6 +31,9 @@ const MentorListTable = () => {
 		if (!selectedRow) return;
 		try {
 			await approveUser(selectedRow._id, action);
+			toast.success(
+				`${selectedRow.name} ${action}d successfully as a ${selectedRow.role}`
+			);
 			toggleModal();
 			fetchData();
 		} catch (error) {

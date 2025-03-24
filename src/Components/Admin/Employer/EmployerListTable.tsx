@@ -1,17 +1,81 @@
-import { Card, CardBody } from "reactstrap";
+import {
+	Button,
+	Card,
+	CardBody,
+	Modal,
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
+} from "reactstrap";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { EmployerProps } from "@/Types/Employer.type";
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import { employerTableColumns } from "@/Data/Admin/Employers/Employer";
 import { getEmployers } from "@/app/api/admin/employers";
-import UpdateEmployerModal from "./UpdateEmployerModal";
-import DeleteEmployerModal from "./DeleteEmployerModal";
-import { employerFakeData } from "@/FakeData/admin/employer";
+import { approveUser } from "@/app/api/admin/team";
+import { toast } from "react-toastify";
 
 const EmployerListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [employers, setEmployers] = useState<any[]>([]);
+	const [employers, setEmployers] = useState<EmployerProps[]>([]);
+	const [selectedRow, setSelectedRow] = useState<EmployerProps | null>(null);
+	const [modalOpen, setModalOpen] = useState(false);
+	const toggleModal = () => setModalOpen(!modalOpen);
+	const openApproveModal = (row: EmployerProps) => {
+		setSelectedRow(row);
+		setModalOpen(true);
+	};
+	const handleAction = async (action: string) => {
+		if (!selectedRow) return;
+		try {
+			await approveUser(selectedRow._id, action);
+			toggleModal();
+			toast.success(
+				`${selectedRow.name} ${action}d successfully as a ${selectedRow.role}`
+			);
+			fetchEmployers();
+		} catch (error) {
+			console.log("Approval error:", error);
+		}
+	};
+	const employerTableColumns: TableColumn<EmployerProps>[] = [
+		{
+			name: "Name",
+			selector: (row) => row["name"],
+			sortable: true,
+			center: false,
+			cell: (row) => row.name,
+		},
+		{
+			name: "Email",
+			selector: (row) => row["email"],
+			sortable: true,
+			center: false,
+			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
+		},
+		{
+			name: "Company",
+			selector: (row) => row["companyName"],
+			sortable: true,
+			center: false,
+		},
+		{
+			name: "Action",
+			sortable: false,
+			center: false,
+			cell: (row) => (
+				<>
+					<Button
+						onClick={() => {
+							openApproveModal(row);
+						}}
+						color={row.isApproved ? "danger" : "success"}>
+						{row.isApproved ? "Disapprove" : "Approve"}
+					</Button>
+				</>
+			),
+		},
+	];
 
 	const filteredItems: EmployerProps[] = employers?.filter(
 		(item: EmployerProps) => {
@@ -23,21 +87,23 @@ const EmployerListTable = () => {
 		}
 	);
 	const fetchEmployers = async () => {
-		// try {
-		// 	const response = await getEmployers();
-		// 	setEmployers(response.employers);
-		// 	setEmployers(employerFakeData);
-		// } catch (error) {
-		// 	console.log(error);
-		// }
-		setEmployers(employerFakeData);
+		try {
+			const response = await getEmployers();
+			console.log("====================================");
+			console.log(response);
+			console.log("====================================");
+			setEmployers(response);
+			// setEmployers(employerFakeData);
+		} catch (error) {
+			console.log(error);
+		}
+		// setEmployers(employerFakeData);
 	};
 	useEffect(() => {
 		fetchEmployers();
 	}, []);
 	return (
 		<Card>
-			{/* <CommonCardHeader headClass="pb-0 card-no-border" title={CourseTitleLabel} /> */}
 			<CardBody>
 				<FilterComponent
 					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -48,34 +114,41 @@ const EmployerListTable = () => {
 				<div className="table-responsive custom-scrollbar user-datatable mt-3">
 					<DataTable
 						data={filteredItems}
-						columns={employerTableColumns.map(
-							(column: TableColumn<EmployerProps>) =>
-								column.name === "Action"
-									? {
-											...column,
-											cell: (row) => (
-												<ul className="action">
-													<UpdateEmployerModal
-														values={row}
-														fetchData={fetchEmployers}
-													/>
-													<DeleteEmployerModal
-														id={row._id}
-														fetchData={fetchEmployers}
-													/>
-												</ul>
-											),
-									  }
-									: column
-						)}
+						columns={employerTableColumns}
 						striped={true}
-						// fixedHeader
 						fixedHeaderScrollHeight="40vh"
-						// className="display"
 						pagination
 					/>
 				</div>
 			</CardBody>
+			<Modal
+				isOpen={modalOpen}
+				toggle={toggleModal}
+				centered>
+				<ModalHeader toggle={toggleModal}>
+					Confirm {selectedRow?.isApproved ? "Disapproval" : "Approval"}
+				</ModalHeader>
+				<ModalBody>
+					Are you sure you want to{" "}
+					{selectedRow?.isApproved ? "disapprove" : "approve"}{" "}
+					<strong>{selectedRow?.name}</strong> as a{" "}
+					<strong>{selectedRow?.role}</strong>?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color="secondary"
+						onClick={toggleModal}>
+						Cancel
+					</Button>
+					<Button
+						color={selectedRow?.isApproved ? "danger" : "success"}
+						onClick={() => {
+							handleAction(selectedRow?.isApproved ? "disapprove" : "approve");
+						}}>
+						Yes, {selectedRow?.isApproved ? "Disapprove" : "Approve"}
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</Card>
 	);
 };

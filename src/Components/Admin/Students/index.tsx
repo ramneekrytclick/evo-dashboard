@@ -1,6 +1,6 @@
 "use client";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { AdminTitle, StudentTitle } from "@/Constant";
+import { AdminTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import StudentListTable from "./StudentListTable";
 
@@ -8,9 +8,9 @@ const StudentPageContainer = () => {
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={StudentTitle}
+				mainTitle={"Students"}
 				parent={AdminTitle}
-				title={StudentTitle}
+				title={"Students"}
 			/>
 			<Container fluid>
 				<Row>

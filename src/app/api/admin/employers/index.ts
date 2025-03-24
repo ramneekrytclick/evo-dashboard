@@ -3,7 +3,7 @@ import { apiClient } from "@/utils/api";
 
 export const getEmployers = async () => {
 	try {
-		const response = await apiClient.get(`/admin/employers`);
+		const response = await apiClient.get("/admin/role/Employer");
 		return response.data;
 	} catch (error) {
 		console.error(error);
