@@ -25,7 +25,8 @@ interface AuthContextType {
 		password: string,
 		name: string,
 		role: string,
-		expertise?: string
+		expertise?: string,
+		wannaBe?: string
 	) => Promise<any>;
 	login: (email: string, password: string, role: string) => Promise<any>;
 	logout: () => void;
@@ -48,76 +49,64 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		password: string,
 		role: string,
 		name: string,
-		expertise?: string
+		expertise?: string,
+		wannaBe?: string
 	) => {
-		try {
-			const URL = process.env.NEXT_PUBLIC_BASE_URL;
-			const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+		const URL = process.env.NEXT_PUBLIC_BASE_URL;
+		const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
-			// Create payload
-			const registerData: any = {
-				name,
-				email,
-				password,
-			};
+		// Create payload
+		const registerData: any = {
+			name,
+			email,
+			password,
+		};
 
-			// Add expertise only if role is Mentor
-			if (role.toLowerCase() === "mentors" && expertise) {
-				registerData.expertise = expertise;
-			}
-
-			const res = await axios.post(
-				`${URL}${role.toLowerCase()}/register`,
-				registerData,
-				{
-					headers: { "x-api-key": apiKey },
-				}
-			);
-			return res.data.message;
-		} catch (error: any) {
-			const message =
-				error?.response?.data?.message ||
-				error?.message ||
-				"Registration failed. Please try again.";
-			throw new Error(message);
+		// Add expertise only if role is Mentor
+		if (role.toLowerCase() === "mentors" && expertise) {
+			registerData.expertise = expertise;
 		}
+		if (role.toLowerCase() === "students" && wannaBe) {
+			registerData.wannaBeInterest = wannaBe;
+		}
+
+		const res = await axios.post(
+			`${URL}${role.toLowerCase()}/register`,
+			registerData,
+			{
+				headers: { "x-api-key": apiKey },
+			}
+		);
+		return res.data.message;
 	};
 
 	const login = async (email: string, password: string, role: string) => {
-		try {
-			const loginData = { email, password };
-			const URL = process.env.NEXT_PUBLIC_BASE_URL;
-			const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+		const loginData = { email, password };
+		const URL = process.env.NEXT_PUBLIC_BASE_URL;
+		const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
-			const res = await axios.post(`${URL}${role}/login`, loginData, {
-				headers: { "x-api-key": apiKey },
-			});
+		const res = await axios.post(`${URL}${role}/login`, loginData, {
+			headers: { "x-api-key": apiKey },
+		});
 
-			const data = res.data;
-			const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
+		const data = res.data;
+		const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
 
-			// Save token & user data
-			setUser({ id: decodedToken._id, token: data.token });
-			setRole(decodedToken.role);
+		// Save token & user data
+		setUser({ id: decodedToken._id, token: data.token });
+		setRole(decodedToken.role);
 
-			localStorage.setItem("token", data.token);
-			Cookies.set("token", data.token, { expires: 1, path: "/" });
+		localStorage.setItem("token", data.token);
+		Cookies.set("token", data.token, { expires: 1, path: "/" });
 
-			// Optional: You can redirect here, or let frontend do it
-			// router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
+		// Optional: You can redirect here, or let frontend do it
+		// router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
 
-			return {
-				status: res.status,
-				token: data.token,
-				role: decodedToken.role,
-			};
-		} catch (error: any) {
-			const message =
-				error?.response?.data?.message ||
-				error?.message ||
-				"Login failed. Please try again.";
-			throw new Error(message);
-		}
+		return {
+			status: res.status,
+			token: data.token,
+			role: decodedToken.role,
+		};
 	};
 
 	const logout = () => {

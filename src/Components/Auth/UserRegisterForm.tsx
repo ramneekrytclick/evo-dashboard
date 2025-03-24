@@ -16,6 +16,7 @@ const UserRegisterForm = () => {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [expertise, setExpertise] = useState("");
+	const [wannaBe, setWannaBe] = useState("");
 	const { register } = useAuth();
 	const router = useRouter();
 
@@ -23,20 +24,15 @@ const UserRegisterForm = () => {
 
 	const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		if (!isPasswordMatch) {
-			toast.error("Passwords do not match");
-			return;
-		}
-
-		const payload = {
-			name,
-			email,
-			password,
-			...(role === "Mentor" && { expertise }),
-		};
-
 		try {
-			const response = await register(email, password, role, name, expertise);
+			const response = await register(
+				email,
+				password,
+				role,
+				name,
+				expertise,
+				wannaBe
+			);
 			toast.success("Registration successful!");
 			router.push("/auth/login");
 		} catch (error: any) {
@@ -92,6 +88,8 @@ const UserRegisterForm = () => {
 							<option value="publishers/auth">Publisher</option>
 							<option value="managers/auth">Manager</option>
 							<option value="course-creators/auth">Course Creator</option>
+							<option value="students">Student</option>
+							<option value="jobs">Employer</option>
 						</Input>
 					</FormGroup>
 
@@ -139,13 +137,25 @@ const UserRegisterForm = () => {
 						/>
 					</FormGroup>
 
-					{role === "Mentor" && (
+					{role === "mentors" && (
 						<FormGroup>
 							<Label className="col-form-label">Expertise</Label>
 							<Input
 								type="text"
 								value={expertise}
 								onChange={(e) => setExpertise(e.target.value)}
+								placeholder="E.g. React, Python"
+								required
+							/>
+						</FormGroup>
+					)}
+					{role === "students" && (
+						<FormGroup>
+							<Label className="col-form-label">WannaBe Interests</Label>
+							<Input
+								type="text"
+								value={wannaBe}
+								onChange={(e) => setWannaBe(e.target.value)}
 								placeholder="E.g. React, Python"
 								required
 							/>

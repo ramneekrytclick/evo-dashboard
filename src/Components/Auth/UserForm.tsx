@@ -11,8 +11,8 @@ import { useAuth } from "@/app/AuthProvider";
 
 const UserForm = () => {
 	const [show, setShow] = useState(false);
-	const [email, setEmail] = useState("rittik@ample.com");
-	const [password, setPassword] = useState("12345678");
+	const [email, setEmail] = useState("admin@evo.com");
+	const [password, setPassword] = useState("1234");
 	const [loading, setLoading] = useState(false);
 	const [role, setRole] = useState("admin");
 	const { login } = useAuth();
@@ -107,10 +107,12 @@ const UserForm = () => {
 							onChange={(e) => setRole(e.target.value)}
 							required>
 							<option value="admin">Admin</option>
-							<option value="mentor">Mentor</option>
-							<option value="publisher">Publisher</option>
-							<option value="manager">Manager</option>
-							<option value="course-creator">Course Creator</option>
+							<option value="mentors">Mentor</option>
+							<option value="publishers/auth">Publisher</option>
+							<option value="managers/auth">Manager</option>
+							<option value="course-creators/auth">Course Creator</option>
+							<option value="students">Student</option>
+							<option value="jobs">Employer</option>
 						</Input>
 					</FormGroup>
 
