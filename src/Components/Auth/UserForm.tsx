@@ -13,6 +13,7 @@ const UserForm = () => {
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("rittik@ample.com");
 	const [password, setPassword] = useState("12345678");
+	const [loading, setLoading] = useState(false);
 	const [role, setRole] = useState("admin");
 	const { login } = useAuth();
 	const router = useRouter();
@@ -20,12 +21,11 @@ const UserForm = () => {
 	const formSubmitHandle = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
+		setLoading(true);
 		try {
 			const response = await login(email, password, role);
-
 			if (response?.status === 200) {
-				toast.success("Login successful!");
-				router.push("/admin/dashboard"); // or route based on role
+				router.push(`/${role}/dashboard`); // or route based on role
 			}
 		} catch (error: any) {
 			const errorMsg =
@@ -33,6 +33,8 @@ const UserForm = () => {
 				error?.message ||
 				"Something went wrong during login.";
 			toast.error(errorMsg);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -126,16 +128,24 @@ const UserForm = () => {
 						</div>
 						<Link
 							className="link"
-							href="/forgot-password">
-							Forgot Password?
+							href="/auth/register">
+							Register User
 						</Link>
 
 						<div className="text-end mt-3">
 							<Button
 								type="submit"
 								color="primary"
+								disabled={loading}
 								block>
 								Sign In
+								{loading && (
+									<span
+										className="spinner-border spinner-border-sm me-2"
+										role="status"
+										aria-hidden="true"
+									/>
+								)}
 							</Button>
 						</div>
 					</div>

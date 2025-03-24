@@ -20,6 +20,13 @@ interface User {
 interface AuthContextType {
 	user: User | null;
 	role: string | null;
+	register: (
+		email: string,
+		password: string,
+		name: string,
+		role: string,
+		expertise?: string
+	) => Promise<any>;
 	login: (email: string, password: string, role: string) => Promise<any>;
 	logout: () => void;
 }
@@ -27,6 +34,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
 	user: null,
 	role: null,
+	register: async () => {},
 	login: async () => {},
 	logout: () => {},
 });
@@ -35,6 +43,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
 	const [user, setUser] = useState<User | null>(null);
 	const [role, setRole] = useState<string | null>(null);
+	const register = async (
+		email: string,
+		password: string,
+		role: string,
+		name: string,
+		expertise?: string
+	) => {
+		try {
+			const URL = process.env.NEXT_PUBLIC_BASE_URL;
+			const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+
+			// Create payload
+			const registerData: any = {
+				name,
+				email,
+				password,
+			};
+
+			// Add expertise only if role is Mentor
+			if (role.toLowerCase() === "mentors" && expertise) {
+				registerData.expertise = expertise;
+			}
+
+			const res = await axios.post(
+				`${URL}${role.toLowerCase()}/register`,
+				registerData,
+				{
+					headers: { "x-api-key": apiKey },
+				}
+			);
+			return res.data.message;
+		} catch (error: any) {
+			const message =
+				error?.response?.data?.message ||
+				error?.message ||
+				"Registration failed. Please try again.";
+			throw new Error(message);
+		}
+	};
+
 	const login = async (email: string, password: string, role: string) => {
 		try {
 			const loginData = { email, password };
@@ -49,7 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
 
 			// Save token & user data
-			setUser({ id: decodedToken.id, token: data.token });
+			setUser({ id: decodedToken._id, token: data.token });
 			setRole(decodedToken.role);
 
 			localStorage.setItem("token", data.token);
@@ -103,7 +151,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ user, role, login, logout }}>
+		<AuthContext.Provider value={{ user, role, register, login, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);
