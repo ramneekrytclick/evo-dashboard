@@ -27,7 +27,7 @@ const UserProfile = () => {
 				{/* <div className='flex-grow-1'>
           <span><User/></span>
         </div> */}
-				<li onClick={() => handleClick("admin")}>
+				{/* <li onClick={() => handleClick("admin")}>
 					<Button
 						color={"success"}
 						className="d-flex align-items-center">
@@ -61,7 +61,7 @@ const UserProfile = () => {
 						className="d-flex align-items-center">
 						Student
 					</Button>
-				</li>
+				</li> */}
 				<li onClick={handleLogout}>
 					<Button
 						color={"primary"}
