@@ -15,8 +15,8 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 	const fetchSubcategories = async () => {
 		try {
 			const response = await getSubcategories(id);
-			// setSubcategories(response.subcategories);
-			setSubcategories(subcategoryFakeData);
+			setSubcategories(response);
+			// setSubcategories(subcategoryFakeData);
 		} catch (error) {
 			console.error(error);
 		}

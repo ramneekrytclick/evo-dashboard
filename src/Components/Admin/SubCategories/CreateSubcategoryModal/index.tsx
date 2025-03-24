@@ -4,9 +4,14 @@ import { useState } from "react";
 import { Button } from "reactstrap";
 import CreateSubcategoryForm from "./CreateSubcategoryForm";
 
-
-const CreateSubcategoryModal = ({fetchData,id}:{fetchData:()=>Promise<void>,id:string}) => {
-    const [modal, setModal] = useState(false);
+const CreateSubcategoryModal = ({
+	fetchData,
+	id,
+}: {
+	fetchData: () => Promise<void>;
+	id: string;
+}) => {
+	const [modal, setModal] = useState(false);
 	const toggle = () => {
 		setModal(!modal);
 	};
@@ -27,13 +32,17 @@ const CreateSubcategoryModal = ({fetchData,id}:{fetchData:()=>Promise<void>,id:s
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createSubcategoryTitle}</h3>
+					<h3 className="mb-3">{`Create New Subcategory under Category ${id}`}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<CreateSubcategoryForm fetchData={fetchData} toggle={toggle} id={id}/>
+					<CreateSubcategoryForm
+						fetchData={fetchData}
+						toggle={toggle}
+						id={id}
+					/>
 				</div>
 			</CommonModal>
 		</>
 	);
-}
+};
 
 export default CreateSubcategoryModal;

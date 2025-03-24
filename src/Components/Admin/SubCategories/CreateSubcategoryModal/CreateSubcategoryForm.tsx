@@ -7,12 +7,12 @@ import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 interface CreateSubcategoryFormProps {
 	toggle: () => void;
 	fetchData: () => Promise<void>;
-    id:string;
+	id: string;
 }
 const CreateSubcategoryForm = ({
 	toggle,
 	fetchData,
-    id
+	id,
 }: CreateSubcategoryFormProps) => {
 	const [formData, setFormData] = useState<Subcategory>({
 		name: "",
@@ -24,12 +24,12 @@ const CreateSubcategoryForm = ({
 		try {
 			const response = await createSubcategory(formData);
 			console.log(response);
-			toast("Subcategory created successfully!");
+			toast.success("Subcategory created successfully!");
 			fetchData();
 			toggle();
 		} catch (error) {
 			console.error(error);
-			alert("Error updating student!");
+			toast.error("Error updating student!");
 		}
 	};
 

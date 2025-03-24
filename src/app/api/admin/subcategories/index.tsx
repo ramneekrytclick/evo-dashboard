@@ -1,22 +1,14 @@
 import { apiClient } from "@/utils/api";
 
 export const getSubcategories = async (id: string) => {
-	try {
-		const response = await apiClient.get(`admin/subcategories`, {
-			params: { categoryId: id },
-		});
-		return response.data;
-	} catch (error) {
-		console.error("Error fetching subcategories:", error);
-		throw error;
-	}
+	const response = await apiClient.get(`/subcategories/category/${id}`);
+	return response.data;
 };
 
-export const createSubcategory = async (data: any) => {
-	try {
-		const response = await apiClient.post("admin/create-subcategory", data);
-		return response.data;
-	} catch (error) {
-		console.error("Error creating subcategory:", error);
-	}
+export const createSubcategory = async (data: {
+	name: string;
+	categoryId: string;
+}) => {
+	const response = await apiClient.post("/subcategories", data);
+	return response.data;
 };
