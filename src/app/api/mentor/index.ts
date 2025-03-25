@@ -15,3 +15,14 @@ export const gradeAssignment = async (data: {
 }) => {
 	return (await apiClient.post(`/mentors/grade-assignment`, data)).data;
 };
+export const getBookedSessions = async (id: string) => {
+	return (await apiClient.get(`/mentor-bookings/${id}`)).data;
+};
+export const updateBookingStatus = async (id: string, status: string) => {
+	return (
+		await apiClient.put(`/mentor-bookings/update-status`, {
+			bookingId: id,
+			status,
+		})
+	).data;
+};

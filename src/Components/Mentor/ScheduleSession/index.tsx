@@ -3,11 +3,12 @@ import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { MentorTitle, scheduleSessionTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import ScheduleSessionForm from "./ScheduleSessionForm";
+import ScheduledSessions from "./ScheduledSessions";
 
 const ScheduleSessionContainer = () => {
-    return (
-        <>
-            <Breadcrumbs
+	return (
+		<>
+			<Breadcrumbs
 				mainTitle={scheduleSessionTitle}
 				parent={MentorTitle}
 				title={scheduleSessionTitle}
@@ -15,17 +16,12 @@ const ScheduleSessionContainer = () => {
 			<Container fluid>
 				<Row>
 					<Col xs={12}>
-						<Card>
-							{/* <CommonCardHeader title={createBlogFormTitle} /> */}
-							<CardBody className="add-post">
-								<ScheduleSessionForm />
-							</CardBody>
-						</Card>
+						<ScheduledSessions />
 					</Col>
 				</Row>
 			</Container>
-        </>
-    );
-}
+		</>
+	);
+};
 
 export default ScheduleSessionContainer;

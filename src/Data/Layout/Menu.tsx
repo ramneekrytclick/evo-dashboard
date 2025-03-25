@@ -270,6 +270,12 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "My Courses",
 			},
 			{
+				id: 4,
+				path: "/student/session-booking",
+				icon: "contact",
+				title: "Book 1:1 Session",
+			},
+			{
 				id: 3,
 				path: "/student/paths",
 				icon: "maps",
@@ -281,6 +287,7 @@ export const MenuList: MenuItem[] | undefined = [
 				icon: "learning",
 				title: "Batches",
 			},
+
 			{
 				id: 4,
 				path: "/student/resume",

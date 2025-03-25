@@ -40,3 +40,11 @@ export const submitAssignment = async (data: {
 }) => {
 	return (await apiClient.post(`/students/submit-assignment`, data)).data;
 };
+export const bookMentorSession = async (data: {
+	studentId: string;
+	mentorId: string;
+	date: any;
+	timeSlot: any;
+}) => {
+	return (await apiClient.post(`/mentor-bookings/book`, data)).data;
+};
