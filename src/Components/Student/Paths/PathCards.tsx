@@ -1,6 +1,9 @@
+"use client";
+import { getEnrolledPaths } from "@/app/api/student";
 import { Href, ImagePath } from "@/Constant";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Badge, Card, CardBody, Col, Progress } from "reactstrap";
 
 export interface PathProps {
@@ -11,42 +14,22 @@ export interface PathProps {
 	roadmapSuggestions?: string[];
 }
 
-export const learningPaths: PathProps[] = [
-	{
-		_id: "1",
-		name: "Full Stack Developer Path",
-		description:
-			"A structured roadmap for mastering frontend and backend technologies.",
-		courses: [
-			{ _id: "c1", name: "HTML & CSS Basics" },
-			{ _id: "c2", name: "JavaScript & React" },
-			{ _id: "c3", name: "Node.js & Databases" },
-		],
-		roadmapSuggestions: [
-			"Complete foundational courses first",
-			"Work on real-world projects",
-		],
-	},
-	{
-		_id: "2",
-		name: "Data Science Mastery",
-		description:
-			"Learn data science, machine learning, and AI with real-world projects.",
-		courses: [
-			{ _id: "c4", name: "Python for Data Science" },
-			{ _id: "c5", name: "Machine Learning Algorithms" },
-		],
-		roadmapSuggestions: [
-			"Practice coding daily",
-			"Stay updated with industry trends",
-		],
-	},
-];
-
 const MyLearningPaths = () => {
+	const [learningPaths, setPaths] = useState<PathProps[]>([]);
+	const fetchData = async () => {
+		try {
+			const response = await getEnrolledPaths();
+			setPaths(response);
+		} catch (error) {
+			console.error("Error fetching learning paths:", error);
+		}
+	};
+	useEffect(() => {
+		fetchData();
+	}, []);
 	return (
 		<>
-			{learningPaths.map((path) => (
+			{learningPaths?.map((path) => (
 				<Col
 					xl={6}
 					className="box-col-6"

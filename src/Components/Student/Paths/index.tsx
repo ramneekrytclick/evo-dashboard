@@ -6,9 +6,9 @@ const MyPathsContainer = () => {
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={"My Courses"}
+				mainTitle={"My Paths"}
 				parent={"Student"}
-				title={"My Courses"}
+				title={"My Paths"}
 			/>
 			<Container fluid>
 				<Row>
