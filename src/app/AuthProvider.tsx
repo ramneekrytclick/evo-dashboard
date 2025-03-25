@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		setUser({ id: decodedToken.id, token: data.token });
 		setRole(decodedToken.role);
 
-		localStorage.setItem("token", data.token);
+		// localStorage.setItem("token", data.token);
 		Cookies.set("token", data.token, { expires: 1, path: "/" });
 
 		// Optional: You can redirect here, or let frontend do it
@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const logout = () => {
 		setUser(null);
-		localStorage.removeItem("token");
+		// localStorage.removeItem("token");
 		setRole(null);
 		Cookies.remove("token");
 		router.push("/auth/login");

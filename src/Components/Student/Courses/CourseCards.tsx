@@ -1,7 +1,10 @@
+"use client";
+import { getEnrolledCourses } from "@/app/api/student";
 import { Href, ImagePath } from "@/Constant";
-import { enrolledCourses } from "@/FakeData/student/mycourses";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Badge, Card, CardBody, Col, Progress } from "reactstrap";
 
 export interface CourseProps {
@@ -18,9 +21,25 @@ export interface CourseProps {
 	price: number;
 }
 const MyEnrolledCourses = () => {
+	const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+	const fetchCourses = async () => {
+		try {
+			const response = await getEnrolledCourses();
+			setEnrolledCourses(response);
+			console.log("====================================");
+			console.log(response);
+			console.log("====================================");
+		} catch (error) {
+			toast.error("Error fetching courses");
+		}
+	};
+	useEffect(() => {
+		fetchCourses();
+	}, []);
+
 	return (
 		<>
-			{enrolledCourses.map((course) => (
+			{enrolledCourses?.map((course) => (
 				<Col
 					xl={6}
 					className="box-col-6"
