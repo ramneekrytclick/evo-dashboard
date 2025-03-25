@@ -32,6 +32,9 @@ const UserForm = () => {
 					case "students":
 						router.push(`/student/dashboard`); // or route based on role
 						break;
+					case "mentors":
+						router.push(`/mentor/dashboard`); // or route based on role
+						break;
 
 					default:
 						router.push(`/${role}/dashboard`); // or route based on role
