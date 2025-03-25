@@ -29,6 +29,9 @@ const CourseModal = ({
 	const goToLessons = () => {
 		router.push(`/admin/lessons/${values._id}`);
 	};
+	const goToBatches = () => {
+		router.push(`/admin/batches/${values._id}`);
+	};
 
 	return (
 		<>
@@ -42,6 +45,11 @@ const CourseModal = ({
 					color="dark"
 					onClick={toggle}>
 					<Edit size={20} />
+				</Button>
+				<Button
+					color="success"
+					onClick={goToBatches}>
+					View Batches
 				</Button>
 			</ButtonGroup>
 			<CommonModal modalData={ModalData}>

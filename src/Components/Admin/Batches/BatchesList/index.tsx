@@ -12,7 +12,6 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { batchTableColumns } from "@/Data/Admin/Batches/Batch";
 import UpdateBatchModal from "./UpdateBatchModal";
 import DeleteBatchModal from "./DeleteBatchModal";
-import { batchFakeData } from "@/FakeData/admin/batch";
 
 const BatchesList = () => {
 	const [batches, setBatches] = useState<any[]>([]);
@@ -32,7 +31,6 @@ const BatchesList = () => {
 			setBatches(BatchData);
 		} catch (error) {
 			console.log(error);
-			setBatches(batchFakeData);
 		}
 	};
 	useEffect(() => {
