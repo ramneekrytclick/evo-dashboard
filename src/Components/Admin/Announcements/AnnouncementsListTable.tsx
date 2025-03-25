@@ -9,6 +9,7 @@ import { announcementTableColumns } from "@/Data/Admin/Announcements/Announcemen
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { getAnnouncements } from "@/app/api/admin/announcements";
 import { announcementFakeData } from "@/FakeData/admin/announcements";
+import CreateAnnouncementModal from "./CreateAnnouncement/CreateAnnouncementModal";
 
 const AnnouncementsListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -27,8 +28,8 @@ const AnnouncementsListTable = () => {
 		try {
 			const data = await getAnnouncements();
 			// console.log(data);
-			setAnnouncementsData(announcementFakeData);
-			// setAnnouncementsData(data?.announcements);
+			// setAnnouncementsData(announcementFakeData);
+			setAnnouncementsData(data);
 		} catch (error) {
 			console.error("Failed to fetch announcements:", error);
 			setAnnouncementsData([]);
@@ -52,6 +53,7 @@ const AnnouncementsListTable = () => {
 					}
 					filterText={filterText}
 				/>
+				<CreateAnnouncementModal fetchData={fetchAnnouncements} />
 				<div
 					className="table-responsive custom-scrollbar user-datatable mt-3"
 					aria-busy={loading}>

@@ -1,14 +1,18 @@
-"use client"
+"use client";
 import { createAnnouncementTitle, EvoLogin } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
-import CommonModal from "../../../../../CommonComponent/CommonModal";
-import CreateAnnouncementForm from "./CreateAnnouncementForm";
 
-const CreateAnnouncementModal = () => {
+import CreateAnnouncementForm from "./CreateAnnouncementForm";
+import CommonModal from "@/CommonComponent/CommonModal";
+interface Props {
+	fetchData: () => Promise<void>;
+}
+const CreateAnnouncementModal = ({ fetchData }: Props) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
 		setModal(!modal);
+		fetchData(); // Call the fetchData function to update the list of announcements after creating a new one.
 	};
 	const ModalData = {
 		isOpen: modal,
