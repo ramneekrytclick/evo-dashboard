@@ -91,9 +91,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 		const data = res.data;
 		const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
-
 		// Save token & user data
-		setUser({ id: decodedToken._id, token: data.token });
+		setUser({ id: decodedToken.id, token: data.token });
 		setRole(decodedToken.role);
 
 		localStorage.setItem("token", data.token);

@@ -63,7 +63,7 @@ export interface CountdownDataProp {
 }
 
 export interface DecodedTokenProps {
-	_id: string;
+	id: string;
 	role: string;
 	exp: number;
 }
