@@ -74,6 +74,13 @@ const TicketTable = () => {
 			),
 		},
 		{
+			name: "User",
+			selector: (row: SupportTicketProps) => {
+				return row.user?.name + "(" + row.user?._id + ")";
+			},
+			sortable: true,
+		},
+		{
 			name: "Subject",
 			selector: (row: SupportTicketProps) => row.subject,
 			sortable: true,
