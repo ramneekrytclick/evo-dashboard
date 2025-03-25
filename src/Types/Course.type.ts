@@ -53,11 +53,10 @@ export interface PromoCodeProps {
 	_id?: string;
 	code: string;
 	discountPercentage: number;
-	expiryDate: string;
-	usageLimit: number;
-	usedCount: number;
-	applicableTo?: string;
-	category: Category | null;
+	course: { _id: string; name?: string } | null;
+	path: { _id: string; name?: string } | null;
+	isActive: boolean;
+	validUntil: string;
 }
 export interface FormGroupCommonProp {
 	type: InputType;

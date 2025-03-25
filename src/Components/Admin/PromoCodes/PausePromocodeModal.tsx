@@ -1,18 +1,20 @@
 "use client";
 
-import { deletePromoCode } from "@/app/api/admin/promo-codes";
+import { updatePromoCode } from "@/app/api/admin/promo-codes";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 import CommonModal from "@/CommonComponent/CommonModal";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { deletePromoCodeConfirmTitle, ImagePath } from "@/Constant";
+import { ImagePath } from "@/Constant";
 
-const DeletePromoCodeModal = ({
+const PausePromocodeModal = ({
 	id,
+	isActive,
 	fetchData,
 }: {
 	id: string;
+	isActive: boolean;
 	fetchData: () => Promise<void>;
 }) => {
 	const [modal, setModal] = useState(false);
@@ -25,50 +27,52 @@ const DeletePromoCodeModal = ({
 		bodyClass: "dark-sign-up social-profile text-start",
 	};
 
-	const handleDelete = async () => {
+	const handleToggleStatus = async () => {
 		try {
-			const response = await deletePromoCode(id);
-			toast.success("Promocode deleted!");
+			await updatePromoCode(id, !isActive);
+			toast.success(
+				`Promo code ${!isActive ? "activated" : "paused"} successfully!`
+			);
 			fetchData();
 			toggle();
 		} catch (error) {
 			console.error(error);
-			alert("Error deleting promo code.");
+			toast.error("Error updating promo code status.");
 		}
 	};
 
 	return (
 		<>
 			<Button
-				color="danger"
+				color={isActive ? "warning" : "success"}
 				className="me-2 px-2"
 				onClick={toggle}>
-				<i className="icon-trash" />
+				<i className={isActive ? "icon-minus" : "icon-plus"} />
 			</Button>
+
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper text-center">
 					<h3 className="mb-3">
-                        {deletePromoCodeConfirmTitle}
+						{isActive ? "Pause this Promo Code?" : "Activate this Promo Code?"}
 					</h3>
 					<Image
 						width={100}
 						height={100}
-						src={`${ImagePath}/gif/danger.gif`}
-						alt="error"
+						src={`${ImagePath}/gif/${isActive ? "danger" : "successful"}.gif`}
+						alt={isActive ? "pause" : "activate"}
 					/>
 
 					<div className="block text-center mt-4">
 						<Button
 							outline
-							color="danger"
-                            className="me-2"
+							color="secondary"
 							onClick={toggle}>
 							Close
 						</Button>
 						<Button
-							color="danger"
-                            className="ms-2"
-							onClick={handleDelete}>
+							color={isActive ? "warning" : "success"}
+							className="ms-2"
+							onClick={handleToggleStatus}>
 							Confirm
 						</Button>
 					</div>
@@ -78,4 +82,4 @@ const DeletePromoCodeModal = ({
 	);
 };
 
-export default DeletePromoCodeModal;
+export default PausePromocodeModal;

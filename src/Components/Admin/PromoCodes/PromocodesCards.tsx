@@ -3,12 +3,10 @@
 import { getPromoCodes } from "@/app/api/admin/promo-codes";
 import { PromoCodeProps } from "@/Types/Course.type";
 import { Fragment, useEffect, useState } from "react";
-import { Col, Row } from "reactstrap";
+import { Card, CardBody, Col, Row } from "reactstrap";
 import CreatePromocodeModal from "./CreatePromocodeModal";
-
-import DeletePromocodeModal from "./DeletePromocodeModal";
+import PausePromoModal from "./PausePromocodeModal";
 import UpdatePromocodeModal from "./UpdatePromocodeModal";
-import { promoCodesFakeData } from "@/FakeData/admin/promocodes";
 
 const PromocodesCards = () => {
 	const [promocodes, setPromocodes] = useState<PromoCodeProps[]>([]);
@@ -18,8 +16,7 @@ const PromocodesCards = () => {
 	const fetchPromoCodes = async () => {
 		try {
 			const response = await getPromoCodes();
-			// setPromocodes(response.promoCodes);
-			setPromocodes(promoCodesFakeData);
+			setPromocodes(response);
 		} catch (error) {
 			console.error("Failed to fetch promo codes:", error);
 		}
@@ -42,47 +39,75 @@ const PromocodesCards = () => {
 						_id,
 						code,
 						discountPercentage,
-						expiryDate,
-						usageLimit,
-						usedCount,
+						validUntil,
+						isActive,
+						course,
+						path,
 					} = promoCode;
+
 					return (
 						<Col
 							sm={6}
 							xl={4}
 							className="my-2"
 							key={index}>
-							<div className="border border-1 height-equal h-100 ribbon-wrapper-bottom alert-light-light">
+							<Card
+								color="light"
+								className=" height-equal h-100 ribbon-wrapper-bottom text-dark">
 								<div className="ribbon ribbon-dark ribbon-clip-bottom">
 									{discountPercentage}% OFF
 								</div>
-								<p>
-									<Fragment>
-										Promo Code: <strong>{code}</strong>
-									</Fragment>
-									<br />
-									<Fragment>
-										Expiry Date:{" "}
-										<em className="txt-danger">
-											{new Date(expiryDate).toLocaleDateString()}
-										</em>
-									</Fragment>
-									<br />
-									<Fragment>
-										Usage Limit: {usageLimit} | Used: {usedCount}
-									</Fragment>
-								</p>
+								<CardBody>
+									<p>
+										<Fragment>
+											Promo Code: <strong>{code}</strong>
+										</Fragment>
+										<br />
+										<Fragment>
+											Valid Until:{" "}
+											<em className="txt-danger">
+												{new Date(validUntil).toLocaleDateString()}
+											</em>
+										</Fragment>
+										<br />
+										<Fragment>
+											Applicable On:{" "}
+											{course ? (
+												<span>
+													Course - <strong>{course.name}</strong>
+												</span>
+											) : path ? (
+												<span>
+													Path - <strong>{path.name}</strong>
+												</span>
+											) : (
+												<span className="text-warning">Not Assigned</span>
+											)}
+										</Fragment>
+										<br />
+										<Fragment>
+											Status:{" "}
+											{isActive ? (
+												<span className="text-success">Active</span>
+											) : (
+												<span className="text-danger">Inactive</span>
+											)}
+										</Fragment>
+									</p>
+								</CardBody>
+
 								<div className="d-flex justify-content-end mt-3 gap-2">
 									<UpdatePromocodeModal
 										values={promoCode}
 										fetchData={fetchPromoCodes}
 									/>
-									<DeletePromocodeModal
+									<PausePromoModal
+										isActive={isActive}
 										id={_id!}
 										fetchData={fetchPromoCodes}
 									/>
 								</div>
-							</div>
+							</Card>
 						</Col>
 					);
 				})}
