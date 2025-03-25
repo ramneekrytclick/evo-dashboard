@@ -11,19 +11,19 @@ import SimpleMdeReact from "react-simplemde-editor";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { BlogProps } from "@/Types/Blogs.type";
-import { submitBlog } from "@/app/api/creator/blogs/blog";
+import { submitBlog } from "@/app/api/publisher/blogs/blog";
 
 const CreateBlogForm = () => {
 	const [blogData, setBlogData] = useState<BlogProps>({
 		title: "",
-		content: ""
+		content: "",
 	});
 
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
 
 	const handleContentChange = (value: string) => {
-        setContent(value)
+		setContent(value);
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -35,25 +35,25 @@ const CreateBlogForm = () => {
 		}
 
 		console.log("Blog Data Submitted:", blogData);
-        try {
-            const response = await submitBlog(blogData);
-            toast.success("Blog Created Successfully!");
-            console.log(response);
-        } catch (error) {
-            toast.error("Error Creating Blog!")
-        }
+		try {
+			const response = await submitBlog(blogData);
+			toast.success("Blog Created Successfully!");
+			console.log(response);
+		} catch (error) {
+			toast.error("Error Creating Blog!");
+		}
 	};
 
 	const handleReset = () => {
 		setBlogData({
-            ...blogData,
+			...blogData,
 			title: "",
 			content: "",
 		});
 	};
 
 	useEffect(() => {
-		setBlogData({...blogData, title: title, content: content });
+		setBlogData({ ...blogData, title: title, content: content });
 	}, [title, content]);
 
 	return (
@@ -69,7 +69,7 @@ const CreateBlogForm = () => {
 								type="text"
 								placeholder="Post Title"
 								name="title"
-                                value={title}
+								value={title}
 								onChange={(e) => {
 									setTitle(e.target.value);
 								}}

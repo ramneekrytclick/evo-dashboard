@@ -148,30 +148,30 @@ export const MenuList: MenuItem[] | undefined = [
 		],
 	},
 	{
-		title: "Creator",
+		title: "Publisher",
 		lanClass: "lan-1",
 		Items: [
 			{
 				id: 1,
-				path: "/creator/dashboard",
+				path: "/publisher/dashboard",
 				icon: "home",
 				title: "Dashboard",
 				type: "link",
 			},
 			{
 				id: 2,
-				path: "/creator/create-blog",
+				path: "/publisher/create-blog",
 				icon: "to-do",
 				title: "Create Blog",
 			},
 			{
 				id: 3,
-				path: "/creator/my-blogs",
+				path: "/publisher/my-blogs",
 				icon: "ui-kits",
 				title: "Get My Blogs",
 			},
 			{
-				path: "/creator/support/tickets",
+				path: "/publisher/support/tickets",
 				icon: "support-tickets",
 				title: "Support",
 				type: "link",

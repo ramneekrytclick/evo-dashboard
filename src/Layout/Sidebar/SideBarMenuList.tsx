@@ -16,8 +16,8 @@ const SidebarMenuList = () => {
 	// const { role } = useAuth(); // Retrieve user role from the auth provider.
 	const role = pathname.startsWith("/admin")
 		? "Admin"
-		: pathname.startsWith("/creator")
-		? "Creator"
+		: pathname.startsWith("/publisher")
+		? "Publisher"
 		: pathname.startsWith("/mentor")
 		? "Mentor"
 		: pathname.startsWith("/manager")
@@ -31,8 +31,8 @@ const SidebarMenuList = () => {
 		switch (role) {
 			case "Admin":
 				return menuList.filter((menu) => menu.title === "Admin");
-			case "Creator":
-				return menuList.filter((menu) => menu.title === "Creator");
+			case "Publisher":
+				return menuList.filter((menu) => menu.title === "Publisher");
 			case "Mentor":
 				return menuList.filter((menu) => menu.title === "Mentor");
 			case "Student":

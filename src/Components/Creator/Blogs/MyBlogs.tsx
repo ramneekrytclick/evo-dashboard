@@ -1,5 +1,5 @@
 "use client";
-import { getMyBlogs } from "@/app/api/creator/blogs/blog";
+import { getMyBlogs } from "@/app/api/publisher/blogs/blog";
 import { blogFakeData } from "@/FakeData/admin/blog";
 import { BlogProps } from "@/Types/Blogs.type";
 import { useEffect, useState } from "react";
