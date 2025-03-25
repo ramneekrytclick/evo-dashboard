@@ -12,6 +12,7 @@ import {
 	Modal,
 	ModalBody,
 	ModalFooter,
+	CardHeader,
 } from "reactstrap";
 import { useRouter } from "next/navigation";
 import { Trash2, Eye } from "react-feather";
@@ -46,7 +47,13 @@ const LessonList = ({ id }: { id: string }) => {
 	useEffect(() => {
 		fetchLessons();
 	}, []);
-
+	if (lessons.length === 0) {
+		return (
+			<Card className="text-center h-100">
+				<h4>No lessons found</h4>
+			</Card>
+		);
+	}
 	return (
 		<Row>
 			{lessons.map((lesson, index) => (
@@ -55,17 +62,12 @@ const LessonList = ({ id }: { id: string }) => {
 					sm={6}
 					key={index}
 					className="mb-4">
-					<Card className="shadow-sm border-0 h-100">
+					<Card
+						className="shadow-sm border-0 h-100"
+						color="light">
 						<CardBody>
-							<h5 className="text-truncate">{lesson.title}</h5>
+							<h2 className="text-truncate">{lesson.title}</h2>
 							<p className="text-muted small text-truncate">{lesson.content}</p>
-							<a
-								href={lesson.videoUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								className="d-block text-primary small mb-2">
-								Watch Video
-							</a>
 							<div className="d-flex justify-content-between">
 								<Button
 									color="primary"
