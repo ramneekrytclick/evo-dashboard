@@ -1,9 +1,7 @@
-import MyBlogsContainer from "@/Components/Creator/Blogs";
+import MyBlogsContainer from "@/Components/Publisher/Blogs";
 
 const MyBlogsPage = () => {
-    return (
-        <MyBlogsContainer/>
-    );
-}
+	return <MyBlogsContainer />;
+};
 
 export default MyBlogsPage;

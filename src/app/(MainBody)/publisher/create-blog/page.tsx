@@ -1,9 +1,7 @@
-import CreateBlogContainer from "@/Components/Creator/CreateBlog";
+import CreateBlogContainer from "@/Components/Publisher/CreateBlog";
 
 const CreateBlogPage = () => {
-    return (
-        <CreateBlogContainer/>
-    );
-}
+	return <CreateBlogContainer />;
+};
 
 export default CreateBlogPage;
