@@ -3,7 +3,7 @@ import { apiClient } from "@/utils/api";
 
 export const createLesson = async (data: LessonFormProps) => {
 	try {
-		const response = await apiClient.post(`/admin/create-lesson`, data);
+		const response = await apiClient.post(`/lessons`, data);
 		return response.data;
 	} catch (error) {
 		console.error(error);

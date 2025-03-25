@@ -4,9 +4,9 @@ import CreateLessonForm from "./CreateLessonForm";
 import { AddLessonTitle, LessonsTitle } from "@/Constant";
 
 const CreateLessonContainer = () => {
-    return (
-        <div>
-            <Breadcrumbs
+	return (
+		<div>
+			<Breadcrumbs
 				mainTitle={AddLessonTitle}
 				parent={LessonsTitle}
 				title={AddLessonTitle}
@@ -14,18 +14,12 @@ const CreateLessonContainer = () => {
 			<Container fluid>
 				<Row>
 					<Col xs={12}>
-						<Card>
-							<CardBody>
-								<Row className="g-xl-5 g-3">
-									<CreateLessonForm />
-								</Row>
-							</CardBody>
-						</Card>
+						<CreateLessonForm />
 					</Col>
 				</Row>
 			</Container>
-        </div>
-    );
-}
+		</div>
+	);
+};
 
 export default CreateLessonContainer;
