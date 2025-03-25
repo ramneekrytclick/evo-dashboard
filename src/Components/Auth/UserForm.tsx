@@ -25,7 +25,18 @@ const UserForm = () => {
 		try {
 			const response = await login(email, password, role);
 			if (response?.status === 200) {
-				router.push(`/${role}/dashboard`); // or route based on role
+				switch (role) {
+					case "admin":
+						router.push(`/admin/dashboard`); // or route based on role
+						break;
+					case "students":
+						router.push(`/student/dashboard`); // or route based on role
+						break;
+
+					default:
+						router.push(`/${role}/dashboard`); // or route based on role
+						break;
+				}
 			}
 		} catch (error: any) {
 			const errorMsg =

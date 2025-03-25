@@ -43,7 +43,7 @@ export function middleware(request: NextRequest) {
 			pathname.startsWith("/mentor") ||
 			pathname.startsWith("/manager")
 		) {
-			// return NextResponse.redirect(new URL("/auth/login", request.url));
+			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}
 	}
 	return NextResponse.next();
