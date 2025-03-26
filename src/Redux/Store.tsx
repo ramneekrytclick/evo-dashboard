@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import AuthSlice from "./Reducers/AuthSlice";
 import BookmarkSlice from "./Reducers/BookmarkSlice";
 import ChatSlice from "./Reducers/ChatSlice";
 // import ContactSlice from "./Reducers/ContactSlice";
@@ -15,22 +16,23 @@ import ThemeCustomizerSlice from "./Reducers/ThemeCustomizerSlice";
 import TodoSlice from "./Reducers/TodoSlice";
 
 const Store = configureStore({
-  reducer: {
-    layout: LayoutSlice,
-    headerBookMark: HeaderBookmarkSlice,
-    letterbox: LetterBoxSlice,
-    fileManager: FileManagerSlice,
-    chat: ChatSlice,
-    project: ProjectSlice,
-    bookmark: BookmarkSlice,
-    // contact: ContactSlice,
-    todos: TodoSlice,
-    tasks: TasksSlice,
-    product: ProductReducer,
-    filter: FilterReducer,
-    searchResult: SearchResultSlice,
-    themeCustomizer: ThemeCustomizerSlice,
-  },
+	reducer: {
+		auth: AuthSlice,
+		layout: LayoutSlice,
+		headerBookMark: HeaderBookmarkSlice,
+		letterbox: LetterBoxSlice,
+		fileManager: FileManagerSlice,
+		chat: ChatSlice,
+		project: ProjectSlice,
+		bookmark: BookmarkSlice,
+		// contact: ContactSlice,
+		todos: TodoSlice,
+		tasks: TasksSlice,
+		product: ProductReducer,
+		filter: FilterReducer,
+		searchResult: SearchResultSlice,
+		themeCustomizer: ThemeCustomizerSlice,
+	},
 });
 
 export default Store;

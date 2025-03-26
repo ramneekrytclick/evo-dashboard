@@ -1,25 +1,22 @@
 "use client";
-import {
-	createContext,
-	useContext,
-	useState,
-	useEffect,
-	ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { DecodedTokenProps } from "@/Types/Auth.type";
+import { useAppDispatch, useAppSelector } from "@/Redux/Hooks";
+import { setUser, logout as reduxLogout } from "@/Redux/Reducers/AuthSlice";
 
 interface User {
 	id: string;
+	name: string;
+	email: string;
+	role: string;
 	token: string;
 }
 
 interface AuthContextType {
 	user: User | null;
-	role: string | null;
 	register: (
 		email: string,
 		password: string,
@@ -34,7 +31,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType>({
 	user: null,
-	role: null,
 	register: async () => {},
 	login: async () => {},
 	logout: () => {},
@@ -42,8 +38,9 @@ const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const router = useRouter();
-	const [user, setUser] = useState<User | null>(null);
-	const [role, setRole] = useState<string | null>(null);
+	const dispatch = useAppDispatch();
+	const user = useAppSelector((state) => state.auth.user);
+
 	const register = async (
 		email: string,
 		password: string,
@@ -55,14 +52,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		const URL = process.env.NEXT_PUBLIC_BASE_URL;
 		const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
-		// Create payload
 		const registerData: any = {
 			name,
 			email,
 			password,
 		};
 
-		// Add expertise only if role is Mentor
 		if (role.toLowerCase() === "mentors" && expertise) {
 			registerData.expertise = expertise;
 		}
@@ -90,28 +85,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		});
 
 		const data = res.data;
-		const decodedToken = jwtDecode<DecodedTokenProps>(data.token);
-		// Save token & user data
-		setUser({ id: decodedToken.id, token: data.token });
-		setRole(decodedToken.role);
 
-		// localStorage.setItem("token", data.token);
+		const userData: User = {
+			id: data._id,
+			name: data.name,
+			email: data.email,
+			role: data.role,
+			token: data.token,
+		};
+
+		dispatch(setUser(userData));
 		Cookies.set("token", data.token, { expires: 1, path: "/" });
-
-		// Optional: You can redirect here, or let frontend do it
-		// router.push(`/${decodedToken.role.toLowerCase()}/dashboard`);
 
 		return {
 			status: res.status,
 			token: data.token,
-			role: decodedToken.role,
+			role: data.role,
 		};
 	};
 
 	const logout = () => {
-		setUser(null);
-		// localStorage.removeItem("token");
-		setRole(null);
+		dispatch(reduxLogout());
 		Cookies.remove("token");
 		router.push("/auth/login");
 	};
@@ -123,11 +117,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				const decodedToken = jwtDecode<{
 					id: string;
 					role: string;
+					name: string;
+					email: string;
 					exp: number;
 				}>(token);
 				if (decodedToken.exp * 1000 > Date.now()) {
-					setUser({ id: decodedToken.id, token });
-					setRole(decodedToken.role);
+					dispatch(
+						setUser({
+							id: decodedToken.id,
+							role: decodedToken.role,
+							name: decodedToken.name,
+							email: decodedToken.email,
+							token,
+						})
+					);
 				} else {
 					logout();
 				}
@@ -139,7 +142,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ user, role, register, login, logout }}>
+		<AuthContext.Provider value={{ user, register, login, logout }}>
 			{children}
 		</AuthContext.Provider>
 	);
