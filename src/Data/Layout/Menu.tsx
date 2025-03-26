@@ -302,6 +302,25 @@ export const MenuList: MenuItem[] | undefined = [
 			},
 		],
 	},
+	{
+		title: "Course Creator",
+		lanClass: "lan-1",
+		Items: [
+			{
+				id: 1,
+				path: "/course-creator/dashboard",
+				icon: "home",
+				title: "Dashboard",
+				type: "link",
+			},
+			{
+				id: 2,
+				path: "/course-creator/courses",
+				icon: "maps",
+				title: "Courses",
+			},
+		],
+	},
 ];
 
 // {

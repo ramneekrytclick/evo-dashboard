@@ -3,6 +3,25 @@ import { Category, Subcategory } from "./Category.type";
 import { StudentProps } from "./Student.type";
 import { MentorProps } from "./Mentor.type";
 
+export interface WannaBeInterest {
+	_id: string;
+	name: string;
+}
+
+export interface SubcategoryNew {
+	_id: string;
+	name: string;
+}
+
+export interface Course {
+	_id: string;
+	title?: string;
+	name?: string;
+	description: string;
+	subcategory?: SubcategoryNew;
+	wannaBeInterest?: WannaBeInterest[];
+}
+
 export interface CourseProps {
 	_id?: string;
 	name: string;

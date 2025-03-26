@@ -24,6 +24,8 @@ const SidebarMenuList = () => {
 		? "Manager"
 		: pathname.startsWith("/employer")
 		? "Employer"
+		: pathname.startsWith("/course-creator")
+		? "Course Creator"
 		: "Student";
 	// Function to filter the menu based on user role
 	const getRoleBasedMenu = (menuList: MenuItem[]) => {
@@ -39,6 +41,8 @@ const SidebarMenuList = () => {
 				return menuList.filter((menu) => menu.title === "Student");
 			case "Employer":
 				return menuList.filter((menu) => menu.title === "Employer");
+			case "Course Creator":
+				return menuList.filter((menu) => menu.title === "Course Creator");
 			default:
 				return [];
 		}

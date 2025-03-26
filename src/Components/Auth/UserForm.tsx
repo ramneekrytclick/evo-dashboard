@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
@@ -41,7 +41,9 @@ const UserForm = () => {
 					case "publishers/auth":
 						router.push(`/publisher/dashboard`); // or route based on role
 						break;
-
+					case "course-creators/auth":
+						router.push(`/course-creator/dashboard`); // or route based on role
+						break;
 					default:
 						router.push(`/${role}/dashboard`); // or route based on role
 						break;
@@ -173,6 +175,7 @@ const UserForm = () => {
 					</div>
 				</Form>
 			</div>
+			<ToastContainer />
 		</div>
 	);
 };
