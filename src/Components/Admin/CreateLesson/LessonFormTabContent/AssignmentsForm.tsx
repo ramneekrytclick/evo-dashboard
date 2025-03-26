@@ -50,7 +50,7 @@ const AssignmentsForm = ({
 	};
 
 	useEffect(() => {
-		setData({ ...data, assignments }); // Sync assignments with parent data
+		setData({ ...data }); // Sync assignments with parent data
 	}, [assignments]);
 
 	const handleNextButton = () => {

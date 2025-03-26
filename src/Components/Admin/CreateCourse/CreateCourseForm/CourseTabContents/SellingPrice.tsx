@@ -33,8 +33,7 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 	const [formData, setFormData] = useState({ initialCost: "" });
 	const [promoCode, setPromoCode] = useState<string[]>([]);
 	const { initialCost } = formData;
-	const [promoCodes, setPromoCodes] =
-		useState<PromoCodeProps[]>(promoCodesFakeData);
+	const [promoCodes, setPromoCodes] = useState<PromoCodeProps[]>([]);
 
 	const updateFormData = (event: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
@@ -67,7 +66,6 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 				);
 				setData({
 					...data,
-					promoCodes: updatedPromoCodes, // Update parent component's state
 				});
 				return updatedPromoCodes;
 			} else {
@@ -75,7 +73,6 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 				const updatedPromoCodes = [...prevPromoCodes, promoCodeId];
 				setData({
 					...data,
-					promoCodes: updatedPromoCodes, // Update parent component's state
 				});
 				return updatedPromoCodes;
 			}
@@ -85,7 +82,6 @@ const SellingPrice: React.FC<SellingPriceProps> = ({
 	useEffect(() => {
 		setData({
 			...data,
-			realPrice: formData.initialCost,
 		});
 	}, [formData]);
 

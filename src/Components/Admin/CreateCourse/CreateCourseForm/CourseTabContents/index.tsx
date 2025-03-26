@@ -12,16 +12,16 @@ const CourseTabContents: React.FC<CourseTabContentProp> = ({
 	steps,
 	activeCallBack,
 }) => {
-	const [data, setData] = useState<CourseFormProps>({
-		name:"",
-		description:"",
-		category:{_id:"",name:""},
-		subcategory:{_id:"",categoryId:"",name:""},
-		duration:"",
-		mentorAssigned:"",
-		managerAssigned:"",
-		realPrice:"",
-		promoCodes:[]
+	const [data, setData] = useState<any>({
+		name: "",
+		description: "",
+		category: { _id: "", name: "" },
+		subcategory: { _id: "", categoryId: "", name: "" },
+		duration: "",
+		mentorAssigned: "",
+		managerAssigned: "",
+		realPrice: "",
+		promoCodes: [],
 	});
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -32,9 +32,9 @@ const CourseTabContents: React.FC<CourseTabContentProp> = ({
 			console.log(error);
 		}
 	};
-	useEffect(()=>{
+	useEffect(() => {
 		// console.log(data);
-	},[data])
+	}, [data]);
 	return (
 		<Col
 			xxl={9}

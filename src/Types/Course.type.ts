@@ -50,9 +50,12 @@ export interface CourseTabContentProp {
 export interface CourseFormProps {
 	name: string;
 	description: string;
+	category?: any;
+	subcategory?: any;
 	categoryId: string;
 	subcategoryId: string;
 	wannaBeInterestId: string;
+	duration?: any;
 }
 
 // Batch Details Interface

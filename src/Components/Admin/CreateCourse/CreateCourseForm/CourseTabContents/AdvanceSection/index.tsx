@@ -21,8 +21,8 @@ import { teamFakeData } from "@/FakeData/admin/team";
 
 interface AdvanceSectionProps {
 	activeCallBack: (tab: number) => void;
-	data: CourseFormProps;
-	setData: (data: CourseFormProps) => void;
+	data: any;
+	setData: (data: any) => void;
 }
 const AdvanceSection: React.FC<AdvanceSectionProps> = ({
 	activeCallBack,

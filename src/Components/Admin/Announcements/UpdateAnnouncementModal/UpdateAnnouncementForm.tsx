@@ -1,55 +1,64 @@
-import { announcementAPIProps, updateAnnouncement } from "@/app/api/admin/announcements";
+import {
+	announcementAPIProps,
+	updateAnnouncement,
+} from "@/app/api/admin/announcements";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { FormEvent, useState } from "react";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 
 interface UpdateAnnouncementFormProps {
 	toggle: () => void;
-	values: IAnnouncement;
+	values: any;
 }
 interface formDataProps {
 	title: string;
 	message: string;
 	media: string;
 	targetRoles: string[];
-	visibilityStart: Date ;
-	visibilityEnd: Date ;
+	visibilityStart: Date;
+	visibilityEnd: Date;
 }
 const UpdateAnnouncementForm = ({
 	toggle,
 	values,
 }: UpdateAnnouncementFormProps) => {
 	const [formData, setFormData] = useState<formDataProps>({
-        title:values.title,
-        message: values.message,
-        media: values.media||"",
-        targetRoles: values.targetRoles,
-        visibilityStart: values.visibilityStart,
-        visibilityEnd: values.visibilityEnd,
-    });
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-		const { title, message, media, targetRoles, visibilityStart, visibilityEnd } = formData
-		const formattedData:announcementAPIProps={
-			title:title,
-			message:message,
-			media:media,
-			targetRoles:targetRoles,
-			visibilityStart:visibilityStart,
-			visibilityEnd:visibilityEnd,
-		}
+		title: values.title,
+		message: values.message,
+		media: values.media || "",
+		targetRoles: values.targetRoles,
+		visibilityStart: values.visibilityStart,
+		visibilityEnd: values.visibilityEnd,
+	});
+	const handleSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+		const {
+			title,
+			message,
+			media,
+			targetRoles,
+			visibilityStart,
+			visibilityEnd,
+		} = formData;
+		const formattedData: any = {
+			title: title,
+			message: message,
+			media: media,
+			targetRoles: targetRoles,
+			visibilityStart: visibilityStart,
+			visibilityEnd: visibilityEnd,
+		};
 		try {
-			const response = await updateAnnouncement(formattedData,values._id!);
+			const response = await updateAnnouncement(formattedData, values._id!);
 			// console.log(response);
 			alert(response);
 			toggle();
-		}
-		catch (error) {
+		} catch (error) {
 			console.error(error);
-			alert("Error Updating")
+			alert("Error Updating");
 		}
-    }
-    const handleCheckboxChange = (role: string) => {
+	};
+	const handleCheckboxChange = (role: string) => {
 		setFormData((prevState) => {
 			const updatedAudience = prevState.targetRoles?.includes(role)
 				? prevState.targetRoles.filter((r) => r !== role)
@@ -73,7 +82,7 @@ const UpdateAnnouncementForm = ({
 						id="title"
 						type="text"
 						placeholder="Enter Title"
-                        value={formData.title}
+						value={formData.title}
 						onChange={(e) => {
 							setFormData({ ...formData, title: e.target.value });
 						}}
@@ -85,7 +94,7 @@ const UpdateAnnouncementForm = ({
 						id="message"
 						type="text"
 						placeholder="Enter Message"
-                        value={formData.message}
+						value={formData.message}
 						onChange={(e) => {
 							setFormData({ ...formData, message: e.target.value });
 						}}
@@ -110,7 +119,7 @@ const UpdateAnnouncementForm = ({
 									<Input
 										id={item}
 										type="checkbox"
-                                        checked={formData.targetRoles?.includes(item)}
+										checked={formData.targetRoles?.includes(item)}
 										onChange={() => {
 											handleCheckboxChange(item.toLowerCase());
 										}}
@@ -138,7 +147,7 @@ const UpdateAnnouncementForm = ({
 							onChange={(e) => {
 								setFormData({
 									...formData,
-									visibilityStart: e.target.valueAsDate||new Date(),
+									visibilityStart: e.target.valueAsDate || new Date(),
 								});
 							}}
 						/>
@@ -156,7 +165,7 @@ const UpdateAnnouncementForm = ({
 							onChange={(e) => {
 								setFormData({
 									...formData,
-									visibilityEnd: e.target.valueAsDate||new Date(),
+									visibilityEnd: e.target.valueAsDate || new Date(),
 								});
 							}}
 						/>

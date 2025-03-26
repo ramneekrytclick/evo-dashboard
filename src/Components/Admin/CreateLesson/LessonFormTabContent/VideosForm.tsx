@@ -34,17 +34,16 @@ const VideosForm = ({ activeCallBack, data, setData }: VideosFormProps) => {
 	};
 
 	useEffect(() => {
-		setData({ ...data, videos }); // Sync videos with parent data
+		setData({ ...data }); // Sync videos with parent data
 	}, [videos]);
 
-    const handleNextButton =()=>{
-        if (videos.length>0) {
-            activeCallBack(3);
-        }
-        else {
-            toast("Add at least 1 video")
-        }
-    }
+	const handleNextButton = () => {
+		if (videos.length > 0) {
+			activeCallBack(3);
+		} else {
+			toast("Add at least 1 video");
+		}
+	};
 	return (
 		<Form
 			onSubmit={(e) => e.preventDefault()}
@@ -94,29 +93,40 @@ const VideosForm = ({ activeCallBack, data, setData }: VideosFormProps) => {
 							<li
 								key={index}
 								className="my-2 p-2 bg-light text-dark rounded-3">
-                                    <Row>
-                                        <Col sm={11}>
-                                            <strong>{video.title}</strong> ( {video.videoURL} )
-                                        </Col>
-                                        <Col sm={1}>
-                                            <Button
-                                                color="danger"
-                                                size="sm"
-                                                className="ms-2 text-end"
-                                                onClick={() => removeVideoEntry(index)}>
-                                                Remove
-                                            </Button>
-                                        </Col>
-                                    </Row>
+								<Row>
+									<Col sm={11}>
+										<strong>{video.title}</strong> ( {video.videoURL} )
+									</Col>
+									<Col sm={1}>
+										<Button
+											color="danger"
+											size="sm"
+											className="ms-2 text-end"
+											onClick={() => removeVideoEntry(index)}>
+											Remove
+										</Button>
+									</Col>
+								</Row>
 							</li>
 						))}
 					</ul>
 				</Col>
 			</Row>
-			<Col xs={12} className="text-end">
-                    <Button color="primary" className='me-2' onClick={() => activeCallBack(1)}>{Previous}</Button>
-                    <Button color="primary" onClick={handleNextButton}>{Continue}</Button>
-                </Col>
+			<Col
+				xs={12}
+				className="text-end">
+				<Button
+					color="primary"
+					className="me-2"
+					onClick={() => activeCallBack(1)}>
+					{Previous}
+				</Button>
+				<Button
+					color="primary"
+					onClick={handleNextButton}>
+					{Continue}
+				</Button>
+			</Col>
 		</Form>
 	);
 };

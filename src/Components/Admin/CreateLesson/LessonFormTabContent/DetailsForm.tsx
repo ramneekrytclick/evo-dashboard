@@ -39,7 +39,6 @@ const DetailsForm = ({
 			...data,
 			courseId: formData.courseId,
 			title: formData.title,
-			description: formData.description,
 		});
 	}, [formData]);
 	return (

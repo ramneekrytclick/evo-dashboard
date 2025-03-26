@@ -7,7 +7,8 @@ import { Button, Col, Container } from "reactstrap";
 const Error503Container = () => {
 	const BackToHomePage: string = "BACK TO HOME PAGE";
 	const router = useRouter();
-	const { role } = useAuth();
+	const { user } = useAuth();
+	const { role } = user ? user : { role: "" };
 
 	return (
 		<div

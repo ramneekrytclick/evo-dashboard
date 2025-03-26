@@ -27,6 +27,9 @@ const LessonFormTabContent = ({
 		videos: [],
 		quizzes: [],
 		assignments: [],
+		content: "",
+		videoUrl: "",
+		resources: [],
 	};
 	const [data, setData] = useState<LessonFormProps>(initialDataValue);
 	const [courses, setCourses] = useState<any[]>([]);
