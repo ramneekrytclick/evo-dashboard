@@ -7,6 +7,7 @@ import Menulist from "./Menulist";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/app/AuthProvider";
 import { usePathname, useRouter } from "next/navigation";
+import { Button } from "reactstrap";
 
 const SidebarMenuList = () => {
 	const [activeMenu, setActiveMenu] = useState([]);
@@ -29,7 +30,6 @@ const SidebarMenuList = () => {
 		: "Student";
 	// Function to filter the menu based on user role
 	const getRoleBasedMenu = (menuList: MenuItem[]) => {
-		console.log(role);
 		switch (role) {
 			case "Admin":
 				return menuList.filter((menu) => menu.title === "Admin");

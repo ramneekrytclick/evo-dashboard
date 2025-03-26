@@ -25,6 +25,9 @@ export function middleware(request: NextRequest) {
 					(pathname.startsWith("/admin") && role !== "Admin") ||
 					(pathname.startsWith("/creator") && role !== "Creator") ||
 					(pathname.startsWith("/mentor") && role !== "Mentor") ||
+					(pathname.startsWith("/student") && role !== "Student") ||
+					(pathname.startsWith("/course-creator") &&
+						role !== "Course Creator") ||
 					(pathname.startsWith("/manager") && role !== "Manager")
 				) {
 					return NextResponse.redirect(new URL("/403", request.url));
