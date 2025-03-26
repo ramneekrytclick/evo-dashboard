@@ -20,7 +20,7 @@ const UserProfile = () => {
 		console.log(role);
 		router.push(`/${role}/dashboard`);
 	};
-	const { user, role } = useAuth();
+	const { user } = useAuth();
 	return (
 		<li className="profile-nav onhover-dropdown p-0">
 			<div className="d-flex align-items-center profile-media gap-1">
@@ -64,8 +64,10 @@ const UserProfile = () => {
 					</Button>
 				</li> */}
 
-				<li>{JSON.stringify(user?.id)}</li>
-				<li>{JSON.stringify(role)}</li>
+				<li>
+					{user?.name} ({user?.email}) - {user?.role}
+				</li>
+				<li></li>
 
 				<li onClick={handleLogout}>
 					<Button
