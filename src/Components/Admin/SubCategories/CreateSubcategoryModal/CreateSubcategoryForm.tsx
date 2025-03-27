@@ -1,5 +1,4 @@
 import { createSubcategory } from "@/app/api/admin/subcategories";
-import { Subcategory } from "@/Types/Category.type";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
@@ -9,47 +8,83 @@ interface CreateSubcategoryFormProps {
 	fetchData: () => Promise<void>;
 	id: string;
 }
+
 const CreateSubcategoryForm = ({
 	toggle,
 	fetchData,
 	id,
 }: CreateSubcategoryFormProps) => {
-	const [formData, setFormData] = useState<Subcategory>({
-		name: "",
-		categoryId: id,
+	const [formData, setFormData] = useState({
+		title: "",
+		description: "",
+		photo: null as File | null,
 	});
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
-			const response = await createSubcategory(formData);
-			console.log(response);
+			const data = new FormData();
+			data.append("title", formData.title);
+			data.append("description", formData.description);
+			data.append("categoryId", id);
+			if (formData.photo) data.append("photo", formData.photo);
+
+			await createSubcategory(data);
 			toast.success("Subcategory created successfully!");
 			fetchData();
 			toggle();
 		} catch (error) {
 			console.error(error);
-			toast.error("Error updating student!");
+			toast.error("Error creating subcategory!");
 		}
 	};
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
+	};
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			setFormData({ ...formData, photo: e.target.files[0] });
+		}
 	};
 
 	return (
 		<Form onSubmit={handleSubmit}>
 			<Row className="g-3">
 				<Col md={12}>
-					<Label htmlFor="name">Category Name</Label>
+					<Label htmlFor="title">Subcategory Title</Label>
 					<Input
-						id="name"
-						name="name"
+						id="title"
+						name="title"
 						type="text"
-						value={formData.name}
+						value={formData.title}
 						onChange={handleChange}
-						placeholder="Enter name"
+						placeholder="Enter title"
+					/>
+				</Col>
+				<Col md={12}>
+					<Label htmlFor="description">Description</Label>
+					<Input
+						id="description"
+						name="description"
+						type="textarea"
+						value={formData.description}
+						onChange={handleChange}
+						placeholder="Optional description"
+					/>
+				</Col>
+				<Col md={12}>
+					<Label htmlFor="photo">Subcategory Icon</Label>
+					<Input
+						id="photo"
+						name="photo"
+						type="file"
+						accept="image/*"
+						onChange={handleFileChange}
 					/>
 				</Col>
 				<Col md={12}>

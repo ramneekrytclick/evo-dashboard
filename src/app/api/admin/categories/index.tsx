@@ -2,19 +2,18 @@ import { Category } from "@/Types/Category.type";
 import { apiClient } from "@/utils/api";
 
 export const getCategories = async () => {
-	try {
-		const response = await apiClient.get("/categories");
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	const response = await apiClient.get("/categories");
+	return response.data;
 };
 
-export const createCategory = async (data: { name: string }) => {
-	try {
-		const response = await apiClient.post("/categories", data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+export const createCategory = async (data: FormData) => {
+	const response = await apiClient.post("/categories", data, {
+		headers: {
+			"Content-Type": "multipart/form-data",
+		},
+	});
+	return response.data;
+};
+export const deleteCategory = async (id: string) => {
+	return (await apiClient.delete(`/categories/${id}`)).data;
 };

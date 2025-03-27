@@ -25,14 +25,14 @@ const WannaBeContainer: React.FC = () => {
 		}
 	};
 
-	const handleSubmit = async (formData: any): Promise<void> => {
+	const handleSubmit = async (formData: FormData): Promise<void> => {
 		try {
-			const response = await createWannaBeInterest(formData);
+			await createWannaBeInterest(formData);
 			fetchData();
 			toast.success("Created Successfully!");
 		} catch (error: any) {
 			console.error("Submission error:", error.message);
-			toast.error("Failed to create Wanna Be Interest!");
+			toast.error("Failed to create Wanna Be Interest! Try Again!");
 		}
 	};
 

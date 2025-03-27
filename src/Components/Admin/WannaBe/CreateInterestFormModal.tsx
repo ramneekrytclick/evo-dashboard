@@ -1,3 +1,5 @@
+"use client";
+
 import {
 	Button,
 	Modal,
@@ -11,16 +13,11 @@ import {
 	FormFeedback,
 } from "reactstrap";
 import { useState } from "react";
-export type WannaBeInterestType = "Wanna Be" | "Interest";
 
-export interface WannaBeInterestForm {
-	type: WannaBeInterestType;
-	name: string;
-}
 interface ModalProps {
 	modalOpen: boolean;
 	toggleModal: () => void;
-	handleSubmit: (data: WannaBeInterestForm) => Promise<void>;
+	handleSubmit: (data: FormData) => Promise<void>;
 }
 
 const CreateInterestFormModal: React.FC<ModalProps> = ({
@@ -28,35 +25,39 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 	toggleModal,
 	handleSubmit,
 }) => {
-	const [formData, setFormData] = useState<WannaBeInterestForm>({
-		type: "Wanna Be",
-		name: "",
+	const [formData, setFormData] = useState({
+		title: "",
+		description: "",
+		image: null as File | null,
 	});
 
-	const [errors, setErrors] = useState<
-		Partial<Record<keyof WannaBeInterestForm, string>>
-	>({});
+	const [errors, setErrors] = useState({
+		title: "",
+		image: "",
+	});
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const validate = () => {
-		const errs: Partial<Record<keyof WannaBeInterestForm, string>> = {};
-		if (!formData.type) errs.type = "Type is required";
-		if (!formData.name.trim()) errs.name = "Name is required";
-		setErrors(errs);
-		return Object.keys(errs).length === 0;
-	};
-
-	const onSubmit = async () => {
-		if (validate()) {
-			await handleSubmit(formData);
-			setFormData({ type: "" as WannaBeInterestForm["type"], name: "" });
-			setErrors({});
-			toggleModal();
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
 		}
+	};
+	const onSubmit = async () => {
+		const data = new FormData();
+		data.append("title", formData.title);
+		data.append("description", formData.description);
+		if (formData.image) data.append("image", formData.image);
+
+		await handleSubmit(data);
+		setFormData({ title: "", description: "", image: null });
+		setErrors({ title: "", image: "" });
+		toggleModal();
 	};
 
 	return (
@@ -68,17 +69,40 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 			<ModalBody>
 				<Form>
 					<FormGroup>
-						<Label for="name">Name</Label>
+						<Label for="title">Title</Label>
 						<Input
-							id="name"
-							name="name"
+							id="title"
+							name="title"
 							type="text"
-							value={formData.name}
+							value={formData.title}
 							onChange={handleChange}
-							invalid={!!errors.name}
-							placeholder="Enter name"
+							invalid={!!errors.title}
+							placeholder="Enter title"
 						/>
-						<FormFeedback>{errors.name}</FormFeedback>
+						<FormFeedback>{errors.title}</FormFeedback>
+					</FormGroup>
+					<FormGroup>
+						<Label for="description">Description</Label>
+						<Input
+							id="description"
+							name="description"
+							type="textarea"
+							value={formData.description}
+							onChange={handleChange}
+							placeholder="Enter description (optional)"
+						/>
+					</FormGroup>
+					<FormGroup>
+						<Label for="image">Image</Label>
+						<Input
+							id="image"
+							name="image"
+							type="file"
+							accept="image/*"
+							onChange={handleFileChange}
+							invalid={!!errors.image}
+						/>
+						<FormFeedback>{errors.image}</FormFeedback>
 					</FormGroup>
 				</Form>
 			</ModalBody>

@@ -5,8 +5,15 @@ export const getWannaBeInterests = async () => {
 	return response.data;
 };
 
-export const createWannaBeInterest = async (data: { name: string }) => {
-	const response = await apiClient.post(`/wanna-be-interest/`, data);
+export const createWannaBeInterest = async (data: FormData) => {
+	console.log("====================================");
+	console.log(data);
+	console.log("====================================");
+	const response = await apiClient.post(`/wanna-be-interest/`, data, {
+		headers: {
+			"Content-Type": "multipart/form-data",
+		},
+	});
 	return response.data;
 };
 

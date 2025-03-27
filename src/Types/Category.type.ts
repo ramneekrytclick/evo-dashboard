@@ -1,10 +1,18 @@
 export interface Category {
-    name:string;
-    _id?:string;
+	_id?: string;
+	title: string;
+	description?: string;
+	photo?: string; // path to image like "category/icon.png"
+	createdAt?: string;
+	updatedAt?: string;
 }
 
 export interface Subcategory {
-    _id?:string;
-    name: string;
-    categoryId:string;
+	_id?: string;
+	title: string;
+	description?: string;
+	photo?: string; // path to image like "subcategory/icon.png"
+	category: string; // category _id
+	createdAt?: string;
+	updatedAt?: string;
 }

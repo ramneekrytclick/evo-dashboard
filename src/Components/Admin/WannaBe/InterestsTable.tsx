@@ -18,6 +18,7 @@ import {
 	Row,
 } from "reactstrap";
 import { FaTrash } from "react-icons/fa";
+import Image from "next/image";
 
 const InterestsTable = ({
 	fetchData,
@@ -51,17 +52,49 @@ const InterestsTable = ({
 	return (
 		<div className="p-4">
 			<Row className="g-3">
+				{interests.length === 0 && (
+					<Col>No Interests Found, Please create new</Col>
+				)}
 				{interests.map((interest) => (
 					<Col
 						key={interest._id}
-						xl={2}
-						md={3}>
-						<Card className="position-relative">
-							<CardHeader className="fw-bold">{interest.name}</CardHeader>
-							<CardBody className="text-muted text-sm">
-								Created: {new Date(interest.createdAt).toLocaleString()}
+						xl={3}
+						md={4}
+						sm={6}>
+						<Card className="shadow-sm border-0 rounded-3 overflow-hidden h-100">
+							{interest.image && (
+								<div className="position-relative">
+									<Image
+										src={`/assets/images/user/1.jpg`}
+										alt={interest.title}
+										width={160}
+										height={160}
+										style={{
+											objectFit: "cover",
+										}}
+									/>
+									<div
+										className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
+										style={{
+											background: "rgba(0, 0, 0, 0.5)",
+											color: "#fff",
+											fontWeight: 600,
+										}}>
+										{interest.title}
+									</div>
+								</div>
+							)}
+							<CardBody>
+								{interest.description && (
+									<p className="text-secondary small mb-2">
+										{interest.description}
+									</p>
+								)}
+								<p className="text-muted small mb-0">
+									Created: {new Date(interest.createdAt).toLocaleString()}
+								</p>
 							</CardBody>
-							<CardFooter className="text-end">
+							<CardFooter className="bg-transparent border-top-0 text-end">
 								<Button
 									color="danger"
 									size="sm"
