@@ -14,9 +14,10 @@ import {
 import { toast } from "react-toastify";
 import { getCourses } from "@/app/api/admin/course";
 import { createLesson } from "@/app/api/admin/lessons/lesson";
+import { CourseProps } from "@/Types/Course.type";
 
 const CreateLessonForm = () => {
-	const [courses, setCourses] = useState<any[]>([]);
+	const [courses, setCourses] = useState<CourseProps[]>([]);
 	const [formData, setFormData] = useState({
 		courseId: "",
 		title: "",
@@ -93,7 +94,7 @@ const CreateLessonForm = () => {
 										<option
 											key={course._id}
 											value={course._id}>
-											{course.name}
+											{course.title}
 										</option>
 									))}
 								</Input>
