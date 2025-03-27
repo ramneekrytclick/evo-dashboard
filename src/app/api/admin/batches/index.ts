@@ -19,12 +19,8 @@ export const getBatchesByCourse = async (id: string) => {
 };
 
 export const createBatch = async (data: BatchProps) => {
-	try {
-		const response = await apiClient.post("/admin/batch/create", data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	const response = await apiClient.post("/batches", data);
+	return response.data;
 };
 
 export const updateBatch = async (id: string, data: BatchProps) => {

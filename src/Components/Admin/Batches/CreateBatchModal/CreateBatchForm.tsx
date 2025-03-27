@@ -1,9 +1,11 @@
-import { createBatch } from "@/app/api/admin/batches";
-import { BatchProps } from "@/Types/Course.type";
-import { StudentProps } from "@/Types/Student.type";
-import { FormEvent, useState } from "react";
-import { toast } from "react-toastify";
+"use client";
+
+import { useEffect, useState, FormEvent, ChangeEvent } from "react";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
+import { toast } from "react-toastify";
+import { getCourses } from "@/app/api/admin/course";
+import { createBatch } from "@/app/api/admin/batches";
+import { CourseProps } from "@/Types/Course.type";
 
 interface CreateBatchFormProps {
 	toggle: () => void;
@@ -11,100 +13,155 @@ interface CreateBatchFormProps {
 }
 
 const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
-	const [formData, setFormData] = useState<BatchProps>({
-		_id: "", // This can be omitted as it might be auto-generated
-		batchStatus: "",
+	const [formData, setFormData] = useState({
 		name: "",
-		courseId: "",
+		description: "",
+		time: "",
+		batchWeekType: "Mon-Fri",
 		startDate: "",
 		endDate: "",
-		students: [],
-		mentors: [],
-		promoCodes: [],
+		courseId: "",
 	});
+
+	const [courses, setCourses] = useState<CourseProps[]>([]);
+
+	useEffect(() => {
+		const fetchCourses = async () => {
+			try {
+				const data = await getCourses();
+				setCourses(data);
+			} catch (error) {
+				toast.error("Failed to fetch courses");
+			}
+		};
+		fetchCourses();
+	}, []);
+
+	const handleChange = (
+		e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+	) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
+	};
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		try {
-			const response = await createBatch(formData);
-			console.log(response);
-			toast("Batch created successfully!");
+			// Prepare data matching backend schema
+			const { courseId, ...rest } = formData;
+			const payload = {
+				...rest,
+				courseId: courseId, // pass `courseId` as `course`
+			};
+			await createBatch(payload);
+			toast.success("Batch created successfully!");
 			fetchData();
 			toggle();
 		} catch (error) {
 			console.error(error);
-			toast.error("Error creating batch!");
+			toast.error("Failed to create batch.");
 		}
-	};
-
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setFormData({ ...formData, [name]: value });
 	};
 
 	return (
 		<Form onSubmit={handleSubmit}>
 			<Row className="g-3">
 				<Col md={12}>
-					<Label htmlFor="name">Batch Name</Label>
+					<Label>Batch Name</Label>
 					<Input
-						id="name"
-						name="name"
 						type="text"
+						name="name"
 						value={formData.name}
 						onChange={handleChange}
 						placeholder="Enter batch name"
 						required
 					/>
 				</Col>
+
 				<Col md={12}>
-					<Label htmlFor="batchStatus">Batch Status</Label>
+					<Label>Description</Label>
 					<Input
-						id="batchStatus"
-						name="batchStatus"
-						type="text"
-						value={formData.batchStatus}
+						type="textarea"
+						name="description"
+						value={formData.description}
 						onChange={handleChange}
-						placeholder="Enter batch status"
+						placeholder="Enter batch description"
+					/>
+				</Col>
+
+				<Col md={12}>
+					<Label>Time</Label>
+					<Input
+						type="text"
+						name="time"
+						value={formData.time}
+						onChange={handleChange}
+						placeholder="e.g. 10:00 AM - 12:00 PM"
 						required
 					/>
 				</Col>
+
 				<Col md={12}>
-					<Label htmlFor="courseId">Course ID</Label>
+					<Label>Batch Week Type</Label>
 					<Input
-						id="courseId"
+						type="select"
+						name="batchWeekType"
+						value={formData.batchWeekType}
+						onChange={handleChange}
+						required>
+						<option value="Full Week">Full Week</option>
+						<option value="Mon-Fri">Mon-Fri</option>
+						<option value="Weekend">Weekend</option>
+					</Input>
+				</Col>
+
+				<Col md={12}>
+					<Label>Course</Label>
+					<Input
+						type="select"
 						name="courseId"
-						type="text"
-						value={typeof formData.courseId === "object" ? formData.courseId?._id : formData.courseId}
+						value={formData.courseId}
 						onChange={handleChange}
-						placeholder="Enter course ID"
-						required
-					/>
+						required>
+						<option value="">Select Course</option>
+						{courses.map((course) => (
+							<option
+								key={course._id}
+								value={course._id}>
+								{course.title}
+							</option>
+						))}
+					</Input>
 				</Col>
-				<Col md={12}>
-					<Label htmlFor="startDate">Start Date</Label>
+
+				<Col md={6}>
+					<Label>Start Date</Label>
 					<Input
-						id="startDate"
-						name="startDate"
 						type="date"
+						name="startDate"
 						value={formData.startDate}
 						onChange={handleChange}
 						required
 					/>
 				</Col>
-				<Col md={12}>
-					<Label htmlFor="endDate">End Date</Label>
+
+				<Col md={6}>
+					<Label>End Date</Label>
 					<Input
-						id="endDate"
-						name="endDate"
 						type="date"
+						name="endDate"
 						value={formData.endDate}
 						onChange={handleChange}
 						required
 					/>
 				</Col>
-				<Col md={12}>
-					<Button color="primary" type="submit">
+
+				<Col
+					md={12}
+					className="text-end">
+					<Button
+						color="primary"
+						type="submit">
 						Create Batch
 					</Button>
 				</Col>
