@@ -70,7 +70,7 @@ const EditCourseForm: React.FC<EditCourseFormProps> = ({
 								checked={wannaBeInterestIds.includes(item._id)}
 								onChange={() => handleCheckboxChange(item._id)}
 							/>{" "}
-							{item.name}
+							{item.title}
 						</Label>
 					))}
 				</div>

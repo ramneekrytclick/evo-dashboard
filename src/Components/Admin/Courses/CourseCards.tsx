@@ -16,7 +16,7 @@ const CourseCards = () => {
 			setCourses(response);
 		} catch (error) {
 			console.error(error);
-			toast.error("Error in fetching courses");
+			toast.error("Error fetching courses");
 		}
 	};
 
@@ -25,9 +25,7 @@ const CourseCards = () => {
 	}, []);
 
 	return (
-		<ScrollBar
-			style={{ width: "100%", height: "40em" }}
-			className="vertical-scroll scroll-demo text-center">
+		<ScrollBar style={{ width: "100%", height: "40em" }}>
 			<Row>
 				{courses.map((course, index) => (
 					<CourseCard

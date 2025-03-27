@@ -24,17 +24,26 @@ export interface Course {
 
 export interface CourseProps {
 	_id?: string;
-	name: string;
-	category: Category | string;
-	subcategory: Subcategory | string;
+	title: string;
 	description: string;
-	duration: string;
-	mentorAssigned: { name: string; id: string; email: string };
-	managerAssigned: { name: string; id: string; email: string };
-	batchesAvailable: BatchProps[] | string[];
-	promoCodes: PromoCodeProps[];
-	price: number;
+	whatYouWillLearn: string;
+	photo: string;
+	youtubeLink: string;
+	timing: string;
+	realPrice: number;
+	discountedPrice: number;
+	category: string;
+	subcategory: string;
 	wannaBeInterest: string[];
+	tags: string[];
+	reviews: {
+		student: string | null;
+		rating: number;
+		comment: string;
+		createdAt: string;
+		_id: string;
+	}[];
+	createdBy: string;
 	createdAt?: string;
 }
 
@@ -48,14 +57,19 @@ export interface CourseTabContentProp {
 }
 
 export interface CourseFormProps {
-	name: string;
+	title: string;
 	description: string;
-	category?: any;
-	subcategory?: any;
+	whatYouWillLearn: string;
+	youtubeLink: string;
+	timing: string;
 	categoryId: string;
 	subcategoryId: string;
 	wannaBeInterestId: string;
-	duration?: any;
+	realPrice: string;
+	discountedPrice: string;
+	tags: string;
+	createdBy: string;
+	review: string;
 }
 
 // Batch Details Interface
