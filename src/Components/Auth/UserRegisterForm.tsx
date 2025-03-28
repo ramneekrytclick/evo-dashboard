@@ -33,6 +33,7 @@ const MultiStepRegister = () => {
 	const [role, setRole] = useState("admin");
 	const [formData, setFormData] = useState<any>({});
 	const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+	const [photoFile, setPhotoFile] = useState<File | null>(null);
 	const { register } = useAuth();
 	const router = useRouter();
 	const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,9 +45,11 @@ const MultiStepRegister = () => {
 		const newValue = type === "file" ? files[0] : value;
 
 		if (type === "file" && files[0]) {
+			const file = files[0];
+			setPhotoFile(file);
 			const reader = new FileReader();
 			reader.onload = () => setPhotoPreview(reader.result as string);
-			reader.readAsDataURL(files[0]);
+			reader.readAsDataURL(file);
 		}
 
 		setFormData((prev: any) => ({
@@ -88,12 +91,20 @@ const MultiStepRegister = () => {
 		try {
 			const form = new FormData();
 			Object.entries(formData).forEach(([key, value]) => {
-				if (key !== "confirmPassword") {
+				if (key !== "confirmPassword" && key !== "photo") {
 					form.append(key, value as string);
 				}
 			});
-			if (formData.photo && role !== "admin") {
-				form.append("photo", formData.photo);
+
+			// Only append photo once (if exists)
+			if (photoFile && role !== "admin") {
+				form.append("photo", photoFile);
+			} else {
+				// Convert default image to Blob and append
+				const defaultImage = await fetch("/assets/images/forms/user.png");
+				const blob = await defaultImage.blob();
+				const file = new File([blob], "default-photo.png", { type: blob.type });
+				form.append("photo", file);
 			}
 			const res = await register(form, role);
 			toast.success(res.message || "Registration successful!");
@@ -165,22 +176,24 @@ const MultiStepRegister = () => {
 			xl={6}
 			className="mx-auto">
 			<div className="text-center mb-4">
-				<Link href="/">
+				<Link
+					className="logo"
+					href="/admin/dashboard">
 					<Image
-						src={imageOne}
-						width={200}
-						height={70}
-						alt="Logo Light"
-						className="for-light"
 						priority
-					/>
-					<Image
-						src={imageTwo}
 						width={200}
 						height={34}
-						alt="Logo Dark"
-						className="for-dark"
+						className="img-fluid for-light"
+						src={imageOne}
+						alt="login page"
+					/>
+					<Image
 						priority
+						width={200}
+						height={34}
+						className="img-fluid for-dark"
+						src={imageTwo}
+						alt="login page"
 					/>
 				</Link>
 			</div>
@@ -224,10 +237,7 @@ const MultiStepRegister = () => {
 											/>
 										</div>
 									</div>
-									<h3 className="mt-2 text-center">
-										Upload Profile Photo{" "}
-										{/* <small className="text-muted">(optional)</small> */}
-									</h3>
+									<h3 className="mt-2 text-center">Upload Profile Photo</h3>
 								</Col>
 							</Row>
 						)}
