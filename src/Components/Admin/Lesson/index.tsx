@@ -18,7 +18,7 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 						<Card>
 							<CardBody>
 								<LessonHeader />
-								<LessonList id={id} />
+								<LessonList courseId={id} />
 							</CardBody>
 							<Row></Row>
 						</Card>
