@@ -54,7 +54,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 				</div>
 			</div>
 			{/* <ThemeCustomizer /> */}
-			<ToastContainer />
+			{/* <ToastContainer /> */}
 			<TapTop />
 		</>
 	);

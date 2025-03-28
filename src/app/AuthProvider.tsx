@@ -18,12 +18,8 @@ interface User {
 interface AuthContextType {
 	user: User | null;
 	register: (
-		email: string,
-		password: string,
-		name: string,
-		role: string,
-		expertise?: string,
-		wannaBe?: string
+		data: FormData | { name: string; email: string; password: string },
+		role: string
 	) => Promise<any>;
 	login: (email: string, password: string, role: string) => Promise<any>;
 	logout: () => void;
@@ -42,33 +38,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const user = useAppSelector((state) => state.auth.user);
 
 	const register = async (
-		email: string,
-		password: string,
-		role: string,
-		name: string,
-		expertise?: string,
-		wannaBe?: string
+		data: FormData | { name: string; email: string; password: string },
+		role: string
 	) => {
 		const URL = process.env.NEXT_PUBLIC_BASE_URL;
-
-		const registerData: any = {
-			name,
-			email,
-			password,
-		};
-
-		if (role.toLowerCase() === "mentors" && expertise) {
-			registerData.expertise = expertise;
+		console.log("====================================");
+		console.log(role, data);
+		console.log("====================================");
+		if (role == "admin") {
+			const res = await axios.post(
+				`${URL}${role.toLowerCase()}/register`,
+				data
+			);
+			return res.data.message;
+		} else {
+			const res = await axios.post(`${URL}${role.toLowerCase()}/signup`, data, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+			return res.data.message;
 		}
-		if (role.toLowerCase() === "students" && wannaBe) {
-			registerData.wannaBeInterest = wannaBe;
-		}
-
-		const res = await axios.post(
-			`${URL}${role.toLowerCase()}/register`,
-			registerData
-		);
-		return res.data.message;
 	};
 
 	const login = async (email: string, password: string, role: string) => {
