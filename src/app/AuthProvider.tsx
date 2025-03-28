@@ -50,7 +50,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		wannaBe?: string
 	) => {
 		const URL = process.env.NEXT_PUBLIC_BASE_URL;
-		const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
 		const registerData: any = {
 			name,
@@ -67,10 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 		const res = await axios.post(
 			`${URL}${role.toLowerCase()}/register`,
-			registerData,
-			{
-				headers: { "x-api-key": apiKey },
-			}
+			registerData
 		);
 		return res.data.message;
 	};
@@ -78,11 +74,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const login = async (email: string, password: string, role: string) => {
 		const loginData = { email, password };
 		const URL = process.env.NEXT_PUBLIC_BASE_URL;
-		const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
-		const res = await axios.post(`${URL}${role}/login`, loginData, {
-			headers: { "x-api-key": apiKey },
-		});
+		const res = await axios.post(`${URL}${role}/login`, loginData);
 
 		const data = res.data;
 

@@ -25,7 +25,7 @@ const CourseCards = () => {
 	}, []);
 
 	return (
-		<ScrollBar style={{ width: "100%", height: "40em" }}>
+		<>
 			<Row>
 				{courses.map((course, index) => (
 					<CourseCard
@@ -35,7 +35,7 @@ const CourseCards = () => {
 					/>
 				))}
 			</Row>
-		</ScrollBar>
+		</>
 	);
 };
 

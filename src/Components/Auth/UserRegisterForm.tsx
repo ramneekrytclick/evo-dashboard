@@ -6,42 +6,112 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
 import { toast } from "react-toastify";
-import { useAuth } from "@/app/AuthProvider";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const UserRegisterForm = () => {
-	const [role, setRole] = useState("Admin");
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [role, setRole] = useState("students");
+	const [formData, setFormData] = useState<any>({});
+	const [photo, setPhoto] = useState<File | null>(null);
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [expertise, setExpertise] = useState("");
-	const [wannaBe, setWannaBe] = useState("");
-	const { register } = useAuth();
 	const router = useRouter();
 
-	const isPasswordMatch = password === confirmPassword;
+	const isPasswordMatch = formData.password === confirmPassword;
+	const URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-	const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFormData({ ...formData, [e.target.name]: e.target.value });
+	};
+
+	const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files[0]) {
+			setPhoto(e.target.files[0]);
+		}
+	};
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
+		if (!isPasswordMatch) {
+			toast.error("Passwords do not match");
+			return;
+		}
+
 		try {
-			const response = await register(
-				email,
-				password,
-				role,
-				name,
-				expertise,
-				wannaBe
-			);
+			const form = new FormData();
+			for (const key in formData) {
+				form.append(key, formData[key]);
+			}
+			if (photo) {
+				form.append("photo", photo);
+			}
+
+			const res = await axios.post(`${URL}${role}/signup`, form);
 			toast.success("Registration successful!");
 			router.push("/auth/login");
 		} catch (error: any) {
-			const errorMsg =
+			const msg =
 				error?.response?.data?.message ||
 				error?.message ||
-				"Something went wrong during registration.";
-			toast.error(errorMsg);
+				"Registration failed";
+			toast.error(msg);
 		}
+	};
+
+	const isFieldVisible = (field: string) => {
+		const roleLower = role.toLowerCase();
+		const roleFields: Record<string, string[]> = {
+			students: [
+				"dob",
+				"contactNumber",
+				"guardianName",
+				"address",
+				"education",
+				"preferredLanguages",
+				"wannaBeInterest",
+				"experience",
+			],
+			mentors: [
+				"username",
+				"dob",
+				"contactNumber",
+				"bio",
+				"address",
+				"education",
+				"expertise",
+				"workingMode",
+			],
+			"publishers/auth": [
+				"username",
+				"dob",
+				"contactNumber",
+				"address",
+				"workingMode",
+				"education",
+				"about",
+			],
+			"course-creators/auth": [
+				"username",
+				"dob",
+				"contactNumber",
+				"address",
+				"workingMode",
+				"education",
+				"about",
+			],
+			"managers/auth": [
+				"username",
+				"dob",
+				"contactNumber",
+				"about",
+				"address",
+				"education",
+				"workingMode",
+			],
+			jobs: ["type", "contactNumber", "industry", "address", "companySize"],
+		};
+
+		return roleFields[role]?.includes(field);
 	};
 
 	return (
@@ -72,16 +142,19 @@ const UserRegisterForm = () => {
 			<div className="login-main">
 				<Form
 					className="theme-form"
-					onSubmit={handleRegister}>
+					onSubmit={handleSubmit}>
 					<h4>Create a New Account</h4>
 					<p>Fill in your details to register</p>
 
 					<FormGroup>
-						<Label className="col-form-label">Select Role</Label>
+						<Label>Select Role</Label>
 						<Input
 							type="select"
 							value={role}
-							onChange={(e) => setRole(e.target.value)}
+							onChange={(e) => {
+								setRole(e.target.value);
+								setFormData({}); // reset on role change
+							}}
 							required>
 							<option value="admin">Admin</option>
 							<option value="mentors">Mentor</option>
@@ -94,99 +167,241 @@ const UserRegisterForm = () => {
 					</FormGroup>
 
 					<FormGroup>
-						<Label className="col-form-label">Name</Label>
+						<Label>Name</Label>
 						<Input
 							type="text"
-							value={name}
-							onChange={(e) => setName(e.target.value)}
-							placeholder="Enter your name"
+							name="name"
+							onChange={handleChange}
 							required
 						/>
 					</FormGroup>
 
+					{isFieldVisible("username") && (
+						<FormGroup>
+							<Label>Username</Label>
+							<Input
+								type="text"
+								name="username"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
 					<FormGroup>
-						<Label className="col-form-label">Email Address</Label>
+						<Label>Email</Label>
 						<Input
 							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							placeholder="Enter your email"
+							name="email"
+							onChange={handleChange}
 							required
 						/>
 					</FormGroup>
 
 					<FormGroup>
-						<Label className="col-form-label">Password</Label>
+						<Label>Password</Label>
 						<Input
 							type="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							placeholder="Enter your password"
+							name="password"
+							onChange={handleChange}
 							required
 						/>
 					</FormGroup>
 
 					<FormGroup>
-						<Label className="col-form-label">Confirm Password</Label>
+						<Label>Confirm Password</Label>
 						<Input
 							type="password"
 							value={confirmPassword}
 							onChange={(e) => setConfirmPassword(e.target.value)}
-							placeholder="Confirm your password"
 							required
 						/>
 					</FormGroup>
 
-					{role === "mentors" && (
+					{isFieldVisible("dob") && (
 						<FormGroup>
-							<Label className="col-form-label">Expertise</Label>
+							<Label>Date of Birth</Label>
 							<Input
-								type="text"
-								value={expertise}
-								onChange={(e) => setExpertise(e.target.value)}
-								placeholder="E.g. React, Python"
+								type="date"
+								name="dob"
+								onChange={handleChange}
 								required
 							/>
 						</FormGroup>
 					)}
-					{role === "students" && (
+
+					{isFieldVisible("contactNumber") && (
 						<FormGroup>
-							<Label className="col-form-label">WannaBe Interests</Label>
+							<Label>Contact Number</Label>
 							<Input
 								type="text"
-								value={wannaBe}
-								onChange={(e) => setWannaBe(e.target.value)}
-								placeholder="E.g. React, Python"
+								name="contactNumber"
+								onChange={handleChange}
 								required
 							/>
 						</FormGroup>
 					)}
-					<div className="form-group mb-0">
-						<div className="checkbox p-0">
+
+					{isFieldVisible("guardianName") && (
+						<FormGroup>
+							<Label>Guardian Name</Label>
 							<Input
-								id="checkbox1"
-								type="checkbox"
+								type="text"
+								name="guardianName"
+								onChange={handleChange}
+								required
 							/>
-							<Label
-								className="text-muted"
-								htmlFor="checkbox1">
-								Remember me
-							</Label>
-						</div>
-						<Link
-							className="link form-group"
-							href="/auth/login">
-							Login
-						</Link>
-						<div className="text-end mt-3">
-							<Button
-								type="submit"
-								color="primary"
-								block
-								disabled={!isPasswordMatch}>
-								Register
-							</Button>
-						</div>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("address") && (
+						<FormGroup>
+							<Label>Address</Label>
+							<Input
+								type="text"
+								name="address"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("education") && (
+						<FormGroup>
+							<Label>Education</Label>
+							<Input
+								type="text"
+								name="education"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("preferredLanguages") && (
+						<FormGroup>
+							<Label>Preferred Languages (comma-separated)</Label>
+							<Input
+								type="text"
+								name="preferredLanguages"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("wannaBeInterest") && (
+						<FormGroup>
+							<Label>Wanna Be Interest</Label>
+							<Input
+								type="text"
+								name="wannaBeInterest"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("experience") && (
+						<FormGroup>
+							<Label>Experience (comma-separated)</Label>
+							<Input
+								type="text"
+								name="experience"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("expertise") && (
+						<FormGroup>
+							<Label>Expertise</Label>
+							<Input
+								type="text"
+								name="expertise"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("bio") || isFieldVisible("about") ? (
+						<FormGroup>
+							<Label>About/Bio</Label>
+							<Input
+								type="textarea"
+								name="about"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					) : null}
+
+					{isFieldVisible("workingMode") && (
+						<FormGroup>
+							<Label>Working Mode</Label>
+							<Input
+								type="text"
+								name="workingMode"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("type") && (
+						<FormGroup>
+							<Label>Employer Type</Label>
+							<Input
+								type="text"
+								name="type"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("industry") && (
+						<FormGroup>
+							<Label>Industry</Label>
+							<Input
+								type="text"
+								name="industry"
+								onChange={handleChange}
+								required
+							/>
+						</FormGroup>
+					)}
+
+					{isFieldVisible("companySize") && (
+						<FormGroup>
+							<Label>Company Size</Label>
+							<Input
+								type="text"
+								name="companySize"
+								onChange={handleChange}
+							/>
+						</FormGroup>
+					)}
+
+					<FormGroup>
+						<Label>Upload Photo</Label>
+						<Input
+							type="file"
+							accept="image/*"
+							onChange={handlePhotoChange}
+						/>
+					</FormGroup>
+
+					<div className="text-end mt-3">
+						<Button
+							type="submit"
+							color="primary"
+							block
+							disabled={!isPasswordMatch}>
+							Register
+						</Button>
 					</div>
 				</Form>
 			</div>
