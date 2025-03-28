@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Col, Input, Label, Row } from "reactstrap";
+import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
 interface BasicInfoProps {
 	formData: any;
@@ -90,147 +90,270 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 
 export default BasicInfoForm;
 
-// FormSteps/StudentForm.tsx
 export const StudentForm = ({ formData, handleChange }: any) => (
-	<>
-		<Input
-			name="dob"
-			type="date"
-			placeholder="DOB"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="contactNumber"
-			placeholder="Contact Number"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="guardianName"
-			placeholder="Guardian Name"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="address"
-			placeholder="Address"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="education"
-			placeholder="Education"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="preferredLanguages"
-			placeholder="Preferred Languages"
-			onChange={handleChange}
-		/>
-		<Input
-			name="wannaBeInterest"
-			placeholder="Wanna Be Interest"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="experience"
-			placeholder="Experience"
-			onChange={handleChange}
-		/>
-	</>
+	<Row className="g-3">
+		<Col sm={6}>
+			<FormGroup>
+				<Label>DOB</Label>
+				<Input
+					type="date"
+					name="dob"
+					value={formData.dob || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Contact Number</Label>
+				<Input
+					name="contactNumber"
+					placeholder="Enter your phone number"
+					value={formData.contactNumber || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Guardian Name</Label>
+				<Input
+					name="guardianName"
+					placeholder="Enter guardian's name"
+					value={formData.guardianName || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Address</Label>
+				<Input
+					name="address"
+					placeholder="Full address"
+					value={formData.address || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Education</Label>
+				<Input
+					name="education"
+					placeholder="E.g. B.Tech CSE"
+					value={formData.education || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Preferred Languages</Label>
+				<Input
+					name="preferredLanguages"
+					placeholder="E.g. JavaScript, Python"
+					value={formData.preferredLanguages || ""}
+					onChange={handleChange}
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Wanna Be Interest</Label>
+				<Input
+					name="wannaBeInterest"
+					placeholder="Frontend Developer, AI Engineer"
+					value={formData.wannaBeInterest || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Experience</Label>
+				<Input
+					name="experience"
+					placeholder="Internship, Freelancing"
+					value={formData.experience || ""}
+					onChange={handleChange}
+				/>
+			</FormGroup>
+		</Col>
+	</Row>
 );
 
 // FormSteps/MentorForm.tsx
 export const MentorForm = ({ formData, handleChange, role }: any) => (
-	<>
-		<Input
-			name="username"
-			placeholder="Username"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="dob"
-			type="date"
-			placeholder="DOB"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="contactNumber"
-			placeholder="Contact Number"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="education"
-			placeholder="Education"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="workingMode"
-			placeholder="Working Mode"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="address"
-			placeholder="Address"
-			onChange={handleChange}
-			required
-		/>
+	<Row className="g-3">
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Username</Label>
+				<Input
+					name="username"
+					placeholder="Unique username"
+					value={formData.username || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>DOB</Label>
+				<Input
+					type="date"
+					name="dob"
+					value={formData.dob || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Contact Number</Label>
+				<Input
+					name="contactNumber"
+					placeholder="Phone number"
+					value={formData.contactNumber || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Education</Label>
+				<Input
+					name="education"
+					placeholder="E.g. M.Sc in AI"
+					value={formData.education || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Working Mode</Label>
+				<Input
+					name="workingMode"
+					placeholder="Online / Offline / Hybrid"
+					value={formData.workingMode || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Address</Label>
+				<Input
+					name="address"
+					placeholder="Full address"
+					value={formData.address || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
 		{role === "mentors" && (
-			<Input
-				name="expertise"
-				placeholder="Expertise"
-				onChange={handleChange}
-				required
-			/>
+			<Col sm={6}>
+				<FormGroup>
+					<Label>Expertise</Label>
+					<Input
+						name="expertise"
+						placeholder="E.g. MERN Stack, Data Science"
+						value={formData.expertise || ""}
+						onChange={handleChange}
+						required
+					/>
+				</FormGroup>
+			</Col>
 		)}
-		<Input
-			name={role === "mentors" ? "bio" : "about"}
-			placeholder="Bio/About"
-			onChange={handleChange}
-			required
-		/>
-	</>
+		<Col sm={12}>
+			<FormGroup>
+				<Label>Bio/About</Label>
+				<Input
+					name={role === "mentors" ? "bio" : "about"}
+					placeholder="Write a short description"
+					value={formData[role === "mentors" ? "bio" : "about"] || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+	</Row>
 );
 
 // FormSteps/EmployerForm.tsx
 export const EmployerForm = ({ formData, handleChange }: any) => (
-	<>
-		<Input
-			name="type"
-			placeholder="Type (Company/Individual)"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="contactNumber"
-			placeholder="Contact Number"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="industry"
-			placeholder="Industry"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="address"
-			placeholder="Address"
-			onChange={handleChange}
-			required
-		/>
-		<Input
-			name="companySize"
-			placeholder="Company Size"
-			onChange={handleChange}
-		/>
-	</>
+	<Row className="g-3">
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Type</Label>
+				<Input
+					name="type"
+					placeholder="Company / Individual"
+					value={formData.type || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Contact Number</Label>
+				<Input
+					name="contactNumber"
+					placeholder="Phone number"
+					value={formData.contactNumber || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Industry</Label>
+				<Input
+					name="industry"
+					placeholder="E.g. IT, Marketing, Design"
+					value={formData.industry || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Address</Label>
+				<Input
+					name="address"
+					placeholder="Company address"
+					value={formData.address || ""}
+					onChange={handleChange}
+					required
+				/>
+			</FormGroup>
+		</Col>
+		<Col sm={6}>
+			<FormGroup>
+				<Label>Company Size</Label>
+				<Input
+					name="companySize"
+					placeholder="E.g. 10-50 employees"
+					value={formData.companySize || ""}
+					onChange={handleChange}
+				/>
+			</FormGroup>
+		</Col>
+	</Row>
 );

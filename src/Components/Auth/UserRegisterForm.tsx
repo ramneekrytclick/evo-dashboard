@@ -1,9 +1,19 @@
 // Role-based multi-step wizard registration form for all roles
-// Components used: BasicInfo, RoleSpecific (step 2), ImageUpload, FinalReview
-// Logic for Admin stays single-step, others split into 2-3 steps depending on fields
+// Components used: BasicInfo, Profile (step 2), RoleSpecific (step 3)
+// Logic for Admin stays single-step, others split into 3 steps
+
 "use client";
-import React, { useState, ChangeEvent } from "react";
-import { Button, Card, CardBody, Col, Form } from "reactstrap";
+import React, { useState, ChangeEvent, useRef } from "react";
+import {
+	Button,
+	Card,
+	CardBody,
+	Col,
+	Form,
+	Row,
+	Input,
+	Label,
+} from "reactstrap";
 import Link from "next/link";
 import Image from "next/image";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
@@ -16,6 +26,7 @@ import BasicInfoForm, {
 } from "./FormSteps";
 import { useAuth } from "@/app/AuthProvider";
 import { useRouter } from "next/navigation";
+import { ImagePath } from "@/Constant";
 
 const MultiStepRegister = () => {
 	const [step, setStep] = useState(1);
@@ -24,6 +35,7 @@ const MultiStepRegister = () => {
 	const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 	const { register } = useAuth();
 	const router = useRouter();
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleChange = (
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -69,7 +81,7 @@ const MultiStepRegister = () => {
 	};
 
 	const handleSubmit = async () => {
-		if (role == "admin") {
+		if (role === "admin") {
 			handleSubmitAdmin();
 			return;
 		}
@@ -84,7 +96,6 @@ const MultiStepRegister = () => {
 				form.append("photo", formData.photo);
 			}
 			const res = await register(form, role);
-
 			toast.success(res.message || "Registration successful!");
 			router.push("/auth/login");
 		} catch (error: any) {
@@ -95,6 +106,7 @@ const MultiStepRegister = () => {
 			toast.error(errorMsg);
 		}
 	};
+
 	const handleSubmitAdmin = async () => {
 		try {
 			const form = {
@@ -103,7 +115,6 @@ const MultiStepRegister = () => {
 				password: formData.password,
 			};
 			const res = await register(form, role);
-
 			toast.success(res.message || "Registration successful!");
 			router.push("/auth/login");
 		} catch (error: any) {
@@ -184,7 +195,44 @@ const MultiStepRegister = () => {
 								setRole={setRole}
 							/>
 						)}
-						{step === 2 && isMultiStep && getRoleForm()}
+
+						{step === 2 && isMultiStep && (
+							<Row className="g-3 avatar-upload">
+								<Col xs={12}>
+									<div>
+										<div className="avatar-edit">
+											<Input
+												onChange={handleChange}
+												innerRef={fileInputRef}
+												type="file"
+												accept=".png, .jpg, .jpeg"
+												name="photo"
+											/>
+											<Label
+												htmlFor="photo"
+												onClick={() => fileInputRef.current?.click()}
+											/>
+										</div>
+										<div className="avatar-preview">
+											<div
+												id="image"
+												style={{
+													backgroundImage: photoPreview
+														? `url(${photoPreview})`
+														: `url(${ImagePath}/forms/user.png)`,
+												}}
+											/>
+										</div>
+									</div>
+									<h3 className="mt-2 text-center">
+										Upload Profile Photo{" "}
+										{/* <small className="text-muted">(optional)</small> */}
+									</h3>
+								</Col>
+							</Row>
+						)}
+
+						{step === 3 && isMultiStep && getRoleForm()}
 
 						<div className="text-end pt-3">
 							{step > 1 && isMultiStep && (
@@ -196,17 +244,19 @@ const MultiStepRegister = () => {
 								</Button>
 							)}
 
-							{/* Step-based logic for button text and action */}
 							<Button
 								color="primary"
+								disabled={formData.password !== formData.confirmPassword}
 								onClick={
 									(role === "admin" && step === 1) ||
-									(isMultiStep && step === 2)
+									(isMultiStep && step === 3)
 										? handleSubmit
 										: handleNext
 								}>
-								{(role === "admin" && step === 1) || (isMultiStep && step === 2)
+								{(role === "admin" && step === 1) || (isMultiStep && step === 3)
 									? "Submit"
+									: step === 2 && !formData.photo
+									? "Skip"
 									: "Next"}
 							</Button>
 						</div>
