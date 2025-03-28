@@ -135,7 +135,7 @@ const PendingListTable = () => {
 				/>
 				<DataTable
 					className="custom-scrollbar"
-					data={filteredItems}
+					data={filteredItems.reverse()}
 					columns={teamListColumns}
 					pagination
 				/>
