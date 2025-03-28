@@ -6,21 +6,20 @@ import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const UserRegisterForm = () => {
-	const [role, setRole] = useState("students");
+	const [role, setRole] = useState("admin");
 	const [formData, setFormData] = useState<any>({});
 	const [photo, setPhoto] = useState<File | null>(null);
-	const [confirmPassword, setConfirmPassword] = useState("");
 	const router = useRouter();
 
-	const isPasswordMatch = formData.password === confirmPassword;
-	const URL = process.env.NEXT_PUBLIC_BASE_URL;
+	const isPasswordMatch = formData.password === formData.confirmPassword;
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData({ ...formData, [name]: value });
 	};
 
 	const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,132 +28,304 @@ const UserRegisterForm = () => {
 		}
 	};
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-
-		if (!isPasswordMatch) {
-			toast.error("Passwords do not match");
-			return;
-		}
-
 		try {
+			const URL = process.env.NEXT_PUBLIC_BASE_URL;
 			const form = new FormData();
-			for (const key in formData) {
-				form.append(key, formData[key]);
-			}
-			if (photo) {
+
+			Object.entries(formData).forEach(([key, value]) => {
+				if (key !== "confirmPassword") form.append(key, value as string);
+			});
+			if (photo && role !== "admin") {
 				form.append("photo", photo);
 			}
 
-			const res = await axios.post(`${URL}${role}/signup`, form);
-			toast.success("Registration successful!");
+			const endpoint =
+				role === "admin"
+					? "admin/register"
+					: role === "students"
+					? "students/signup"
+					: role === "mentors"
+					? "mentors/signup"
+					: role === "publishers/auth"
+					? "publishers/auth/signup"
+					: role === "course-creators/auth"
+					? "course-creators/auth/signup"
+					: role === "managers/auth"
+					? "managers/auth/signup"
+					: role === "jobs"
+					? "jobs/signup"
+					: "";
+
+			const res = await axios.post(`${URL}/api/${endpoint}`, form);
+			toast.success(res.data.message || "Registration successful!");
 			router.push("/auth/login");
 		} catch (error: any) {
-			const msg =
+			const errorMsg =
 				error?.response?.data?.message ||
 				error?.message ||
 				"Registration failed";
-			toast.error(msg);
+			toast.error(errorMsg);
 		}
 	};
 
-	const isFieldVisible = (field: string) => {
-		const roleLower = role.toLowerCase();
-		const roleFields: Record<string, string[]> = {
-			students: [
-				"dob",
-				"contactNumber",
-				"guardianName",
-				"address",
-				"education",
-				"preferredLanguages",
-				"wannaBeInterest",
-				"experience",
-			],
-			mentors: [
-				"username",
-				"dob",
-				"contactNumber",
-				"bio",
-				"address",
-				"education",
-				"expertise",
-				"workingMode",
-			],
-			"publishers/auth": [
-				"username",
-				"dob",
-				"contactNumber",
-				"address",
-				"workingMode",
-				"education",
-				"about",
-			],
-			"course-creators/auth": [
-				"username",
-				"dob",
-				"contactNumber",
-				"address",
-				"workingMode",
-				"education",
-				"about",
-			],
-			"managers/auth": [
-				"username",
-				"dob",
-				"contactNumber",
-				"about",
-				"address",
-				"education",
-				"workingMode",
-			],
-			jobs: ["type", "contactNumber", "industry", "address", "companySize"],
-		};
+	const renderRoleSpecificFields = () => {
+		switch (role) {
+			case "students":
+				return (
+					<>
+						<FormGroup>
+							<Label>DOB</Label>
+							<Input
+								type="date"
+								name="dob"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Contact Number</Label>
+							<Input
+								name="contactNumber"
+								placeholder="Enter your phone number"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Guardian Name</Label>
+							<Input
+								name="guardianName"
+								placeholder="Enter guardian's full name"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Address</Label>
+							<Input
+								name="address"
+								placeholder="Enter your full address"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Education</Label>
+							<Input
+								name="education"
+								placeholder="E.g. B.Tech in CSE"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Preferred Languages</Label>
+							<Input
+								name="preferredLanguages"
+								placeholder="E.g. JavaScript, Python"
+								onChange={handleInputChange}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Wanna Be Interest</Label>
+							<Input
+								name="wannaBeInterest"
+								placeholder="E.g. Frontend Developer, ML Engineer"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Experience</Label>
+							<Input
+								name="experience"
+								placeholder="E.g. Freelancing, Internship at XYZ"
+								onChange={handleInputChange}
+							/>
+						</FormGroup>
+					</>
+				);
 
-		return roleFields[role]?.includes(field);
+			case "mentors":
+			case "publishers/auth":
+			case "course-creators/auth":
+			case "managers/auth":
+				return (
+					<>
+						<FormGroup>
+							<Label>Username</Label>
+							<Input
+								name="username"
+								placeholder="Unique username"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>DOB</Label>
+							<Input
+								type="date"
+								name="dob"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Contact Number</Label>
+							<Input
+								name="contactNumber"
+								placeholder="Enter your contact number"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Education</Label>
+							<Input
+								name="education"
+								placeholder="E.g. M.Sc in AI"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Working Mode</Label>
+							<Input
+								name="workingMode"
+								placeholder="Online / Offline / Hybrid"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Address</Label>
+							<Input
+								name="address"
+								placeholder="Enter your full address"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						{role === "mentors" && (
+							<FormGroup>
+								<Label>Expertise</Label>
+								<Input
+									name="expertise"
+									placeholder="E.g. MERN Stack, Data Science"
+									onChange={handleInputChange}
+									required
+								/>
+							</FormGroup>
+						)}
+						<FormGroup>
+							<Label>Bio/About</Label>
+							<Input
+								name={role === "mentors" ? "bio" : "about"}
+								placeholder="Brief about your background"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+					</>
+				);
+
+			case "jobs":
+				return (
+					<>
+						<FormGroup>
+							<Label>Type</Label>
+							<Input
+								name="type"
+								placeholder="Company / Individual / Startup"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Contact Number</Label>
+							<Input
+								name="contactNumber"
+								placeholder="Enter official contact number"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Industry</Label>
+							<Input
+								name="industry"
+								placeholder="E.g. IT, Marketing, Finance"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Address</Label>
+							<Input
+								name="address"
+								placeholder="Company address"
+								onChange={handleInputChange}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Company Size</Label>
+							<Input
+								name="companySize"
+								placeholder="E.g. 10-50 employees"
+								onChange={handleInputChange}
+							/>
+						</FormGroup>
+					</>
+				);
+
+			default:
+				return null;
+		}
 	};
 
 	return (
-		<div>
-			<div>
-				<Link
-					className="logo"
-					href="/">
+		<div className="register-wrapper">
+			{/* Website Logo */}
+			<div className="logo mb-4 text-center">
+				<Link href="/">
 					<Image
-						priority
+						src={imageOne}
 						width={200}
 						height={34}
+						alt="Facetroop Logo Light"
 						className="img-fluid for-light"
-						src={imageOne}
-						alt="register page"
+						priority
 					/>
 					<Image
-						priority
+						src={imageTwo}
 						width={200}
 						height={34}
+						alt="Facetroop Logo Dark"
 						className="img-fluid for-dark"
-						src={imageTwo}
-						alt="register page"
+						priority
 					/>
 				</Link>
 			</div>
 
+			{/* Registration Form */}
 			<div className="login-main">
 				<Form
 					className="theme-form"
-					onSubmit={handleSubmit}>
+					onSubmit={handleRegister}
+					encType="multipart/form-data">
 					<h4>Create a New Account</h4>
 					<p>Fill in your details to register</p>
 
+					{/* Form inputs here (already updated previously) */}
 					<FormGroup>
 						<Label>Select Role</Label>
 						<Input
 							type="select"
 							value={role}
-							onChange={(e) => {
-								setRole(e.target.value);
-								setFormData({}); // reset on role change
-							}}
+							onChange={(e) => setRole(e.target.value)}
 							required>
 							<option value="admin">Admin</option>
 							<option value="mentors">Mentor</option>
@@ -166,239 +337,72 @@ const UserRegisterForm = () => {
 						</Input>
 					</FormGroup>
 
+					{/* Shared Inputs */}
 					<FormGroup>
 						<Label>Name</Label>
 						<Input
-							type="text"
 							name="name"
-							onChange={handleChange}
+							placeholder="Full Name"
+							onChange={handleInputChange}
 							required
 						/>
 					</FormGroup>
-
-					{isFieldVisible("username") && (
-						<FormGroup>
-							<Label>Username</Label>
-							<Input
-								type="text"
-								name="username"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
 					<FormGroup>
 						<Label>Email</Label>
 						<Input
-							type="email"
 							name="email"
-							onChange={handleChange}
+							type="email"
+							placeholder="Email"
+							onChange={handleInputChange}
 							required
 						/>
 					</FormGroup>
-
 					<FormGroup>
 						<Label>Password</Label>
 						<Input
-							type="password"
 							name="password"
-							onChange={handleChange}
+							type="password"
+							placeholder="Password"
+							onChange={handleInputChange}
 							required
 						/>
 					</FormGroup>
-
 					<FormGroup>
 						<Label>Confirm Password</Label>
 						<Input
+							name="confirmPassword"
 							type="password"
-							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
+							placeholder="Confirm Password"
+							onChange={handleInputChange}
 							required
 						/>
 					</FormGroup>
 
-					{isFieldVisible("dob") && (
+					{/* Conditional Photo Upload */}
+					{role !== "admin" && (
 						<FormGroup>
-							<Label>Date of Birth</Label>
+							<Label>Upload Photo</Label>
 							<Input
-								type="date"
-								name="dob"
-								onChange={handleChange}
-								required
+								type="file"
+								onChange={handlePhotoChange}
+								accept="image/*"
 							/>
 						</FormGroup>
 					)}
 
-					{isFieldVisible("contactNumber") && (
-						<FormGroup>
-							<Label>Contact Number</Label>
-							<Input
-								type="text"
-								name="contactNumber"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
+					{/* Role-specific fields */}
+					{renderRoleSpecificFields()}
 
-					{isFieldVisible("guardianName") && (
-						<FormGroup>
-							<Label>Guardian Name</Label>
-							<Input
-								type="text"
-								name="guardianName"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("address") && (
-						<FormGroup>
-							<Label>Address</Label>
-							<Input
-								type="text"
-								name="address"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("education") && (
-						<FormGroup>
-							<Label>Education</Label>
-							<Input
-								type="text"
-								name="education"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("preferredLanguages") && (
-						<FormGroup>
-							<Label>Preferred Languages (comma-separated)</Label>
-							<Input
-								type="text"
-								name="preferredLanguages"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("wannaBeInterest") && (
-						<FormGroup>
-							<Label>Wanna Be Interest</Label>
-							<Input
-								type="text"
-								name="wannaBeInterest"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("experience") && (
-						<FormGroup>
-							<Label>Experience (comma-separated)</Label>
-							<Input
-								type="text"
-								name="experience"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("expertise") && (
-						<FormGroup>
-							<Label>Expertise</Label>
-							<Input
-								type="text"
-								name="expertise"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("bio") || isFieldVisible("about") ? (
-						<FormGroup>
-							<Label>About/Bio</Label>
-							<Input
-								type="textarea"
-								name="about"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					) : null}
-
-					{isFieldVisible("workingMode") && (
-						<FormGroup>
-							<Label>Working Mode</Label>
-							<Input
-								type="text"
-								name="workingMode"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("type") && (
-						<FormGroup>
-							<Label>Employer Type</Label>
-							<Input
-								type="text"
-								name="type"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("industry") && (
-						<FormGroup>
-							<Label>Industry</Label>
-							<Input
-								type="text"
-								name="industry"
-								onChange={handleChange}
-								required
-							/>
-						</FormGroup>
-					)}
-
-					{isFieldVisible("companySize") && (
-						<FormGroup>
-							<Label>Company Size</Label>
-							<Input
-								type="text"
-								name="companySize"
-								onChange={handleChange}
-							/>
-						</FormGroup>
-					)}
-
-					<FormGroup>
-						<Label>Upload Photo</Label>
-						<Input
-							type="file"
-							accept="image/*"
-							onChange={handlePhotoChange}
-						/>
-					</FormGroup>
-
-					<div className="text-end mt-3">
+					{/* Submit + Login Link */}
+					<div className="form-footer mt-3 d-flex justify-content-between align-items-center">
+						<Link
+							href="/auth/login"
+							className="text-primary">
+							Already have an account? Login
+						</Link>
 						<Button
 							type="submit"
 							color="primary"
-							block
 							disabled={!isPasswordMatch}>
 							Register
 						</Button>
