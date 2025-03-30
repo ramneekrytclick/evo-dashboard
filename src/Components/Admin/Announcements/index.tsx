@@ -12,11 +12,7 @@ const AnnouncementsContainer = () => {
 				title={AnnouncementsTitle}
 			/>
 			<Container fluid>
-				<Row>
-					<Col sm={12}>
-						<AnnouncementsListTable />
-					</Col>
-				</Row>
+				<AnnouncementsListTable />
 			</Container>
 		</>
 	);

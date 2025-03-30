@@ -1,9 +1,8 @@
-import { AxiosError } from "axios";
-
 export interface IAnnouncement {
-	_id?: string;
+	_id: string;
 	title: string;
-	message: string;
+	description: string;
 	roles: string[];
-	createdAt: Date;
+	image?: string | null;
+	createdAt: string;
 }

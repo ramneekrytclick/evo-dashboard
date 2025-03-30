@@ -1,49 +1,38 @@
 import {
-	announcementAPIProps,
+	AnnouncementFormInput,
 	createAnnouncement,
 } from "@/app/api/admin/announcements";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
-
-interface formDataProps {
-	title: string;
-	message: string;
-	roles: string[];
-}
+import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 
 const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
-	const [formData, setFormData] = useState<formDataProps>({
+	const [formData, setFormData] = useState<AnnouncementFormInput>({
 		title: "",
-		message: "",
+		description: "",
 		roles: [],
+		image: null,
 	});
 
 	const handleCheckboxChange = (role: string) => {
-		setFormData((prevState) => {
-			const updatedRoles = prevState.roles.includes(role)
-				? prevState.roles.filter((r) => r !== role)
-				: [...prevState.roles, role];
-			return { ...prevState, roles: updatedRoles };
+		setFormData((prev) => {
+			const roles = prev.roles.includes(role)
+				? prev.roles.filter((r) => r !== role)
+				: [...prev.roles, role];
+			return { ...prev, roles };
 		});
 	};
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-
-		const formattedData: announcementAPIProps = {
-			title: formData.title,
-			message: formData.message,
-			roles: formData.roles,
-		};
-
 		try {
-			await createAnnouncement(formattedData);
-			toast.success("Announcement created successfully!");
+			await createAnnouncement(formData);
+			toast.success("Announcement created!");
 			toggle();
+			setFormData({ title: "", description: "", roles: [], image: null });
 		} catch (error) {
-			console.error("Failed to create announcement:", error);
-			toast.error("Error creating announcement.");
+			console.error(error);
+			toast.error("Error creating announcement");
 		}
 	};
 
@@ -51,54 +40,68 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 		<Form onSubmit={handleSubmit}>
 			<Row className="g-3">
 				<Col md={12}>
-					<Label htmlFor="title">Title</Label>
+					<Label>Title</Label>
 					<Input
-						id="title"
 						type="text"
-						placeholder="Enter Title"
 						value={formData.title}
 						onChange={(e) =>
 							setFormData({ ...formData, title: e.target.value })
 						}
+						required
 					/>
 				</Col>
 				<Col md={12}>
-					<Label htmlFor="message">Message</Label>
+					<Label>Description</Label>
 					<Input
-						id="message"
 						type="textarea"
-						placeholder="Enter Message"
-						value={formData.message}
+						value={formData.description}
 						onChange={(e) =>
-							setFormData({ ...formData, message: e.target.value })
+							setFormData({ ...formData, description: e.target.value })
+						}
+						required
+					/>
+				</Col>
+				<Col md={12}>
+					<Label>Roles</Label>
+					{[
+						"Student",
+						"Mentor",
+						"Manager",
+						"Employer",
+						"Course Creator",
+						"Publisher",
+					].map((role) => (
+						<div key={role}>
+							<Input
+								type="checkbox"
+								id={role}
+								checked={formData.roles.includes(role)}
+								onChange={() => handleCheckboxChange(role)}
+							/>
+							<Label
+								check
+								htmlFor={role}>
+								{role}
+							</Label>
+						</div>
+					))}
+				</Col>
+				<Col md={12}>
+					<Label>Image (optional)</Label>
+					<Input
+						type="file"
+						accept="image/*"
+						onChange={(e) =>
+							setFormData({ ...formData, image: e.target.files?.[0] || null })
 						}
 					/>
 				</Col>
-				<Col xs={12}>
-					<Label>Target Audience</Label>
-					<FormGroup check>
-						{["Student", "Mentor", "Manager", "Employer", "Course Creator"].map(
-							(role) => (
-								<div key={role}>
-									<Input
-										id={role}
-										type="checkbox"
-										checked={formData.roles.includes(role)}
-										onChange={() => handleCheckboxChange(role)}
-									/>
-									<Label
-										htmlFor={role}
-										className="d-block mb-1"
-										check>
-										{role}
-									</Label>
-								</div>
-							)
-						)}
-					</FormGroup>
-				</Col>
 				<Col md={12}>
-					<Button color="primary">Create</Button>
+					<Button
+						color="primary"
+						type="submit">
+						Create
+					</Button>
 				</Col>
 			</Row>
 		</Form>

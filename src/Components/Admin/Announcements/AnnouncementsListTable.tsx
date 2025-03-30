@@ -1,71 +1,64 @@
 "use client";
+import { useEffect, useState } from "react";
+import { Card, CardBody } from "reactstrap";
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import FilterComponent from "@/CommonComponent/FilterComponent";
 import { AnnouncementsTitle } from "@/Constant";
-import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
-import { Card, CardBody } from "reactstrap";
+import { getAnnouncements } from "@/app/api/admin/announcements";
+import CreateAnnouncementModal from "./CreateAnnouncement/CreateAnnouncementModal";
 import { announcementTableColumns } from "@/Data/Admin/Announcements/Announcement";
 import { IAnnouncement } from "@/Types/Announcement.type";
-import { getAnnouncements } from "@/app/api/admin/announcements";
-import { announcementFakeData } from "@/FakeData/admin/announcements";
-import CreateAnnouncementModal from "./CreateAnnouncement/CreateAnnouncementModal";
 
 const AnnouncementsListTable = () => {
 	const [filterText, setFilterText] = useState("");
-	const [announcementsData, setAnnouncementsData] = useState<any[]>([]);
-	const [loading, setLoading] = useState(true);
-	const filteredItems: IAnnouncement[] = announcementsData?.filter(
-		(item: IAnnouncement) => {
-			return Object.values(item).some(
-				(value) =>
-					value &&
-					value.toString().toLowerCase().includes(filterText.toLowerCase())
-			);
-		}
+	const [announcementsData, setAnnouncementsData] = useState<IAnnouncement[]>(
+		[]
 	);
-	const fetchAnnouncements = async (): Promise<void> => {
+	const [loading, setLoading] = useState(true);
+
+	const fetchAnnouncements = async () => {
 		try {
 			const data = await getAnnouncements();
-			// console.log(data);
-			// setAnnouncementsData(announcementFakeData);
 			setAnnouncementsData(data);
 		} catch (error) {
-			console.error("Failed to fetch announcements:", error);
-			setAnnouncementsData([]);
+			console.error("Error fetching announcements:", error);
 		} finally {
 			setLoading(false);
 		}
 	};
+
 	useEffect(() => {
 		fetchAnnouncements();
 	}, []);
+
+	const filteredItems = announcementsData.filter((item) =>
+		[item.title, item.description].some((val) =>
+			val?.toLowerCase().includes(filterText.toLowerCase())
+		)
+	);
+
 	return (
 		<Card>
-			<CommonCardHeader
-				headClass="pb-0 card-no-border"
-				title={AnnouncementsTitle}
-			/>
+			<CommonCardHeader title={AnnouncementsTitle} />
 			<CardBody>
-				<FilterComponent
-					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setFilterText(e.target.value)
-					}
-					filterText={filterText}
-				/>
-				<CreateAnnouncementModal fetchData={fetchAnnouncements} />
-				<div
-					className="table-responsive custom-scrollbar user-datatable mt-3"
-					aria-busy={loading}>
+				<div className="d-flex w-100 justify-content-between">
+					<FilterComponent
+						filterText={filterText}
+						onFilter={(e) => setFilterText(e.target.value)}
+					/>
+					<CreateAnnouncementModal fetchData={fetchAnnouncements} />
+				</div>
+				<div className="table-responsive custom-scrollbar mt-3">
 					{loading ? (
-						<div>Loading..</div>
+						<div>Loading...</div>
 					) : (
 						<DataTable
 							data={filteredItems}
 							columns={announcementTableColumns}
 							striped
 							fixedHeader
-							fixedHeaderScrollHeight="40vh"
+							fixedHeaderScrollHeight="400px"
 							className="display"
 						/>
 					)}

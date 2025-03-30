@@ -4,11 +4,20 @@ export interface announcementAPIProps {
 	message: string;
 	roles: string[];
 }
+export interface AnnouncementFormInput {
+	title: string;
+	description: string;
+	roles: string[];
+	image?: File | null;
+}
 
-export const createAnnouncement = async (
-	formattedData: announcementAPIProps
-) => {
-	const response = await apiClient.post("/announcements", formattedData);
+export const createAnnouncement = async (formData: AnnouncementFormInput) => {
+	const data = new FormData();
+	data.append("title", formData.title);
+	data.append("description", formData.description);
+	formData.roles.forEach((role) => data.append("roles[]", role));
+	if (formData.image) data.append("image", formData.image);
+	const response = await apiClient.post("/announcements", data);
 	return response;
 };
 

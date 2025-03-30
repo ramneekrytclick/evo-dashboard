@@ -2,6 +2,7 @@ import DeleteAnnouncementModal from "@/Components/Admin/Announcements/DeleteAnno
 import UpdateAnnouncementModal from "@/Components/Admin/Announcements/UpdateAnnouncementModal";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { TableColumn } from "react-data-table-component";
+import { Badge, UncontrolledTooltip } from "reactstrap";
 
 export const announcementFilterOptions = [
 	{
@@ -30,32 +31,55 @@ export const announcementFilterOptions = [
 	},
 ];
 
+// import UpdateAnnouncementModal from "./UpdateAnnouncementModal";
+// import DeleteAnnouncementModal from "./DeleteAnnouncementModal";
+
 export const announcementTableColumns: TableColumn<IAnnouncement>[] = [
 	{
 		name: "Title",
 		selector: (row) => row.title,
 		sortable: true,
+		cell: (row) => (
+			<strong style={{ whiteSpace: "nowrap" }}>{row.title}</strong>
+		),
 	},
 	{
 		name: "Message",
-		selector: (row) => row.message,
+		selector: (row) => row.description,
 		sortable: true,
 		cell: (row) => (
 			<div
+				id={`desc-tooltip-${row._id}`}
 				style={{
-					maxWidth: "300px",
+					maxWidth: "250px",
 					whiteSpace: "nowrap",
 					overflow: "hidden",
 					textOverflow: "ellipsis",
 				}}>
-				{row.message}
+				{row.description}
+				<UncontrolledTooltip
+					placement="top"
+					target={`desc-tooltip-${row._id}`}>
+					{row.description}
+				</UncontrolledTooltip>
 			</div>
 		),
 	},
 	{
 		name: "Target Roles",
 		selector: (row) => row.roles?.join(", "),
-		sortable: false,
+		cell: (row) => (
+			<div className="d-flex flex-wrap gap-1">
+				{row.roles?.map((role, i) => (
+					<Badge
+						key={i}
+						color="info"
+						className="text-uppercase">
+						{role}
+					</Badge>
+				))}
+			</div>
+		),
 	},
 	{
 		name: "Created At",
@@ -67,16 +91,17 @@ export const announcementTableColumns: TableColumn<IAnnouncement>[] = [
 			}),
 		sortable: true,
 	},
+	// Optional future actions (edit/delete)
 	// {
-	// 	name: "Actions",
-	// 	cell: (row) => (
-	// 		<ul className="action d-flex gap-2">
-	// 			<UpdateAnnouncementModal values={row} />
-	// 			<DeleteAnnouncementModal id={row._id!} />
-	// 		</ul>
-	// 	),
-	// 	ignoreRowClick: true,
-	// 	allowOverflow: true,
-	// 	button: true,
+	//   name: "Actions",
+	//   cell: (row) => (
+	//     <ul className="action d-flex gap-2">
+	//       <UpdateAnnouncementModal values={row} />
+	//       <DeleteAnnouncementModal id={row._id!} />
+	//     </ul>
+	//   ),
+	//   ignoreRowClick: true,
+	//   allowOverflow: true,
+	//   button: true,
 	// },
 ];
