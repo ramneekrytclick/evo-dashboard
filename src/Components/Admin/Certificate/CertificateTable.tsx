@@ -3,10 +3,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DataTable, { TableColumn } from "react-data-table-component";
-
-import { getCourses } from "@/app/api/admin/course";
-import { getStudents } from "@/app/api/admin/students";
-import { getSubmittedAssignments } from "@/app/api/mentor";
 import {
 	Button,
 	Card,
@@ -17,7 +13,13 @@ import {
 	ModalFooter,
 	Label,
 	Input,
+	Spinner,
 } from "reactstrap";
+
+import { getCourses } from "@/app/api/admin/course";
+import { getStudents } from "@/app/api/admin/students";
+import { getSubmittedAssignments } from "@/app/api/mentor";
+import { generateCertificate } from "@/app/api/admin/certificate";
 
 // ---------- TYPES ----------
 interface Course {
@@ -51,7 +53,9 @@ interface Student {
 }
 
 interface TableRow {
+	studentId: string;
 	studentName: string;
+	courseId: string;
 	course: string;
 	assignmentsDone: number;
 	totalAssignments: number;
@@ -72,6 +76,7 @@ const CertificateTable = () => {
 	const [selectedStudent, setSelectedStudent] = useState<TableRow | null>(null);
 	const [certificateFile, setCertificateFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const toggleModal = () => {
 		setModalOpen(!modalOpen);
@@ -131,6 +136,30 @@ const CertificateTable = () => {
 		return map;
 	};
 
+	const handleIssueCertificate = async () => {
+		if (!selectedStudent || !certificateFile) {
+			toast.error("Please select a certificate file.");
+			return;
+		}
+		try {
+			setIsLoading(true);
+			const formData = new FormData();
+			formData.append("studentId", selectedStudent.studentId);
+			formData.append("courseId", selectedStudent.courseId);
+			formData.append("certificate", certificateFile);
+
+			await generateCertificate(formData);
+
+			toast.success("Certificate issued successfully.");
+			toggleModal();
+		} catch (err: any) {
+			console.error(err);
+			toast.error("Failed to issue certificate.");
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	const generateTableData = () => {
 		const assignmentCountMap = getAssignmentCountPerCourse(allAssignments);
 		const allData: TableRow[] = [];
@@ -155,19 +184,21 @@ const CertificateTable = () => {
 					: 0;
 
 				allData.push({
+					studentId: student._id,
 					studentName: student.name,
+					courseId,
 					course: courseTitle,
 					assignmentsDone: submittedAssignments,
 					totalAssignments,
 					quizzesDone: courseObj.quizScore || 0,
-					totalQuizzes: 1, // Update if you have more quiz info
+					totalQuizzes: 1,
 					progress,
 					evoScore: courseObj.evoScore || 0,
 				});
 			});
 		});
 
-		allData.sort((a, b) => b.progress - a.progress); // Sort descending by progress
+		allData.sort((a, b) => b.progress - a.progress);
 		setTableData(allData);
 	};
 
@@ -207,12 +238,12 @@ const CertificateTable = () => {
 		{ name: "Course", selector: (row) => row.course, sortable: true },
 		{
 			name: "Assignments Done",
-			selector: (row) => row.assignmentsDone + " / " + row.totalAssignments,
+			selector: (row) => `${row.assignmentsDone} / ${row.totalAssignments}`,
 			sortable: true,
 		},
 		{
 			name: "Quizzes Done",
-			selector: (row) => row.quizzesDone + " / " + row.totalQuizzes,
+			selector: (row) => `${row.quizzesDone} / ${row.totalQuizzes}`,
 			sortable: true,
 		},
 		{
@@ -226,12 +257,12 @@ const CertificateTable = () => {
 			cell: (row) => (
 				<Button
 					color="info"
-					// disabled={row.progress < 99}
+					id={`issue-btn-${row.studentId}-${row.courseId}`}
 					onClick={() => {
 						setSelectedStudent(row);
 						toggleModal();
 					}}>
-					Certify
+					Issue
 				</Button>
 			),
 		},
@@ -265,7 +296,15 @@ const CertificateTable = () => {
 						type="file"
 						accept="application/pdf,image/*"
 						onChange={handleFileChange}
+						id="certificate-file"
 					/>
+					{!certificateFile && (
+						<small
+							id="tooltip-missing-file"
+							className="text-danger">
+							Certificate file is required
+						</small>
+					)}
 
 					{previewUrl && (
 						<div className="mt-3">
@@ -288,9 +327,11 @@ const CertificateTable = () => {
 					)}
 				</ModalBody>
 				<ModalFooter>
-					<Button color="primary">
-						{/* Submit button left intentionally blank */}
-						Give Certificate
+					<Button
+						color="primary"
+						onClick={handleIssueCertificate}
+						disabled={!certificateFile || isLoading}>
+						{isLoading ? <Spinner size="sm" /> : "Give Certificate"}
 					</Button>
 					<Button
 						color="secondary"
