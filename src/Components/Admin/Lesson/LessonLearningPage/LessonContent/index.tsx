@@ -75,10 +75,12 @@ const LessonContent = ({
 								+ Add Assignment
 							</Button>
 						</div>
-						<AssignmentSection
-							assignments={lesson.assignments}
-							lessonId={lesson._id}
-						/>
+						<div style={{ height: "550px", overflow: "scroll" }}>
+							<AssignmentSection
+								assignments={lesson.assignments}
+								lessonId={lesson._id}
+							/>
+						</div>
 					</>
 				)}
 			</CardBody>

@@ -54,9 +54,7 @@ const LessonSidebar = ({
 
 	return (
 		<>
-			<Card
-				className="rounded-0 border-start"
-				style={{ height: "600px", overflow: "scroll" }}>
+			<Card className="rounded-0 border-start">
 				<CardBody>
 					<div className="d-flex justify-content-between align-items-center py-2">
 						<h2 className="mb-3">Lessons</h2>
@@ -66,52 +64,54 @@ const LessonSidebar = ({
 							<i className="fa fa-plus me-2 py-1" /> Add Lesson
 						</Link>
 					</div>
-					<Accordion
-						flush
-						open={open}
-						toggle={toggle}>
-						{lessons.map((lesson) => (
-							<AccordionItem key={lesson._id}>
-								<AccordionHeader targetId={lesson._id}>
-									<div className="d-flex justify-content-between align-items-center w-100 ">
-										<span>{lesson.title}</span>
-										<Button
-											color="danger"
-											onClick={(e) => {
-												e.stopPropagation();
-												openDeleteModal(lesson);
-											}}>
-											<i className="fa fa-trash" />
-										</Button>
-									</div>
-								</AccordionHeader>
-								<AccordionBody
-									accordionId={lesson._id}
-									className="bg-light">
-									<ListGroup flush>
-										<ListGroupItem
-											tag="button"
-											action
-											onClick={() => onSelect(lesson, "video")}>
-											View Lesson
-										</ListGroupItem>
-										<ListGroupItem
-											tag="button"
-											action
-											onClick={() => onSelect(lesson, "quiz")}>
-											Quiz
-										</ListGroupItem>
-										<ListGroupItem
-											tag="button"
-											action
-											onClick={() => onSelect(lesson, "assignment")}>
-											Assignments
-										</ListGroupItem>
-									</ListGroup>
-								</AccordionBody>
-							</AccordionItem>
-						))}
-					</Accordion>
+					<div style={{ height: "550px", overflow: "scroll" }}>
+						<Accordion
+							flush
+							open={open}
+							toggle={toggle}>
+							{lessons.map((lesson) => (
+								<AccordionItem key={lesson._id}>
+									<AccordionHeader targetId={lesson._id}>
+										<div className="d-flex justify-content-between align-items-center w-100 ">
+											<span>{lesson.title}</span>
+											<Button
+												color="danger"
+												onClick={(e) => {
+													e.stopPropagation();
+													openDeleteModal(lesson);
+												}}>
+												<i className="fa fa-trash" />
+											</Button>
+										</div>
+									</AccordionHeader>
+									<AccordionBody
+										accordionId={lesson._id}
+										className="bg-light">
+										<ListGroup flush>
+											<ListGroupItem
+												tag="button"
+												action
+												onClick={() => onSelect(lesson, "video")}>
+												View Lesson
+											</ListGroupItem>
+											<ListGroupItem
+												tag="button"
+												action
+												onClick={() => onSelect(lesson, "quiz")}>
+												Quiz
+											</ListGroupItem>
+											<ListGroupItem
+												tag="button"
+												action
+												onClick={() => onSelect(lesson, "assignment")}>
+												Assignments
+											</ListGroupItem>
+										</ListGroup>
+									</AccordionBody>
+								</AccordionItem>
+							))}
+						</Accordion>
+					</div>
 				</CardBody>
 			</Card>
 
