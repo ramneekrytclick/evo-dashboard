@@ -1,4 +1,4 @@
-import MyCoursesContainer from "@/Components/Student/Courses";
+import MyCoursesContainer from "@/Components/Student/MyCourses";
 
 const page = () => {
 	return <MyCoursesContainer />;

@@ -3,6 +3,9 @@ import { apiClient } from "@/utils/api";
 export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
 };
+export const getCourses = async () => {
+	return (await apiClient.get(`/courses`)).data;
+};
 export const getEnrolledCourses = async () => {
 	return (await apiClient.get(`/students/enrolled-courses`)).data;
 };
