@@ -29,7 +29,7 @@ const LessonContent = ({
 	return (
 		<Card
 			className="rounded-0"
-			style={{ minHeight: "600px" }}>
+			style={{ height: "600px", overflow: "scroll" }}>
 			<CardBody>
 				{view === "video" && (
 					<>
@@ -49,11 +49,11 @@ const LessonContent = ({
 				{view === "quiz" && (
 					<>
 						<div className="d-flex justify-content-between align-items-center">
-							<h4>Quizzes</h4>
+							<h2>{lesson.title} : Quiz</h2>
 							<Button
 								color="info"
 								onClick={openQuizModal}>
-								+ Add Quiz
+								+ Add Question
 							</Button>
 						</div>
 						<QuizSection
@@ -66,7 +66,7 @@ const LessonContent = ({
 				{view === "assignment" && (
 					<>
 						<div className="d-flex justify-content-between align-items-center">
-							<h4>Assignments</h4>
+							<h2>{lesson.title} : Assignments</h2>
 							<Button
 								color="warning"
 								onClick={openAssignmentModal}>

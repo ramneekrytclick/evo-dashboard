@@ -61,13 +61,12 @@ const QuizFormModal = ({
 		try {
 			const response = await createQuiz(data);
 			toast.success("Quiz created successfully");
-			refresh();
 		} catch (error) {
 			toast.error("Error creating quiz");
 			console.error(error);
 		}
 		// call API or callback here
-		toggle();
+		// toggle();
 	};
 
 	return (
@@ -75,7 +74,7 @@ const QuizFormModal = ({
 			isOpen={isOpen}
 			toggle={toggle}
 			size="lg">
-			<ModalHeader toggle={toggle}>Create Quiz</ModalHeader>
+			<ModalHeader toggle={toggle}>Add Questions</ModalHeader>
 			<ModalBody>
 				{quizList.map((quiz, index) => (
 					<Form
@@ -113,7 +112,7 @@ const QuizFormModal = ({
 					</Form>
 				))}
 				<Button
-					color="secondary"
+					color="primary"
 					onClick={addMoreQuiz}>
 					+ Add Another Question
 				</Button>
@@ -125,7 +124,7 @@ const QuizFormModal = ({
 					Create
 				</Button>
 				<Button
-					color="secondary"
+					color="dark"
 					onClick={toggle}>
 					Cancel
 				</Button>

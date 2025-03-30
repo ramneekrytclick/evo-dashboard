@@ -87,25 +87,25 @@ const LessonSidebar = ({
 								</AccordionHeader>
 								<AccordionBody
 									accordionId={lesson._id}
-									className="bg-light-dark">
+									className="bg-light">
 									<ListGroup flush>
 										<ListGroupItem
 											tag="button"
 											action
 											onClick={() => onSelect(lesson, "video")}>
-											▶️ Video
+											View Lesson
 										</ListGroupItem>
 										<ListGroupItem
 											tag="button"
 											action
 											onClick={() => onSelect(lesson, "quiz")}>
-											📝 Quiz
+											Quiz
 										</ListGroupItem>
 										<ListGroupItem
 											tag="button"
 											action
 											onClick={() => onSelect(lesson, "assignment")}>
-											📄 Assignment
+											Assignments
 										</ListGroupItem>
 									</ListGroup>
 								</AccordionBody>

@@ -20,30 +20,34 @@ const QuizSection = ({
 		quizzes.map((quiz, i) => (
 			<Card
 				key={i}
-				className="mb-3">
+				className="my-3 bg-light-dark">
 				<CardBody>
 					<h6>{quiz.question}</h6>
 					<ul>
-						{quiz.options.map((opt, idx) => (
-							<li key={idx}>
-								<input
-									type="radio"
-									name={`q-${i}`}
-									disabled
-								/>{" "}
-								{opt}
-							</li>
-						))}
+						<div className="d-flex justify-content-between">
+							{quiz.options.map((opt, idx) => (
+								<li key={idx}>
+									<input
+										type="radio"
+										name={`q-${i}`}
+										disabled
+									/>{" "}
+									{opt}
+								</li>
+							))}
+						</div>
 					</ul>
-					<div className="d-flex gap-2 mt-2">
+					<div className="d-flex gap-2 mt-2 w-100">
 						<Button
 							size="sm"
-							color="primary"
+							color="info"
+							className="flex-fill"
 							onClick={() => handleEdit(i)}>
 							Edit
 						</Button>
 						<Button
 							size="sm"
+							className="flex-fill"
 							color="danger"
 							onClick={() => handleDelete(i)}>
 							Delete
