@@ -7,7 +7,17 @@ import DataTable, { TableColumn } from "react-data-table-component";
 import { getCourses } from "@/app/api/admin/course";
 import { getStudents } from "@/app/api/admin/students";
 import { getSubmittedAssignments } from "@/app/api/mentor";
-import { Card, CardBody } from "reactstrap";
+import {
+	Button,
+	Card,
+	CardBody,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	Label,
+	Input,
+} from "reactstrap";
 
 // ---------- TYPES ----------
 interface Course {
@@ -57,6 +67,17 @@ const CertificateTable = () => {
 	const [allAssignments, setAllAssignments] = useState<Assignment[]>([]);
 	const [courses, setCourses] = useState<Course[]>([]);
 	const [tableData, setTableData] = useState<TableRow[]>([]);
+
+	const [modalOpen, setModalOpen] = useState(false);
+	const [selectedStudent, setSelectedStudent] = useState<TableRow | null>(null);
+	const [certificateFile, setCertificateFile] = useState<File | null>(null);
+	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+	const toggleModal = () => {
+		setModalOpen(!modalOpen);
+		setCertificateFile(null);
+		setPreviewUrl(null);
+	};
 
 	const fetchAllCourses = async () => {
 		try {
@@ -146,6 +167,7 @@ const CertificateTable = () => {
 			});
 		});
 
+		allData.sort((a, b) => b.progress - a.progress); // Sort descending by progress
 		setTableData(allData);
 	};
 
@@ -165,6 +187,17 @@ const CertificateTable = () => {
 		}
 	}, [allStudents, allAssignments, courses]);
 
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0] || null;
+		setCertificateFile(file);
+		if (file) {
+			const url = URL.createObjectURL(file);
+			setPreviewUrl(url);
+		} else {
+			setPreviewUrl(null);
+		}
+	};
+
 	const columns: TableColumn<TableRow>[] = [
 		{
 			name: "Student Name",
@@ -172,31 +205,101 @@ const CertificateTable = () => {
 			sortable: true,
 		},
 		{ name: "Course", selector: (row) => row.course, sortable: true },
-		{ name: "Assignments Done", selector: (row) => row.assignmentsDone },
-		{ name: "Total Assignments", selector: (row) => row.totalAssignments },
-		{ name: "Quizzes Done", selector: (row) => row.quizzesDone },
-		{ name: "Total Quizzes", selector: (row) => row.totalQuizzes },
+		{
+			name: "Assignments Done",
+			selector: (row) => row.assignmentsDone + " / " + row.totalAssignments,
+			sortable: true,
+		},
+		{
+			name: "Quizzes Done",
+			selector: (row) => row.quizzesDone + " / " + row.totalQuizzes,
+			sortable: true,
+		},
 		{
 			name: "Progress %",
 			selector: (row) => `${row.progress}%`,
 			sortable: true,
 		},
 		{ name: "Evo Score", selector: (row) => row.evoScore },
+		{
+			name: "Action",
+			cell: (row) => (
+				<Button
+					color="info"
+					// disabled={row.progress < 99}
+					onClick={() => {
+						setSelectedStudent(row);
+						toggleModal();
+					}}>
+					Certify
+				</Button>
+			),
+		},
 	];
 
 	return (
-		<Card>
-			<CardBody>
-				<DataTable
-					columns={columns}
-					data={tableData}
-					pagination
-					striped
-					highlightOnHover
-					persistTableHead
-				/>
-			</CardBody>
-		</Card>
+		<>
+			<Card>
+				<CardBody>
+					<DataTable
+						columns={columns}
+						data={tableData}
+						pagination
+						striped
+						highlightOnHover
+						persistTableHead
+					/>
+				</CardBody>
+			</Card>
+
+			{/* Modal */}
+			<Modal
+				isOpen={modalOpen}
+				toggle={toggleModal}>
+				<ModalHeader toggle={toggleModal}>
+					Generate Certificate for {selectedStudent?.studentName}
+				</ModalHeader>
+				<ModalBody>
+					<Label>Upload Certificate (PDF or Image)</Label>
+					<Input
+						type="file"
+						accept="application/pdf,image/*"
+						onChange={handleFileChange}
+					/>
+
+					{previewUrl && (
+						<div className="mt-3">
+							<Label>Preview:</Label>
+							{certificateFile?.type === "application/pdf" ? (
+								<iframe
+									src={previewUrl}
+									width="100%"
+									height="400px"
+									title="PDF Preview"
+								/>
+							) : (
+								<img
+									src={previewUrl}
+									alt="Certificate Preview"
+									style={{ maxWidth: "100%", maxHeight: "400px" }}
+								/>
+							)}
+						</div>
+					)}
+				</ModalBody>
+				<ModalFooter>
+					<Button color="primary">
+						{/* Submit button left intentionally blank */}
+						Give Certificate
+					</Button>
+					<Button
+						color="secondary"
+						onClick={toggleModal}>
+						Cancel
+					</Button>
+				</ModalFooter>
+			</Modal>
+		</>
 	);
 };
 

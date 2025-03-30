@@ -6,7 +6,7 @@ export const addAssignment = async (data: AddAssignmentProps) => {
 	return response.data;
 };
 export const getSubmittedAssignments = async () => {
-	return (await apiClient.get("/mentors/submitted-assignments")).data;
+	return (await apiClient.get("/mentors/submitted-assignments-admin")).data;
 };
 export const gradeAssignment = async (data: {
 	assignmentId: string;
