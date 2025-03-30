@@ -1,5 +1,10 @@
+import { useState } from "react";
 import { Button, Card, CardBody } from "reactstrap";
 import { QuizQuestion } from "@/Types/Lesson.type";
+import EditQuizModal from "../Quiz/EditQuizModal";
+import DeleteQuizModal from "../Quiz/DeleteQuizModal";
+import { deleteQuiz, updateQuiz } from "@/app/api/admin/lessons/quiz";
+import { toast } from "react-toastify";
 
 const QuizSection = ({
 	quizzes,
@@ -8,25 +13,71 @@ const QuizSection = ({
 	quizzes: QuizQuestion[];
 	lessonId: string;
 }) => {
-	const handleDelete = (index: number) => {
-		console.log("Delete quiz", index);
-	};
+	const [editIndex, setEditIndex] = useState<number | null>(null);
+	const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+
+	const [editModalOpen, setEditModalOpen] = useState(false);
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
 	const handleEdit = (index: number) => {
-		console.log("Edit quiz", index);
+		setEditIndex(index);
+		setEditModalOpen(true);
+	};
+
+	const handleDelete = (index: number) => {
+		setDeleteIndex(index);
+		setDeleteModalOpen(true);
+	};
+
+	const handleEditSave = async (updatedQuiz: QuizQuestion, index: number) => {
+		console.log("Save updated quiz:", updatedQuiz, "at index:", index);
+		try {
+			const response = await updateQuiz(lessonId, updatedQuiz);
+			toast.success("Quiz updated successfully");
+		} catch (error) {
+			toast.error("Error updating quiz");
+			console.error("Error updating quiz:", error);
+		}
+		// TODO: Call API to update quiz
+	};
+
+	const handleDeleteConfirm = async () => {
+		console.log("Deleted quiz at index", deleteIndex);
+		try {
+			const response = await deleteQuiz(lessonId);
+			toast.success("Quiz deleted successfully");
+		} catch (error) {
+			toast.error("Error deleting quiz");
+			console.error("Error deleting quiz:", error);
+		}
+		// TODO: Call API to delete quiz
+		setDeleteModalOpen(false);
 	};
 
 	return quizzes.length > 0 ? (
-		quizzes.map((quiz, i) => (
-			<Card
-				key={i}
-				className="my-3 bg-light-dark">
-				<CardBody>
-					<h6>{quiz.question}</h6>
-					<ul>
-						<div className="d-flex justify-content-between">
+		<>
+			{quizzes.map((quiz, i) => (
+				<Card
+					key={i}
+					className="my-3 bg-light-info">
+					<CardBody>
+						<h6>{quiz.question}</h6>
+						<ul>
 							{quiz.options.map((opt, idx) => (
-								<li key={idx}>
+								<li
+									key={idx}
+									style={{
+										color:
+											opt.trim().toLowerCase() ===
+											quiz.correctAnswer.trim().toLowerCase()
+												? "green"
+												: "inherit",
+										fontWeight:
+											opt.trim().toLowerCase() ===
+											quiz.correctAnswer.trim().toLowerCase()
+												? "bold"
+												: "normal",
+									}}>
 									<input
 										type="radio"
 										name={`q-${i}`}
@@ -35,27 +86,45 @@ const QuizSection = ({
 									{opt}
 								</li>
 							))}
+						</ul>
+						<div className="d-flex gap-2 mt-2 w-100 justify-content-end">
+							<Button
+								size="sm"
+								color="info"
+								onClick={() => handleEdit(i)}>
+								Edit
+							</Button>
+							<Button
+								size="sm"
+								color="danger"
+								onClick={() => handleDelete(i)}>
+								Delete
+							</Button>
 						</div>
-					</ul>
-					<div className="d-flex gap-2 mt-2 w-100">
-						<Button
-							size="sm"
-							color="info"
-							className="flex-fill"
-							onClick={() => handleEdit(i)}>
-							Edit
-						</Button>
-						<Button
-							size="sm"
-							className="flex-fill"
-							color="danger"
-							onClick={() => handleDelete(i)}>
-							Delete
-						</Button>
-					</div>
-				</CardBody>
-			</Card>
-		))
+					</CardBody>
+				</Card>
+			))}
+
+			{/* Modals */}
+			{editIndex !== null && (
+				<EditQuizModal
+					isOpen={editModalOpen}
+					toggle={() => setEditModalOpen(false)}
+					quiz={quizzes[editIndex]}
+					index={editIndex}
+					onSave={handleEditSave}
+				/>
+			)}
+
+			{deleteIndex !== null && (
+				<DeleteQuizModal
+					isOpen={deleteModalOpen}
+					toggle={() => setDeleteModalOpen(false)}
+					onConfirm={handleDeleteConfirm}
+					questionText={quizzes[deleteIndex].question}
+				/>
+			)}
+		</>
 	) : (
 		<p className="text-muted">No quizzes available</p>
 	);
