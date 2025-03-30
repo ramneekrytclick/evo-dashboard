@@ -73,15 +73,27 @@ export interface CourseFormProps {
 }
 
 // Batch Details Interface
+export interface ChatMessage {
+	_id: string;
+	sender: string; // studentId or mentorId
+	message: string;
+	timestamp: string;
+}
+
 export interface BatchProps {
 	_id?: string;
 	name: string;
-	courseId: string | { _id: string } | null;
+	description?: string;
+	time?: string;
+	batchWeekType?: string; // e.g., "Mon-Fri", "Weekend"
 	startDate: string;
 	endDate: string;
-	students?: StudentProps[];
-	mentors?: MentorProps[];
-	promoCodes?: PromoCodeProps[];
+	course?: string; // courseId
+	students?: string[]; // array of studentIds
+	mentor?: string | null; // mentorId or null
+	chatMessages?: ChatMessage[];
+	createdAt?: string;
+	updatedAt?: string;
 }
 
 export interface PromoCodeProps {

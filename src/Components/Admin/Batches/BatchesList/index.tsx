@@ -1,46 +1,137 @@
+// BatchesList.tsx
 "use client";
+
+import { useEffect, useState, useMemo } from "react";
+import { Card, CardBody, Button, Badge } from "reactstrap";
+import DataTable, { TableColumn } from "react-data-table-component";
 
 import { getBatches } from "@/app/api/admin/batches";
 import { BatchProps } from "@/Types/Course.type";
-import { useEffect, useState } from "react";
-import { Card, CardBody, Row } from "reactstrap";
-import BatchDetails from "./BatchDetails";
 import CreateBatchModal from "../CreateBatchModal";
-import BatchListTable from "./BatchListTable";
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import DataTable, { TableColumn } from "react-data-table-component";
-import { batchTableColumns } from "@/Data/Admin/Batches/Batch";
-import UpdateBatchModal from "./UpdateBatchModal";
-import DeleteBatchModal from "./DeleteBatchModal";
+import AssignStudentsModal from "./AssignStudents";
+import AssignMentorModal from "./AssignMentor";
+import BatchDetails from "./BatchDetails";
+import Link from "next/link";
 
 const BatchesList = () => {
 	const [batches, setBatches] = useState<any[]>([]);
 	const [filterText, setFilterText] = useState("");
-	const filteredItems: BatchProps[] = batches.filter((item: BatchProps) => {
-		return Object.values(item).some(
-			(value) =>
-				value &&
-				value.toString().toLowerCase().includes(filterText.toLowerCase())
-		);
-	});
+
+	const [assignStudentsModalOpen, setAssignStudentsModalOpen] = useState<
+		string | null
+	>(null);
+	const [assignMentorModalOpen, setAssignMentorModalOpen] = useState<
+		string | null
+	>(null);
+
+	const [selectedBatch, setSelectedBatch] = useState<BatchProps | null>(null); // for modals
+	const [selectedBatchForDetails, setSelectedBatchForDetails] =
+		useState<BatchProps | null>(null); // for details modal
+
 	const fetchBatches = async () => {
 		try {
 			const response = await getBatches();
-			const BatchData = response.batches;
-			console.log(response.batches);
-			setBatches(BatchData);
+			setBatches(response);
 		} catch (error) {
-			console.log(error);
+			console.error("Error fetching batches:", error);
 		}
 	};
+
 	useEffect(() => {
 		fetchBatches();
 	}, []);
+
+	const filteredItems = useMemo(() => {
+		return batches.filter((item) =>
+			Object.values(item).some((value) =>
+				value?.toString().toLowerCase().includes(filterText.toLowerCase())
+			)
+		);
+	}, [batches, filterText]);
+
+	const columns: TableColumn<BatchProps>[] = [
+		{
+			name: "Batch",
+			sortable: true,
+			cell: (row) => <>{row.name}</>,
+		},
+		{
+			name: "Course",
+			selector: (row) => row.course || "-",
+			sortable: true,
+			cell: (row) => (
+				<Link href={`/admin/lessons/${row.course}`}>{row.course}</Link>
+			),
+		},
+		{
+			name: "Status",
+			selector: () => "",
+			sortable: false,
+			cell: (row) => {
+				const now = new Date();
+				const end = new Date(row.endDate);
+				const isActive = end > now;
+				return (
+					<Badge color={isActive ? "success" : "secondary"}>
+						{isActive ? "Ongoing" : "Completed"}
+					</Badge>
+				);
+			},
+		},
+		{
+			name: "Students",
+			selector: (row) => row.students?.length || 0,
+			sortable: true,
+			cell: (row) => <span>{row.students?.length || 0}</span>,
+		},
+		{
+			name: "Mentor",
+			selector: (row) => row.mentor || "Not Assigned",
+			sortable: true,
+			cell: (row) =>
+				row.mentor ? (
+					<Badge
+						color="info"
+						pill>
+						{row.mentor}
+					</Badge>
+				) : (
+					<Badge color="warning">Unassigned</Badge>
+				),
+		},
+		{
+			name: "Actions",
+			cell: (row: BatchProps) => (
+				<div style={{ minWidth: 200 }}>
+					<Button
+						color="primary"
+						size="sm"
+						className="mb-2 me-2"
+						onClick={() => {
+							setAssignStudentsModalOpen(row._id || "");
+							setSelectedBatch(row);
+						}}>
+						Assign Students
+					</Button>
+					<Button
+						color="success"
+						size="sm"
+						onClick={() => {
+							setAssignMentorModalOpen(row._id || "");
+							setSelectedBatch(row);
+						}}>
+						Assign Mentor
+					</Button>
+				</div>
+			),
+		},
+	];
+
 	return (
 		<div>
 			<CreateBatchModal fetchData={fetchBatches} />
 			<Card>
-				{/* <CommonCardHeader headClass="pb-0 card-no-border" title={CourseTitleLabel} /> */}
 				<CardBody>
 					<FilterComponent
 						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -51,35 +142,49 @@ const BatchesList = () => {
 					<div className="table-responsive custom-scrollbar user-datatable mt-3">
 						<DataTable
 							data={filteredItems}
-							columns={batchTableColumns.map(
-								(column: TableColumn<BatchProps>) =>
-									column.name === "Actions"
-										? {
-												...column,
-												cell: (row: any) => (
-													<ul className="action">
-														<UpdateBatchModal
-															values={row}
-															fetchData={fetchBatches}
-														/>
-														<DeleteBatchModal
-															id={row._id}
-															fetchData={fetchBatches}
-														/>
-													</ul>
-												),
-										  }
-										: column
-							)}
-							striped={true}
+							columns={columns}
+							striped
 							pagination
 							fixedHeader
-							// fixedHeaderScrollHeight="40vh"
+							persistTableHead
 							className="display"
+							noDataComponent="No batches found."
+							onRowClicked={(row) => setSelectedBatchForDetails(row)}
+							highlightOnHover
+							pointerOnHover
 						/>
 					</div>
 				</CardBody>
 			</Card>
+
+			{/* Modals */}
+			{assignStudentsModalOpen && selectedBatch?.course && (
+				<AssignStudentsModal
+					batchId={assignStudentsModalOpen}
+					batchCourseId={selectedBatch?.course}
+					isOpen={!!assignStudentsModalOpen}
+					toggle={() => setAssignStudentsModalOpen(null)}
+					fetchData={fetchBatches}
+				/>
+			)}
+
+			{assignMentorModalOpen && selectedBatch && (
+				<AssignMentorModal
+					batchId={assignMentorModalOpen}
+					batchCourseId={selectedBatch.course}
+					isOpen={!!assignMentorModalOpen}
+					toggle={() => setAssignMentorModalOpen(null)}
+					fetchData={fetchBatches}
+				/>
+			)}
+
+			{selectedBatchForDetails && (
+				<BatchDetails
+					batch={selectedBatchForDetails}
+					isOpen={!!selectedBatchForDetails}
+					toggle={() => setSelectedBatchForDetails(null)}
+				/>
+			)}
 		</div>
 	);
 };

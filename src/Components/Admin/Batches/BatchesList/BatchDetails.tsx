@@ -1,34 +1,53 @@
-import { Dollar } from "@/Constant";
+// components/BatchDetails.tsx
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { BatchProps } from "@/Types/Course.type";
-import Link from "next/link";
-import { Badge } from "reactstrap";
 
-const BatchDetails = ({ batch }: { batch: BatchProps }) => {
+const BatchDetails = ({
+	batch,
+	isOpen,
+	toggle,
+}: {
+	batch: BatchProps;
+	isOpen: boolean;
+	toggle: () => void;
+}) => {
 	return (
-		<div className="product-details bg-light">
-			<Link href={`/admin/batches`}>
-				<h4>{batch.name}</h4>
-			</Link>
-			<p className="text-primary">{JSON.stringify(batch.courseId)}</p>
-			<Badge
-				className="py-1 my-1 text-light"
-				color={`${batch.batchStatus == "Active" ? "success" : "danger"}`}>
-				{batch.batchStatus}
-			</Badge>
-			<div className="product-price">
-				{new Date(batch.startDate).toLocaleDateString("en-US", {
-					year: "numeric",
-					month: "long",
-					day: "numeric",
-				})}
-				-{" "}
-				{new Date(batch.endDate).toLocaleDateString("en-US", {
-					year: "numeric",
-					month: "long",
-					day: "numeric",
-				})}
-			</div>
-		</div>
+		<Modal
+			isOpen={isOpen}
+			toggle={toggle}
+			size="lg">
+			<ModalHeader toggle={toggle}>Batch Details - {batch.name}</ModalHeader>
+			<ModalBody>
+				<p>
+					<strong>Description:</strong> {batch.description || "—"}
+				</p>
+				<p>
+					<strong>Time:</strong> {batch.time || "—"}
+				</p>
+				<p>
+					<strong>Days:</strong> {batch.batchWeekType || "—"}
+				</p>
+				<p>
+					<strong>Start:</strong>{" "}
+					{new Date(batch.startDate).toLocaleDateString()}
+				</p>
+				<p>
+					<strong>End:</strong> {new Date(batch.endDate).toLocaleDateString()}
+				</p>
+				<p>
+					<strong>Students:</strong> {batch.students?.length || 0}
+				</p>
+				<p>
+					<strong>Mentor:</strong> {batch.mentor || "Unassigned"}
+				</p>
+				<p>
+					<strong>Course ID:</strong> <code>{batch.course}</code>
+				</p>
+				<p>
+					<strong>Chat Messages:</strong> {batch.chatMessages?.length || 0}
+				</p>
+			</ModalBody>
+		</Modal>
 	);
 };
 

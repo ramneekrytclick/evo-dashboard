@@ -1,15 +1,18 @@
-"use client"
+"use client";
 import { createBatchTitle } from "@/Constant";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
-import CommonModal from "@/CommonComponent/CommonModal"
+import CommonModal from "@/CommonComponent/CommonModal";
 import CreateBatchForm from "./CreateBatchForm";
 
-
-const CreateBatchModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
+const CreateBatchModal = ({
+	fetchData,
+}: {
+	fetchData: () => Promise<void>;
+}) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
-		setModal(!modal); 
+		setModal(!modal);
 	};
 	const ModalData = {
 		isOpen: modal,
@@ -31,7 +34,10 @@ const CreateBatchModal = ({fetchData}:{fetchData:()=>Promise<void>}) => {
 				<div className="modal-toggle-wrapper">
 					<h3 className="mb-3">{createBatchTitle}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
-					<CreateBatchForm fetchData={fetchData} toggle={toggle}/>
+					<CreateBatchForm
+						fetchData={fetchData}
+						toggle={toggle}
+					/>
 				</div>
 			</CommonModal>
 		</>
