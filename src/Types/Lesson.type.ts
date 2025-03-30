@@ -6,7 +6,26 @@ export interface LessonFormProps {
 	videoUrl: string;
 	resources: any[]; // could be assignments + quizzes combined
 }
+export interface LessonType {
+	_id: string;
+	title: string;
+	content: string;
+	videoUrl: string;
+	quizzes: QuizQuestion[];
+	assignments: Assignment[];
+}
 
+export interface QuizQuestion {
+	question: string;
+	options: string[];
+	correctAnswer: string;
+}
+
+export interface Assignment {
+	title: string;
+	description: string;
+	attachmentUrl?: string;
+}
 export interface Video {
 	_id?: string;
 	title: string;
@@ -27,5 +46,5 @@ export interface Assignment {
 	_id?: string;
 	title: string;
 	description: string;
-	submissionURL: string;
+	submissionURL?: string;
 }

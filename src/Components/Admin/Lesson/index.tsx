@@ -1,30 +1,41 @@
+"use client";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { CoursesTitle, LessonsTitle } from "@/Constant";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
-import LessonList from "./LessonList";
-import LessonHeader from "./LessonHeader";
+import { CoursesTitle } from "@/Constant";
+import { useEffect, useState } from "react";
+import { LessonType } from "@/Types/Lesson.type";
+import { getLessons } from "@/app/api/admin/lessons/lesson";
+import { toast } from "react-toastify";
+import LessonLearningPage from "./LessonLearningPage";
 
 const LessonsPageContainer = ({ id }: { id: string }) => {
+	const [lessons, setLessons] = useState<LessonType[]>([]);
+	const fetchLessons = async () => {
+		try {
+			const response = await getLessons(id);
+			setLessons(response);
+		} catch (error) {
+			toast.error("Error fetching lessons");
+		}
+	};
+
+	useEffect(() => {
+		fetchLessons();
+	}, []);
+
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={LessonsTitle}
+				mainTitle={"Course View"}
 				parent={CoursesTitle}
-				title={LessonsTitle}
+				title={"Course View"}
 			/>
-			<Container fluid>
-				<Row>
-					<Col className="box-col-8">
-						<Card>
-							<CardBody>
-								<LessonHeader />
-								<LessonList courseId={id} />
-							</CardBody>
-							<Row></Row>
-						</Card>
-					</Col>
-				</Row>
-			</Container>
+			<LessonLearningPage
+				lessons={lessons}
+				refresh={() => {
+					fetchLessons();
+					console.log("refreshed");
+				}}
+			/>
 		</>
 	);
 };

@@ -20,10 +20,6 @@ export const getLessons = async (id: string) => {
 };
 
 export const deleteLesson = async (id: string) => {
-	try {
-		const response = await apiClient.delete(`/lessons/${id}`);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	const response = await apiClient.delete(`/lessons/${id}`);
+	return response.data;
 };
