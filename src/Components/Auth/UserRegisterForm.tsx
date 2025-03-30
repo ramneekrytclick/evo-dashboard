@@ -1,6 +1,4 @@
-// Role-based multi-step wizard registration form for all roles
-// Components used: BasicInfo, Profile (step 2), RoleSpecific (step 3)
-// Logic for Admin stays single-step, others split into 3 steps
+// ✅ Updated MultiStepRegister with improved UX for OTP sending
 
 "use client";
 import React, { useState, ChangeEvent, useRef } from "react";
@@ -13,6 +11,7 @@ import {
 	Row,
 	Input,
 	Label,
+	Spinner,
 } from "reactstrap";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,7 +33,10 @@ const MultiStepRegister = () => {
 	const [formData, setFormData] = useState<any>({});
 	const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 	const [photoFile, setPhotoFile] = useState<File | null>(null);
-	const { register } = useAuth();
+	const [otpSent, setOtpSent] = useState(false);
+	const [otp, setOtp] = useState("");
+	const [sendingOtp, setSendingOtp] = useState(false);
+	const { register, verifyStudentOtp } = useAuth();
 	const router = useRouter();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,7 +45,6 @@ const MultiStepRegister = () => {
 	) => {
 		const { name, value, type, files } = e.target as any;
 		const newValue = type === "file" ? files[0] : value;
-
 		if (type === "file" && files[0]) {
 			const file = files[0];
 			setPhotoFile(file);
@@ -51,11 +52,8 @@ const MultiStepRegister = () => {
 			reader.onload = () => setPhotoPreview(reader.result as string);
 			reader.readAsDataURL(file);
 		}
-
-		setFormData((prev: any) => ({
-			...prev,
-			[name]: newValue,
-		}));
+		setOtpSent(false); // Re-enable OTP if user edits the form
+		setFormData((prev: any) => ({ ...prev, [name]: newValue }));
 	};
 
 	const isBasicValid = () => {
@@ -70,51 +68,51 @@ const MultiStepRegister = () => {
 	};
 
 	const handleNext = () => {
-		if (step === 1 && isBasicValid()) {
-			setStep(2);
-		} else if (step === 2) {
-			setStep(3);
-		} else {
-			toast.error("Please fill out all required fields.");
-		}
+		if (step === 1 && isBasicValid()) setStep(2);
+		else if (step === 2) setStep(3);
+		else toast.error("Please fill out all required fields.");
 	};
 
-	const handleBack = () => {
-		setStep((prev) => prev - 1);
-	};
+	const handleBack = () => setStep((prev) => prev - 1);
 
-	const handleSubmit = async () => {
-		if (role === "admin") {
-			handleSubmitAdmin();
-			return;
-		}
+	const handleSendOtp = async () => {
 		try {
+			setSendingOtp(true);
 			const form = new FormData();
 			Object.entries(formData).forEach(([key, value]) => {
-				if (key !== "confirmPassword" && key !== "photo") {
-					form.append(key, value as string);
+				if (
+					key !== "confirmPassword" &&
+					(typeof value === "string" || value instanceof Blob)
+				) {
+					form.append(key, value);
 				}
 			});
-
-			// Only append photo once (if exists)
-			if (photoFile && role !== "admin") {
-				form.append("photo", photoFile);
-			} else {
-				// Convert default image to Blob and append
+			if (photoFile) form.append("photo", photoFile);
+			else {
 				const defaultImage = await fetch("/assets/images/forms/user.png");
 				const blob = await defaultImage.blob();
-				const file = new File([blob], "default-photo.png", { type: blob.type });
-				form.append("photo", file);
+				form.append(
+					"photo",
+					new File([blob], "default-photo.png", { type: blob.type })
+				);
 			}
-			const res = await register(form, role);
-			toast.success(res.message || "Registration successful!");
+			await register(form, role);
+			toast.success("OTP sent to your email");
+			setOtpSent(true);
+		} catch (error: any) {
+			toast.error(error?.response?.data?.message || "Failed to send OTP");
+		} finally {
+			setSendingOtp(false);
+		}
+	};
+
+	const handleVerifyOtp = async () => {
+		try {
+			await verifyStudentOtp(formData.email, otp);
+			toast.success("Email verified successfully!");
 			router.push("/auth/login");
 		} catch (error: any) {
-			const errorMsg =
-				error?.response?.data?.message ||
-				error?.message ||
-				"Something went wrong during registration.";
-			toast.error(errorMsg);
+			toast.error("Invalid OTP or expired. Please try again.");
 		}
 	};
 
@@ -125,27 +123,32 @@ const MultiStepRegister = () => {
 				email: formData.email,
 				password: formData.password,
 			};
-			const res = await register(form, role);
-			toast.success(res.message || "Registration successful!");
+			await register(form, role);
+			toast.success("Registration successful!");
 			router.push("/auth/login");
 		} catch (error: any) {
-			const errorMsg =
+			toast.error(
 				error?.response?.data?.message ||
-				error?.message ||
-				"Something went wrong during registration.";
-			toast.error(errorMsg);
+					"Something went wrong during registration."
+			);
 		}
 	};
 
 	const getRoleForm = () => {
+		if (role === "students") {
+			return (
+				<StudentForm
+					formData={formData}
+					handleChange={handleChange}
+					otpSent={otpSent}
+					handleSendOtp={handleSendOtp}
+					otp={otp}
+					setOtp={setOtp}
+					handleVerifyOtp={handleVerifyOtp}
+				/>
+			);
+		}
 		switch (role) {
-			case "students":
-				return (
-					<StudentForm
-						formData={formData}
-						handleChange={handleChange}
-					/>
-				);
 			case "mentors":
 			case "publishers/auth":
 			case "course-creators/auth":
@@ -208,44 +211,39 @@ const MultiStepRegister = () => {
 								setRole={setRole}
 							/>
 						)}
-
 						{step === 2 && isMultiStep && (
 							<Row className="g-3 avatar-upload">
 								<Col xs={12}>
-									<div>
-										<div className="avatar-edit">
-											<Input
-												onChange={handleChange}
-												innerRef={fileInputRef}
-												type="file"
-												accept=".png, .jpg, .jpeg"
-												name="photo"
-											/>
-											<Label
-												htmlFor="photo"
-												onClick={() => fileInputRef.current?.click()}
-											/>
-										</div>
-										<div className="avatar-preview">
-											<div
-												id="image"
-												style={{
-													backgroundImage: photoPreview
-														? `url(${photoPreview})`
-														: `url(${ImagePath}/forms/user.png)`,
-												}}
-											/>
-										</div>
+									<div className="avatar-edit">
+										<Input
+											onChange={handleChange}
+											innerRef={fileInputRef}
+											type="file"
+											accept=".png, .jpg, .jpeg"
+											name="photo"
+										/>
+										<Label
+											htmlFor="photo"
+											onClick={() => fileInputRef.current?.click()}
+										/>
+									</div>
+									<div className="avatar-preview">
+										<div
+											id="image"
+											style={{
+												backgroundImage: photoPreview
+													? `url(${photoPreview})`
+													: `url(${ImagePath}/forms/user.png)`,
+											}}
+										/>
 									</div>
 									<h3 className="mt-2 text-center">Upload Profile Photo</h3>
 								</Col>
 							</Row>
 						)}
-
 						{step === 3 && isMultiStep && getRoleForm()}
-
 						<div className="text-end pt-3">
-							{step > 1 && isMultiStep && (
+							{step > 1 && step < 4 && (
 								<Button
 									color="secondary"
 									onClick={handleBack}
@@ -253,22 +251,51 @@ const MultiStepRegister = () => {
 									Back
 								</Button>
 							)}
-
-							<Button
-								color="primary"
-								disabled={formData.password !== formData.confirmPassword}
-								onClick={
-									(role === "admin" && step === 1) ||
-									(isMultiStep && step === 3)
-										? handleSubmit
-										: handleNext
-								}>
-								{(role === "admin" && step === 1) || (isMultiStep && step === 3)
-									? "Submit"
-									: step === 2 && !formData.photo
-									? "Skip"
-									: "Next"}
-							</Button>
+							{step < 4 && (
+								<Button
+									color="primary"
+									onClick={() => {
+										if (role === "admin" && step === 1) {
+											handleSubmitAdmin();
+										} else if (role === "students" && step === 3) {
+											otpSent ? handleVerifyOtp() : handleSendOtp();
+										} else if (
+											isMultiStep &&
+											step === 3 &&
+											role !== "students"
+										) {
+											handleSubmitAdmin();
+										} else {
+											handleNext();
+										}
+									}}
+									disabled={
+										sendingOtp || formData.password !== formData.confirmPassword
+									}>
+									{sendingOtp ? (
+										<>
+											<Spinner
+												size="sm"
+												className="me-1"
+											/>{" "}
+											Sending...
+										</>
+									) : role === "students" && step === 3 ? (
+										otpSent ? (
+											"Verify OTP"
+										) : (
+											"Send OTP"
+										)
+									) : (role === "admin" && step === 1) ||
+									  (isMultiStep && step === 3) ? (
+										"Submit"
+									) : step === 2 && !formData.photo ? (
+										"Skip"
+									) : (
+										"Next"
+									)}
+								</Button>
+							)}
 						</div>
 						<div className="text-center mt-3">
 							<Link

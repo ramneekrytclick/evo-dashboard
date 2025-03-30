@@ -23,6 +23,7 @@ interface AuthContextType {
 	) => Promise<any>;
 	login: (email: string, password: string, role: string) => Promise<any>;
 	logout: () => void;
+	verifyStudentOtp: (email: string, otp: string) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -30,6 +31,7 @@ const AuthContext = createContext<AuthContextType>({
 	register: async () => {},
 	login: async () => {},
 	logout: () => {},
+	verifyStudentOtp: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -92,7 +94,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		Cookies.remove("token");
 		router.push("/auth/login");
 	};
-
+	const verifyStudentOtp = async (email: string, otp: string) => {
+		const URL = process.env.NEXT_PUBLIC_BASE_URL;
+		const res = await axios.post(`${URL}students/verify-otp`, { email, otp });
+		return res.data;
+	};
 	useEffect(() => {
 		const token = Cookies.get("token");
 		if (token) {
@@ -125,7 +131,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ user, register, login, logout }}>
+		<AuthContext.Provider
+			value={{ user, register, login, logout, verifyStudentOtp }}>
 			{children}
 		</AuthContext.Provider>
 	);
