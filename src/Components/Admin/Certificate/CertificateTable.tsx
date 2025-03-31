@@ -18,8 +18,11 @@ import {
 
 import { getCourses } from "@/app/api/admin/course";
 import { getStudents } from "@/app/api/admin/students";
-import { getSubmittedAssignments } from "@/app/api/mentor";
-import { generateCertificate } from "@/app/api/admin/certificate";
+
+import {
+	generateCertificate,
+	getSubmittedAssignments,
+} from "@/app/api/admin/certificate";
 
 // ---------- TYPES ----------
 interface Course {

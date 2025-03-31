@@ -26,9 +26,6 @@ const AssignmentList = () => {
 	const fetchAssignments = async () => {
 		try {
 			const response = await getSubmittedAssignments();
-			console.log("====================================");
-			console.log(response);
-			console.log("====================================");
 			setAssignments(response);
 		} catch (error) {
 			console.error("Error fetching assignments:", error);

@@ -230,19 +230,13 @@ export const MenuList: MenuItem[] | undefined = [
 				id: 2,
 				path: "/mentor/schedule-session",
 				icon: "calendar",
-				title: "Schedule Session",
-			},
-			{
-				id: 3,
-				path: "/mentor/add-assignment",
-				icon: "form",
-				title: "Add Assignment",
+				title: "Scheduled Sessions",
 			},
 			{
 				id: 4,
 				path: "/mentor/assignments",
 				icon: "layout",
-				title: "Assignments",
+				title: "Grade Assignments",
 			},
 			{
 				path: "/mentor/support/tickets",
