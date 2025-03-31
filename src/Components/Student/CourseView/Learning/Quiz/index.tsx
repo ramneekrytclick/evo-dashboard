@@ -53,7 +53,7 @@ const QuizInteractiveView = ({
 						</h4>
 						<p className="fw-bold">{currentQuiz?.question}</p>
 						<ul>
-							{currentQuiz.options.map((opt, i) => (
+							{currentQuiz?.options.map((opt, i) => (
 								<li key={i}>
 									<label>
 										<input

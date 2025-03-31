@@ -40,9 +40,14 @@ export const submitQuiz = async (data: {
 };
 export const submitAssignment = async (data: {
 	lessonId: string;
-	fileUrl: string;
+	description: string;
+	file: File;
 }) => {
-	return (await apiClient.post(`/students/submit-assignment`, data)).data;
+	const formData = new FormData();
+	formData.append("lessonId", data.lessonId);
+	formData.append("description", data.description);
+	formData.append("file", data.file);
+	return (await apiClient.post(`/students/submit-assignment`, formData)).data;
 };
 export const bookMentorSession = async (data: {
 	studentId: string;

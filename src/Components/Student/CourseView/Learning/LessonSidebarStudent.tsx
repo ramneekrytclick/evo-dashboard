@@ -45,18 +45,24 @@ const LessonSidebar = ({
 											onClick={() => onSelect(lesson, "video")}>
 											View Lesson
 										</ListGroupItem>
-										<ListGroupItem
-											tag="button"
-											action
-											onClick={() => onSelect(lesson, "quiz")}>
-											Quiz
-										</ListGroupItem>
-										<ListGroupItem
-											tag="button"
-											action
-											onClick={() => onSelect(lesson, "assignment")}>
-											Assignments
-										</ListGroupItem>
+
+										{lesson.quizzes?.length > 0 && (
+											<ListGroupItem
+												tag="button"
+												action
+												onClick={() => onSelect(lesson, "quiz")}>
+												Quiz
+											</ListGroupItem>
+										)}
+
+										{lesson.assignments?.length > 0 && (
+											<ListGroupItem
+												tag="button"
+												action
+												onClick={() => onSelect(lesson, "assignment")}>
+												Assignments
+											</ListGroupItem>
+										)}
 									</ListGroup>
 								</AccordionBody>
 							</AccordionItem>
@@ -67,4 +73,5 @@ const LessonSidebar = ({
 		</Card>
 	);
 };
+
 export default LessonSidebar;
