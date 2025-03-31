@@ -26,9 +26,6 @@ const MyEnrolledCourses = () => {
 		try {
 			const response = await getEnrolledCourses();
 			setEnrolledCourses(response);
-			console.log("====================================");
-			console.log(response);
-			console.log("====================================");
 		} catch (error) {
 			toast.error("Error fetching courses");
 		}

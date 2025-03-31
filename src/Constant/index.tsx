@@ -52,25 +52,25 @@ export const CourseLanguage: string = "Course Language";
 export const PromoCodes: string = "Promo Codes";
 export const AssignMentors: string = "Assign Mentors";
 export const AssignManagers: string = "Assign Managers";
-export const AddMentorTitle: string = "Add Mentor"
-export const createMentorTitle:string = "Create Mentor"
-export const updateMentorTitle:string = "Update Mentor"
-export const deleteMentorConfirmTitle:string = "Delete Mentor?"
+export const AddMentorTitle: string = "Add Mentor";
+export const createMentorTitle: string = "Create Mentor";
+export const updateMentorTitle: string = "Update Mentor";
+export const deleteMentorConfirmTitle: string = "Delete Mentor?";
 // export const AssignBatches: string = "Assign Batches";
 
 // Product
 export const ECommerceTitle: string = "ECommerce";
-export const ProductTitle: string = "Product"
+export const ProductTitle: string = "Product";
 export const STEP = 5;
 export const MIN = 10;
 export const MAX = 100;
 export const Dollar: string = "$";
-export const Rupees:string = "Rs."
+export const Rupees: string = "₹";
 
 //Product Page
 export const ProductPageTitle: string = "Product Page";
 //Social App
-export const SocialAppTitle: string = "Social App"
+export const SocialAppTitle: string = "Social App";
 export const MutualFriendsTitle: string = "Mutual Friends";
 export const ActivityFeedTitle: string = "Activity Feed";
 export const ProfileIntroTitle: string = "Profile Intro";
@@ -85,20 +85,20 @@ export const ActivityLogTitle: string = "Activity Log";
 export const AboutTitle: string = "About";
 
 //Search Result
-export const SearchPagesTitle: string = "Search Pages"
-export const SearchWebsiteTitle: string = "Search Website"
+export const SearchPagesTitle: string = "Search Pages";
+export const SearchWebsiteTitle: string = "Search Website";
 
 //Add-Courses
 export const CourseForm: string = "Course Form";
 export const CourseTitleLabel: string = "Course Title";
 export const CoursesLabel: string = "Courses";
-export const CourseSubTitle : string = "";
+export const CourseSubTitle: string = "";
 export const AddMentor: string = "Add Instructor";
 export const CreateNewMentor: string = "Create New Instructor";
-export const AddManager:string = "Add Manager";
+export const AddManager: string = "Add Manager";
 export const CreateNewManager: string = "Create New Manager";
-export const AddCreator:string = "Add Creator";
-export const CreateManagerTitle:string = "Create Manager"
+export const AddCreator: string = "Add Creator";
+export const CreateManagerTitle: string = "Create Manager";
 
 //Add-Product
 export const AddProductTitle: string = "Add-Product";
@@ -109,8 +109,8 @@ export const AddSubCategory: string = "Add Subcategory";
 export const CreateNewCategory: string = "Create New Category";
 export const CategoryName: string = "Category Name";
 export const Add: string = "Add";
-export const Cancel: string = "Cancel"
-export const Print: string = "Print"
+export const Cancel: string = "Cancel";
+export const Print: string = "Print";
 export const PublishStatus: string = "Publish Status";
 export const PublishDateTime: string = "Publish Date & Time";
 export const TooltipLabelText: string = "Types of product discount";
@@ -119,11 +119,11 @@ export const SellingPriceText: string = "Selling price";
 export const ChooseYourCurrency: string = "Choose your currency";
 export const ProductStocks: string = "Product stocks";
 export const InventoryText: string = "Inventory";
-export const AdditionalOptionText: string = 'Additional Options';
-export const ShippingText: string = 'Shipping';
+export const AdditionalOptionText: string = "Additional Options";
+export const ShippingText: string = "Shipping";
 export const StockAvailability: string = "Stock Availability";
-export const LowStock: string = 'Low Stock';
-export const Sku: string = 'SKU';
+export const LowStock: string = "Low Stock";
+export const Sku: string = "SKU";
 export const StockQuantity: string = "Stock Quantity";
 export const RestockDate: string = "Restock Date";
 export const PreOrder: string = "Pre-Order";
@@ -172,11 +172,11 @@ export const Newsletter: string = "Newsletter";
 export const Notification: string = "notification";
 
 //Calender
-export const CalendarBasicTitle: string = "Calendar Basic"
-export const CalendarTitle: string = "Calendar"
-export const CalendarFilter: string = "calendar filter"
-export const DraggableEventsTitle: string = "Draggable Events"
-export const RemoveAfterDrop: string = "remove after drop"
+export const CalendarBasicTitle: string = "Calendar Basic";
+export const CalendarTitle: string = "Calendar";
+export const CalendarFilter: string = "calendar filter";
+export const DraggableEventsTitle: string = "Draggable Events";
+export const RemoveAfterDrop: string = "remove after drop";
 export const Personal: string = "Personal";
 export const EditMoreInformation: string = "Edit more information";
 export const PrintPreview: string = "Print Preview";
@@ -237,7 +237,6 @@ export const OrdersStatusHeading: string = "Order Status";
 export const MonthlySaleHeading: string = "Monthly Sales";
 export const UsesHeading: string = "Uses";
 
-
 //Manager
 export const ManagerTitle: string = "Manager";
 export const ManagerListTitle: string = "Manager List";
@@ -253,9 +252,9 @@ export const MentorCreateTitle: string = "Mentor Create";
 export const MentorName: string = "Mentor Name";
 export const MentorTitleText: string = "Mentor Title";
 export const MentorDOB: string = "Mentor DOB";
-export const DOBTitle:string = "DOB";
-export const TimeAvailability:string = "Time Availability";
-export const MentorCardsTitle:string = "Mentor Cards";
+export const DOBTitle: string = "DOB";
+export const TimeAvailability: string = "Time Availability";
+export const MentorCardsTitle: string = "Mentor Cards";
 //Project
 export const ProjectTitle: string = "Project";
 export const ProjectListTitle: string = "Project List";
@@ -271,7 +270,8 @@ export const StartingDate: string = "Starting date";
 export const EndingDate: string = "Ending date";
 export const EnterSomeDetails: string = "Enter some Details";
 export const UploadProjectFiles: string = "Upload project file";
-export const DropFileUploadText: string = "(This is just a demo dropzone. Selected files are ";
+export const DropFileUploadText: string =
+	"(This is just a demo dropzone. Selected files are ";
 export const ActualFileUpload: string = " actually uploaded.)";
 //Dashboard
 export const DashboardTitle: string = "Dashboard";
@@ -290,29 +290,29 @@ export const ProjectSummeryHeading: string = "Project Summery";
 export const ProjectStatisticsHeading: string = "Project Statistics";
 export const UpcomingDeadlinesHeading: string = "Upcoming Deadlines";
 export const ProjectDeliveriesHeading: string = "Project Deliveries";
-export const TeamMembersHeading: string = "Team Members"
+export const TeamMembersHeading: string = "Team Members";
 //layout
 export const Pinned: string = "Pinned";
 //Dashboard
 export const DefaultDashboardTitle: string = "Default Dashboard";
 export const DefaultTitle: string = "Default";
 export const AdminTitle: string = "Admin";
-export const Schedules: string = "Schedule"
-export const TransactionHistoryHeading: string = "Transaction History"
-export const TopSellingProductHeading: string = "Top Selling Product"
-export const RecentOrders: string = "Recent Orders"
-export const OurGrowthHeading: string = "Our Growth"
-export const ProductValuationHeading: string = "Product Valuation"
-export const NotificationsHeading: string = "Notifications"
-export const UserByCountryHeading: string = " User By Country"
+export const Schedules: string = "Schedule";
+export const TransactionHistoryHeading: string = "Transaction History";
+export const TopSellingProductHeading: string = "Top Selling Product";
+export const RecentOrders: string = "Recent Orders";
+export const OurGrowthHeading: string = "Our Growth";
+export const ProductValuationHeading: string = "Product Valuation";
+export const NotificationsHeading: string = "Notifications";
+export const UserByCountryHeading: string = " User By Country";
 export const DailyVisitorsHeading: string = "Daily Visitors";
 export const TopProductHeading: string = "Top Product";
 export const OpenInvoicesHeading: string = "Open invoices";
-export const TotalEarningsHeading: string = "Total Earnings"
-export const TotalExpensesHeading: string = "Total Expenses"
+export const TotalEarningsHeading: string = "Total Earnings";
+export const TotalExpensesHeading: string = "Total Expenses";
 
 //Miscellaneous - Knowledgebase
-export const Knowledgebase: string = "Knowledgebase"
+export const Knowledgebase: string = "Knowledgebase";
 export const KnowledgebaseHelpQue: string = "How Can I help you?";
 export const knowledgeArticle: string = "Browse articles by category";
 export const BrowseArticles: string = "Browse Articles";
@@ -326,64 +326,63 @@ export const Layout_Type = "Layout Type";
 export const Sidebar_Icon = "Sidebar Icon";
 export const UnlimitedColor = "Unlimited Color";
 export const Mix_Layout = "MixLayout";
-export const Sidebar_Type = 'Sidebar Type';
-export const Box = "Box"
-export const Fill = "Fill"
-export const LTRBadges = "LTR"
-export const RTLBadges = "RTL"
-export const Stroke = "Stroke"
-export const Configuration = 'Configuration';
-export const LightLayout = "Light layout"
-export const DarkLayout = "Dark Layout"
+export const Sidebar_Type = "Sidebar Type";
+export const Box = "Box";
+export const Fill = "Fill";
+export const LTRBadges = "LTR";
+export const RTLBadges = "RTL";
+export const Stroke = "Stroke";
+export const Configuration = "Configuration";
+export const LightLayout = "Light layout";
+export const DarkLayout = "Dark Layout";
 
 // Invoices
-export const BilledTo = "Billed To"
-export const InvoiceDate= "Invoice Date"
-export const InvoiceOne = "Invoice 1"
-export const InvoiceTwo  = "Invoice 2"
-export const InvoiceThree= "Invoice 3"
-export const InvoiceFour = "Invoice 4"
-export const InvoiceFive  ="Invoice 5"
-export const InvoiceSix = "Invoice 6"
-export const InvoiceNumber= "Invoice Number"
-export const AmountDus = "Amount Dus (USD)"
-export const Evo= "Evo"
-export const Rate= "Rate"
-export const Qty  = "Qty"
-export const LineTotal= "Line Total"
-export const AuthorizedSign = "Authorized Sign"
-export const PrintInvoice = "Print Invoice"
-export const Download= "Download"
-export const InvoiceNo="Invoice No."
-export const PaymentStatus= "Payment Status"
-export const TotalAmount= "Total Amount"
-export const BillingAddress= "BILLING ADDRESS"
-export const ShippingAddress= "SHIPPING ADDRESS"
-export const Unit= "Unit"
-export const Vat= "Vat %"
-export const ShippingRate= "ShippingRate"
-export const Invoice= "Invoice"
-export const InvoiceHeading = "INVOICE"
-export const ClientDetails= "CLIENT DETAILS"
-export const BankTransfer = "BANK TRANSFER"
-export const BankAccount= "Bank Account"
-export const Code= "Code"
+export const BilledTo = "Billed To";
+export const InvoiceDate = "Invoice Date";
+export const InvoiceOne = "Invoice 1";
+export const InvoiceTwo = "Invoice 2";
+export const InvoiceThree = "Invoice 3";
+export const InvoiceFour = "Invoice 4";
+export const InvoiceFive = "Invoice 5";
+export const InvoiceSix = "Invoice 6";
+export const InvoiceNumber = "Invoice Number";
+export const AmountDus = "Amount Dus (USD)";
+export const Evo = "Evo";
+export const Rate = "Rate";
+export const Qty = "Qty";
+export const LineTotal = "Line Total";
+export const AuthorizedSign = "Authorized Sign";
+export const PrintInvoice = "Print Invoice";
+export const Download = "Download";
+export const InvoiceNo = "Invoice No.";
+export const PaymentStatus = "Payment Status";
+export const TotalAmount = "Total Amount";
+export const BillingAddress = "BILLING ADDRESS";
+export const ShippingAddress = "SHIPPING ADDRESS";
+export const Unit = "Unit";
+export const Vat = "Vat %";
+export const ShippingRate = "ShippingRate";
+export const Invoice = "Invoice";
+export const InvoiceHeading = "INVOICE";
+export const ClientDetails = "CLIENT DETAILS";
+export const BankTransfer = "BANK TRANSFER";
+export const BankAccount = "Bank Account";
+export const Code = "Code";
 
-export const AllTaxesIncluded= "All Taxes included"
-export const InvoiceTo = "Invoice to"
-export const AccountNo ="Account No"
-export const DueAmount = "Due Amount"
-export const UnitePrice = "Unite Price"
-export const PaymentTeams= "Payment Teams"
-export const Tax= "Tax"
-export const Discount= "Discount"
-export const TotalDue= "Total Due"
-export const No= "No."
-export const VATTax= "VAT / Tax 15%"
-export const Mofi= "Evo"
-export const ItemDescription= "Item Description"
-export const SubTotal = "Sub-total"
-
+export const AllTaxesIncluded = "All Taxes included";
+export const InvoiceTo = "Invoice to";
+export const AccountNo = "Account No";
+export const DueAmount = "Due Amount";
+export const UnitePrice = "Unite Price";
+export const PaymentTeams = "Payment Teams";
+export const Tax = "Tax";
+export const Discount = "Discount";
+export const TotalDue = "Total Due";
+export const No = "No.";
+export const VATTax = "VAT / Tax 15%";
+export const Mofi = "Evo";
+export const ItemDescription = "Item Description";
+export const SubTotal = "Sub-total";
 
 //Miscellaneous - Maps
 export const Maps: string = "Maps";
@@ -423,8 +422,6 @@ export const ProfitSupportTicket: string = "Profit";
 export const LossSupportTicket: string = "Loss";
 export const DeleteSupportTicket: string = "Delete";
 export const DeleteData: string = "Delete Selected Data..!";
-
- 
 
 //Miscellaneous - FAQ
 export const FAQ: string = "FAQ";
@@ -478,7 +475,8 @@ export const ListView: string = "List View";
 export const JobDetails: string = "Job Detail";
 export const JobSearch: string = "Job Search";
 export const ApplyForThisJob: string = "Apply for this job";
-export const ProductDesignerMainCard: string = "Product Designer (UI/UX Designer)";
+export const ProductDesignerMainCard: string =
+	"Product Designer (UI/UX Designer)";
 export const EndLessDesigner: string = "Endless - United States";
 export const SimilarJobs: string = "Similar jobs";
 export const JobDescriptionHeading: string = "Job Description";
@@ -488,7 +486,8 @@ export const Perks: string = "Perks";
 export const Share: string = "share";
 export const Apply: string = "Apply";
 export const JobUIDesigner: string = "UI Designer";
-export const JobEndlessTelecomTechnologies: string = "Endless Telecom & Technologies , NY";
+export const JobEndlessTelecomTechnologies: string =
+	"Endless Telecom & Technologies , NY";
 export const JobPersonalDetails: string = "Personal Details";
 export const JobYourEducation: string = "Your Education";
 export const JobYourExperience: string = "Your Experience";
@@ -539,8 +538,6 @@ export const Page: string = "Pages";
 export const SamplePage: string = "Sample Page";
 export const SampleCard: string = "Sample Card";
 
- 
-
 //Pages - Authentication
 export const SignInToAccount: string = "Sign in to account";
 export const EmailAddressLogIn = "Email Address";
@@ -553,7 +550,8 @@ export const TwitterIcon: string = " twitter ";
 export const FacebookIcon: string = " facebook ";
 export const DontHaveAccount: string = "Don't have account?";
 export const CreateAccount: string = "Create Account ";
-export const EnterYourPersonalDetailsToCreateAccount: string = "Enter your personal details to create account";
+export const EnterYourPersonalDetailsToCreateAccount: string =
+	"Enter your personal details to create account";
 export const YourNameSignUp = "Your Name";
 export const EmailAddressSignUp = "Email Address";
 export const PasswordSignUp = "Password";
@@ -573,10 +571,12 @@ export const CreateYourPassword: string = "Create Your Password";
 export const CreateYourAccount: string = "Create your account";
 export const BackToHomePage: string = "BACK TO HOME PAGE";
 export const MaintenancesTitle: string = "MAINTENANCE";
-export const MaintenancesSubContent: string = "Our Site is Currently under maintenance We will be back Shortly";
+export const MaintenancesSubContent: string =
+	"Our Site is Currently under maintenance We will be back Shortly";
 export const ThankYouForPatience: string = "Thank You For Patience";
 export const SignUpToAccount: string = "Sign up to account";
-export const EnterYourEmailPasswordToLoginWizard: string = "Enter your email & password to login";
+export const EnterYourEmailPasswordToLoginWizard: string =
+	"Enter your email & password to login";
 export const FirstNameWizard: string = "First Name";
 export const LastNameWizard: string = "Last Name";
 export const ContactNameWizard: string = "Contact No.";
@@ -607,14 +607,19 @@ export const Seconds: string = "Seconds";
 
 //Miscellaneous - Gallery
 export const Gallery: string = "Gallery";
-export const GalleryGridWithDescription: string = "Gallery Grid With Description";
+export const GalleryGridWithDescription: string =
+	"Gallery Grid With Description";
 export const ImageGallery: string = "IMAGE GALLERY";
 export const MasonryGallery: string = "Masonry Gallery";
-export const GalleryGridWithDescriptions: string = "Gallery Grid With Description";
-export const GalleryGridWithDescriptionCap: string = "IMAGE GALLERY WITH DESCRIPTION";
-export const MasonryGalleryWithDescription: string = "Masonry Gallery With Description";
+export const GalleryGridWithDescriptions: string =
+	"Gallery Grid With Description";
+export const GalleryGridWithDescriptionCap: string =
+	"IMAGE GALLERY WITH DESCRIPTION";
+export const MasonryGalleryWithDescription: string =
+	"Masonry Gallery With Description";
 export const MasonryGalleryCap: string = "MASONRY GALLERY";
-export const MasonryGalleryDescriptionCap: string = "MASONRY GALLERY WITH DESCRIPTION";
+export const MasonryGalleryDescriptionCap: string =
+	"MASONRY GALLERY WITH DESCRIPTION";
 export const PortfolioTitle: string = "Portfolio Title";
 export const ImageHoverEffects: string = "Image Hover Effects";
 
@@ -644,7 +649,8 @@ export const SizingButtonsTitle: string = "Sizing buttons";
 export const ActiveButtonsTitle: string = "Active Buttons";
 export const DisabledButtonsTitle: string = "Disabled buttons";
 export const OutlineButtonsTitle: string = "Outline buttons";
-export const BoldBorderOutlineButtonsTitle: string = "Bold Border outline buttons";
+export const BoldBorderOutlineButtonsTitle: string =
+	"Bold Border outline buttons";
 export const GradienButtonsTitle: string = "Gradien buttons";
 export const ButtonGroupTitle: string = "Button Group";
 export const Option1: string = "Option 1";
@@ -742,7 +748,8 @@ export const ThemifyIcon: string = "Themify Icon";
 export const ArrowsDirection: string = "Arrows & Direction ";
 export const Control: string = "Control";
 export const WhetherIcon = "Whether Icon";
-export const whetherIconsWithAnimations: string = "Whether Icons With Animations";
+export const whetherIconsWithAnimations: string =
+	"Whether Icons With Animations";
 export const CopyText: string = "Copy text";
 export const Markup: string = "Markup";
 //Bonus Ui - Range Slider
@@ -805,7 +812,8 @@ export const MouseWheelVariants: string = "Mouse Wheel Variant";
 export const WithIndicator: string = "With Indicators";
 export const WithCaption: string = "With Captions";
 export const CrossFades: string = "Cross-Fade";
-export const IndividualCarouselItemIntervals: string = "Individual Carousel-Item Interval";
+export const IndividualCarouselItemIntervals: string =
+	"Individual Carousel-Item Interval";
 export const DisableTouchSwipingTitle: string = "Disable Touch Swiping";
 export const DarkVariants: string = "Dark Variant";
 
@@ -817,7 +825,8 @@ export const VariationsOfRightRibbons: string = "Variations Of Right Ribbons";
 //Bonus Ui - Pagination
 export const Pagination: string = "Pagination";
 export const DefaultPaginationTitle: string = "Default Pagination";
-export const PaginationWithActiveAndDisabled: string = "Pagination With Active And Disabled";
+export const PaginationWithActiveAndDisabled: string =
+	"Pagination With Active And Disabled";
 export const PaginationWithIcon: string = "Pagination With Icons";
 export const RoundedPaginationTitle: string = "Rounded Pagination";
 export const PaginationAlignments: string = "Pagination Alignment";
@@ -955,11 +964,11 @@ export const DividerDropdowns = "Divider Dropdown";
 export const Wishlist = "Wishlist";
 export const DropdownSizings = "Dropdown Sizing";
 export const LargeButton = "Large button";
-export const Emailaddress = "Email address"
-export const RememberMe = "Remember me"
+export const Emailaddress = "Email address";
+export const RememberMe = "Remember me";
 
 //Ui Kits - Accordion
-export const Accordion = "Accordion"
+export const Accordion = "Accordion";
 export const SimpleAccordions = "Simple Accordion";
 export const FlushAccordions = "Flush Accordion";
 export const WhatDoWebDesignersDo = "What do web designers do ?";
@@ -990,7 +999,7 @@ export const BorderTab = "Border Tabs ";
 export const Inbox = "Inbox";
 export const UxDesigner = "UX designer";
 export const IOTDeveloper = "IOT developer";
-export const WebDesigner = "Web Designer"
+export const WebDesigner = "Web Designer";
 export const User = "User";
 export const Description = "Description";
 export const Review = "Review";
@@ -1018,7 +1027,7 @@ export const ContactUs = "Contact us";
 export const Settings = "Settings";
 //Modal
 export const ModalTitle: string = "Modal";
-export const BasicModalTitle: string = "Basic Modal"
+export const BasicModalTitle: string = "Basic Modal";
 export const SaveChanges: string = "Save Changes";
 export const Simple: string = "Simple";
 export const ExploreMore: string = "Explore More";
@@ -1071,12 +1080,12 @@ export const BalanceModal: string = "Balance Modal";
 export const BrooklynSimmons: string = "Brooklyn Simmons";
 export const BrooklynSimmonEmail: string = "@brookly.simmons";
 export const YourBalance: string = "Your Balance";
-export const YourTotalBalance = '768,987.90';
+export const YourTotalBalance = "768,987.90";
 export const CashBackText: string = "Cash Back";
 export const InvestmentConstant: string = "Investment";
 
 //tooltip
-export const Tooltip = "Tooltip"
+export const Tooltip = "Tooltip";
 export const TooltipSmall = "tooltip";
 export const BasicTooltip = "Basic Tooltip";
 export const DirectionsTooltip = "Tooltip  directions";
@@ -1089,8 +1098,8 @@ export const HTMLElementsWithHoverEffect = "HTML Elements With Hover Effect";
 export const NotificationsReceived = "Notifications Received";
 export const FilledTooltips = "Filled Tooltip";
 export const TooltipPrimary = "Tooltip Primary";
-export const ButtonSmall= "Button"
-export const Primary= "Primary"
+export const ButtonSmall = "Button";
+export const Primary = "Primary";
 //Grid
 export const GridTitle: string = "Grid";
 export const GridOptionsTitle: string = "GridOptions";
@@ -1100,7 +1109,7 @@ export const Class: string = "Class";
 export const ValueClass: string = "Value of the class";
 export const HorizontalAlignmentTitle: string = "Horizontal alignment";
 export const NestingTitle: string = "Nesting";
-export const OrderTitle: string = 'Order';
+export const OrderTitle: string = "Order";
 export const OffSetTitle: string = "Offset";
 //Progress
 export const ProgressTitle: string = "Progress";
@@ -1121,26 +1130,26 @@ export const OutlineAlertTitle: string = "Outline Dark And Light Alerts";
 export const AlertWithIconsTitle: string = "Alerts With Icons and Text Actions";
 export const DismissingDarkAlertTitle: string = "Dismissing Dark Alerts";
 export const DismissingLightAlertTitle: string = "Dismissing Light Alerts";
-export const LiveAlertTitle: string = 'Live Alert';
+export const LiveAlertTitle: string = "Live Alert";
 export const ShowLiveAlert: string = "Show live alert";
 export const LiveAlertText: string = "Nice, you triggered this alert message!";
 export const LeftBorderAlertTitle: string = "Left Border Alert";
-export const AdditionalAlertTitle: string = 'Additional content';
+export const AdditionalAlertTitle: string = "Additional content";
 //Avatars
 export const AvatarsTitle: string = "Avatars";
-export const Sizes: string = 'Sizes';
-export const StatusIndicatorTitle: string = 'Status Indicator';
-export const ShapesTitle: string = 'Shapes';
-export const RatioTitle: string = 'Ratio';
-export const GroupingTitle: string = 'Grouping';
+export const Sizes: string = "Sizes";
+export const StatusIndicatorTitle: string = "Status Indicator";
+export const ShapesTitle: string = "Shapes";
+export const RatioTitle: string = "Ratio";
+export const GroupingTitle: string = "Grouping";
 //Helper Classes
-export const HelperClassesTitle: string = "Helper Classes"
-export const BorderStylesTitle: string = 'Styles in borders';
+export const HelperClassesTitle: string = "Helper Classes";
+export const BorderStylesTitle: string = "Styles in borders";
 export const CustomBorderTitle: string = "Custom border-radius class";
-export const BorderColorTitle: string = 'Border color';
+export const BorderColorTitle: string = "Border color";
 export const BorderWidthTitle: string = "Border-width";
 export const TextColorsTitle: string = "Text colors";
-export const BordersAndDisplaysTitle: string = 'Borders and displays';
+export const BordersAndDisplaysTitle: string = "Borders and displays";
 export const AdditiveBorderTitle: string = "Additive border";
 export const SubtractiveBorderTitle: string = "Subtractive border";
 export const AdditiveRadiusTitle: string = "Additive Radius";
@@ -1182,13 +1191,16 @@ export const DataTablesTitle: string = "Data Tables";
 export const BasicDataTablesTitle: string = "Basic DataTables";
 export const ZeroConfigurationTitle: string = "Zero Configuration";
 export const StateSavingTableTitle: string = "State saving";
-export const ScrollVerticalDynamicHeightTitle: string = "Scroll - vertical, dynamic height";
+export const ScrollVerticalDynamicHeightTitle: string =
+	"Scroll - vertical, dynamic height";
 export const StockResultTitle: string = "Stock Result";
 export const RowCreateCallbackTitle: string = "Row Create Callback";
 export const AddRowsTitle: string = "Add rows";
 export const AddNewRow: string = "Add new row";
-export const ChildRowsTitle: string = "Child rows (show extra / detailed information)";
-export const RowsSelectionAndDeletionTitle: string = "Row Selection And Deletion (Single Row)";
+export const ChildRowsTitle: string =
+	"Child rows (show extra / detailed information)";
+export const RowsSelectionAndDeletionTitle: string =
+	"Row Selection And Deletion (Single Row)";
 export const DeleteRow: string = "Delete Row";
 export const CustomFilteringTitle: string = "Custom filtering - range search";
 export const HtmlTableTitle: string = "HTML (DOM) Sourced Data";
@@ -1201,10 +1213,10 @@ export const DataSourceDataTablesTitle: string = "DATA Source DataTables";
 
 //Ui Kits
 export const TypographyTitle: string = "Typography";
-export const HeadingsTitle: string = 'Headings';
-export const ColoredHeadingTitle: string = 'Colored headings';
+export const HeadingsTitle: string = "Headings";
+export const ColoredHeadingTitle: string = "Colored headings";
 export const FontWeightTitle: string = "Font weight";
-export const ListingTypography: string = 'Listing Typography';
+export const ListingTypography: string = "Listing Typography";
 export const UnorderListTitle: string = "Unorder list";
 export const OrderListTitle: string = "Order list";
 export const DescriptionListTitle: string = "Description list";
@@ -1213,18 +1225,19 @@ export const Inlinetextelements: string = "Inline text elements";
 export const TextColorTitle: string = "Text Color";
 export const BlockquotesTitle: string = "Blockquotes";
 //Form Layout
-export const FormLayoutTitle: string = "Form Layout"
-export const StepFormWizardTitle: string = "Step Form Wizard"
+export const FormLayoutTitle: string = "Form Layout";
+export const StepFormWizardTitle: string = "Step Form Wizard";
 export const CustomHorizontalTitle: string = "Custom horizontal wizard";
 export const Continue: string = "Continue";
-export const AadhaarNumber: string = "Aadhaar Number"
-export const PAN: string = "PAN"
+export const AadhaarNumber: string = "Aadhaar Number";
+export const PAN: string = "PAN";
 export const ChooseBanks: string = "Choose from these popular banks";
 export const DescribeIssue: string = "If no, could you please describe?";
 export const SuccessfullyCompleted: string = "Successfully Completed";
 export const AccountType: string = "Select the type of account";
 export const AccountName: string = "Account Name";
-export const ProjectDescription: string = " Select a project and write a description for it";
+export const ProjectDescription: string =
+	" Select a project and write a description for it";
 export const ContactDetails: string = "Contact details";
 
 export const OrganizationName: string = "Organization Name";
@@ -1234,45 +1247,51 @@ export const BusinessVerticalTitle: string = "Business vertical wizard";
 export const CustomVerticalTitle: string = "Custom vertical wizard";
 export const BusinessWizardTitle: string = "Business horizontal wizard";
 export const Email: string = "Email";
-export const Website: string = "Website"; 
+export const Website: string = "Website";
 export const ContactNo: string = "ContactNo";
 //Two Factor
 export const TwoFactorTitle: string = "Two Factor";
 export const TwoFactorAuthenticationTitle: string = "Two-factor authentication";
-export const FactorAuthentication: string = "2 factor authentication"
+export const FactorAuthentication: string = "2 factor authentication";
 export const Next: string = "Next";
-export const EmailVerificationTitle: string = "Email verification"
+export const EmailVerificationTitle: string = "Email verification";
 export const VerificationCodeTitle: string = "Verification code";
 
 //Tables
-export const ReactstrapTablesTitle: string = "Reactstrap Tables"
-export const ReactstrapBasicTablesTitle: string = "Reactstrap Basic Tables"
-export const BasicTableWithBorderTitle: string = "Basic Table With Border Bottom Color";
+export const ReactstrapTablesTitle: string = "Reactstrap Tables";
+export const ReactstrapBasicTablesTitle: string = "Reactstrap Basic Tables";
+export const BasicTableWithBorderTitle: string =
+	"Basic Table With Border Bottom Color";
 export const InverseTableTitle: string = "Inverse Table";
-export const HoverableRowsTitle: string = "Hoverable Rows With Horizontal Border";
-export const InverseTablePrimaryTitle: string = "Inverse Table with Primary background";
+export const HoverableRowsTitle: string =
+	"Hoverable Rows With Horizontal Border";
+export const InverseTablePrimaryTitle: string =
+	"Inverse Table with Primary background";
 export const CaptionTitle: string = "Caption";
 export const UserList: string = "List of users";
 export const TableHeadOptionsTitle: string = "Table head options";
-export const StripedRowInverseTableTitle: string = "Striped Row with Inverse Table";
+export const StripedRowInverseTableTitle: string =
+	"Striped Row with Inverse Table";
 export const BreckpointSpecificTitle: string = "Breckpoint Specific";
-export const ResponsiveLightBackgroundTitle: string = "Responsive Tables With Light Background";
+export const ResponsiveLightBackgroundTitle: string =
+	"Responsive Tables With Light Background";
 export const SizingTablesTitle: string = "Sizing Tables";
-export const CustomColorHoverStrippedTitle: string = "Custom Table Color With Hover And Stripped";
+export const CustomColorHoverStrippedTitle: string =
+	"Custom Table Color With Hover And Stripped";
 export const DashedBorderTitle: string = "Dashed Border";
 //table-components
 export const TableComponentsTitle: string = "Table Components";
-export const UIComponentsTitle: string = 'UI Components';
-export const ProgressbarTitle: string = 'Progressbar';
-export const CheckboxTitle: string = 'Checkbox';
-export const RadioButtonsTitle: string = 'Radio Buttons';
-export const Select: string = 'Select';
+export const UIComponentsTitle: string = "UI Components";
+export const ProgressbarTitle: string = "Progressbar";
+export const CheckboxTitle: string = "Checkbox";
+export const RadioButtonsTitle: string = "Radio Buttons";
+export const Select: string = "Select";
 export const Input: string = "Input";
-export const BadgesTitle: string = 'Badges';
-export const TooltipTriggersTitle: string = 'Tooltip Triggers';
+export const BadgesTitle: string = "Badges";
+export const TooltipTriggersTitle: string = "Tooltip Triggers";
 export const DefaultButtonsTitle: string = "Default Button";
 //Form Widgets
-export const FormWidgetsTitle: string = "Form Widgets"
+export const FormWidgetsTitle: string = "Form Widgets";
 //Clipboard
 export const ClipboardTitle: string = "Clipboard";
 export const ClipBoardOnTextInputTitle: string = "Clipboard on text input";
@@ -1285,12 +1304,13 @@ export const CopyPortionParagraphTitle: string = "Copy portion from paragraph";
 export const CopyHighlightedText: string = "Copy highlighted text";
 
 //Form Layout
-export const FormWizardTitle: string = "Form Wizard"
+export const FormWizardTitle: string = "Form Wizard";
 export const NumberingWizardTitle: string = "Numbering wizard";
 export const ConfirmPassword: string = "Confirm Password";
 export const PlaceholderName: string = "Placeholder Name";
 export const UploadDocumentation: string = "Upload Documentation";
-export const AboveInformationCorrect: string = "All the above information is correct";
+export const AboveInformationCorrect: string =
+	"All the above information is correct";
 export const LinkedIn: string = "LinkedIn";
 export const Github: string = "Git hub";
 export const SelectState: string = "Select State";
@@ -1304,15 +1324,16 @@ export const CVVNumber: string = "CVV Number";
 export const Previous: string = "Previous";
 export const Name: string = "Name";
 export const AddProfile: string = "Add Profile";
-export const PortfolioURL: string = " Portfolio URL"
+export const PortfolioURL: string = " Portfolio URL";
 export const ProjectDescriptionText: string = "project and write a description";
-export const SocialLinks: string = " Social Links "
+export const SocialLinks: string = " Social Links ";
 export const Twitter: string = " Twitter";
-export const VerticalValidationWizardTitle: string = "Vertical validation wizard";
+export const VerticalValidationWizardTitle: string =
+	"Vertical validation wizard";
 export const ZipCode: string = "Zip Code";
 export const ContactNumber: string = "Contact Number";
 export const SelectPaymentMethod: string = "Select your payment method";
-export const NetBanking: string = " NET BANKING"
+export const NetBanking: string = " NET BANKING";
 export const SelectYourBank: string = " SELECT YOUR BANK";
 export const Cvv: string = "CVV";
 export const ShippingFormTitle: string = "Shipping form";
@@ -1323,19 +1344,19 @@ export const RememberMeNext: string = "Remember me for next time";
 export const OtherNotes: string = "Other Notes";
 export const ProceedToBack: string = "Proceed to back";
 export const ProceedToNext: string = "Proceed to Next";
-export const ShippingInformation: string = "Shipping Information"
-export const SavedAddress: string = "Saved Address"
-export const Information: string = "Information"
-export const AddressType: string = "Address Type"
+export const ShippingInformation: string = "Shipping Information";
+export const SavedAddress: string = "Saved Address";
+export const Information: string = "Information";
+export const AddressType: string = "Address Type";
 export const Save: string = "Save";
-export const ShippingMethod: string = "Shipping Method"
-export const PaymentInformation: string = "Payment Information"
+export const ShippingMethod: string = "Shipping Method";
+export const PaymentInformation: string = "Payment Information";
 export const CardHolder: string = "Card Holder";
 export const OrderConfirmed: string = "Thank you! Your order is confirmed.";
 export const CurrentCartTitle: string = "Current Cart";
-export const Close: string = "Close"
+export const Close: string = "Close";
 //Datepicker
-export const DatepickerTitle: string = "Datepicker"
+export const DatepickerTitle: string = "Datepicker";
 export const DefaultCalendarTitle: string = "Default calendar";
 export const ReactstrapCalendarTitle: string = "Reactstrap calendar";
 export const DatePickerCardTitle: string = "Date picker";
@@ -1352,16 +1373,19 @@ export const HourPicker: string = "24-hour Time Picker";
 export const TimePickerLimits: string = "Time Picker W/Limits";
 export const PreloadingTime: string = "Preloading Time";
 export const TimePickerRange: string = "TimePicker with Limited Time Range";
-export const TimePickerMinMaxRange: string = "TimePicker with Min/Max Time Range";
+export const TimePickerMinMaxRange: string =
+	"TimePicker with Min/Max Time Range";
 export const DateWithTime: string = "Date With Time";
 //Touchspin
 export const TouchspinTitle: string = "Touchspin";
 export const DefaultTouchspinTitle: string = "Default touchspin";
 export const OutlinedTouchspinTitle: string = "Outlined touchspin";
-export const IconsWithPrefixAndPostfixTitle: string = "Icons with prefix and postfix";
+export const IconsWithPrefixAndPostfixTitle: string =
+	"Icons with prefix and postfix";
 export const Pre: string = "Pre";
 export const Post: string = "Post";
-export const ButtonsWithPrefixPostfixTitle: string = "Buttons with prefix and postfix";
+export const ButtonsWithPrefixPostfixTitle: string =
+	"Buttons with prefix and postfix";
 export const RoundedTouchspinTitle: string = "Rounded touchspin";
 //Switch
 export const SwitchTitle: string = "Switch";
@@ -1370,47 +1394,48 @@ export const DisabledOutlineSwitchTitle: string = "Disabled outline switch";
 export const VariationOfSwitchesTitle: string = "Variation of switches";
 //Typeahead
 export const TypeaheadTitle: string = "Typeahead";
-export const BasicTypeaheadTitle: string = 'Basic typeahead';
-export const PrefetchTitle: string = 'Prefetch';
-export const BloodhoundTitle: string = 'Bloodhound (Suggestion Engine)';
-export const RemoteTypeaheadTitle: string = 'Remote typeahead';
-export const CustomTemplatesTitle: string = 'Custom templates';
-export const MultipleSectionsHeadersTitle: string = 'Multiple sections with headers';
-export const ScrollableDropdownMenuTitle: string = 'Scrollable Dropdown Menu';
-export const RTLSupportTitle: string = 'RTL Support';
+export const BasicTypeaheadTitle: string = "Basic typeahead";
+export const PrefetchTitle: string = "Prefetch";
+export const BloodhoundTitle: string = "Bloodhound (Suggestion Engine)";
+export const RemoteTypeaheadTitle: string = "Remote typeahead";
+export const CustomTemplatesTitle: string = "Custom templates";
+export const MultipleSectionsHeadersTitle: string =
+	"Multiple sections with headers";
+export const ScrollableDropdownMenuTitle: string = "Scrollable Dropdown Menu";
+export const RTLSupportTitle: string = "RTL Support";
 //Form Controls
 export const FormControlsTitle: string = "Form Controls";
 
 //Checkbox & Radio
-export const CheckboxRadioTitle: string = "Checkbox & Radio"
+export const CheckboxRadioTitle: string = "Checkbox & Radio";
 export const DefaultCheckboxTitle: string = "Default checkbox";
 export const Indeterminate: string = "Indeterminate";
 export const IndeterminateCheckbox: string = "Indeterminate checkbox";
 export const CustomCheckboxTitle: string = "Custom checkbox";
-export const BorderedCheckboxTitle = 'Bordered Checkbox';
-export const PrimaryCheckbox = 'Primary - checkbox-primary';
-export const SecondaryCheckbox = 'Secondary - checkbox-secondary';
-export const SuccessCheckbox = 'Success - checkbox-success';
-export const IconCheckboxTitle = 'Icon Checkbox';
-export const FilledCheckboxTitle = 'Filled Checkbox';
-export const WarningSolidCheckbox = 'Warning - checkbox-solid-warning';
-export const DangerSolidCheckbox = 'Danger - checkbox-solid-danger';
-export const InfoSolidCheckbox = 'Info - checkbox-solid-info';
-export const DefaultRadioTitle = 'Default radio';
-export const CustomRadiosTitle = 'Custom Radios';
-export const DefaultCheckedRadio = 'Default checked radio';
-export const DisabledRadios = 'Disabled Radios';
-export const DisabledRadioSmall = 'Disabled radio';
-export const DisabledCheckedRadio = 'Disabled checked radio';
-export const RightRadios = 'Right Radios';
-export const ImagesCheckboxTitle = 'Images with checkbox';
-export const ImagesWithRadioTitle = 'Images with radio';
-export const BorderedRadioTitle = 'Bordered Radio';
-export const IconsRadioTitle = 'Icons Radio';
-export const FilledRadioTitle = 'Filled Radio';
-export const DefaultSwitchesTitle = 'Default switches';
-export const InlineInputTypesTitle = 'Inline Input-types';
-export const InlineSwitchesTitle: string = 'Inline Switches';
+export const BorderedCheckboxTitle = "Bordered Checkbox";
+export const PrimaryCheckbox = "Primary - checkbox-primary";
+export const SecondaryCheckbox = "Secondary - checkbox-secondary";
+export const SuccessCheckbox = "Success - checkbox-success";
+export const IconCheckboxTitle = "Icon Checkbox";
+export const FilledCheckboxTitle = "Filled Checkbox";
+export const WarningSolidCheckbox = "Warning - checkbox-solid-warning";
+export const DangerSolidCheckbox = "Danger - checkbox-solid-danger";
+export const InfoSolidCheckbox = "Info - checkbox-solid-info";
+export const DefaultRadioTitle = "Default radio";
+export const CustomRadiosTitle = "Custom Radios";
+export const DefaultCheckedRadio = "Default checked radio";
+export const DisabledRadios = "Disabled Radios";
+export const DisabledRadioSmall = "Disabled radio";
+export const DisabledCheckedRadio = "Disabled checked radio";
+export const RightRadios = "Right Radios";
+export const ImagesCheckboxTitle = "Images with checkbox";
+export const ImagesWithRadioTitle = "Images with radio";
+export const BorderedRadioTitle = "Bordered Radio";
+export const IconsRadioTitle = "Icons Radio";
+export const FilledRadioTitle = "Filled Radio";
+export const DefaultSwitchesTitle = "Default switches";
+export const InlineInputTypesTitle = "Inline Input-types";
+export const InlineSwitchesTitle: string = "Inline Switches";
 export const AnimatedButtonsTitle: string = "Animated buttons";
 export const BasicRadioAndCheckboxTitle: string = "Basic radio and checkbox";
 export const RadioToggleButtonsTitle: string = "Radio toggle buttons";
@@ -1422,7 +1447,7 @@ export const SingleToggle: string = "Single toggle";
 export const CheckedSuccessRadio: string = "Checked success radio";
 export const DarkRadio: string = "Dark radio";
 //Input Mask
-export const InputMaskTitle: string = "Input Mask"
+export const InputMaskTitle: string = "Input Mask";
 export const DateFormatTitle: string = "Date Format";
 export const DateFormatType: string = "Date format type";
 export const TimeFormatTitle: string = "Time Format";
@@ -1436,7 +1461,7 @@ export const PhoneNumber: string = "Phone Number";
 export const Tailprefix: string = "Tailprefix";
 export const CardNumber: string = "Card Number";
 //Mega Options
-export const MegaOptionsTitle: string = "Mega Options"
+export const MegaOptionsTitle: string = "Mega Options";
 export const VariationRadioTitle: string = "Variation radio";
 export const VariationCheckboxTitle: string = "Variation checkbox";
 export const DefaultStyleTitle: string = "Default Style";
@@ -1461,10 +1486,12 @@ export const BrowserDefaultsTitle: string = "Browser defaults";
 export const EmailAddress: string = "Email address";
 export const Password: string = "Password";
 export const State: string = "State";
-export const ChooseFile: string = 'Choose file';
-export const DescriptionLabel: string = 'Description';
-export const AgreePolicy: string = ' By proceeding, you agree to the terms and conditions';
-export const ConfirmationText: string = 'Are you sure the above information is true';
+export const ChooseFile: string = "Choose file";
+export const DescriptionLabel: string = "Description";
+export const AgreePolicy: string =
+	" By proceeding, you agree to the terms and conditions";
+export const ConfirmationText: string =
+	"Are you sure the above information is true";
 export const PayMethodTitle: string = "Select your payment method";
 export const Submit: string = "Submit";
 
@@ -1485,36 +1512,38 @@ export const PleaseComments: string = "Please do comments";
 export const RomanNumberTitle: string = "Select your favorite roman number";
 export const MultiplePaintingTitle: string = "Select your multiple paintings";
 export const BasicHtmlInputControlTitle: string = "Basic HTML input control";
-export const Placeholder: string = 'Placeholder';
-export const Number: string = 'Number';
-export const Telephone: string = 'Telephone';
-export const URL: string = 'URL';
-export const DateAndTime: string = 'Date and time';
+export const Placeholder: string = "Placeholder";
+export const Number: string = "Number";
+export const Telephone: string = "Telephone";
+export const URL: string = "URL";
+export const DateAndTime: string = "Date and time";
 export const Date: string = "Date";
-export const Month: string = 'Month';
-export const Week: string = 'Week';
-export const DatalistExampleTitle: string = 'Datalist example';
-export const Time: string = 'Time';
-export const ColorPicker: string = 'Color picker';
-export const MaximumLength: string = 'Maximum Length';
-export const StaticText: string = 'Static Text';
-export const StaticMagicalText: string = 'Hello !... This is my magical text';
-export const BasicFloatingInputControlTitle: string = "Basic floating input control";
-export const ValidInput = 'Valid input';
-export const InputWithValue = 'Input with value';
-export const InvalidInput = 'Invalid input';
-export const OpenSelectMenu = 'Open this select menu';
-export const WorksWithSelects = 'Works with selects';
-export const InputGroupTitle = 'Input group';
-export const UsernameFeedback2 = 'Please choose a username.';
-export const Layout = 'Layout';
+export const Month: string = "Month";
+export const Week: string = "Week";
+export const DatalistExampleTitle: string = "Datalist example";
+export const Time: string = "Time";
+export const ColorPicker: string = "Color picker";
+export const MaximumLength: string = "Maximum Length";
+export const StaticText: string = "Static Text";
+export const StaticMagicalText: string = "Hello !... This is my magical text";
+export const BasicFloatingInputControlTitle: string =
+	"Basic floating input control";
+export const ValidInput = "Valid input";
+export const InputWithValue = "Input with value";
+export const InvalidInput = "Invalid input";
+export const OpenSelectMenu = "Open this select menu";
+export const WorksWithSelects = "Works with selects";
+export const InputGroupTitle = "Input group";
+export const UsernameFeedback2 = "Please choose a username.";
+export const Layout = "Layout";
 export const Comments: string = "Comments";
 export const EdgesInputStyleTitle: string = "Edges input style";
 export const DefaultInput: string = "Default Input";
 export const Male: string = "Male";
 export const Female: string = "Female";
 export const RaiseInputStyleTitle: string = "Raise input style";
-export const PixelstrapThemeTitle: string = "Select Your Favorite Pixelstrap theme";
+export const PixelstrapThemeTitle: string =
+	"Select Your Favorite Pixelstrap theme";
 export const ColorSelectTitle: string = "Select the color you like below";
 export const CheckMeOut: string = "Check me out";
 export const SignIn: string = "Sign in";
@@ -1523,142 +1552,140 @@ export const InputGroupsTitle: string = "Input Groups";
 export const ButtonAddonsTitle: string = "Button addons";
 export const CustomFormsTitle: string = "Custom forms";
 export const Options: string = "Options";
-export const FavoriteColorsTitle: string = 'Select Your Favorite Colors';
-export const FavoriteChocolatesTitle: string = 'Select Your Favorite Chocolates';
-export const FavoriteItemsTitle: string = 'Select Your Favorite Items';
+export const FavoriteColorsTitle: string = "Select Your Favorite Colors";
+export const FavoriteChocolatesTitle: string =
+	"Select Your Favorite Chocolates";
+export const FavoriteItemsTitle: string = "Select Your Favorite Items";
 export const CustomFileInputTitle: string = "Custom file input";
-export const Upload: string = 'Upload';
+export const Upload: string = "Upload";
 export const Verify: string = "Verify";
 export const ButtonsWithDropdownsTitle: string = "Buttons with dropdowns";
 export const DropdownTitle: string = "Dropdown";
 export const SegmentedButtonsTitle: string = "Segmented buttons";
-export const Info: string = 'info';
-export const Secondary: string = 'Secondary';
+export const Info: string = "info";
+export const Secondary: string = "Secondary";
 export const CheckboxesAndRadiosTitle: string = "Checkboxes and radios";
-export const SizingTitle: string = "Sizing"
+export const SizingTitle: string = "Sizing";
 export const SmallInput: string = "Small";
 export const DefaultInputText: string = "Default";
 export const LargeInput: string = "Large";
 export const MultipleInputsTitle: string = "Multiple inputs";
 export const FirstAndLastName: string = "First and last name";
 export const BasicInputGroupsTitle: string = "Basic input groups";
-export const Basic: string = 'Basic';
-export const YourVanityUrl: string = 'Your vanity URL';
-export const Wrapping: string = 'Wrapping';
+export const Basic: string = "Basic";
+export const YourVanityUrl: string = "Your vanity URL";
+export const Wrapping: string = "Wrapping";
 export const VariationAddonsTitle: string = "Variation of addons";
-export const LeftAddon = 'Left Addon';
-export const RightAddon = 'Right Addon';
-export const JointAddon = 'Joint Addon';
-export const LeftAndRightAddon = 'Left & Right Addon';
-export const SolidStyle = 'Solid style';
-export const FlatStyle = 'Flat style';
-export const RaiseStyle = 'Raise style';
+export const LeftAddon = "Left Addon";
+export const RightAddon = "Right Addon";
+export const JointAddon = "Joint Addon";
+export const LeftAndRightAddon = "Left & Right Addon";
+export const SolidStyle = "Solid style";
+export const FlatStyle = "Flat style";
+export const RaiseStyle = "Raise style";
 
+export const TeamTitle = "Team";
+export const addUserTitle = "Add User";
+export const roleTitle = "Role";
+export const createUserTitle = "Create User";
 
-export const TeamTitle = "Team"
-export const addUserTitle = "Add User"
-export const roleTitle= "Role"
-export const createUserTitle = "Create User"
+export const StudentTitle = "Student";
+export const AddStudentTitle = "Add Student";
+export const createStudentTitle = "Create Student";
+export const deleteStudentConfirmTitle: string = "Delete Student?";
+export const updateStudentTitle: string = "Update Student";
 
+export const CreatorTitle = "Creator";
+export const AddCreatorTitle = "Add Creator";
+export const createCreatorTitle = "Create Creator";
 
-export const StudentTitle = "Student"
-export const AddStudentTitle = "Add Student"
-export const createStudentTitle = "Create Student" 
-export const deleteStudentConfirmTitle:string = "Delete Student?"
-export const updateStudentTitle:string = "Update Student"
+export const myBlogsTitle = "My Blogs";
 
+export const BlogsTitle = "Blogs";
+export const BlogsApprovalTitle = "Blogs-Approval";
+export const AddBlogTitle = "Add Blog";
+export const createBlogTitle = "Create Blog";
+export const approveBlogTitle = "Approve Blog";
+export const createBlogFormTitle = "Create Blog Form";
 
-export const CreatorTitle = "Creator"
-export const AddCreatorTitle = "Add Creator"
-export const createCreatorTitle = "Create Creator"
+export const AnnouncementsTitle = "Announcements";
+export const AddAnnouncementTitle = "Add Announcement";
+export const createAnnouncementTitle = "Create Announcement";
+export const updateAnnoucementTitle = "Update Announcement";
+export const deleteAnnoucementTitle = "Delete Announcement";
+export const deleteAnnoucementConfirmTitle = "Confirm Delete Announcement?";
 
-export const myBlogsTitle = "My Blogs"
+export const CategoriesTitle = "Course Categories";
+export const AddCategoryTitle = "Add Category";
+export const createCategoryTitle = "Create Category";
+export const updateCategoryTitle = "Update Category";
+export const deleteCategoryTitle = "Delete Category";
+export const deleteCategoryConfirmTitle = "Confirm Delete Category?";
 
-export const BlogsTitle = "Blogs"
-export const BlogsApprovalTitle = "Blogs-Approval"
-export const AddBlogTitle = "Add Blog"
-export const createBlogTitle = "Create Blog"
-export const approveBlogTitle = "Approve Blog"
-export const createBlogFormTitle = "Create Blog Form"
+export const SubcategoriesTitle = "Course Subcategories";
+export const AddSubcategoryTitle = "Add Subcategory";
+export const createSubcategoryTitle = "Create Subcategory";
+export const updateSubcategoryTitle = "Update Subcategory";
+export const deleteSubcategoryTitle = "Delete Subcategory";
+export const deleteSubcategoryConfirmTitle = "Confirm Delete Subcategory?";
 
-export const AnnouncementsTitle = "Announcements"
-export const AddAnnouncementTitle = "Add Announcement"
-export const createAnnouncementTitle = "Create Announcement"
-export const updateAnnoucementTitle = "Update Announcement"
-export const deleteAnnoucementTitle = "Delete Announcement"
-export const deleteAnnoucementConfirmTitle = "Confirm Delete Announcement?"
+export const AddDescription = "Add Description";
 
-export const CategoriesTitle = "Course Categories"
-export const AddCategoryTitle = "Add Category"
-export const createCategoryTitle = "Create Category"
-export const updateCategoryTitle = "Update Category"
-export const deleteCategoryTitle = "Delete Category"
-export const deleteCategoryConfirmTitle = "Confirm Delete Category?"
+export const EmployerTitle = "Employer";
+export const AddEmployerTitle = "Add Employer";
+export const createEmployerTitle = "Create Employer";
+export const deleteEmployerConfirmTitle: string = "Delete Employer?";
+export const updateEmployerTitle: string = "Update Employer";
 
-export const SubcategoriesTitle = "Course Subcategories"
-export const AddSubcategoryTitle = "Add Subcategory"
-export const createSubcategoryTitle = "Create Subcategory"
-export const updateSubcategoryTitle = "Update Subcategory"
-export const deleteSubcategoryTitle = "Delete Subcategory"
-export const deleteSubcategoryConfirmTitle = "Confirm Delete Subcategory?"
+export const BatchesTitle = "Batches";
+export const AddBatchTitle = "Add Batch";
+export const createBatchTitle = "Create Batch";
+export const updateBatchTitle = "Update Batch";
+export const deleteBatchTitle = "Delete Batch";
+export const deleteBatchConfirmTitle = "Confirm Delete Batch?";
 
-export const AddDescription = "Add Description"
+export const LessonsTitle = "Lessons";
+export const AddLessonTitle = "Add Lesson";
+export const createLessonTitle = "Create Lesson";
+export const updateLessonTitle = "Update Lesson";
+export const deleteLessonTitle = "Delete Lesson";
+export const deleteLessonConfirmTitle = "Confirm Delete Lesson?";
+export const CreateLessonsFormTitle = "Create-Lesson Form";
 
-export const EmployerTitle = "Employer"
-export const AddEmployerTitle = "Add Employer"
-export const createEmployerTitle = "Create Employer" 
-export const deleteEmployerConfirmTitle:string = "Delete Employer?"
-export const updateEmployerTitle:string = "Update Employer"
+export const CoursesTitle = "Courses";
+export const AddCourseTitle = "Add Course";
+export const createCourseTitle = "Create Course";
+export const updateCourseTitle = "Update Course";
+export const deleteCourseTitle = "Delete Course";
+export const deleteCourseConfirmTitle = "Confirm Delete Course?";
+export const CreateCourseFormTitle = "Create-Course Form";
 
-export const BatchesTitle = "Batches"
-export const AddBatchTitle = "Add Batch"
-export const createBatchTitle = "Create Batch"
-export const updateBatchTitle = "Update Batch"
-export const deleteBatchTitle = "Delete Batch"
-export const deleteBatchConfirmTitle = "Confirm Delete Batch?"
+export const PathsTitle = "Paths";
+export const AddPathTitle = "Add Path";
+export const createPathTitle = "Create Path";
+export const updatePathTitle = "Update Path";
+export const deletePathTitle = "Delete Path";
+export const deletePathConfirmTitle = "Confirm Delete Path?";
+export const CreatePathFormTitle = "Create-Path Form";
 
-export const LessonsTitle = "Lessons"
-export const AddLessonTitle = "Add Lesson"
-export const createLessonTitle = "Create Lesson"
-export const updateLessonTitle = "Update Lesson"
-export const deleteLessonTitle = "Delete Lesson"
-export const deleteLessonConfirmTitle = "Confirm Delete Lesson?"
-export const CreateLessonsFormTitle = "Create-Lesson Form"
+export const PromoCodesTitle = "Promo Codes";
+export const AddPromoCodeTitle = "Add Promo Code";
+export const createPromoCodeTitle = "Create Promo Code";
+export const updatePromoCodeTitle = "Update Promo Code";
+export const deletePromoCodeTitle = "Delete Promo Code";
+export const deletePromoCodeConfirmTitle = "Confirm Delete Promo Code?";
+export const CreatePromoCodeFormTitle = "Create-Promo-Code Form";
 
-export const CoursesTitle = "Courses"
-export const AddCourseTitle = "Add Course"
-export const createCourseTitle = "Create Course"
-export const updateCourseTitle = "Update Course"
-export const deleteCourseTitle = "Delete Course"
-export const deleteCourseConfirmTitle = "Confirm Delete Course?"
-export const CreateCourseFormTitle = "Create-Course Form"
+export const createJobTitle = "Create Job";
+export const studentsTitle = "Students";
+export const jobApplicationsTitle = "Job Applications";
+export const createJobFormTitle = "Create Job Form";
 
-export const PathsTitle = "Paths"
-export const AddPathTitle = "Add Path"
-export const createPathTitle = "Create Path"
-export const updatePathTitle = "Update Path"
-export const deletePathTitle = "Delete Path"
-export const deletePathConfirmTitle = "Confirm Delete Path?"
-export const CreatePathFormTitle = "Create-Path Form"
+export const createTicketTitle = "Create Ticket";
+export const createTicketFormTitle = "Create Ticket Form";
+export const deleteTicketTitle = "Delete Ticket";
+export const deleteTicketConfirmTitle = "Confirm Delete Ticket?";
 
-export const PromoCodesTitle = "Promo Codes"
-export const AddPromoCodeTitle = "Add Promo Code"
-export const createPromoCodeTitle = "Create Promo Code"
-export const updatePromoCodeTitle = "Update Promo Code"
-export const deletePromoCodeTitle = "Delete Promo Code"
-export const deletePromoCodeConfirmTitle = "Confirm Delete Promo Code?"
-export const CreatePromoCodeFormTitle = "Create-Promo-Code Form"
-
-export const createJobTitle = "Create Job"
-export const studentsTitle = "Students"
-export const jobApplicationsTitle = "Job Applications"
-export const createJobFormTitle = "Create Job Form"
-
-export const createTicketTitle= "Create Ticket"
-export const createTicketFormTitle = "Create Ticket Form"
-export const deleteTicketTitle = "Delete Ticket"
-export const deleteTicketConfirmTitle = "Confirm Delete Ticket?"
-
-export const scheduleSessionTitle = "Schedule Session"
-export const addAssignmentTitle = "Add Assignment"
-export const assignmentsTitle = "Assignments"
+export const scheduleSessionTitle = "Schedule Session";
+export const addAssignmentTitle = "Add Assignment";
+export const assignmentsTitle = "Assignments";

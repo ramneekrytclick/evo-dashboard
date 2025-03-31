@@ -8,6 +8,7 @@ import HeaderCart from "./HeaderCart/HeaderCart";
 import UserProfile from "./UserProfile/UserProfile";
 import Language from "./Language/Language";
 import HeaderBookmark from "./HeaderBookmark";
+import HeaderCartCourse from "./CourseHeaderCart";
 
 const RightHeaderIcon = () => {
 	return (
@@ -24,6 +25,7 @@ const RightHeaderIcon = () => {
 				{/* <DarkMode /> */}
 				{/* <HeaderMessage /> */}
 				{/* <HeaderCart /> */}
+				<HeaderCartCourse />
 				<UserProfile />
 			</ul>
 		</Col>

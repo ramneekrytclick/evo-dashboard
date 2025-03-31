@@ -10,9 +10,11 @@ const AllCoursesContainer = () => {
 				parent={"Student"}
 				title={"All Courses"}
 			/>
-			<Container fluid>
+			<Card
+				color="light"
+				style={{ height: "80vh", overflow: "scroll" }}>
 				<CourseCards />
-			</Container>
+			</Card>
 		</>
 	);
 };

@@ -5,6 +5,7 @@ import ChatSlice from "./Reducers/ChatSlice";
 // import ContactSlice from "./Reducers/ContactSlice";
 import FilterReducer from "./Reducers/ECommerce/FilterReducer";
 import ProductReducer from "./Reducers/ECommerce/ProductReducer";
+import courseCartReducer from "./Reducers/Courses/CourseCartSlice";
 import FileManagerSlice from "./Reducers/FileManagerSlice";
 import HeaderBookmarkSlice from "./Reducers/Layout/HeaderBookmarkSlice";
 import LayoutSlice from "./Reducers/Layout/LayoutSlice";
@@ -29,6 +30,7 @@ const Store = configureStore({
 		todos: TodoSlice,
 		tasks: TasksSlice,
 		product: ProductReducer,
+		courseCart: courseCartReducer,
 		filter: FilterReducer,
 		searchResult: SearchResultSlice,
 		themeCustomizer: ThemeCustomizerSlice,

@@ -2,11 +2,15 @@
 import { getCourses } from "@/app/api/student";
 import { ImagePath } from "@/Constant";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Badge, Button, Card, CardBody, Col, Row } from "reactstrap";
 import { sampleData } from "./sampleData";
+import { useAppDispatch, useAppSelector } from "@/Redux/Hooks";
+import {
+	addToCourseCart,
+	removeFromCourseCart,
+} from "@/Redux/Reducers/Courses/CourseCartSlice";
 
 export interface CourseProps {
 	_id?: string;
@@ -24,6 +28,8 @@ export interface CourseProps {
 
 const AvailableCourses = () => {
 	const [courses, setCourses] = useState<CourseProps[]>([]);
+	const dispatch = useAppDispatch();
+	const { courseCartData } = useAppSelector((state) => state.courseCart);
 
 	const fetchCourses = async () => {
 		try {
@@ -35,6 +41,9 @@ const AvailableCourses = () => {
 		}
 	};
 
+	const isCourseInCart = (courseId: string) =>
+		courseCartData.some((c) => c._id === courseId);
+
 	useEffect(() => {
 		fetchCourses();
 	}, []);
@@ -45,7 +54,7 @@ const AvailableCourses = () => {
 				<Col
 					xl={6}
 					key={course._id}>
-					<Card className="course-card shadow-sm border-0 h-100">
+					<Card className="shadow-sm border-0 h-100">
 						<CardBody>
 							<div className="d-flex mb-3">
 								<Image
@@ -60,7 +69,7 @@ const AvailableCourses = () => {
 									alt={course.title}
 								/>
 								<div className="flex-grow-1">
-									<h5 className="mb-1 fw-bold">{course.title}</h5>
+									<h5 className="mb-1 fw-bold text-truncate">{course.title}</h5>
 									<Badge
 										color="info"
 										className="me-2">
@@ -80,9 +89,10 @@ const AvailableCourses = () => {
 								</div>
 							</div>
 
-							<p className="text-muted">{course.description}</p>
+							<p className="text-muted small">{course.description}</p>
 
-							{course.tags?.length && course.tags?.length > 0 && (
+							{/* Tags */}
+							{course.tags?.length && (
 								<div className="mb-3">
 									{course.tags.map((tag, i) => (
 										<Badge
@@ -95,7 +105,7 @@ const AvailableCourses = () => {
 								</div>
 							)}
 
-							{/* Pricing and CTA */}
+							{/* Price + Cart */}
 							<div className="d-flex justify-content-between align-items-center mt-3">
 								<div>
 									<h6 className="mb-0 text-success fw-bold">
@@ -105,13 +115,32 @@ const AvailableCourses = () => {
 										₹{course.realPrice}
 									</small>
 								</div>
-								<Link href={`/student/course/preview/${course._id}`}>
+
+								{isCourseInCart(course._id!) ? (
+									<Button
+										color="danger"
+										size="sm"
+										onClick={() => dispatch(removeFromCourseCart(course._id!))}>
+										Remove from Cart
+									</Button>
+								) : (
 									<Button
 										color="primary"
-										className="px-4">
-										Enroll Now
+										size="sm"
+										onClick={() =>
+											dispatch(
+												addToCourseCart({
+													_id: course._id!,
+													title: course.title,
+													discountedPrice: course.discountedPrice,
+													photo: course.photo,
+													realPrice: course.realPrice,
+												})
+											)
+										}>
+										Add to Cart
 									</Button>
-								</Link>
+								)}
 							</div>
 						</CardBody>
 					</Card>
