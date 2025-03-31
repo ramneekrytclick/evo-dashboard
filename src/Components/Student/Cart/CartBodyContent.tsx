@@ -1,21 +1,35 @@
 import React from "react";
 import Link from "next/link";
-import { Button, Input, InputGroup } from "reactstrap";
 import { useAppSelector } from "@/Redux/Hooks";
 import { enrollInCourse } from "@/app/api/student";
 import { toast } from "react-toastify";
 
-const CartBodyContent = () => {
+const CartBodyContent = ({ promoDiscounts = {} as Record<string, number> }) => {
 	const { courseCartData } = useAppSelector((state) => state.courseCart);
 
-	const getTotal = () => {
-		return courseCartData.reduce((sum, item) => sum + item.discountedPrice, 0);
+	const calculateDiscountedPrice = (
+		original: number,
+		discountPercent: number
+	) => {
+		return Math.max(0, original - (original * discountPercent) / 100);
 	};
+
+	const getTotal = () => {
+		return courseCartData.reduce((sum, item) => {
+			const discount = promoDiscounts[item._id] || 0;
+			const finalPrice = calculateDiscountedPrice(
+				item.discountedPrice,
+				discount
+			);
+			return sum + finalPrice;
+		}, 0);
+	};
+
 	const enrollInCourses = async () => {
 		try {
 			await Promise.all(
 				courseCartData.map(async (item) => {
-					await enroll(item._id);
+					await enrollInCourse(item._id);
 					toast.success(`Course ${item._id} Enrolled Successfully`);
 				})
 			);
@@ -24,30 +38,18 @@ const CartBodyContent = () => {
 			console.error(error);
 		}
 	};
-	const enroll = async (id: string) => {
-		return await enrollInCourse(id);
-	};
 
 	return (
 		<>
 			<tr>
-				<td colSpan={4}>
-					<InputGroup>
-						<Input
-							className="me-2"
-							type="text"
-							placeholder="Enter coupon code"
-						/>
-						<Button color="primary">Apply</Button>
-					</InputGroup>
-				</td>
+				<td colSpan={4}></td>
 				<td className="total-amount">
 					<h3 className="m-0 text-end">
 						<span className="f-w-600">Total Price :</span>
 					</h3>
 				</td>
 				<td colSpan={2}>
-					<span>₹{getTotal()}</span>
+					<span>₹{getTotal().toFixed(2)}</span>
 				</td>
 			</tr>
 			<tr>
@@ -62,7 +64,7 @@ const CartBodyContent = () => {
 				</td>
 				<td>
 					<Link
-						href="#" //will be replaced with the checkout page
+						href="#"
 						onClick={enrollInCourses}
 						className="btn btn-success cart-btn-transform">
 						Check Out

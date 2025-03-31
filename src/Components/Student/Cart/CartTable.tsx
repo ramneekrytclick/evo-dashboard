@@ -7,12 +7,11 @@ import EmptyCart from "./EmptyCart";
 import CartTableBody from "./CartTableBody";
 
 const cartTableHead = [
+	"Remove",
 	"Course",
 	"Course Name",
-	"Original Price",
-	"Discounted Price",
-	"Quantity",
-	"Remove",
+	"Price",
+	"PromoCode",
 	"Total",
 ];
 

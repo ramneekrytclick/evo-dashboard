@@ -22,12 +22,8 @@ export const enrollInPath = async (pathId: string) => {
 export const applyPromoCodeAndPurchase = async (data: {
 	code: string;
 	courseId: string;
-	pathId: string;
-	userId: string;
-	originalAmount: number;
-	paymentMethod: "Credit Card" | "PayPal" | "Bank Transfer";
 }) => {
-	return (await apiClient.post(`/students/apply-purchase`, data)).data;
+	return (await apiClient.post(`/promos/apply`, data)).data;
 };
 export const submitQuiz = async (data: {
 	lessonId: string;
