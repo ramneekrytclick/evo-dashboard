@@ -97,14 +97,16 @@ export interface BatchProps {
 }
 
 export interface PromoCodeProps {
-	_id?: string;
+	_id: string;
 	code: string;
 	discountPercentage: number;
-	course: { _id: string; name?: string } | null;
-	path: { _id: string; name?: string } | null;
-	isActive: boolean;
 	validUntil: string;
+	course?: { _id: string; name: string };
+	usageLimit?: number;
+	usageCount?: number;
+	isActive: boolean;
 }
+
 export interface FormGroupCommonProp {
 	type: InputType;
 	placeholder?: string;

@@ -3,9 +3,7 @@ import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { toast } from "react-toastify";
 import { CourseProps, PromoCodeProps } from "@/Types/Course.type";
 import { createPromoCode } from "@/app/api/admin/promo-codes";
-import { PathProps } from "@/Types/Path.type";
 import { getCourses } from "@/app/api/admin/course";
-import { getPaths } from "@/app/api/admin/path";
 
 interface PromoCodeCreationFormProps {
 	toggle: () => void;
@@ -21,22 +19,20 @@ const PromoCodeCreationForm = ({
 		discountPercentage: 0,
 		validUntil: "",
 		isActive: true,
-		course: null,
-		path: null,
+		course: { _id: "", name: "" },
+		usageLimit: undefined,
 	});
 
 	const [courses, setCourses] = useState<CourseProps[]>([]);
-	const [paths, setPaths] = useState<PathProps[]>([]);
+	const [isOverall, setIsOverall] = useState(false);
 
 	useEffect(() => {
 		const fetchDataInit = async () => {
 			try {
 				const courseRes = await getCourses();
-				const pathRes = await getPaths();
 				setCourses(courseRes);
-				setPaths(pathRes);
 			} catch (err) {
-				toast.error("Error loading data");
+				toast.error("Error loading courses");
 			}
 		};
 		fetchDataInit();
@@ -44,14 +40,20 @@ const PromoCodeCreationForm = ({
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
+
+		if (!formData.course && !formData.usageLimit) {
+			toast.error("Set course or usage limit for overall promo");
+			return;
+		}
+
 		try {
 			await createPromoCode({
 				code: formData.code || "",
 				discountPercentage: formData.discountPercentage || 0,
 				validUntil: formData.validUntil || "",
 				isActive: formData.isActive ?? true,
-				course: formData.course || null,
-				path: formData.path || null,
+				course: isOverall ? undefined : formData.course || undefined,
+				usageLimit: isOverall ? formData.usageLimit || 1 : undefined,
 			});
 			toast.success("Promo code created!");
 			fetchData();
@@ -69,9 +71,22 @@ const PromoCodeCreationForm = ({
 		const checked = (e.target as HTMLInputElement).checked;
 		const updatedValue = type === "checkbox" ? checked : value;
 
+		if (name === "isOverall") {
+			setIsOverall(checked);
+			setFormData((prev) => ({
+				...prev,
+				course: undefined,
+				usageLimit: checked ? 1 : undefined,
+			}));
+			return;
+		}
+
 		setFormData((prev) => ({
 			...prev,
-			[name]: name === "discountPercentage" ? +updatedValue : updatedValue,
+			[name]:
+				name === "discountPercentage" || name === "usageLimit"
+					? +updatedValue
+					: updatedValue,
 		}));
 	};
 
@@ -108,54 +123,62 @@ const PromoCodeCreationForm = ({
 						required
 					/>
 				</Col>
-				<Col md={6}>
-					<Label>Apply to Course</Label>
-					<Input
-						type="select"
-						name="course"
-						value={(formData.course as any)?._id || ""}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								course: e.target.value ? { _id: e.target.value } : null,
-								path: null,
-							})
-						}>
-						<option value="">-- Select Course --</option>
-						{courses?.map((course) => (
-							<option
-								key={course._id}
-								value={course._id}>
-								{course.name}
-							</option>
-						))}
-					</Input>
-				</Col>
-				<Col md={6}>
-					<Label>Apply to Path</Label>
-					<Input
-						type="select"
-						name="path"
-						value={(formData.path as any)?._id || ""}
-						onChange={(e) =>
-							setFormData({
-								...formData,
-								path: e.target.value ? { _id: e.target.value } : null,
-								course: null,
-							})
-						}>
-						<option value="">-- Select Path --</option>
-						{paths?.map((path) => (
-							<option
-								key={path._id}
-								value={path._id}>
-								{path.name}
-							</option>
-						))}
-					</Input>
-				</Col>
+
 				<Col md={12}>
-					<Label>
+					<Label check>
+						<Input
+							type="checkbox"
+							name="isOverall"
+							checked={isOverall}
+							onChange={handleChange}
+						/>{" "}
+						Apply as Overall Promo (not course-specific)
+					</Label>
+				</Col>
+
+				{!isOverall && (
+					<Col md={12}>
+						<Label>Apply to Course</Label>
+						<Input
+							type="select"
+							name="course"
+							value={formData.course?._id || ""}
+							onChange={(e) =>
+								setFormData({
+									...formData,
+									course: e.target.value
+										? { _id: e.target.value, name: "" }
+										: undefined,
+								})
+							}>
+							<option value="">-- Select Course --</option>
+							{courses?.map((course) => (
+								<option
+									key={course._id}
+									value={course._id}>
+									{course.title}
+								</option>
+							))}
+						</Input>
+					</Col>
+				)}
+
+				{isOverall && (
+					<Col md={12}>
+						<Label>Usage Limit</Label>
+						<Input
+							name="usageLimit"
+							type="number"
+							value={formData.usageLimit || 1}
+							min={1}
+							onChange={handleChange}
+							required
+						/>
+					</Col>
+				)}
+
+				<Col md={12}>
+					<Label check>
 						<Input
 							type="checkbox"
 							name="isActive"
@@ -165,6 +188,7 @@ const PromoCodeCreationForm = ({
 						Is Active
 					</Label>
 				</Col>
+
 				<Col md={12}>
 					<Button
 						color="primary"

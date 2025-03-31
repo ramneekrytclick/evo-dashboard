@@ -11,20 +11,21 @@ const CartBodyContent = () => {
 	const getTotal = () => {
 		return courseCartData.reduce((sum, item) => sum + item.discountedPrice, 0);
 	};
-	const enrollInCourses = () => {
-		courseCartData.forEach((item) => {
-			try {
-				enroll(item._id);
-				toast.success(`Course ${item._id} Enrolled Successfully`);
-			} catch (error) {
-				toast.error(`Error Enrolling Course ${item._id}`);
-				console.error(error);
-			}
-		});
+	const enrollInCourses = async () => {
+		try {
+			await Promise.all(
+				courseCartData.map(async (item) => {
+					await enroll(item._id);
+					toast.success(`Course ${item._id} Enrolled Successfully`);
+				})
+			);
+		} catch (error) {
+			toast.error("Error Enrolling in Courses");
+			console.error(error);
+		}
 	};
 	const enroll = async (id: string) => {
-		const response = await enrollInCourse(id);
-		return response;
+		return await enrollInCourse(id);
 	};
 
 	return (

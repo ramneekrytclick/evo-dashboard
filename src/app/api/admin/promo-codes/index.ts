@@ -1,41 +1,18 @@
 import { PromoCodeProps } from "@/Types/Course.type";
 import { apiClient } from "@/utils/api";
 
-export const getPromoCodes = async () => {
-	try {
-		const response = await apiClient.get(`/promos`);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+export const getPromoCodes = async (): Promise<PromoCodeProps[]> => {
+	const response = await apiClient.get("/promos");
+	return response.data;
 };
 
-export const createPromoCode = async (data: PromoCodeProps) => {
-	try {
-		const response = await apiClient.post(`/promos`, data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+export const createPromoCode = async (data: Partial<PromoCodeProps>) => {
+	const dataToSend = { ...data, courseId: data.course?._id };
+	const response = await apiClient.post("/promos", dataToSend);
+	return response.data;
 };
 
-export const updatePromoCode = async (promoId: string, isActive: boolean) => {
-	try {
-		const response = await apiClient.put(`/promos/status`, {
-			promoId,
-			isActive,
-		});
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
-};
-
-export const deletePromoCode = async (id: string) => {
-	try {
-		const response = await apiClient.delete(`/admin/promo-codes/${id}`);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+export const updatePromoStatus = async (promoId: string, isActive: boolean) => {
+	const response = await apiClient.put("/promos/status", { promoId, isActive });
+	return response.data;
 };
