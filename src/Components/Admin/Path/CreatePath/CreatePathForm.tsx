@@ -1,6 +1,7 @@
 "use client";
 import { getCourses } from "@/app/api/admin/course";
 import { createPath } from "@/app/api/admin/path";
+import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { CourseProps } from "@/Types/Course.type";
 import { PathProps } from "@/Types/Path.type";
 import { useEffect, useState } from "react";
@@ -18,134 +19,152 @@ import {
 } from "reactstrap";
 
 const CreatePathForm = () => {
-	const [selectedCourses, setSelectedCourses] = useState<CourseProps[]>([]);
-	const [roadmap, setRoadmap] = useState<string[]>([]);
 	const [formData, setFormData] = useState<PathProps>({
-		name: "",
+		title: "",
 		description: "",
+		timing: "",
+		price: 0,
 		courses: [],
-		roadmapSuggestions: [],
+		wannaBeInterest: [],
 	});
-	const [suggestion, setSuggestion] = useState("");
 	const [courses, setCourses] = useState<CourseProps[]>([]);
+	const [wannaBeInterests, setWannaBeInterests] = useState<any[]>([]);
+	const [photo, setPhoto] = useState<File | null>(null);
 
-	const fetchCourses = async () => {
-		try {
-			const response = await getCourses();
-			setCourses(response.courses);
-		} catch (error) {
-			toast.error("Error Fetching Courses!");
-		}
+	useEffect(() => {
+		(async () => {
+			try {
+				const courseRes = await getCourses();
+				const wannaBeRes = await getWannaBeInterests();
+				setCourses(courseRes);
+				setWannaBeInterests(wannaBeRes);
+			} catch (err) {
+				toast.error("Failed to load resources");
+			}
+		})();
+	}, []);
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setFormData({
+			...formData,
+			[name]: name === "price" ? Number(value) : value,
+		});
 	};
 
-	const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
+	const toggleCourse = (id: string) => {
+		const exists = formData.courses.includes(id);
+		const updated = exists
+			? formData.courses.filter((cid) => cid !== id)
+			: [...formData.courses, id];
+		setFormData({ ...formData, courses: updated });
 	};
 
-	const toggleCourseSelection = (course: CourseProps) => {
-		const isSelected = selectedCourses.some(
-			(selected) => selected._id === course._id
-		);
-
-		const updatedCourses = isSelected
-			? selectedCourses.filter((selected) => selected._id !== course._id)
-			: [...selectedCourses, course];
-
-		setSelectedCourses(updatedCourses);
-		setFormData({ ...formData, courses: updatedCourses });
-	};
-
-	const addRoadmapEntry = () => {
-		if (suggestion.trim()) {
-			const newRoadmap = [...roadmap, suggestion];
-			setRoadmap(newRoadmap);
-			setFormData({ ...formData, roadmapSuggestions: newRoadmap });
-			setSuggestion("");
-		} else {
-			toast.error("Suggestion cannot be empty!");
-		}
-	};
-
-	const removeRoadmapEntry = (index: number) => {
-		const updatedRoadmap = roadmap.filter((_, i) => i !== index);
-		setRoadmap(updatedRoadmap);
-		setFormData({ ...formData, roadmapSuggestions: updatedRoadmap });
+	const toggleWannaBe = (id: string) => {
+		const exists = formData.wannaBeInterest.includes(id);
+		const updated = exists
+			? formData.wannaBeInterest.filter((wid) => wid !== id)
+			: [...formData.wannaBeInterest, id];
+		setFormData({ ...formData, wannaBeInterest: updated });
 	};
 
 	const handleSubmit = async () => {
-		if (!formData.name.trim() || !formData.description.trim()) {
-			toast.error("Name and Description are required!");
+		if (
+			!formData.title ||
+			!formData.description ||
+			!formData.courses.length ||
+			!formData.wannaBeInterest.length
+		) {
+			toast.error(
+				"All fields are required, including at least one course and interest!"
+			);
 			return;
 		}
-		if (selectedCourses.length === 0) {
-			toast.error("Select at least one course!");
-			return;
-		}
-		console.log(formData);
+		const payload = new FormData();
+		Object.entries(formData).forEach(([key, value]) => {
+			if (Array.isArray(value)) {
+				payload.append(key, value.join(","));
+			} else {
+				payload.append(key, value.toString());
+			}
+		});
+		if (photo) payload.append("photo", photo);
+
 		try {
-			const response = await createPath(formData);
-			console.log(response);
-			toast.success("Path Created Successfully!");
-		} catch (error) {
-			toast.error("Error in Creating Path");
+			if (photo) {
+				await createPath({ ...formData, photo });
+			} else {
+				await createPath(formData);
+			}
+
+			toast.success("Path created successfully");
+			setFormData({
+				title: "",
+				description: "",
+				timing: "",
+				price: 0,
+				courses: [],
+				wannaBeInterest: [],
+			});
+			setPhoto(null);
+		} catch (err) {
+			toast.error("Failed to create path");
 		}
 	};
 
-	useEffect(() => {
-		fetchCourses();
-	}, []);
-
 	return (
-		<Form
-			onSubmit={(e) => e.preventDefault()}
-			className="needs-validation"
-			noValidate>
+		<Form onSubmit={(e) => e.preventDefault()}>
 			<Row className="g-3">
-				<Col sm={6}>
-					<Label>
-						{"Path Name"}
-						<span className="txt-danger">*</span>
-					</Label>
+				<Col md={6}>
+					<Label>Path Title *</Label>
 					<Input
-						type="text"
-						placeholder="Path Name"
-						name="name"
-						value={formData.name}
-						onChange={handleFormChange}
+						name="title"
+						value={formData.title}
+						onChange={handleChange}
 					/>
 				</Col>
-				<Col sm={6}>
-					<Label>
-						{"Description"}
-						<span className="txt-danger">*</span>
-					</Label>
+				<Col md={6}>
+					<Label>Description *</Label>
 					<Input
-						type="text"
-						placeholder="Description"
 						name="description"
 						value={formData.description}
-						onChange={handleFormChange}
+						onChange={handleChange}
 					/>
 				</Col>
-			</Row>
-			<Row className="mt-3">
-				<Col>
-					<Label>{"Courses"}</Label>
-					<ScrollBar
-						className="scroll-demo scroll-b-none border-primary"
-						style={{ width: "100%", height: "22.5em" }}>
+				<Col md={6}>
+					<Label>Timing *</Label>
+					<Input
+						name="timing"
+						value={formData.timing}
+						onChange={handleChange}
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Price *</Label>
+					<Input
+						type="number"
+						name="price"
+						value={formData.price}
+						onChange={handleChange}
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Photo</Label>
+					<Input
+						type="file"
+						onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Courses *</Label>
+					<ScrollBar style={{ height: "150px" }}>
 						<ListGroup>
 							{courses?.map((course) => (
-								<ListGroupItem
-									key={course._id}
-									className="my-1 rounded-3 bg-light text-dark border-b-dark">
+								<ListGroupItem key={course._id}>
 									<Input
 										type="checkbox"
-										value={course._id}
-										checked={selectedCourses.some(
-											(selected) => selected._id === course._id
-										)}
-										onChange={() => toggleCourseSelection(course)}
+										checked={formData.courses.includes(course._id!)}
+										onChange={() => toggleCourse(course._id!)}
 									/>
 									<span className="ms-2">{course.title}</span>
 								</ListGroupItem>
@@ -153,56 +172,33 @@ const CreatePathForm = () => {
 						</ListGroup>
 					</ScrollBar>
 				</Col>
-			</Row>
-			<Row className="mt-3">
-				<Col>
-					<Label>{"Roadmap Suggestions"}</Label>
-					<Input
-						type="text"
-						placeholder="Add a suggestion"
-						value={suggestion}
-						onChange={(e) => setSuggestion(e.target.value)}
-					/>
+				<Col md={6}>
+					<Label>WannaBe Interests *</Label>
+					<ScrollBar style={{ height: "150px" }}>
+						<ListGroup>
+							{wannaBeInterests?.map((item) => (
+								<ListGroupItem key={item._id}>
+									<Input
+										type="checkbox"
+										checked={formData.wannaBeInterest.includes(item._id)}
+										onChange={() => toggleWannaBe(item._id)}
+									/>
+									<span className="ms-2">{item.title}</span>
+								</ListGroupItem>
+							))}
+						</ListGroup>
+					</ScrollBar>
+				</Col>
+				<Col
+					xs={12}
+					className="text-end mt-3">
 					<Button
 						color="primary"
-						className="mt-2"
-						onClick={addRoadmapEntry}>
-						Add Suggestion
+						onClick={handleSubmit}>
+						Create Path
 					</Button>
 				</Col>
 			</Row>
-			<Row className="mt-3">
-				<Col>
-					<ul>
-						{roadmap.map((entry, index) => (
-							<li
-								key={index}
-								className="my-2 p-2 bg-light text-dark rounded-3">
-								<Row>
-									<Col sm={11}>{entry}</Col>
-									<Col sm={1}>
-										<Button
-											color="danger"
-											size="sm"
-											onClick={() => removeRoadmapEntry(index)}>
-											Remove
-										</Button>
-									</Col>
-								</Row>
-							</li>
-						))}
-					</ul>
-				</Col>
-			</Row>
-			<Col
-				xs={12}
-				className="text-end">
-				<Button
-					color="primary"
-					onClick={handleSubmit}>
-					Create New Path
-				</Button>
-			</Col>
 		</Form>
 	);
 };

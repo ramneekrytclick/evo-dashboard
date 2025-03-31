@@ -29,7 +29,7 @@ const UpdatePathForm = ({ toggle, values }: UpdatePathFormProps) => {
 	const fetchCourses = async () => {
 		try {
 			const response = await getCourses();
-			setCourses(response.courses);
+			setCourses(response);
 		} catch (error) {
 			toast.error("Error fetching courses!");
 		}
@@ -117,7 +117,7 @@ const UpdatePathForm = ({ toggle, values }: UpdatePathFormProps) => {
 						className="scroll-demo scroll-b-none border-primary"
 						style={{ width: "100%", height: "22.5em" }}>
 						<ListGroup>
-							{courses.map((course) => (
+							{courses?.map((course) => (
 								<ListGroupItem
 									key={course._id}
 									className="my-1 rounded-3 bg-light text-dark border-b-dark">
