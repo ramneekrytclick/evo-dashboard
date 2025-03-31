@@ -10,10 +10,10 @@ interface DecodedToken {
 export function middleware(request: NextRequest) {
 	const token = request.cookies.get("token")?.value;
 	const pathname = request.nextUrl.pathname;
-
 	if (token) {
 		try {
 			const { exp, role }: DecodedToken = jwtDecode(token);
+			console.log(`[Middleware] Path: ${pathname} | Role: ${role}`);
 
 			if (exp * 1000 > Date.now()) {
 				if (pathname === "/auth/login") {
@@ -54,9 +54,12 @@ export function middleware(request: NextRequest) {
 
 export const config = {
 	matcher: [
+		"/auth/login",
 		"/admin/:path*",
 		"/creator/:path*",
 		"/mentor/:path*",
-		"/auth/login",
+		"/student/:path*",
+		"/manager/:path*",
+		"/course-creator/:path*",
 	],
 };

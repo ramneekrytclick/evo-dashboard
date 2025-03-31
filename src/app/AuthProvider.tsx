@@ -1,4 +1,6 @@
+// Context/AuthContext.tsx
 "use client";
+
 import { createContext, useContext, useEffect, ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
@@ -44,10 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		role: string
 	) => {
 		const URL = process.env.NEXT_PUBLIC_BASE_URL;
-		console.log("====================================");
-		console.log(role, data);
-		console.log("====================================");
-		if (role == "admin") {
+		if (role === "admin") {
 			const res = await axios.post(
 				`${URL}${role.toLowerCase()}/register`,
 				data
@@ -66,9 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const login = async (email: string, password: string, role: string) => {
 		const loginData = { email, password };
 		const URL = process.env.NEXT_PUBLIC_BASE_URL;
-
 		const res = await axios.post(`${URL}${role}/login`, loginData);
-
 		const data = res.data;
 
 		const userData: User = {
@@ -94,11 +91,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		Cookies.remove("token");
 		router.push("/auth/login");
 	};
+
 	const verifyStudentOtp = async (email: string, otp: string) => {
 		const URL = process.env.NEXT_PUBLIC_BASE_URL;
 		const res = await axios.post(`${URL}students/verify-otp`, { email, otp });
 		return res.data;
 	};
+
 	useEffect(() => {
 		const token = Cookies.get("token");
 		if (token) {
@@ -106,25 +105,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 				const decodedToken = jwtDecode<{
 					id: string;
 					role: string;
-					name: string;
-					email: string;
+					iat: string;
 					exp: number;
 				}>(token);
+
+				console.log("Decoded Token:", decodedToken);
+
+				// Check if token is valid
 				if (decodedToken.exp * 1000 > Date.now()) {
 					dispatch(
 						setUser({
 							id: decodedToken.id,
 							role: decodedToken.role,
-							name: decodedToken.name,
-							email: decodedToken.email,
 							token,
+							name: "",
+							email: "",
 						})
 					);
 				} else {
 					logout();
 				}
 			} catch (error) {
-				console.error("Token parsing error", error);
+				console.error("Invalid token", error);
 				logout();
 			}
 		}
