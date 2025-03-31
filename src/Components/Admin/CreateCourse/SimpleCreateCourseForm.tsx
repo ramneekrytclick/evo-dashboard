@@ -210,7 +210,7 @@ const SimpleCreateCourseForm = () => {
 							<option
 								key={cat._id}
 								value={cat._id}>
-								{cat.name}
+								{cat.title}
 							</option>
 						))}
 					</Input>

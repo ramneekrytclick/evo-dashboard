@@ -70,7 +70,7 @@ const QuizSection = ({
 										color:
 											opt.trim().toLowerCase() ===
 											quiz.correctAnswer.trim().toLowerCase()
-												? "green"
+												? "red"
 												: "inherit",
 										fontWeight:
 											opt.trim().toLowerCase() ===
@@ -80,6 +80,10 @@ const QuizSection = ({
 									}}>
 									<input
 										type="radio"
+										checked={
+											opt.trim().toLowerCase() ===
+											quiz.correctAnswer.trim().toLowerCase()
+										}
 										name={`q-${i}`}
 										disabled
 									/>{" "}
