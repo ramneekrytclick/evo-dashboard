@@ -8,102 +8,122 @@ import {
 } from "@/Constant";
 import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import SimpleMdeReact from "react-simplemde-editor";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
-import { BlogProps } from "@/Types/Blogs.type";
 import { submitBlog } from "@/app/api/publisher/blogs/blog";
 
 const CreateBlogForm = () => {
-	const [blogData, setBlogData] = useState<BlogProps>({
-		title: "",
-		content: "",
-	});
-
 	const [title, setTitle] = useState("");
 	const [content, setContent] = useState("");
-
-	const handleContentChange = (value: string) => {
-		setContent(value);
-	};
+	const [tags, setTags] = useState("");
+	const [conclusion, setConclusion] = useState("");
+	const [image, setImage] = useState<File | null>(null);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!blogData.title.trim() || !blogData.content.trim()) {
+		if (!title.trim() || !content.trim()) {
 			toast.error("Title and Content are required!");
 			return;
 		}
 
-		console.log("Blog Data Submitted:", blogData);
+		const formData = new FormData();
+		formData.append("title", title);
+		formData.append("content", content);
+		formData.append("tags", tags);
+		formData.append("conclusion", conclusion);
+		if (image) formData.append("image", image);
+
 		try {
-			const response = await submitBlog(blogData);
+			await submitBlog(formData);
 			toast.success("Blog Created Successfully!");
-			console.log(response);
+			setTitle("");
+			setContent("");
+			setTags("");
+			setConclusion("");
+			setImage(null);
 		} catch (error) {
 			toast.error("Error Creating Blog!");
 		}
 	};
 
 	const handleReset = () => {
-		setBlogData({
-			...blogData,
-			title: "",
-			content: "",
-		});
+		setTitle("");
+		setContent("");
+		setTags("");
+		setConclusion("");
+		setImage(null);
 	};
 
-	useEffect(() => {
-		setBlogData({ ...blogData, title: title, content: content });
-	}, [title, content]);
-
 	return (
-		<div>
-			<Form
-				className="needs-validation"
-				onSubmit={handleSubmit}>
-				<Row>
-					<Col sm={12}>
-						<FormGroup>
-							<Label check>{PostTitle}:</Label>
-							<Input
-								type="text"
-								placeholder="Post Title"
-								name="title"
-								value={title}
-								onChange={(e) => {
-									setTitle(e.target.value);
-								}}
-							/>
-						</FormGroup>
-						<div className="email-wrapper">
-							<div className="theme-form">
-								<FormGroup>
-									<Label check>{PostContent}:</Label>
-									<SimpleMdeReact
-										// id="editor_container"
-										onChange={handleContentChange}
-										// options={{ spellChecker: false }}
-									/>
-								</FormGroup>
-							</div>
-						</div>
-					</Col>
-				</Row>
-				<div className="btn-showcase text-end mt-4">
-					<Button
-						color="primary"
-						type="submit">
-						{BlogPostButton}
-					</Button>
-					<Button
-						color="light"
-						type="button"
-						onClick={handleReset}>
-						{BlogDiscardButton}
-					</Button>
-				</div>
-			</Form>
-		</div>
+		<Form
+			className="needs-validation"
+			onSubmit={handleSubmit}>
+			<Row>
+				<Col sm={12}>
+					<FormGroup>
+						<Label>{PostTitle}:</Label>
+						<Input
+							type="text"
+							value={title}
+							onChange={(e) => setTitle(e.target.value)}
+							placeholder="Enter blog title"
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<Label>{PostContent}:</Label>
+						<SimpleMdeReact
+							value={content}
+							onChange={setContent}
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<Label>Tags (comma-separated):</Label>
+						<Input
+							type="text"
+							value={tags}
+							onChange={(e) => setTags(e.target.value)}
+							placeholder="e.g. AI, Coding, React"
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<Label>Conclusion:</Label>
+						<Input
+							type="textarea"
+							value={conclusion}
+							onChange={(e) => setConclusion(e.target.value)}
+							placeholder="Short conclusion or summary"
+						/>
+					</FormGroup>
+
+					<FormGroup>
+						<Label>Upload Image:</Label>
+						<Input
+							type="file"
+							accept="image/*"
+							onChange={(e) => setImage(e.target.files?.[0] || null)}
+						/>
+					</FormGroup>
+				</Col>
+			</Row>
+
+			<div className="btn-showcase text-end mt-4">
+				<Button
+					color="primary"
+					type="submit">
+					{BlogPostButton}
+				</Button>
+				<Button
+					color="light"
+					type="button"
+					onClick={handleReset}>
+					{BlogDiscardButton}
+				</Button>
+			</div>
+		</Form>
 	);
 };
 

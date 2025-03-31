@@ -1,12 +1,14 @@
-import { BlogProps } from "@/Types/Blogs.type";
 import { apiClient } from "@/utils/api";
 
-export const submitBlog = async (data: { title: string; content: string }) => {
+export const submitBlog = async (formData: FormData) => {
 	try {
-		const response = await apiClient.post("/blogs/create", data);
+		const response = await apiClient.post("/blogs", formData, {
+			headers: { "Content-Type": "multipart/form-data" },
+		});
 		return response.data;
 	} catch (error) {
 		console.error(error);
+		throw error;
 	}
 };
 
