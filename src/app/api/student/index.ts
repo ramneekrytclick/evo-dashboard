@@ -1,4 +1,5 @@
 import { apiClient } from "@/utils/api";
+import { lessonSampleData } from "../admin/lessons/lessonSampleData";
 
 export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
@@ -50,4 +51,8 @@ export const bookMentorSession = async (data: {
 	timeSlot: any;
 }) => {
 	return (await apiClient.post(`/mentor-bookings/book`, data)).data;
+};
+export const getLessonsByCourseID = async (courseId: string) => {
+	// return (await apiClient.get(`/lessons/course/${courseId}`)).data;
+	return (await apiClient.get(`/lessons/${courseId}`)).data;
 };

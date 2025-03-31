@@ -1,89 +1,91 @@
 "use client";
 import { getEnrolledCourses } from "@/app/api/student";
 import { Href, ImagePath } from "@/Constant";
+import { CourseProps } from "@/Types/Course.type";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Badge, Card, CardBody, Col, Progress } from "reactstrap";
+import { Badge, Card, CardBody, Col, Progress, Row } from "reactstrap";
 
-export interface CourseProps {
-	_id?: string;
-	name: string;
-	category: string;
-	subcategory: string;
-	description: string;
-	duration: string;
-	mentorAssigned: { name: string; id: string; email: string };
-	managerAssigned: { name: string; id: string; email: string };
-	batchesAvailable: string[];
-	promoCodes: { code: string; discount: number }[];
-	price: number;
-}
 const MyEnrolledCourses = () => {
-	const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+	const [enrolledCourses, setEnrolledCourses] = useState<
+		{ course: CourseProps; completedLessons: any }[]
+	>([]);
+
 	const fetchCourses = async () => {
 		try {
 			const response = await getEnrolledCourses();
-			setEnrolledCourses(response);
+			setEnrolledCourses(response.student.enrolledCourses);
 		} catch (error) {
 			toast.error("Error fetching courses");
 		}
 	};
+
 	useEffect(() => {
 		fetchCourses();
 	}, []);
 
+	const calculateProgress = (
+		completedLessons: any[],
+		totalLessons: number = 10
+	) => {
+		const completed = completedLessons.length;
+		return totalLessons > 0 ? Math.floor((completed / totalLessons) * 100) : 0;
+	};
+
 	return (
-		<>
-			{enrolledCourses?.map((course) => (
-				<Col
-					xl={6}
-					className="box-col-6"
-					key={course._id}>
-					<Link href={`/student/course/lesson`}>
-						<Card className="course-card">
-							<CardBody>
-								<div className="d-flex">
-									<Image
-										priority
-										width={50}
-										height={50}
-										className="img-50 img-fluid m-r-20"
-										src={`${ImagePath}/job-search/${course._id}.jpg`}
-										alt={course.name}
-									/>
-									<div className="flex-grow-1">
-										<h6 className="f-w-700">
-											<Link
-												className="text-primary"
-												href={Href}>
-												{course.name}
-											</Link>
-											<Badge
-												color="primary"
-												className="pull-right">
-												{JSON.stringify(course.category)}
-											</Badge>
-										</h6>
-										<p>{JSON.stringify(course.subcategory)}</p>
-										<p>Duration: {course.duration}</p>
-										<p>
-											Mentor: <strong>{course.mentorAssigned.name}</strong>
-										</p>
+		<Row>
+			{enrolledCourses?.map((item) => {
+				const course = item.course;
+				const progress = calculateProgress(item.completedLessons);
+				return (
+					<Col
+						xl={6}
+						className="box-col-6"
+						key={course._id}>
+						<Link href={`/student/course/${course._id}`}>
+							<Card className="course-card">
+								<CardBody>
+									<div className="d-flex">
+										<Image
+											priority
+											width={50}
+											height={50}
+											className="img-50 img-fluid m-r-20"
+											src={`${ImagePath}/job-search/${course._id}.jpg`}
+											alt={course.title || "Course"}
+										/>
+										<div className="flex-grow-1">
+											<h6 className="f-w-700">
+												<Link
+													className="text-primary"
+													href={`/student/course/${course._id}`}>
+													{course.title || "Untitled Course"}
+												</Link>
+												<Badge
+													color="primary"
+													className="pull-right">
+													{course.category || "Category"}
+												</Badge>
+											</h6>
+											<p>{course.subcategory || "Subcategory"}</p>
+											<p>Duration: {course.timing || "N/A"}</p>
+										</div>
 									</div>
-								</div>
-								<p>{course.description}</p>
-								<div>
-									<p className="mb-2">Progress</p>
-									<Progress value={Math.floor(Math.random() * 100)} />
-								</div>
-							</CardBody>
-						</Card>
-					</Link>
-				</Col>
-			))}
-		</>
+									<p className="mt-3">{course.description}</p>
+									<div>
+										<p className="mb-2">Progress</p>
+										<Progress value={progress} />
+										<small>{progress}% Completed</small>
+									</div>
+								</CardBody>
+							</Card>
+						</Link>
+					</Col>
+				);
+			})}
+		</Row>
 	);
 };
 

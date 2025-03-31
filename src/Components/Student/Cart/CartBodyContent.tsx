@@ -2,12 +2,29 @@ import React from "react";
 import Link from "next/link";
 import { Button, Input, InputGroup } from "reactstrap";
 import { useAppSelector } from "@/Redux/Hooks";
+import { enrollInCourse } from "@/app/api/student";
+import { toast } from "react-toastify";
 
 const CartBodyContent = () => {
 	const { courseCartData } = useAppSelector((state) => state.courseCart);
 
 	const getTotal = () => {
 		return courseCartData.reduce((sum, item) => sum + item.discountedPrice, 0);
+	};
+	const enrollInCourses = () => {
+		courseCartData.forEach((item) => {
+			try {
+				enroll(item._id);
+				toast.success(`Course ${item._id} Enrolled Successfully`);
+			} catch (error) {
+				toast.error(`Error Enrolling Course ${item._id}`);
+				console.error(error);
+			}
+		});
+	};
+	const enroll = async (id: string) => {
+		const response = await enrollInCourse(id);
+		return response;
 	};
 
 	return (
@@ -44,7 +61,8 @@ const CartBodyContent = () => {
 				</td>
 				<td>
 					<Link
-						href="/student/course/checkout"
+						href="#" //will be replaced with the checkout page
+						onClick={enrollInCourses}
 						className="btn btn-success cart-btn-transform">
 						Check Out
 					</Link>
