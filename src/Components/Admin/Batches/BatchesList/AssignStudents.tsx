@@ -94,7 +94,7 @@ const AssignStudentsModal = ({
 		try {
 			await assignStudentsToBatch({
 				batchId,
-				studentIds: selectedIds.join(","),
+				studentIds: selectedIds,
 			});
 			toast.success("Students assigned successfully!");
 			toggle();

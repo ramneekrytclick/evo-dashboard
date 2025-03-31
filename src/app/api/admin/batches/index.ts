@@ -15,9 +15,9 @@ export const getBatches = async () => {
 				"67d7c1cb8de6ac36963b9a35",
 				"67ce922117d183c5f40e6d83",
 			],
-			mentor: "67c97454f14be6d01b3a1c41",
+			mentor: "67c98af51312698a4cc6b7bf",
 			createdAt: "2025-03-05T08:44:50.923Z",
-			updatedAt: "2025-03-17T07:33:44.625Z",
+			updatedAt: "2025-03-30T15:16:22.506Z",
 			__v: 5,
 			chatMessages: [
 				{
@@ -27,6 +27,7 @@ export const getBatches = async () => {
 					timestamp: "2025-03-17T07:33:44.618Z",
 				},
 			],
+			batchWeekType: "Mon-Fri",
 		},
 		{
 			_id: "67e3b519f331e6d9a85570b2",
@@ -135,9 +136,24 @@ export const getBatches = async () => {
 			endDate: "2025-05-16T00:00:00.000Z",
 			course: "67e52c01116c918cca685efd",
 			students: [],
-			mentor: null,
+			mentor: "67e65dceeeb386331e0be64c",
 			createdAt: "2025-03-30T15:00:44.052Z",
-			updatedAt: "2025-03-30T15:00:44.052Z",
+			updatedAt: "2025-03-30T15:21:48.718Z",
+			__v: 0,
+		},
+		{
+			_id: "67ea495db198c2116433eef3",
+			name: "Admin User",
+			description: "adaca",
+			time: "10Am - 12PM",
+			batchWeekType: "Weekend",
+			startDate: "2025-03-03T00:00:00.000Z",
+			endDate: "2025-04-05T00:00:00.000Z",
+			course: "67e52c01116c918cca685efd",
+			students: [],
+			mentor: null,
+			createdAt: "2025-03-31T07:50:53.744Z",
+			updatedAt: "2025-03-31T07:50:53.744Z",
 			__v: 0,
 		},
 	];
@@ -158,7 +174,7 @@ export const createBatch = async (data: BatchProps) => {
 
 export const assignStudentsToBatch = async (data: {
 	batchId: string;
-	studentIds: string;
+	studentIds: string[];
 }) => {
 	return (await apiClient.put(`/batches/assign-students`, data)).data;
 };
