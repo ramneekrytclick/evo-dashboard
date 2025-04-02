@@ -10,10 +10,12 @@ import LessonSidebar from "./LessonSidebar";
 
 const LessonLearningPage = ({
 	lessons,
+	courseId,
 	refresh,
 }: {
 	lessons: LessonType[];
 	refresh: () => void;
+	courseId: string;
 }) => {
 	const [selectedLesson, setSelectedLesson] = useState<LessonType | null>(null);
 	const [selectedView, setSelectedView] = useState<
@@ -43,6 +45,7 @@ const LessonLearningPage = ({
 							setSelectedView(view);
 						}}
 						refresh={refresh}
+						courseId={courseId}
 					/>
 				</Col>
 			</Row>

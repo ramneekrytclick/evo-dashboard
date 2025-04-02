@@ -27,7 +27,7 @@ const DeleteLessonModal = ({
 					Delete
 				</Button>
 				<Button
-					color="dark"
+					color="outline-danger"
 					onClick={toggle}>
 					Cancel
 				</Button>

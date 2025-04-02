@@ -31,6 +31,7 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 			/>
 			<LessonLearningPage
 				lessons={lessons}
+				courseId={id}
 				refresh={() => {
 					fetchLessons();
 					console.log("refreshed");

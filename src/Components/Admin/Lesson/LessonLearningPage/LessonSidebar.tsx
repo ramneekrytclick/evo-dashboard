@@ -15,18 +15,22 @@ import Link from "next/link";
 import DeleteLessonModal from "./DeleteLesson";
 import { deleteLesson } from "@/app/api/admin/lessons/lesson";
 import { toast } from "react-toastify";
+import CreateLessonModal from "./CreateLessonModal";
 
 const LessonSidebar = ({
 	lessons,
 	onSelect,
 	refresh,
+	courseId,
 }: {
 	lessons: LessonType[];
 	onSelect: (lesson: LessonType, view: "video" | "quiz" | "assignment") => void;
 	refresh: () => void;
+	courseId: string;
 }) => {
 	const [open, setOpen] = useState("");
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [showCreateLessonModal, setShowCreateLessonModal] = useState(false);
 	const [selectedLessonForDelete, setSelectedLessonForDelete] =
 		useState<LessonType | null>(null);
 
@@ -35,6 +39,9 @@ const LessonSidebar = ({
 	const openDeleteModal = (lesson: LessonType) => {
 		setSelectedLessonForDelete(lesson);
 		setShowDeleteModal(true);
+	};
+	const openCreateLessonModal = () => {
+		setShowCreateLessonModal(true);
 	};
 
 	const handleDeleteLesson = async () => {
@@ -58,11 +65,11 @@ const LessonSidebar = ({
 				<CardBody>
 					<div className="d-flex justify-content-between align-items-center py-2">
 						<h2 className="mb-3">Lessons</h2>
-						<Link
-							className="btn btn-primary"
-							href={"/admin/create-lesson"}>
+						<Button
+							color="primary"
+							onClick={openCreateLessonModal}>
 							<i className="fa fa-plus me-2 py-1" /> Add Lesson
-						</Link>
+						</Button>
 					</div>
 					<div style={{ height: "550px", overflow: "scroll" }}>
 						<Accordion
@@ -120,6 +127,12 @@ const LessonSidebar = ({
 				toggle={() => setShowDeleteModal(false)}
 				onConfirm={handleDeleteLesson}
 				lessonTitle={selectedLessonForDelete?.title || ""}
+			/>
+			<CreateLessonModal
+				isOpen={showCreateLessonModal}
+				toggle={() => setShowCreateLessonModal(false)}
+				refresh={refresh}
+				courseId={courseId}
 			/>
 		</>
 	);
