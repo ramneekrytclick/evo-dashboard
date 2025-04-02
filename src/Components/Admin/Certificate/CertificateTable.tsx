@@ -20,33 +20,38 @@ import { getCourses } from "@/app/api/admin/course";
 import { getStudents } from "@/app/api/admin/students";
 import {
 	generateCertificate,
+	getAllCertificates,
 	getSubmittedAssignments,
 } from "@/app/api/admin/certificate";
 
+// Types
 interface Course {
 	_id: string;
 	title: string;
 }
-
 interface Assignment {
 	_id: string;
 	lesson: { _id: string; course: string };
 	student: { _id: string };
 }
-
 interface EnrolledCourse {
 	course: string;
 	assignmentScore?: number;
 	quizScore?: number;
 	evoScore?: number;
 }
-
 interface Student {
 	_id: string;
 	name: string;
 	enrolledCourses: EnrolledCourse[];
 }
-
+interface Certificate {
+	_id: string;
+	student: { _id: string };
+	course: { _id: string };
+	fileUrl: string;
+	createdAt: string;
+}
 interface TableRow {
 	studentId: string;
 	studentName: string;
@@ -58,12 +63,14 @@ interface TableRow {
 	totalQuizzes: number;
 	progress: number;
 	evoScore: number;
+	certificateUrl?: string;
 }
 
 const CertificateTable = () => {
 	const [students, setStudents] = useState<Student[]>([]);
 	const [assignments, setAssignments] = useState<Assignment[]>([]);
 	const [courses, setCourses] = useState<Course[]>([]);
+	const [certificates, setCertificates] = useState<Certificate[]>([]);
 	const [tableData, setTableData] = useState<TableRow[]>([]);
 
 	const [modalOpen, setModalOpen] = useState(false);
@@ -84,17 +91,21 @@ const CertificateTable = () => {
 
 	const fetchData = async () => {
 		try {
-			const [studentList, assignmentList, courseList] = await Promise.all([
-				getStudents(),
-				getSubmittedAssignments(),
-				getCourses(),
-			]);
+			const [studentList, assignmentList, courseList, certificateList] =
+				await Promise.all([
+					getStudents(),
+					getSubmittedAssignments(),
+					getCourses(),
+					getAllCertificates(),
+				]);
+
 			setStudents(studentList);
 			setAssignments(assignmentList.submissions);
 			setCourses(courseList);
-		} catch (error: any) {
-			toast.error("Failed to fetch data");
-			console.error("Failed to fetch data", error);
+			setCertificates(certificateList.certificates);
+		} catch (error) {
+			console.error(error);
+			toast.error("Error fetching data");
 		}
 	};
 
@@ -134,6 +145,16 @@ const CertificateTable = () => {
 					? Math.round((assignmentsDone / totalAssignments) * 100)
 					: 0;
 
+				const matchingCertificates = certificates.filter(
+					(cert) =>
+						cert.student._id === student._id && cert.course._id === course._id
+				);
+
+				const latestCert = matchingCertificates.sort(
+					(a, b) =>
+						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+				)[0];
+
 				table.push({
 					studentId: student._id,
 					studentName: student.name,
@@ -145,12 +166,13 @@ const CertificateTable = () => {
 					totalQuizzes: 1,
 					progress,
 					evoScore: enrolled.evoScore || 0,
+					certificateUrl: latestCert?.fileUrl,
 				});
 			});
 		});
 
 		setTableData(table.sort((a, b) => b.progress - a.progress));
-	}, [students, assignments, courses]);
+	}, [students, assignments, courses, certificates]);
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0] || null;
@@ -173,6 +195,7 @@ const CertificateTable = () => {
 			await generateCertificate(formData);
 			toggleModal();
 			toast.success("Certificate issued successfully!");
+			fetchData(); // Refresh certificate list
 		} catch (err) {
 			toast.error("Certificate issue failed");
 		} finally {
@@ -195,16 +218,26 @@ const CertificateTable = () => {
 		{ name: "Evo Score", selector: (row) => row.evoScore },
 		{
 			name: "Action",
-			cell: (row) => (
-				<Button
-					color="info"
-					onClick={() => {
-						setSelectedStudent(row);
-						toggleModal();
-					}}>
-					Issue
-				</Button>
-			),
+			cell: (row) =>
+				row.certificateUrl ? (
+					<a
+						className="btn btn-success btn-sm"
+						href={`/${row.certificateUrl}`}
+						target="_blank"
+						rel="noopener noreferrer">
+						View
+					</a>
+				) : (
+					<Button
+						color="info"
+						size="sm"
+						onClick={() => {
+							setSelectedStudent(row);
+							toggleModal();
+						}}>
+						Issue
+					</Button>
+				),
 		},
 	];
 
@@ -223,7 +256,6 @@ const CertificateTable = () => {
 				</CardBody>
 			</Card>
 
-			{/* Modal */}
 			<Modal
 				isOpen={modalOpen}
 				toggle={toggleModal}>

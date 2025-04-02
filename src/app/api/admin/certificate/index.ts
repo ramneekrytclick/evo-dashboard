@@ -6,3 +6,6 @@ export const generateCertificate = async (data: FormData) => {
 export const getSubmittedAssignments = async () => {
 	return (await apiClient.get("/admin/assignments")).data;
 };
+export const getAllCertificates = async () => {
+	return (await apiClient.get("/admin/certificates")).data;
+};
