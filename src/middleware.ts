@@ -44,7 +44,9 @@ export function middleware(request: NextRequest) {
 			pathname.startsWith("/admin") ||
 			pathname.startsWith("/creator") ||
 			pathname.startsWith("/mentor") ||
-			pathname.startsWith("/manager")
+			pathname.startsWith("/manager") ||
+			pathname.startsWith("/student") ||
+			pathname.startsWith("/course-creator")
 		) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}

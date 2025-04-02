@@ -5,7 +5,7 @@ export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
 };
 export const getCourses = async () => {
-	return (await apiClient.get(`/courses`)).data;
+	return (await apiClient.get(`/students/courses`)).data;
 };
 export const getEnrolledCourses = async () => {
 	return (await apiClient.get(`/students/enrolled-courses`)).data;
@@ -55,5 +55,5 @@ export const bookMentorSession = async (data: {
 };
 export const getLessonsByCourseID = async (courseId: string) => {
 	// return (await apiClient.get(`/lessons/course/${courseId}`)).data;
-	return (await apiClient.get(`/lessons/${courseId}`)).data;
+	return (await apiClient.get(`/students/lessons/${courseId}`)).data;
 };

@@ -18,7 +18,7 @@ const CourseViewPageContainer = ({ id }: { id: string }) => {
 	const fetchEnrolledCourses = async () => {
 		try {
 			const response = await getEnrolledCourses();
-			setCourses(response.student.enrolledCourses);
+			setCourses(response.enrolledCourses);
 		} catch (error: any) {
 			setError(error);
 			toast.error(error.message);
@@ -35,7 +35,7 @@ const CourseViewPageContainer = ({ id }: { id: string }) => {
 		}
 		try {
 			const response = await getLessonsByCourseID(id);
-			setLessons(response);
+			setLessons(response.lessons);
 			toast.success("Course fetched successfully");
 		} catch (error: any) {
 			setError(error);

@@ -1,11 +1,18 @@
 "use client";
 import { getCourses } from "@/app/api/student";
-import { ImagePath } from "@/Constant";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Badge, Button, Card, CardBody, Col, Row } from "reactstrap";
-import { sampleData } from "./sampleData";
+import {
+	Badge,
+	Button,
+	Card,
+	CardBody,
+	CardImg,
+	CardText,
+	CardTitle,
+	Col,
+	Row,
+} from "reactstrap";
 import { useAppDispatch, useAppSelector } from "@/Redux/Hooks";
 import {
 	addToCourseCart,
@@ -19,11 +26,12 @@ export interface CourseProps {
 	timing: string;
 	discountedPrice: number;
 	realPrice: number;
-	category: string;
-	subcategory: string;
+	category?: { _id: string; title: string } | string | null;
+	subcategory?: { _id: string; title: string } | string | null;
 	photo?: string | null;
 	mentorAssigned?: { name: string; id: string; email: string };
 	tags?: string[];
+	wannaBeInterest?: { title: string }[];
 }
 
 const AvailableCourses = () => {
@@ -34,15 +42,14 @@ const AvailableCourses = () => {
 	const fetchCourses = async () => {
 		try {
 			const response = await getCourses();
-			setCourses(response);
+			setCourses(response.courses);
 		} catch (error) {
-			toast.error("Error Fetching Courses from API");
-			setCourses(sampleData);
+			toast.error("Error fetching courses. Showing sample data.");
 		}
 	};
 
-	const isCourseInCart = (courseId: string) =>
-		courseCartData.some((c) => c._id === courseId);
+	const isCourseInCart = (id: string) =>
+		courseCartData.some((c) => c._id === id);
 
 	useEffect(() => {
 		fetchCourses();
@@ -50,102 +57,141 @@ const AvailableCourses = () => {
 
 	return (
 		<Row className="gy-4">
-			{courses?.map((course) => (
-				<Col
-					xl={6}
-					key={course._id}>
-					<Card className="shadow-sm border-0 h-100">
-						<CardBody>
-							<div className="d-flex mb-3">
-								<Image
-									width={80}
-									height={80}
-									className="rounded img-fluid me-3 object-fit-cover"
-									src={
-										course.photo
-											? `/${course.photo}`
-											: `${ImagePath}/job-search/placeholder.jpg`
-									}
+			{courses?.map((course) => {
+				const category =
+					typeof course.category === "object"
+						? course.category?.title
+						: course.category;
+				const subcategory =
+					typeof course.subcategory === "object"
+						? course.subcategory?.title
+						: course.subcategory;
+
+				const discount = course.realPrice
+					? Math.round(
+							((course.realPrice - course.discountedPrice) / course.realPrice) *
+								100
+					  )
+					: 0;
+
+				return (
+					<Col
+						xl={4}
+						md={6}
+						key={course._id}>
+						<Card className="border-0 shadow-md rounded-4 overflow-hidden h-100">
+							<div className="position-relative">
+								<CardImg
+									top
+									width="100%"
+									height="200px"
+									src={course.photo ? `/${course.photo}` : "/placeholder.jpg"}
 									alt={course.title}
+									className="object-fit-cover"
 								/>
-								<div className="flex-grow-1">
-									<h5 className="mb-1 fw-bold text-truncate">{course.title}</h5>
+								{discount > 0 && (
 									<Badge
-										color="info"
-										className="me-2">
-										{course.category.slice(0, 12)}...
-									</Badge>
-									<Badge color="secondary">
-										{course.subcategory.slice(0, 12)}...
-									</Badge>
-									<p className="mb-1 text-muted small mt-2">
-										Timing: {course.timing}
-									</p>
-									{course.mentorAssigned?.name && (
-										<p className="text-muted small mb-0">
-											Mentor: <strong>{course.mentorAssigned.name}</strong>
-										</p>
-									)}
-								</div>
-							</div>
-
-							<p className="text-muted small">{course.description}</p>
-
-							{/* Tags */}
-							{course.tags?.length && (
-								<div className="mb-3">
-									{course.tags.map((tag, i) => (
-										<Badge
-											key={i}
-											color="light"
-											className="me-2 border text-dark">
-											#{tag}
-										</Badge>
-									))}
-								</div>
-							)}
-
-							{/* Price + Cart */}
-							<div className="d-flex justify-content-between align-items-center mt-3">
-								<div>
-									<h6 className="mb-0 text-success fw-bold">
-										₹{course.discountedPrice}
-									</h6>
-									<small className="text-muted text-decoration-line-through">
-										₹{course.realPrice}
-									</small>
-								</div>
-
-								{isCourseInCart(course._id!) ? (
-									<Button
 										color="danger"
-										size="sm"
-										onClick={() => dispatch(removeFromCourseCart(course._id!))}>
-										Remove from Cart
-									</Button>
-								) : (
-									<Button
-										color="primary"
-										size="sm"
-										onClick={() =>
-											dispatch(
-												addToCourseCart({
-													_id: course._id!,
-													title: course.title,
-													discountedPrice: course.discountedPrice,
-													photo: course.photo,
-													realPrice: course.realPrice,
-												})
-											)
-										}>
-										Add to Cart
-									</Button>
+										pill
+										className="position-absolute top-0 end-0 m-3 fs-6">
+										-{discount}% Off
+									</Badge>
 								)}
 							</div>
-						</CardBody>
-					</Card>
-				</Col>
-			))}
+
+							<CardBody className="text-start p-4 d-flex flex-column">
+								<CardTitle
+									tag="h5"
+									className="fw-bold text-dark mb-2">
+									{course.title}
+								</CardTitle>
+
+								{/* Category/Subcategory */}
+								<div className="mb-2">
+									{category && (
+										<Badge
+											color="primary"
+											className="me-2">
+											{category}
+										</Badge>
+									)}
+									{subcategory && <Badge color="success">{subcategory}</Badge>}
+								</div>
+
+								{/* Tags */}
+								{(course.tags ?? []).length > 0 && (
+									<div className="mb-3">
+										{course.tags?.map((tag, i) => (
+											<Badge
+												key={i}
+												color="light"
+												className="me-2 text-dark border">
+												#{tag}
+											</Badge>
+										))}
+									</div>
+								)}
+
+								{/* Mentor & Timing */}
+								<div className="text-muted small mb-2">
+									{course.mentorAssigned?.name && (
+										<p className="mb-1">
+											<strong>Mentor:</strong> {course.mentorAssigned.name}
+										</p>
+									)}
+									<p className="mb-1">
+										<strong>Timing:</strong> {course.timing || "Self-paced"}
+									</p>
+								</div>
+
+								<CardText className="text-muted small mb-3 flex-grow-1">
+									{course.description?.slice(0, 120) ||
+										"No description provided."}
+								</CardText>
+
+								{/* Price + Add/Remove Cart */}
+								<div className="d-flex justify-content-between align-items-center mt-auto">
+									<div className="fs-5 fw-semibold text-success">
+										₹{course.discountedPrice}
+										{course.realPrice && (
+											<del className="text-muted ms-2 fs-6">
+												₹{course.realPrice}
+											</del>
+										)}
+									</div>
+									{isCourseInCart(course._id!) ? (
+										<Button
+											color="danger"
+											size="sm"
+											onClick={() =>
+												dispatch(removeFromCourseCart(course._id!))
+											}>
+											Remove
+										</Button>
+									) : (
+										<Button
+											color="primary"
+											size="sm"
+											onClick={() =>
+												dispatch(
+													addToCourseCart({
+														_id: course._id!,
+														title: course.title,
+														discountedPrice: course.discountedPrice,
+														photo: course.photo,
+														realPrice: course.realPrice,
+													})
+												)
+											}>
+											Add to Cart
+										</Button>
+									)}
+								</div>
+							</CardBody>
+						</Card>
+					</Col>
+				);
+			})}
 		</Row>
 	);
 };
