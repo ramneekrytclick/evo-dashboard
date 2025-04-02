@@ -65,6 +65,7 @@ const BatchesList = () => {
 		},
 		{
 			name: "Course",
+			center: true,
 			sortable: true,
 			selector: (row) =>
 				typeof row.course === "object" ? row.course.title : row.course || "-",
@@ -83,12 +84,13 @@ const BatchesList = () => {
 		{
 			name: "Status",
 			selector: () => "",
+			center: true,
 			cell: (row) => {
 				const now = new Date();
 				const end = new Date(row.endDate);
 				const isActive = end > now;
 				return (
-					<Badge color={isActive ? "success" : "secondary"}>
+					<Badge color={isActive ? "warning" : "success"}>
 						{isActive ? "Ongoing" : "Completed"}
 					</Badge>
 				);
@@ -96,6 +98,7 @@ const BatchesList = () => {
 		},
 		{
 			name: "Students",
+			center: true,
 			sortable: true,
 			selector: (row) => row.students?.length || 0,
 			cell: (row) => <span>{row.students?.length || 0}</span>,
@@ -107,10 +110,12 @@ const BatchesList = () => {
 				typeof row.mentor === "object"
 					? row.mentor.name
 					: row.mentor || "Unassigned",
+			center: true,
 			cell: (row) =>
 				row.mentor ? (
 					<Badge
-						color="info"
+						style={{ fontSize: "15px" }}
+						color="dark"
 						pill>
 						{typeof row.mentor === "object" ? row.mentor.name : row.mentor}
 					</Badge>
@@ -121,9 +126,10 @@ const BatchesList = () => {
 		{
 			name: "Actions",
 			center: true,
+			width: "15%",
 			cell: (row: BatchProps) => (
 				<div
-					className="d-flex flex-column gap-1"
+					className="d-flex flex-column gap-1 align-items-center justify-content-center "
 					style={{ minWidth: 200 }}>
 					<Button
 						color="primary"
