@@ -4,6 +4,7 @@ import { MentorDataProps } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import {
+	Badge,
 	Button,
 	Card,
 	CardBody,
@@ -14,27 +15,39 @@ import {
 } from "reactstrap";
 
 import Link from "next/link";
-import { approveUser } from "@/app/api/admin/team";
+import { approveUser, updateUserStatus } from "@/app/api/admin/team";
 import { getStudents } from "@/app/api/admin/students";
+import { toast } from "react-toastify";
 
 const MentorListTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<MentorDataProps | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
+	const [actionType, setActionType] = useState<
+		"Active" | "Inactive" | "Banned"
+	>("Active");
+
 	const toggleModal = () => setModalOpen(!modalOpen);
-	const openApproveModal = (row: MentorDataProps) => {
+
+	const openStatusModal = (
+		row: MentorDataProps,
+		action: "Active" | "Inactive" | "Banned"
+	) => {
 		setSelectedRow(row);
+		setActionType(action);
 		setModalOpen(true);
 	};
-	const handleAction = async (action: string) => {
+	const handleAction = async () => {
 		if (!selectedRow) return;
 		try {
-			await approveUser(selectedRow._id, action);
+			await updateUserStatus(selectedRow._id, actionType);
+			toast.success(`${selectedRow.name}'s status updated to ${actionType}`);
 			toggleModal();
 			fetchData();
 		} catch (error) {
-			console.log("Approval error:", error);
+			console.log("Status update error:", error);
+			toast.error("Failed to update status");
 		}
 	};
 	const mentorTableColumns: TableColumn<MentorDataProps>[] = [
@@ -55,25 +68,53 @@ const MentorListTable = () => {
 		},
 		{
 			name: "Email",
+			center: true,
 			selector: (row) => row.email,
 			sortable: true,
-			center: false,
+			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
+		},
+		{
+			name: "Status",
+			selector: (row) => row.status,
+			sortable: true,
+			cell: (row) => (
+				<Badge
+					color={
+						row.status === "Active"
+							? "success"
+							: row.status === "Inactive"
+							? "warning"
+							: "danger"
+					}
+					pill>
+					{row.status}
+				</Badge>
+			),
 		},
 		{
 			name: "Action",
 			sortable: true,
-			center: false,
+			center: true,
 			cell: (row) => (
-				<>
-					Certificate option
-					{/* <Button
-						onClick={() => {
-							openApproveModal(row);
-						}}
-						color={row.isApproved ? "danger" : "success"}>
-						{row.isApproved ? "Disapprove" : "Approve"}
-					</Button> */}
-				</>
+				<div className="d-flex gap-1">
+					<Button
+						color={row.status === "Active" ? "warning" : "success"}
+						size="sm"
+						onClick={() =>
+							openStatusModal(
+								row,
+								row.status === "Active" ? "Inactive" : "Active"
+							)
+						}>
+						{row.status === "Active" ? "Deactivate" : "Activate"}
+					</Button>
+					<Button
+						color="danger"
+						size="sm"
+						onClick={() => openStatusModal(row, "Banned")}>
+						Ban
+					</Button>
+				</div>
 			),
 		},
 	];
@@ -126,14 +167,21 @@ const MentorListTable = () => {
 				isOpen={modalOpen}
 				toggle={toggleModal}
 				centered>
-				<ModalHeader toggle={toggleModal}>
-					Confirm {selectedRow?.isApproved ? "Disapproval" : "Approval"}
-				</ModalHeader>
+				<ModalHeader toggle={toggleModal}>Confirm Status Change</ModalHeader>
 				<ModalBody>
-					Are you sure you want to{" "}
-					{selectedRow?.isApproved ? "disapprove" : "approve"}{" "}
-					<strong>{selectedRow?.name}</strong> as a{" "}
-					<strong>{selectedRow?.role}</strong>?
+					Are you sure you want to set <strong>{selectedRow?.name}</strong> as{" "}
+					<Badge
+						color={
+							actionType === "Active"
+								? "success"
+								: actionType === "Inactive"
+								? "warning"
+								: "danger"
+						}
+						pill>
+						{actionType}
+					</Badge>
+					?
 				</ModalBody>
 				<ModalFooter>
 					<Button
@@ -142,11 +190,15 @@ const MentorListTable = () => {
 						Cancel
 					</Button>
 					<Button
-						color={selectedRow?.isApproved ? "danger" : "success"}
-						onClick={() => {
-							handleAction(selectedRow?.isApproved ? "disapprove" : "approve");
-						}}>
-						Yes, {selectedRow?.isApproved ? "Disapprove" : "Approve"}
+						color={
+							actionType === "Active"
+								? "success"
+								: actionType === "Inactive"
+								? "warning"
+								: "danger"
+						}
+						onClick={handleAction}>
+						Yes, Change Status
 					</Button>
 				</ModalFooter>
 			</Modal>

@@ -63,15 +63,19 @@ const TeamListTable = () => {
 		},
 		{
 			name: "Email",
+			center: true,
 			selector: (row) => row.email,
 			sortable: true,
-			cell: (row) => <p className="f-light">{row.email}</p>,
+			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
 		},
 		{
 			name: "Role",
 			selector: (row) => row.role.toUpperCase(),
 			sortable: true,
-			cell: (row) => <span style={{ fontSize: 13 }}>{row.role}</span>,
+			center: true,
+			cell: (row) => (
+				<span style={{ fontSize: 13, fontWeight: 600 }}>{row.role}</span>
+			),
 		},
 		{
 			name: "Status",

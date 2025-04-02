@@ -65,8 +65,10 @@ const MentorListTable = () => {
 		},
 		{
 			name: "Email",
+			center: true,
 			selector: (row) => row.email,
 			sortable: true,
+			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
 		},
 		{
 			name: "Status",

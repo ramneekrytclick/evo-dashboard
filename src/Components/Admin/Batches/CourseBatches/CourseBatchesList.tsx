@@ -117,6 +117,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 		},
 		{
 			name: "Actions",
+			center: true,
 			cell: (row) => (
 				<div
 					className="d-flex flex-column gap-1"

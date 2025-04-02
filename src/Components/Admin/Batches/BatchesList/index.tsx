@@ -120,6 +120,7 @@ const BatchesList = () => {
 		},
 		{
 			name: "Actions",
+			center: true,
 			cell: (row: BatchProps) => (
 				<div
 					className="d-flex flex-column gap-1"

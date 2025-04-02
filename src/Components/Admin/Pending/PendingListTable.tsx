@@ -60,9 +60,10 @@ const PendingListTable = () => {
 		},
 		{
 			name: "Email",
+			center: true,
 			selector: (row) => row.email,
 			sortable: true,
-			cell: (row) => <p className="f-light">{row.email}</p>,
+			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
 		},
 		{
 			name: "Role",
@@ -103,7 +104,11 @@ const PendingListTable = () => {
 	const fetchData = async () => {
 		try {
 			const response = await getPendingApprovals();
-			setTeamListTableData(response);
+			setTeamListTableData(
+				response.filter((item: UserProps) => {
+					return item.role !== "Student";
+				})
+			);
 		} catch (error) {
 			console.log(error);
 			// setTeamListTableData(teamFakeData);
