@@ -88,9 +88,9 @@ export interface BatchProps {
 	batchWeekType?: string; // e.g., "Mon-Fri", "Weekend"
 	startDate: string;
 	endDate: string;
-	course?: string; // courseId
+	course?: string | { _id: string; title: string }; // courseId
 	students?: string[]; // array of studentIds
-	mentor?: string | null; // mentorId or null
+	mentor?: string | { _id: string; name: string }; // mentorId or null
 	chatMessages?: ChatMessage[];
 	createdAt?: string;
 	updatedAt?: string;

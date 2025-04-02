@@ -159,12 +159,7 @@ export const getBatches = async () => {
 	];
 };
 export const getBatchesByCourse = async (id: string) => {
-	try {
-		const response = await apiClient.get(`/batches/${id}`);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	return (await apiClient.get(`/admin/batches/by-course/${id}`)).data;
 };
 
 export const createBatch = async (data: BatchProps) => {

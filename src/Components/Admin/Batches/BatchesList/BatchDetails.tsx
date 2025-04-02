@@ -1,4 +1,3 @@
-// components/BatchDetails.tsx
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import { BatchProps } from "@/Types/Course.type";
 
@@ -11,6 +10,21 @@ const BatchDetails = ({
 	isOpen: boolean;
 	toggle: () => void;
 }) => {
+	const courseDisplay = () => {
+		if (!batch.course) return "—";
+
+		if (typeof batch.course === "string") {
+			return <code>{batch.course}</code>;
+		}
+
+		return (
+			<>
+				<strong>Course Title:</strong> {batch.course?.title} <br />
+				<strong>Course ID:</strong> <code>{batch.course?._id}</code>
+			</>
+		);
+	};
+
 	return (
 		<Modal
 			isOpen={isOpen}
@@ -38,14 +52,12 @@ const BatchDetails = ({
 					<strong>Students:</strong> {batch.students?.length || 0}
 				</p>
 				<p>
-					<strong>Mentor:</strong> {batch.mentor || "Unassigned"}
+					<strong>Mentor:</strong>{" "}
+					{typeof batch.mentor === "object"
+						? batch.mentor?.name || "Unassigned"
+						: batch.mentor || "Unassigned"}
 				</p>
-				<p>
-					<strong>Course ID:</strong> <code>{batch.course}</code>
-				</p>
-				<p>
-					<strong>Chat Messages:</strong> {batch.chatMessages?.length || 0}
-				</p>
+				<p>{courseDisplay()}</p>
 			</ModalBody>
 		</Modal>
 	);
