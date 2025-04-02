@@ -77,6 +77,7 @@ const MentorListTable = () => {
 			name: "Status",
 			selector: (row) => row.status,
 			sortable: true,
+			center: true,
 			cell: (row) => (
 				<Badge
 					color={

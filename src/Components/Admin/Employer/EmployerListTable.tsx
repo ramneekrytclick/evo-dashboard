@@ -72,11 +72,13 @@ const EmployerListTable = () => {
 		},
 		{
 			name: "Company",
+			center: true,
 			selector: (row) => row.companyName,
 			sortable: true,
 		},
 		{
 			name: "Status",
+			center: true,
 			selector: (row) => row.status,
 			cell: (row) => (
 				<Badge
@@ -95,6 +97,7 @@ const EmployerListTable = () => {
 		{
 			name: "Action",
 			sortable: false,
+			center: true,
 			cell: (row) => (
 				<div className="d-flex gap-1">
 					<Button

@@ -69,6 +69,7 @@ const PendingListTable = () => {
 			name: "Role",
 			selector: (row) => row.role.toUpperCase(),
 			sortable: true,
+			center: true,
 			cell: (row) => (
 				<Badge
 					color=""
@@ -79,10 +80,10 @@ const PendingListTable = () => {
 							? "primary"
 							: row.role.toLowerCase() === "manager"
 							? "danger"
-							: row.role.toLowerCase() === "student"
+							: row.role.toLowerCase() === "publisher"
 							? "info"
-							: row.role.toLowerCase() === "coursecreator"
-							? "success"
+							: row.role.toLowerCase() === "course creator"
+							? "warning"
 							: "secondary"
 					}`}>
 					{row.role}
@@ -91,6 +92,7 @@ const PendingListTable = () => {
 		},
 		{
 			name: "Action",
+			center: true,
 			cell: (row) => (
 				<Button
 					color="success"

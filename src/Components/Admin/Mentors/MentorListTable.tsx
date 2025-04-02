@@ -73,6 +73,7 @@ const MentorListTable = () => {
 		{
 			name: "Status",
 			selector: (row) => row.status,
+			center: true,
 			cell: (row) => (
 				<Badge
 					color={
@@ -90,6 +91,7 @@ const MentorListTable = () => {
 		{
 			name: "Action",
 			sortable: false,
+			center: true,
 			cell: (row) => (
 				<div className="d-flex gap-1">
 					<Button
