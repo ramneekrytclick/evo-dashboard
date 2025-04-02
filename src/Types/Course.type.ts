@@ -82,15 +82,22 @@ export interface ChatMessage {
 
 export interface BatchProps {
 	_id?: string;
-	name: string;
+	name?: string; // Optional because your current data does not include "name"
 	description?: string;
 	time?: string;
 	batchWeekType?: string; // e.g., "Mon-Fri", "Weekend"
-	startDate: string;
-	endDate: string;
-	course?: string | { _id: string; title: string }; // courseId
+	startDate?: string;
+	endDate?: string;
+	course?: {
+		_id: string;
+		title: string;
+	};
 	students?: string[]; // array of studentIds
-	mentor?: string | { _id: string; name: string }; // mentorId or null
+	mentor?: {
+		_id: string;
+		name: string;
+		email: string;
+	};
 	chatMessages?: ChatMessage[];
 	createdAt?: string;
 	updatedAt?: string;

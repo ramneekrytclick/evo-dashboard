@@ -57,3 +57,10 @@ export const getLessonsByCourseID = async (courseId: string) => {
 	// return (await apiClient.get(`/lessons/course/${courseId}`)).data;
 	return (await apiClient.get(`/students/lessons/${courseId}`)).data;
 };
+
+export const getMyBatches = async () => {
+	return (await apiClient.get(`/students/batches`)).data;
+};
+export const getBatchByID = async (id: string) => {
+	return (await apiClient.get(`/students/batches/${id}`)).data;
+};
