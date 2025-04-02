@@ -10,12 +10,8 @@ export const createStudent = async (data: StudentProps) => {
 	}
 };
 export const getStudents = async () => {
-	try {
-		const response = await apiClient.get("/admin/role/Student");
-		return response.data;
-	} catch (error) {
-		console.log(error);
-	}
+	const response = await apiClient.get("/admin/role/Student");
+	return response.data;
 };
 
 export const updateStudent = async (id: string, data: StudentProps) => {

@@ -1,8 +1,10 @@
 import { PromoCodeProps } from "@/Types/Course.type";
 import { apiClient } from "@/utils/api";
 
-export const getPromoCodes = async (): Promise<PromoCodeProps[]> => {
-	const response = await apiClient.get("/promos");
+export const getPromoCodes = async (): Promise<{
+	promoCodes: PromoCodeProps[];
+}> => {
+	const response = await apiClient.get("/promos/promocodes");
 	return response.data;
 };
 

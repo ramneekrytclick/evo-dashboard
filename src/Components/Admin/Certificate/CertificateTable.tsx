@@ -23,28 +23,21 @@ import {
 	getSubmittedAssignments,
 } from "@/app/api/admin/certificate";
 
-// ---------- TYPES ----------
 interface Course {
 	_id: string;
 	title: string;
 }
 
-interface Lesson {
-	_id: string;
-	course: string;
-}
-
 interface Assignment {
 	_id: string;
-	lesson: Lesson;
+	lesson: { _id: string; course: string };
 	student: { _id: string };
 }
 
 interface EnrolledCourse {
 	course: string;
-	completedLessons?: string[];
 	assignmentScore?: number;
-	quizScore?: number; // This should ideally be a count of completed quizzes
+	quizScore?: number;
 	evoScore?: number;
 }
 
@@ -67,10 +60,9 @@ interface TableRow {
 	evoScore: number;
 }
 
-// ---------- COMPONENT ----------
 const CertificateTable = () => {
-	const [allStudents, setAllStudents] = useState<Student[]>([]);
-	const [allAssignments, setAllAssignments] = useState<Assignment[]>([]);
+	const [students, setStudents] = useState<Student[]>([]);
+	const [assignments, setAssignments] = useState<Assignment[]>([]);
 	const [courses, setCourses] = useState<Course[]>([]);
 	const [tableData, setTableData] = useState<TableRow[]>([]);
 
@@ -83,7 +75,6 @@ const CertificateTable = () => {
 	const toggleModal = () => {
 		setModalOpen(!modalOpen);
 		if (modalOpen) {
-			// Reset state when closing
 			setSelectedStudent(null);
 			setCertificateFile(null);
 			if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -93,18 +84,17 @@ const CertificateTable = () => {
 
 	const fetchData = async () => {
 		try {
-			const [students, { submissions: assignments }, courseList] =
-				await Promise.all([
-					getStudents(),
-					getSubmittedAssignments(),
-					getCourses(),
-				]);
-			setAllStudents(students.reverse());
-			setAllAssignments(assignments);
+			const [studentList, assignmentList, courseList] = await Promise.all([
+				getStudents(),
+				getSubmittedAssignments(),
+				getCourses(),
+			]);
+			setStudents(studentList);
+			setAssignments(assignmentList.submissions);
 			setCourses(courseList);
-		} catch (error) {
-			console.error(error);
-			toast.error("Error loading data.");
+		} catch (error: any) {
+			toast.error("Failed to fetch data");
+			console.error("Failed to fetch data", error);
 		}
 	};
 
@@ -113,67 +103,60 @@ const CertificateTable = () => {
 	}, []);
 
 	useEffect(() => {
-		if (allStudents.length && allAssignments.length && courses.length) {
-			const assignmentCountMap: Record<string, number> = {};
-			allAssignments.forEach((a) => {
-				const courseId = a.lesson?.course;
-				if (courseId)
-					assignmentCountMap[courseId] =
-						(assignmentCountMap[courseId] || 0) + 1;
+		if (!students.length || !assignments.length || !courses.length) return;
+
+		const assignmentMap: Record<string, number> = {};
+		assignments.forEach((a) => {
+			if (a.lesson?.course) {
+				assignmentMap[a.lesson.course] =
+					(assignmentMap[a.lesson.course] || 0) + 1;
+			}
+		});
+
+		const table: TableRow[] = [];
+
+		students.forEach((student) => {
+			const submissionMap: Record<string, number> = {};
+			assignments.forEach((a) => {
+				if (a.student._id === student._id && a.lesson?.course) {
+					submissionMap[a.lesson.course] =
+						(submissionMap[a.lesson.course] || 0) + 1;
+				}
 			});
 
-			const rows: TableRow[] = [];
+			student.enrolledCourses.forEach((enrolled) => {
+				const course = courses.find((c) => c._id === enrolled.course);
+				if (!course) return;
 
-			allStudents.forEach((student) => {
-				const studentAssignmentMap: Record<string, number> = {};
-				allAssignments.forEach((a) => {
-					const courseId = a.lesson?.course;
-					if (a.student?._id === student._id && courseId) {
-						studentAssignmentMap[courseId] =
-							(studentAssignmentMap[courseId] || 0) + 1;
-					}
-				});
+				const totalAssignments = assignmentMap[enrolled.course] || 0;
+				const assignmentsDone = submissionMap[enrolled.course] || 0;
+				const progress = totalAssignments
+					? Math.round((assignmentsDone / totalAssignments) * 100)
+					: 0;
 
-				student.enrolledCourses?.forEach((enroll) => {
-					const courseId = enroll.course;
-					const course = courses.find((c) => c._id === courseId);
-					if (!course) return;
-
-					const totalAssignments = assignmentCountMap[courseId] || 0;
-					const submittedAssignments = studentAssignmentMap[courseId] || 0;
-					const progress = totalAssignments
-						? Math.round((submittedAssignments / totalAssignments) * 100)
-						: 0;
-
-					rows.push({
-						studentId: student._id,
-						studentName: student.name,
-						courseId,
-						course: course.title,
-						assignmentsDone: submittedAssignments,
-						totalAssignments,
-						quizzesDone: enroll.quizScore || 0,
-						totalQuizzes: 1,
-						progress,
-						evoScore: enroll.evoScore || 0,
-					});
+				table.push({
+					studentId: student._id,
+					studentName: student.name,
+					courseId: course._id,
+					course: course.title,
+					assignmentsDone,
+					totalAssignments,
+					quizzesDone: enrolled.quizScore || 0,
+					totalQuizzes: 1,
+					progress,
+					evoScore: enrolled.evoScore || 0,
 				});
 			});
+		});
 
-			setTableData(rows.sort((a, b) => b.progress - a.progress));
-		}
-	}, [allStudents, allAssignments, courses]);
+		setTableData(table.sort((a, b) => b.progress - a.progress));
+	}, [students, assignments, courses]);
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0] || null;
 		setCertificateFile(file);
-
-		if (previewUrl) URL.revokeObjectURL(previewUrl); // Clear old URL
-
-		if (file) {
-			const url = URL.createObjectURL(file);
-			setPreviewUrl(url);
-		}
+		if (previewUrl) URL.revokeObjectURL(previewUrl);
+		if (file) setPreviewUrl(URL.createObjectURL(file));
 	};
 
 	const handleIssueCertificate = async () => {
@@ -187,41 +170,29 @@ const CertificateTable = () => {
 			formData.append("studentId", selectedStudent.studentId);
 			formData.append("courseId", selectedStudent.courseId);
 			formData.append("certificate", certificateFile);
-
 			await generateCertificate(formData);
-			toast.success("Certificate issued successfully.");
 			toggleModal();
-		} catch (error) {
-			console.error(error);
-			toast.error("Failed to issue certificate.");
+			toast.success("Certificate issued successfully!");
+		} catch (err) {
+			toast.error("Certificate issue failed");
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
 	const columns: TableColumn<TableRow>[] = [
-		{
-			name: "Student Name",
-			selector: (row) => row.studentName,
-			sortable: true,
-		},
+		{ name: "Student", selector: (row) => row.studentName, sortable: true },
 		{ name: "Course", selector: (row) => row.course, sortable: true },
 		{
 			name: "Assignments",
 			selector: (row) => `${row.assignmentsDone}/${row.totalAssignments}`,
-			sortable: true,
 		},
 		{
 			name: "Quizzes",
 			selector: (row) => `${row.quizzesDone}/${row.totalQuizzes}`,
-			sortable: true,
 		},
-		{
-			name: "Progress",
-			selector: (row) => `${row.progress}%`,
-			sortable: true,
-		},
-		{ name: "Evo Score", selector: (row) => row.evoScore, sortable: true },
+		{ name: "Progress", selector: (row) => `${row.progress}%` },
+		{ name: "Evo Score", selector: (row) => row.evoScore },
 		{
 			name: "Action",
 			cell: (row) => (
@@ -239,9 +210,6 @@ const CertificateTable = () => {
 
 	return (
 		<>
-			<p>{JSON.stringify(allAssignments)}</p>
-			<p>{JSON.stringify(courses)}</p>
-			<p>{JSON.stringify(allStudents)}</p>
 			<Card>
 				<CardBody>
 					<DataTable
@@ -274,7 +242,6 @@ const CertificateTable = () => {
 							* Certificate file is required
 						</small>
 					)}
-
 					{previewUrl && (
 						<div className="mt-3">
 							<Label>Preview:</Label>
