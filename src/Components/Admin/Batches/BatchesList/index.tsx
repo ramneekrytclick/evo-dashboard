@@ -61,7 +61,7 @@ const BatchesList = () => {
 		{
 			name: "Batch",
 			sortable: true,
-			selector: (row) => row.name,
+			selector: (row) => row.name || "",
 		},
 		{
 			name: "Course",
@@ -87,7 +87,7 @@ const BatchesList = () => {
 			center: true,
 			cell: (row) => {
 				const now = new Date();
-				const end = new Date(row.endDate);
+				const end = new Date(row.endDate || 0);
 				const isActive = end > now;
 				return (
 					<Badge color={isActive ? "warning" : "success"}>
@@ -197,6 +197,7 @@ const BatchesList = () => {
 					isOpen={!!assignStudentsModalOpen}
 					toggle={() => setAssignStudentsModalOpen(null)}
 					fetchData={fetchBatches}
+					currentStudents={selectedBatch.students || []}
 				/>
 			)}
 
@@ -206,11 +207,12 @@ const BatchesList = () => {
 					batchCourseId={
 						typeof selectedBatch.course === "object"
 							? selectedBatch.course._id
-							: selectedBatch.course
+							: selectedBatch.course || ""
 					}
 					isOpen={!!assignMentorModalOpen}
 					toggle={() => setAssignMentorModalOpen(null)}
 					fetchData={fetchBatches}
+					currentMentor={selectedBatch.mentor?._id || ""}
 				/>
 			)}
 

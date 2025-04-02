@@ -22,6 +22,7 @@ interface AssignStudentsModalProps {
 	toggle: () => void;
 	fetchData: () => void;
 	batchCourseId: string;
+	currentStudents: string[];
 }
 
 const AssignStudentsModal = ({
@@ -30,6 +31,7 @@ const AssignStudentsModal = ({
 	toggle,
 	fetchData,
 	batchCourseId,
+	currentStudents,
 }: AssignStudentsModalProps) => {
 	const [allStudents, setAllStudents] = useState<any[]>([]);
 	const [filteredStudents, setFilteredStudents] = useState<any[]>([]);
@@ -120,14 +122,14 @@ const AssignStudentsModal = ({
 					<FormGroup>
 						<div className="d-flex justify-content-end mb-2">
 							<Button
-								color="secondary"
+								color="primary"
 								size="sm"
 								onClick={selectAll}
 								className="me-2">
 								Select All
 							</Button>
 							<Button
-								color="outline-secondary"
+								color="outline-primary"
 								size="sm"
 								onClick={deselectAll}>
 								Deselect All
@@ -140,6 +142,7 @@ const AssignStudentsModal = ({
 								<Label check>
 									<Input
 										type="checkbox"
+										defaultChecked={currentStudents.includes(student._id)}
 										checked={selectedIds.includes(student._id)}
 										onChange={() => toggleStudentSelection(student._id)}
 									/>
@@ -158,7 +161,7 @@ const AssignStudentsModal = ({
 					Assign
 				</Button>
 				<Button
-					color="secondary"
+					color="outline-primary"
 					onClick={toggle}>
 					Cancel
 				</Button>

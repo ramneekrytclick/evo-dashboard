@@ -271,28 +271,21 @@ export const MenuList: MenuItem[] | undefined = [
 			},
 			{
 				id: 4,
-				path: "/student/session-booking",
-				icon: "contact",
-				title: "Book 1:1 Session",
-			},
-			{
-				id: 3,
-				path: "/student/paths",
-				icon: "maps",
-				title: "Enrolled Paths",
-			},
-			{
-				id: 4,
 				path: "/student/batches",
 				icon: "learning",
-				title: "Batches",
+				title: "My Batches",
 			},
-
 			{
 				id: 4,
 				path: "/student/resume",
 				icon: "layout",
 				title: "Resume",
+			},
+			{
+				id: 4,
+				path: "/student/job-portal",
+				icon: "learning",
+				title: "Job Portal",
 			},
 			{
 				path: "/student/support/tickets",

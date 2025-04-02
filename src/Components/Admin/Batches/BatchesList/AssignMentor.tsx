@@ -17,7 +17,21 @@ import { toast } from "react-toastify";
 import { assignMentorToBatch } from "@/app/api/admin/batches";
 import { getMentors } from "@/app/api/admin/mentors";
 
-const AssignMentorModal = ({ batchId, isOpen, toggle, fetchData }: any) => {
+const AssignMentorModal = ({
+	batchId,
+	isOpen,
+	toggle,
+	batchCourseId,
+	fetchData,
+	currentMentor,
+}: {
+	batchId: string;
+	isOpen: boolean;
+	batchCourseId: string;
+	toggle: () => void;
+	fetchData: () => void;
+	currentMentor: string;
+}) => {
 	const [mentorId, setMentorId] = useState("");
 	const [mentors, setMentors] = useState<any[]>([]);
 	const [selectedMentor, setSelectedMentor] = useState<any>(null);
@@ -74,6 +88,7 @@ const AssignMentorModal = ({ batchId, isOpen, toggle, fetchData }: any) => {
 					<Label>Select a Mentor</Label>
 					<Input
 						type="select"
+						defaultValue={currentMentor}
 						value={mentorId}
 						onChange={handleMentorChange}>
 						<option value="">-- Select Mentor --</option>
@@ -129,7 +144,7 @@ const AssignMentorModal = ({ batchId, isOpen, toggle, fetchData }: any) => {
 					Assign
 				</Button>
 				<Button
-					color="secondary"
+					color="outline-success"
 					onClick={toggle}>
 					Cancel
 				</Button>

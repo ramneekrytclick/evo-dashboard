@@ -7,21 +7,21 @@ import { useEffect } from "react";
 import { headerResponsive } from "@/Redux/Reducers/Layout/LayoutSlice";
 
 const Header = () => {
-  const { toggleSidebar } = useAppSelector((state) => state.layout);
-  const dispatch = useAppDispatch();
+	const { toggleSidebar } = useAppSelector((state) => state.layout);
+	const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(headerResponsive());
-  }, []);
+	useEffect(() => {
+		dispatch(headerResponsive());
+	}, []);
 
-  return (
-    <div className={`page-header ${toggleSidebar ? "close_icon" : ""}`}>
-      <Row className='header-wrapper m-0'>
-        <HeaderLogo />
-        <SearchInput />
-        <RightHeaderIcon />
-      </Row>
-    </div>
-  );
+	return (
+		<div className={`page-header ${toggleSidebar ? "close_icon" : ""}`}>
+			<Row className="header-wrapper m-0">
+				<HeaderLogo />
+				{/* <SearchInput /> */}
+				<RightHeaderIcon />
+			</Row>
+		</div>
+	);
 };
 export default Header;
