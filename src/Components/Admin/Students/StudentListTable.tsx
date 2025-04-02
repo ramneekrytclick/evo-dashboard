@@ -132,12 +132,9 @@ const MentorListTable = () => {
 		try {
 			const response = await getStudents();
 			const data = response;
-			// console.log(data);
 			setMentorTableData(data);
-			// setMentorTableData(mentorFakeData);
 		} catch (error) {
 			console.log(error);
-			// setMentorTableData(mentorFakeData);
 		}
 	};
 	useEffect(() => {

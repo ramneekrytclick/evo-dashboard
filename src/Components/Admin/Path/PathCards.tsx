@@ -8,9 +8,8 @@ import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
 import { Card, CardBody } from "reactstrap";
-import UpdatePathModal from "./UpdatePathModal";
+
 import DeletePathModal from "./DeletePathModal";
-import { pathFakeData } from "@/FakeData/admin/path";
 
 const PathCards = () => {
 	const [paths, setPaths] = useState<PathProps[]>([]);
@@ -22,7 +21,6 @@ const PathCards = () => {
 			console.log(response.paths);
 		} catch (error) {
 			toast.error("Error in fetching paths");
-			setPaths(pathFakeData);
 		}
 	};
 	const filteredItems: PathProps[] = paths.filter((item: PathProps) => {
@@ -54,10 +52,10 @@ const PathCards = () => {
 											...column,
 											cell: (row) => (
 												<ul className="action">
-													<UpdatePathModal
+													{/* <UpdatePathModal
 														values={row}
 														fetchData={fetchPaths}
-													/>
+													/> */}
 													<DeletePathModal
 														id={row._id!}
 														fetchData={fetchPaths}

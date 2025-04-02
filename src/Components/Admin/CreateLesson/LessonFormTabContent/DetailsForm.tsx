@@ -91,7 +91,7 @@ const DetailsForm = ({
 								<option
 									key={index}
 									value={course._id}>
-									{course.name}
+									{course.title}
 								</option>
 							);
 						})}

@@ -60,7 +60,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 	const columns: TableColumn<BatchProps>[] = [
 		{
 			name: "Batch",
-			selector: (row) => row.name,
+			selector: (row) => row.name || "",
 			sortable: true,
 		},
 		{
@@ -87,7 +87,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 			sortable: false,
 			cell: (row) => {
 				const now = new Date();
-				const end = new Date(row.endDate);
+				const end = new Date(row.endDate || 0);
 				const isActive = end > now;
 				return (
 					<Badge color={isActive ? "success" : "secondary"}>
@@ -188,6 +188,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 					isOpen={!!assignStudentsModalOpen}
 					toggle={() => setAssignStudentsModalOpen(null)}
 					fetchData={fetchBatches}
+					currentStudents={selectedBatch.students || []}
 				/>
 			)}
 
@@ -197,10 +198,11 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 					batchCourseId={
 						typeof selectedBatch.course === "object"
 							? selectedBatch.course._id
-							: selectedBatch.course
+							: selectedBatch.course || ""
 					}
 					isOpen={!!assignMentorModalOpen}
 					toggle={() => setAssignMentorModalOpen(null)}
+					currentMentor={selectedBatch.mentor?._id || ""}
 					fetchData={fetchBatches}
 				/>
 			)}

@@ -9,7 +9,6 @@ import QuizzesForm from "./QuizzesForm";
 import { createLesson } from "@/app/api/admin/lessons/lesson";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { courseFakeData } from "@/FakeData/admin/course";
 
 interface LessonFormTabContentProps {
 	activeCallBack: (tab: number) => void;
@@ -48,10 +47,8 @@ const LessonFormTabContent = ({
 		try {
 			const response = await getCourses();
 			setCourses(response.courses);
-			setCourses(courseFakeData);
 			return response.courses;
 		} catch (error) {
-			setCourses(courseFakeData);
 			toast.error("Error fetching courses!");
 			return [];
 		}

@@ -9,7 +9,6 @@ import {
 	getPendingApprovals,
 	getUsers,
 } from "@/app/api/admin/team";
-import { teamFakeData } from "@/FakeData/admin/team";
 import {
 	Badge,
 	Button,
@@ -113,7 +112,6 @@ const PendingListTable = () => {
 			);
 		} catch (error) {
 			console.log(error);
-			// setTeamListTableData(teamFakeData);
 		}
 	};
 	useEffect(() => {

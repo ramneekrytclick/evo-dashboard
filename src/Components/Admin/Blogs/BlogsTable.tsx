@@ -74,7 +74,6 @@ const BlogsTable = () => {
 		try {
 			const response = await getBlogs();
 			console.log(response?.blogs);
-			// setBlogs(blogFakeData);
 			setBlogs(response.blogs);
 			return response;
 		} catch (error) {

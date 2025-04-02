@@ -43,10 +43,13 @@ const BatchDetails = ({
 				</p>
 				<p>
 					<strong>Start:</strong>{" "}
-					{new Date(batch.startDate).toLocaleDateString()}
+					{batch.startDate
+						? new Date(batch.startDate).toLocaleDateString()
+						: "—"}
 				</p>
 				<p>
-					<strong>End:</strong> {new Date(batch.endDate).toLocaleDateString()}
+					<strong>End:</strong>{" "}
+					{batch.endDate ? new Date(batch.endDate).toLocaleDateString() : "—"}
 				</p>
 				<p>
 					<strong>Students:</strong> {batch.students?.length || 0}

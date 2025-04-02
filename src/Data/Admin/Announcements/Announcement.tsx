@@ -1,5 +1,3 @@
-import DeleteAnnouncementModal from "@/Components/Admin/Announcements/DeleteAnnouncementModal";
-import UpdateAnnouncementModal from "@/Components/Admin/Announcements/UpdateAnnouncementModal";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { TableColumn } from "react-data-table-component";
 import { Badge, UncontrolledTooltip } from "reactstrap";
