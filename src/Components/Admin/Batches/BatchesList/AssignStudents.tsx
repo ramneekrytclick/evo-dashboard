@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { assignStudentsToBatch } from "@/app/api/admin/batches";
-import { getStudents } from "@/app/api/admin/students";
+import { getStudents, getStudentsByCourseID } from "@/app/api/admin/students";
 
 interface AssignStudentsModalProps {
 	batchId: string;
@@ -39,10 +39,8 @@ const AssignStudentsModal = ({
 	const fetchStudents = async () => {
 		try {
 			setIsLoading(true);
-			const response = await getStudents();
-			console.log(response);
-
-			setAllStudents(response);
+			const response = await getStudentsByCourseID(batchCourseId);
+			setAllStudents(response.students);
 		} catch (err) {
 			toast.error("Failed to fetch students");
 			console.error(err);

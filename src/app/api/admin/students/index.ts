@@ -13,6 +13,9 @@ export const getStudents = async () => {
 	const response = await apiClient.get("/admin/role/Student");
 	return response.data;
 };
+export const getStudentsByCourseID = async (id: string) => {
+	return (await apiClient.get(`/admin/students/by-course/${id}`)).data;
+};
 
 export const updateStudent = async (id: string, data: StudentProps) => {
 	try {

@@ -1,4 +1,3 @@
-// BatchesList.tsx
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
@@ -15,7 +14,7 @@ import BatchDetails from "./BatchDetails";
 import Link from "next/link";
 
 const BatchesList = () => {
-	const [batches, setBatches] = useState<any[]>([]);
+	const [batches, setBatches] = useState<BatchProps[]>([]);
 	const [filterText, setFilterText] = useState("");
 
 	const [assignStudentsModalOpen, setAssignStudentsModalOpen] = useState<
@@ -24,15 +23,14 @@ const BatchesList = () => {
 	const [assignMentorModalOpen, setAssignMentorModalOpen] = useState<
 		string | null
 	>(null);
-
-	const [selectedBatch, setSelectedBatch] = useState<BatchProps | null>(null); // for modals
+	const [selectedBatch, setSelectedBatch] = useState<BatchProps | null>(null);
 	const [selectedBatchForDetails, setSelectedBatchForDetails] =
-		useState<BatchProps | null>(null); // for details modal
+		useState<BatchProps | null>(null);
 
 	const fetchBatches = async () => {
 		try {
 			const response = await getBatches();
-			setBatches(response);
+			setBatches(response.batches || []);
 		} catch (error) {
 			console.error("Error fetching batches:", error);
 		}
@@ -44,9 +42,18 @@ const BatchesList = () => {
 
 	const filteredItems = useMemo(() => {
 		return batches.filter((item) =>
-			Object.values(item).some((value) =>
-				value?.toString().toLowerCase().includes(filterText.toLowerCase())
-			)
+			Object.values(item).some((value) => {
+				if (typeof value === "string") {
+					return value.toLowerCase().includes(filterText.toLowerCase());
+				}
+				if (typeof value === "object" && value !== null) {
+					return Object.values(value)
+						.join(" ")
+						.toLowerCase()
+						.includes(filterText.toLowerCase());
+				}
+				return false;
+			})
 		);
 	}, [batches, filterText]);
 
@@ -54,20 +61,28 @@ const BatchesList = () => {
 		{
 			name: "Batch",
 			sortable: true,
-			cell: (row) => <>{row.name}</>,
+			selector: (row) => row.name,
 		},
 		{
 			name: "Course",
-			selector: (row) => row.course || "-",
 			sortable: true,
-			cell: (row) => (
-				<Link href={`/admin/lessons/${row.course}`}>{row.course}</Link>
-			),
+			selector: (row) =>
+				typeof row.course === "object" ? row.course.title : row.course || "-",
+			cell: (row) =>
+				row.course ? (
+					<Link
+						href={`/admin/lessons/${
+							typeof row.course === "object" ? row.course._id : row.course
+						}`}>
+						{typeof row.course === "object" ? row.course.title : row.course}
+					</Link>
+				) : (
+					<span>—</span>
+				),
 		},
 		{
 			name: "Status",
 			selector: () => "",
-			sortable: false,
 			cell: (row) => {
 				const now = new Date();
 				const end = new Date(row.endDate);
@@ -81,20 +96,23 @@ const BatchesList = () => {
 		},
 		{
 			name: "Students",
-			selector: (row) => row.students?.length || 0,
 			sortable: true,
+			selector: (row) => row.students?.length || 0,
 			cell: (row) => <span>{row.students?.length || 0}</span>,
 		},
 		{
 			name: "Mentor",
-			selector: (row) => row.mentor || "Not Assigned",
 			sortable: true,
+			selector: (row) =>
+				typeof row.mentor === "object"
+					? row.mentor.name
+					: row.mentor || "Unassigned",
 			cell: (row) =>
 				row.mentor ? (
 					<Badge
 						color="info"
 						pill>
-						{row.mentor}
+						{typeof row.mentor === "object" ? row.mentor.name : row.mentor}
 					</Badge>
 				) : (
 					<Badge color="warning">Unassigned</Badge>
@@ -103,11 +121,12 @@ const BatchesList = () => {
 		{
 			name: "Actions",
 			cell: (row: BatchProps) => (
-				<div style={{ minWidth: 200 }}>
+				<div
+					className="d-flex flex-column gap-1"
+					style={{ minWidth: 200 }}>
 					<Button
 						color="primary"
 						size="sm"
-						className="mb-2 me-2"
 						onClick={() => {
 							setAssignStudentsModalOpen(row._id || "");
 							setSelectedBatch(row);
@@ -125,6 +144,8 @@ const BatchesList = () => {
 					</Button>
 				</div>
 			),
+			ignoreRowClick: true,
+			button: true,
 		},
 	];
 
@@ -158,10 +179,14 @@ const BatchesList = () => {
 			</Card>
 
 			{/* Modals */}
-			{assignStudentsModalOpen && selectedBatch?.course && (
+			{assignStudentsModalOpen && selectedBatch && (
 				<AssignStudentsModal
 					batchId={assignStudentsModalOpen}
-					batchCourseId={selectedBatch?.course}
+					batchCourseId={
+						typeof selectedBatch.course === "object"
+							? selectedBatch.course._id || ""
+							: selectedBatch.course || ""
+					}
 					isOpen={!!assignStudentsModalOpen}
 					toggle={() => setAssignStudentsModalOpen(null)}
 					fetchData={fetchBatches}
@@ -171,7 +196,11 @@ const BatchesList = () => {
 			{assignMentorModalOpen && selectedBatch && (
 				<AssignMentorModal
 					batchId={assignMentorModalOpen}
-					batchCourseId={selectedBatch.course}
+					batchCourseId={
+						typeof selectedBatch.course === "object"
+							? selectedBatch.course._id
+							: selectedBatch.course
+					}
 					isOpen={!!assignMentorModalOpen}
 					toggle={() => setAssignMentorModalOpen(null)}
 					fetchData={fetchBatches}
