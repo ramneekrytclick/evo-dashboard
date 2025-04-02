@@ -19,16 +19,11 @@ export const assignWannaBeInterestToCourse = async (
 	id: string,
 	wannaBeInterestIds: string[]
 ) => {
-	try {
-		const response = await apiClient.put(`/courses/assign-wanna-be-interest`, {
-			courseId: id,
-			wannaBeInterestIds,
-		});
-		return response.data;
-	} catch (error) {
-		console.error("Error updating course:", error);
-		return null;
-	}
+	const response = await apiClient.put(`/courses/assign-wanna-be-interest`, {
+		courseId: id,
+		wannaBeInterestIds,
+	});
+	return response.data;
 };
 
 export const deleteCourse = async (id: string) => {

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { assignWannaBeInterestToCourse } from "@/app/api/admin/course";
+import { toast } from "react-toastify";
 
 interface EditCourseFormProps {
 	toggle: () => void;
@@ -52,6 +53,7 @@ const EditCourseForm: React.FC<EditCourseFormProps> = ({
 			fetchData();
 		} catch (error) {
 			console.error("Error updating course:", error);
+			toast.error("Error assigning WannaBeInterests");
 		}
 	};
 

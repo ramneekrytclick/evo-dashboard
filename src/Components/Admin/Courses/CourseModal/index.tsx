@@ -3,48 +3,73 @@
 import React, { useState } from "react";
 import { Button, ButtonGroup } from "reactstrap";
 import { CourseProps } from "@/Types/Course.type";
-import { Edit } from "react-feather";
+import { Edit2 } from "react-feather";
 import CommonModal from "@/CommonComponent/CommonModal";
-import { updateCourseTitle } from "@/Constant";
 import EditCourseForm from "./UpdateCourseForm";
 import { useRouter } from "next/navigation";
 
 const CourseModal = ({
 	values,
 	fetchData,
+	iconOnly = false,
 }: {
 	values: CourseProps;
 	fetchData: () => void;
+	iconOnly?: boolean;
 }) => {
 	const [modal, setModal] = useState(false);
 	const router = useRouter();
-	const toggle = () => {
-		setModal(!modal);
+	const toggle = () => setModal(!modal);
+
+	const goToBatches = () => {
+		router.push(`/admin/batches/${values._id}`);
 	};
+
 	const ModalData = {
 		isOpen: modal,
 		toggler: toggle,
 		bodyClass: "dark-sign-up social-profile text-start",
 	};
-	const goToLessons = () => {
-		router.push(`/admin/lessons/${values._id}`);
-	};
-	const goToBatches = () => {
-		router.push(`/admin/batches/${values._id}`);
-	};
+
+	if (iconOnly) {
+		return (
+			<>
+				<Button
+					color="link"
+					className="p-0"
+					onClick={toggle}
+					title="Edit WannaBe">
+					<Edit2
+						size={18}
+						className="text-dark"
+					/>
+				</Button>
+				<CommonModal modalData={ModalData}>
+					<div className="modal-toggle-wrapper">
+						<h5 className="mb-3">Assign WannaBe Interest</h5>
+						<EditCourseForm
+							toggle={toggle}
+							id={values._id || ""}
+							wannaBeInterestId={values.wannaBeInterest}
+							fetchData={fetchData}
+						/>
+					</div>
+				</CommonModal>
+			</>
+		);
+	}
 
 	return (
 		<>
 			<ButtonGroup>
 				<Button
-					color="primary"
-					onClick={goToLessons}>
-					View Lessons
-				</Button>
-				<Button
 					color="dark"
 					onClick={toggle}>
-					<Edit size={20} />
+					<Edit2
+						size={16}
+						className="me-1"
+					/>
+					Assign WannaBe
 				</Button>
 				<Button
 					color="success"
@@ -54,8 +79,7 @@ const CourseModal = ({
 			</ButtonGroup>
 			<CommonModal modalData={ModalData}>
 				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{updateCourseTitle}</h3>
-					{/* <p>{"Fill in your information below to continue."}</p> */}
+					<h5 className="mb-3">Assign WannaBe Interest</h5>
 					<EditCourseForm
 						toggle={toggle}
 						id={values._id || ""}
@@ -67,4 +91,5 @@ const CourseModal = ({
 		</>
 	);
 };
+
 export default CourseModal;

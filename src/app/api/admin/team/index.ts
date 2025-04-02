@@ -6,10 +6,15 @@ export const getUsers = async () => {
 		const responseManager = await apiClient.get("/admin/role/Manager");
 		const responsePublisher = await apiClient.get("/admin/role/Publisher");
 		const responseCreator = await apiClient.get("/admin/role/Creator");
+		const responseCourseCreator = await apiClient.get(`/admin/course-creators`);
 		const managers = responseManager.data;
 		const employers = responsePublisher.data;
 		const creators = responseCreator.data;
-		return [...managers, ...employers, ...creators];
+		const courseCreators = responseCourseCreator.data.creators;
+		courseCreators.forEach((courseCreator: any) => {
+			courseCreator.role = "Course Creator";
+		});
+		return [...managers, ...employers, ...creators, ...courseCreators];
 	} catch (error) {
 		console.error(error);
 	}
