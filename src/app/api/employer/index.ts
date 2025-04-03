@@ -1,17 +1,22 @@
 import { JobProps } from "@/Types/Job.type";
 import { apiClient } from "@/utils/api";
-
-export const createJob = async (data: {
+export interface CreateJobPayload {
 	title: string;
 	description: string;
-	employerId: string;
-}) => {
-	try {
-		const response = await apiClient.post("/employer/create-job", data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	companyName: string;
+	location: string;
+	jobType: "Full-Time" | "Part-Time" | "Internship" | "Contract";
+	experienceRequired?: string;
+	salary?: string;
+	applicationDeadline: Date;
+	skillsRequired: string[];
+	openings: number;
+	employer: string; // ObjectId string
+}
+
+export const createJob = async (data: CreateJobPayload) => {
+	const response = await apiClient.post("/jobs", data);
+	return response.data;
 };
 
 export const getStudents = async () => {

@@ -112,6 +112,12 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/categories",
 			},
 			{
+				id: 4,
+				path: "/admin/job-approval",
+				icon: "learning",
+				title: "Job Approval",
+			},
+			{
 				id: 9,
 				path: "/admin/blog-approval",
 				icon: "table",

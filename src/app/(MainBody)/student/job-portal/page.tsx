@@ -1,5 +1,7 @@
+import JobPortalContainer from "@/Components/Student/JobPortal";
+
 const page = () => {
-	return <div>Job Portal Container</div>;
+	return <JobPortalContainer />;
 };
 
 export default page;

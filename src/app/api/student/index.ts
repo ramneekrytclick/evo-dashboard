@@ -64,3 +64,6 @@ export const getMyBatches = async () => {
 export const getBatchByID = async (id: string) => {
 	return (await apiClient.get(`/students/batches/${id}`)).data;
 };
+export const getJobs = async () => {
+	return (await apiClient.get(`/students/jobs`)).data;
+};
