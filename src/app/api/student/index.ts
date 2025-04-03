@@ -67,3 +67,9 @@ export const getBatchByID = async (id: string) => {
 export const getJobs = async () => {
 	return (await apiClient.get(`/students/jobs`)).data;
 };
+export const applyJobApplication = async (data: {
+	jobId: string;
+	studentId: string;
+}) => {
+	return (await apiClient.post(`/jobs/apply`, data)).data;
+};
