@@ -20,6 +20,7 @@ import { getStudents } from "@/app/api/admin/students";
 import { toast } from "react-toastify";
 
 const MentorListTable = () => {
+	const [loading, setLoading] = useState(true);
 	const [filterText, setFilterText] = useState("");
 	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<MentorDataProps | null>(null);
@@ -130,11 +131,15 @@ const MentorListTable = () => {
 	);
 	const fetchData = async () => {
 		try {
+			setLoading(true);
 			const response = await getStudents();
 			const data = response;
 			setMentorTableData(data);
 		} catch (error) {
 			console.log(error);
+			toast.error("Failed to fetch data");
+		} finally {
+			setLoading(false);
 		}
 	};
 	useEffect(() => {
@@ -157,6 +162,7 @@ const MentorListTable = () => {
 					// fixedHeader
 					fixedHeaderScrollHeight="40vh"
 					// className="display"
+					progressPending={loading}
 					pagination
 				/>
 				{/* </div> */}

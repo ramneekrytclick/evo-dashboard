@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 
 const EmployerListTable = () => {
+	const [loading, setLoading] = useState(true);
 	const [filterText, setFilterText] = useState("");
 	const [employers, setEmployers] = useState<EmployerProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<EmployerProps | null>(null);
@@ -132,10 +133,14 @@ const EmployerListTable = () => {
 
 	const fetchEmployers = async () => {
 		try {
+			setLoading(true);
 			const response = await getEmployers();
 			setEmployers(response);
 		} catch (error) {
 			console.log(error);
+			toast.error("Error fetching Employer Data");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -159,6 +164,7 @@ const EmployerListTable = () => {
 						striped
 						fixedHeaderScrollHeight="40vh"
 						pagination
+						progressPending={loading}
 					/>
 				</div>
 

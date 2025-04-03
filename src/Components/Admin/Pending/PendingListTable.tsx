@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 
 const PendingListTable = () => {
+	const [loading, setLoading] = useState(false);
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<TeamListType | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -104,6 +105,7 @@ const PendingListTable = () => {
 	];
 	const fetchData = async () => {
 		try {
+			setLoading(true);
 			const response = await getPendingApprovals();
 			setTeamListTableData(
 				response.filter((item: UserProps) => {
@@ -112,6 +114,9 @@ const PendingListTable = () => {
 			);
 		} catch (error) {
 			console.log(error);
+			toast.error("Error fetching Team Data");
+		} finally {
+			setLoading(false);
 		}
 	};
 	useEffect(() => {
@@ -142,6 +147,7 @@ const PendingListTable = () => {
 					className="custom-scrollbar"
 					data={filteredItems.reverse()}
 					columns={teamListColumns}
+					progressPending={loading}
 					pagination
 				/>
 				<Modal

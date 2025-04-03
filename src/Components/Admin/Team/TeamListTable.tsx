@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 
 const TeamListTable = () => {
+	const [loading, setLoading] = useState(true);
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<TeamListType | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -126,10 +127,14 @@ const TeamListTable = () => {
 
 	const fetchData = async () => {
 		try {
+			setLoading(true);
 			const response = await getUsers();
 			setTeamListTableData(response || []);
 		} catch (error) {
 			console.log(error);
+			toast.error("Error fetching Team Data");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -161,6 +166,7 @@ const TeamListTable = () => {
 					className="custom-scrollbar"
 					data={filteredItems}
 					columns={teamListColumns}
+					progressPending={loading}
 					pagination
 				/>
 				{/* Status Modal */}

@@ -18,6 +18,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 
 const MentorListTable = () => {
+	const [loading, setLoading] = useState(false);
 	const [filterText, setFilterText] = useState("");
 	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<MentorDataProps | null>(null);
@@ -127,10 +128,14 @@ const MentorListTable = () => {
 
 	const fetchData = async () => {
 		try {
+			setLoading(true);
 			const response = await getMentors();
 			setMentorTableData(response);
 		} catch (error) {
+			toast.error("Error fetching Mentor Data");
 			console.log(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -150,6 +155,7 @@ const MentorListTable = () => {
 				<DataTable
 					data={filteredItems}
 					columns={mentorTableColumns}
+					progressPending={loading}
 					striped
 					fixedHeaderScrollHeight="40vh"
 					pagination

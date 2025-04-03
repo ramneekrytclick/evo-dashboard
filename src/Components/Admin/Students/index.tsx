@@ -3,6 +3,7 @@ import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { AdminTitle } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import StudentListTable from "./StudentListTable";
+import Loading from "@/app/loading";
 
 const StudentPageContainer = () => {
 	return (
