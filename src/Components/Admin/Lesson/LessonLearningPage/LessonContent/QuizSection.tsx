@@ -7,11 +7,13 @@ import { deleteQuiz, updateQuiz } from "@/app/api/admin/lessons/quiz";
 import { toast } from "react-toastify";
 
 const QuizSection = ({
+	refresh,
 	quizzes,
 	lessonId,
 }: {
 	quizzes: QuizQuestion[];
 	lessonId: string;
+	refresh: () => void;
 }) => {
 	const [editIndex, setEditIndex] = useState<number | null>(null);
 	const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
@@ -31,8 +33,9 @@ const QuizSection = ({
 
 	const handleEditSave = async (updatedQuiz: QuizQuestion, index: number) => {
 		console.log("Save updated quiz:", updatedQuiz, "at index:", index);
+		const data = { ...updatedQuiz, lessonId, quizIndex: index };
 		try {
-			const response = await updateQuiz(lessonId, updatedQuiz);
+			const response = await updateQuiz(data);
 			toast.success("Quiz updated successfully");
 		} catch (error) {
 			toast.error("Error updating quiz");
@@ -113,7 +116,10 @@ const QuizSection = ({
 			{editIndex !== null && (
 				<EditQuizModal
 					isOpen={editModalOpen}
-					toggle={() => setEditModalOpen(false)}
+					toggle={() => {
+						setEditModalOpen(false);
+						refresh();
+					}}
 					quiz={quizzes[editIndex]}
 					index={editIndex}
 					onSave={handleEditSave}

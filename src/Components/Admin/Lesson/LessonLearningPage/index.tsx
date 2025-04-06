@@ -33,6 +33,7 @@ const LessonLearningPage = ({
 					<LessonContent
 						lesson={selectedLesson}
 						view={selectedView}
+						refresh={refresh}
 						openQuizModal={() => setQuizModal(true)}
 						openAssignmentModal={() => setAssignmentModal(true)}
 					/>
@@ -56,8 +57,11 @@ const LessonLearningPage = ({
 						isOpen={quizModal}
 						toggle={() => {
 							setQuizModal(false);
+							console.log("====================================");
+							console.log("asd");
+							console.log("====================================");
+							refresh();
 						}}
-						refresh={refresh}
 						id={selectedLesson._id}
 					/>
 					<AssignmentFormModal

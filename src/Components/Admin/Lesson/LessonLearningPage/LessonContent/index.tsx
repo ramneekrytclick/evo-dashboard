@@ -7,12 +7,14 @@ const LessonContent = ({
 	lesson,
 	view,
 	openQuizModal,
+	refresh,
 	openAssignmentModal,
 }: {
 	lesson: LessonType | null;
 	view: "video" | "quiz" | "assignment";
 	openQuizModal: () => void;
 	openAssignmentModal: () => void;
+	refresh: () => void;
 }) => {
 	if (!lesson) {
 		return (
@@ -58,6 +60,7 @@ const LessonContent = ({
 						</div>
 						<div style={{ height: "550px", overflow: "scroll" }}>
 							<QuizSection
+								refresh={refresh}
 								quizzes={lesson.quizzes}
 								lessonId={lesson._id}
 							/>

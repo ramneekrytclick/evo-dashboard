@@ -18,13 +18,12 @@ export const deleteQuiz = async (id: string) => {
 	return (await apiClient.delete(`/quizzes/quiz/${id}`)).data;
 };
 
-export const updateQuiz = async (
-	id: string,
-	data: {
-		question: string;
-		options: string[];
-		correctAnswer: string;
-	}
-) => {
-	return (await apiClient.put(`/quizzes/quiz/${id}`, data)).data;
+export const updateQuiz = async (data: {
+	lessonId: string;
+	quizIndex: number;
+	question: string;
+	options: string[];
+	correctAnswer: string;
+}) => {
+	return (await apiClient.put(`/quizzes/quiz`, data)).data;
 };

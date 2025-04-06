@@ -1,5 +1,5 @@
 "use client";
-import { getMyTickets } from "@/app/api/support/support";
+import { getAllTickets, getMyTickets } from "@/app/api/support/support";
 import { SupportTicketProps } from "@/Types/Support.type";
 import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
@@ -17,8 +17,13 @@ import {
 } from "reactstrap";
 import Link from "next/link";
 import { respondToTicket } from "@/app/api/admin/support";
+import { useAuth } from "@/app/AuthProvider";
+import { toast } from "react-toastify";
 
 const TicketTable = () => {
+	const auth = useAuth();
+	const userId = auth.user?.id;
+	const role = auth.user?.role;
 	const [data, setData] = useState<SupportTicketProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<SupportTicketProps | null>(
 		null
@@ -40,9 +45,16 @@ const TicketTable = () => {
 
 	const fetchTickets = async () => {
 		try {
-			const response = await getMyTickets();
-			setData(response);
+			if (role === "Admin") {
+				const response = await getAllTickets();
+				setData(response);
+				return;
+			} else {
+				const response = await getMyTickets(userId || "");
+				setData(response);
+			}
 		} catch (error) {
+			toast.error("Error fetching tickets!");
 			console.error(error);
 		}
 	};
@@ -135,6 +147,9 @@ const TicketTable = () => {
 	];
 
 	useEffect(() => {
+		console.log("====================================");
+		console.log(role);
+		console.log("====================================");
 		fetchTickets();
 	}, []);
 

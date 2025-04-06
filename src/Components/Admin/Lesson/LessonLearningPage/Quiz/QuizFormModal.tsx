@@ -18,12 +18,10 @@ const QuizFormModal = ({
 	isOpen,
 	toggle,
 	id,
-	refresh,
 }: {
 	isOpen: boolean;
 	toggle: () => void;
 	id: string;
-	refresh: () => void;
 }) => {
 	const [quizList, setQuizList] = useState<QuizQuestion[]>([
 		{ question: "", options: [""], correctAnswer: "" },
@@ -89,7 +87,6 @@ const QuizFormModal = ({
 		try {
 			await createQuiz(data);
 			toast.success("Quiz created successfully");
-			refresh();
 			toggle();
 		} catch (error) {
 			toast.error("Error creating quiz");

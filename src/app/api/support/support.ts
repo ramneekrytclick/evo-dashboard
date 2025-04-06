@@ -5,19 +5,14 @@ export const createTicket = async (data: {
 	subject: string;
 	message: string;
 }) => {
-	try {
-		const response = await apiClient.post("/tickets", data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	const response = await apiClient.post("/tickets", data);
+	return response.data;
 };
 
-export const getMyTickets = async () => {
-	try {
-		const response = await apiClient.get("/tickets");
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+export const getAllTickets = async () => {
+	const response = await apiClient.get("/tickets");
+	return response.data;
+};
+export const getMyTickets = async (userId: string) => {
+	return (await apiClient.get(`/tickets/${userId}`)).data;
 };
