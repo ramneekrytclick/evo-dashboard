@@ -2,27 +2,23 @@
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
-import { createCourse } from "@/app/api/admin/course";
-import { getCategories } from "@/app/api/admin/categories";
-import { getSubcategories } from "@/app/api/admin/subcategories";
-import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { toast } from "react-toastify";
+import {
+	createCourse,
+	getAllCategories,
+	getAllSubcategories,
+	getAllWannaBeInterests,
+} from "@/app/api/cc";
+import { useAuth } from "@/app/AuthProvider";
 
 const SimpleCreateCourseForm = () => {
+	const { user } = useAuth();
 	const [formData, setFormData] = useState({
-		title: "",
+		name: "",
 		description: "",
-		whatYouWillLearn: "",
-		youtubeLink: "",
-		timing: "",
 		categoryId: "",
 		subcategoryId: "",
-		wannaBeInterestId: "",
-		realPrice: "",
-		discountedPrice: "",
-		tags: "",
-		createdBy: "admin-id-placeholder", // Replace with actual logic
-		review: "No reviews yet",
+		wannaBeInterest: "",
 	});
 
 	const [categories, setCategories] = useState([]);
@@ -41,11 +37,11 @@ const SimpleCreateCourseForm = () => {
 	const fetchInitialData = async () => {
 		try {
 			const [catRes, intRes] = await Promise.all([
-				getCategories(),
-				getWannaBeInterests(),
+				getAllCategories(),
+				getAllWannaBeInterests(),
 			]);
-			setCategories(catRes);
-			setInterests(intRes);
+			setCategories(catRes.categories);
+			setInterests(intRes.interests);
 		} catch {
 			toast.error("Failed to fetch initial data");
 		}
@@ -53,8 +49,10 @@ const SimpleCreateCourseForm = () => {
 
 	const fetchSubcategories = async (categoryId: string) => {
 		try {
-			const res = await getSubcategories(categoryId);
-			setSubcategories(res);
+			const res = await getAllSubcategories();
+			setSubcategories(
+				res.subcategories.filter((sub: any) => sub.categoryId === categoryId)
+			);
 		} catch {
 			toast.error("Failed to fetch subcategories");
 		}
@@ -62,48 +60,32 @@ const SimpleCreateCourseForm = () => {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		const requiredFields = [
-			"title",
-			"description",
-			"whatYouWillLearn",
-			"youtubeLink",
-			"timing",
-			"categoryId",
-			"subcategoryId",
-			"wannaBeInterestId",
-			"realPrice",
-			"discountedPrice",
-			"tags",
-			"createdBy",
-			"review",
-		];
 
-		for (const field of requiredFields) {
-			if (!formData[field as keyof typeof formData]) {
-				return toast.error("All fields are required");
-			}
+		const { name, description, categoryId, subcategoryId, wannaBeInterest } =
+			formData;
+
+		if (
+			!name ||
+			!description ||
+			!categoryId ||
+			!subcategoryId ||
+			!wannaBeInterest
+		) {
+			return toast.error("Please fill all required fields");
 		}
 
 		try {
-			// No split — send tags as a comma-separated string
 			await createCourse(formData);
 			toast.success("Course created successfully");
 			setFormData({
-				title: "",
+				name: "",
 				description: "",
-				whatYouWillLearn: "",
-				youtubeLink: "",
-				timing: "",
 				categoryId: "",
 				subcategoryId: "",
-				wannaBeInterestId: "",
-				realPrice: "",
-				discountedPrice: "",
-				tags: "",
-				createdBy: "admin-id-placeholder",
-				review: "No reviews yet",
+				wannaBeInterest: "",
 			});
 		} catch (err) {
+			console.error(err);
 			toast.error("Failed to create course");
 		}
 	};
@@ -121,8 +103,8 @@ const SimpleCreateCourseForm = () => {
 					<Label>Course Title</Label>
 					<Input
 						type="text"
-						name="title"
-						value={formData.title}
+						name="name"
+						value={formData.name}
 						onChange={handleChange}
 						required
 					/>
@@ -133,66 +115,6 @@ const SimpleCreateCourseForm = () => {
 						type="text"
 						name="description"
 						value={formData.description}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>What You Will Learn</Label>
-					<Input
-						type="textarea"
-						name="whatYouWillLearn"
-						value={formData.whatYouWillLearn}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>YouTube Link</Label>
-					<Input
-						type="text"
-						name="youtubeLink"
-						value={formData.youtubeLink}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>Timing</Label>
-					<Input
-						type="text"
-						name="timing"
-						value={formData.timing}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>Real Price</Label>
-					<Input
-						type="number"
-						name="realPrice"
-						value={formData.realPrice}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>Discounted Price</Label>
-					<Input
-						type="number"
-						name="discountedPrice"
-						value={formData.discountedPrice}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>Tags (comma-separated)</Label>
-					<Input
-						type="text"
-						name="tags"
-						value={formData.tags}
 						onChange={handleChange}
 						required
 					/>
@@ -237,8 +159,8 @@ const SimpleCreateCourseForm = () => {
 					<Label>Wanna Be Interest</Label>
 					<Input
 						type="select"
-						name="wannaBeInterestId"
-						value={formData.wannaBeInterestId}
+						name="wannaBeInterest"
+						value={formData.wannaBeInterest}
 						onChange={handleChange}
 						required>
 						<option value="">Select Interest</option>

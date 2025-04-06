@@ -25,7 +25,7 @@ export const pathTableColumns: TableColumn<PathProps>[] = [
 		selector: (row: PathProps) => row.price.toFixed(2),
 		sortable: true,
 		cell: (row: PathProps) => (
-			<span className="badge bg-secondary">₹{row.price.toFixed(2)}</span>
+			<span className="badge bg-secondary">₹{row.price?.toFixed(2)}</span>
 		),
 	},
 	{
