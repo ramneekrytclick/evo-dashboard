@@ -12,18 +12,7 @@ const MyBlogsContainer = () => {
 				title={myBlogsTitle}
 			/>
 			<Container fluid>
-				<Row>
-					<Col xs={12}>
-						<Card>
-							{/* <CommonCardHeader title={myBlogsTitle} /> */}
-							<CardBody>
-								<Row className="g-xl-5 g-3">
-									<MyBlogs />
-								</Row>
-							</CardBody>
-						</Card>
-					</Col>
-				</Row>
+				<MyBlogs />
 			</Container>
 		</>
 	);

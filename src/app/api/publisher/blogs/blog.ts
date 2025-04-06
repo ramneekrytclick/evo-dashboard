@@ -14,7 +14,7 @@ export const submitBlog = async (formData: FormData) => {
 
 export const getMyBlogs = async () => {
 	try {
-		const response = await apiClient.get("/creator/my-blogs");
+		const response = await apiClient.get("/publishers/auth/my-blogs");
 		return response.data;
 	} catch (error) {
 		console.error(error);
