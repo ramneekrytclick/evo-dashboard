@@ -8,6 +8,8 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/Redux/Hooks";
 import { setUser, logout as reduxLogout } from "@/Redux/Reducers/AuthSlice";
+import { toast } from "react-toastify";
+import { getMyProfile } from "./api";
 
 interface User {
 	id: string;
@@ -97,7 +99,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		const res = await axios.post(`${URL}students/verify-otp`, { email, otp });
 		return res.data;
 	};
-
+	const fetchProfile = async (role: string, token: string) => {
+		try {
+			const response = await getMyProfile(role);
+			const data = response.user;
+			dispatch(
+				setUser({
+					id: data._id,
+					name: data.name,
+					email: data.email,
+					role: data.role,
+					token,
+				})
+			);
+		} catch (error) {
+			toast.error("Failed to fetch profile");
+		}
+	};
 	useEffect(() => {
 		const token = Cookies.get("token");
 		if (token) {
@@ -108,8 +126,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					iat: string;
 					exp: number;
 				}>(token);
-
-				console.log("Decoded Token:", decodedToken);
 
 				// Check if token is valid
 				if (decodedToken.exp * 1000 > Date.now()) {
@@ -122,6 +138,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 							email: "",
 						})
 					);
+					fetchProfile(decodedToken.role, token);
 				} else {
 					logout();
 				}

@@ -43,6 +43,8 @@ const SidebarMenuList = () => {
 				return menuList.filter((menu) => menu.title === "Employer");
 			case "Course Creator":
 				return menuList.filter((menu) => menu.title === "Course Creator");
+			case "Manager":
+				return menuList.filter((menu) => menu.title === "Manager");
 			default:
 				return [];
 		}

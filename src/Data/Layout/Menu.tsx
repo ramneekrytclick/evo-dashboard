@@ -302,6 +302,31 @@ export const MenuList: MenuItem[] | undefined = [
 		],
 	},
 	{
+		title: "Manager",
+		lanClass: "lan-1",
+		Items: [
+			{
+				id: 1,
+				path: "/manager/dashboard",
+				icon: "home",
+				title: "Dashboard",
+				type: "link",
+			},
+			{
+				id: 3,
+				path: "/manager/mentors",
+				icon: "user",
+				title: "Assigned Mentors",
+			},
+			{
+				id: 4,
+				path: "/manager/support/tickets",
+				icon: "support-tickets",
+				title: "Support",
+			},
+		],
+	},
+	{
 		title: "Course Creator",
 		lanClass: "lan-1",
 		Items: [
@@ -311,12 +336,6 @@ export const MenuList: MenuItem[] | undefined = [
 				icon: "home",
 				title: "Dashboard",
 				type: "link",
-			},
-			{
-				id: 2,
-				path: "/course-creator/courses",
-				icon: "maps",
-				title: "Courses",
 			},
 			{
 				id: 3,
