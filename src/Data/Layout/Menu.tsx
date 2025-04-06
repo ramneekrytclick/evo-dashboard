@@ -318,6 +318,18 @@ export const MenuList: MenuItem[] | undefined = [
 				icon: "maps",
 				title: "Courses",
 			},
+			{
+				id: 3,
+				path: "/course-creator/create-course",
+				icon: "form",
+				title: "Create Course",
+			},
+			{
+				id: 4,
+				path: "/course-creator/support/tickets",
+				icon: "support-tickets",
+				title: "Support",
+			},
 		],
 	},
 ];
