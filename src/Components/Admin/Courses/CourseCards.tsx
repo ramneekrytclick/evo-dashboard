@@ -27,6 +27,7 @@ const CourseCards = () => {
 	return (
 		<>
 			<Row>
+				{/* {JSON.stringify(courses)} */}
 				{courses.map((course, index) => (
 					<CourseCard
 						key={index}

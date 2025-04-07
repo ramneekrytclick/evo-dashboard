@@ -12,8 +12,8 @@ import {
 } from "reactstrap";
 import { CourseProps } from "@/Types/Course.type";
 import CourseModal from "./CourseModal";
-import { Edit2 } from "react-feather";
 import { useRouter } from "next/navigation";
+import ViewReviewsModal from "./ReviewModal";
 
 interface CourseCardProps {
 	data: CourseProps;
@@ -151,6 +151,10 @@ const CourseCard = ({ data, fetchData }: CourseCardProps) => {
 							onClick={goToBatches}>
 							View Batches
 						</Button>
+						<ViewReviewsModal
+							reviews={data.reviews}
+							courseId={data._id || ""}
+						/>
 					</div>
 				</CardBody>
 			</Card>
