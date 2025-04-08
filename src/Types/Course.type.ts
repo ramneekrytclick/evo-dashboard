@@ -92,7 +92,7 @@ export interface BatchProps {
 		_id: string;
 		title: string;
 	};
-	students?: string[]; // array of studentIds
+	students?: { _id: string; name: string; email: string }[]; // array of studentIds
 	mentor?: {
 		_id: string;
 		name: string;

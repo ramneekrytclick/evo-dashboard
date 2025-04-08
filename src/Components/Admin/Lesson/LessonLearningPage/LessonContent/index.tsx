@@ -16,6 +16,15 @@ const LessonContent = ({
 	openAssignmentModal: () => void;
 	refresh: () => void;
 }) => {
+	const getEmbedUrl = (url: string) => {
+		const youtubeMatch = url.match(
+			/^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/
+		);
+		if (youtubeMatch && youtubeMatch[1]) {
+			return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+		}
+		return url; // fallback if it's not YouTube
+	};
 	if (!lesson) {
 		return (
 			<Card
@@ -39,7 +48,7 @@ const LessonContent = ({
 						<iframe
 							width="100%"
 							height="400"
-							src={lesson.videoUrl.replace("watch?v=", "embed/")}
+							src={getEmbedUrl(lesson.videoUrl)}
 							title={lesson.title}
 							style={{ borderRadius: "10px" }}
 							allowFullScreen></iframe>

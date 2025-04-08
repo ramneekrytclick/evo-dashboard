@@ -9,12 +9,10 @@ import {
 	Button,
 	FormGroup,
 	Spinner,
-	Label,
-	Input,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { assignStudentsToBatch } from "@/app/api/admin/batches";
-import { getStudents, getStudentsByCourseID } from "@/app/api/admin/students";
+import { getStudentsByCourseID } from "@/app/api/admin/students";
 
 interface AssignStudentsModalProps {
 	batchId: string;
@@ -22,7 +20,7 @@ interface AssignStudentsModalProps {
 	toggle: () => void;
 	fetchData: () => void;
 	batchCourseId: string;
-	currentStudents: string[];
+	currentStudents: { _id: string; name: string; email: string }[];
 }
 
 const AssignStudentsModal = ({
@@ -38,6 +36,7 @@ const AssignStudentsModal = ({
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
+	// Fetch students from API
 	const fetchStudents = async () => {
 		try {
 			setIsLoading(true);
@@ -52,24 +51,39 @@ const AssignStudentsModal = ({
 	};
 
 	useEffect(() => {
-		if (batchId) {
-			fetchStudents();
+		const fetchAndFilter = async () => {
+			try {
+				setIsLoading(true);
+				const response = await getStudentsByCourseID(batchCourseId);
+				const students = response.students || [];
+
+				// Filter eligible students
+				const eligible = students.filter((student: any) =>
+					student.enrolledCourses?.some(
+						(course: any) => course.course === batchCourseId
+					)
+				);
+
+				setAllStudents(students);
+				setFilteredStudents(eligible);
+
+				// Preselect those already in batch
+				const preSelected = eligible
+					.filter((s: any) => currentStudents.some((cs) => cs._id === s._id))
+					.map((s: any) => s._id);
+				setSelectedIds(preSelected);
+			} catch (err) {
+				toast.error("Failed to fetch students");
+				console.error(err);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		if (isOpen && batchId && batchCourseId) {
+			fetchAndFilter();
 		}
-	}, [batchId]);
-
-	useEffect(() => {
-		if (batchCourseId && allStudents) {
-			console.log(batchCourseId);
-
-			const eligible = allStudents.filter((student) =>
-				student.enrolledCourses?.some(
-					(course: any) => course.course === batchCourseId
-				)
-			);
-			setFilteredStudents(eligible);
-		}
-	}, [batchCourseId, allStudents]);
-
+	}, [isOpen, batchId, batchCourseId, currentStudents]);
 	const toggleStudentSelection = (studentId: string) => {
 		setSelectedIds((prev) =>
 			prev.includes(studentId)
@@ -88,8 +102,10 @@ const AssignStudentsModal = ({
 	};
 
 	const handleAssign = async () => {
-		if (!selectedIds.length)
-			return toast.error("Please select at least one student");
+		if (!selectedIds.length) {
+			toast.error("Please select at least one student");
+			return;
+		}
 
 		try {
 			await assignStudentsToBatch({
@@ -119,13 +135,13 @@ const AssignStudentsModal = ({
 				) : filteredStudents.length === 0 ? (
 					<p className="text-muted">No eligible students for this course.</p>
 				) : (
-					<FormGroup>
+					<>
 						<div className="d-flex justify-content-end mb-2">
 							<Button
 								color="primary"
 								size="sm"
-								onClick={selectAll}
-								className="me-2">
+								className="me-2"
+								onClick={selectAll}>
 								Select All
 							</Button>
 							<Button
@@ -135,22 +151,39 @@ const AssignStudentsModal = ({
 								Deselect All
 							</Button>
 						</div>
-						{filteredStudents.map((student) => (
-							<FormGroup
-								key={student._id}
-								check>
-								<Label check>
-									<Input
-										type="checkbox"
-										defaultChecked={currentStudents.includes(student._id)}
-										checked={selectedIds.includes(student._id)}
-										onChange={() => toggleStudentSelection(student._id)}
-									/>
-									{student.name} ({student.email})
-								</Label>
-							</FormGroup>
-						))}
-					</FormGroup>
+						<div className="student-list d-flex flex-column gap-2">
+							{filteredStudents.map((student) => {
+								const isSelected = selectedIds.includes(student._id);
+								return (
+									<div
+										key={student._id}
+										onClick={() => toggleStudentSelection(student._id)}
+										className={`border rounded p-2 w-full d-flex justify-content-between align-items-center cursor-pointer ${
+											isSelected
+												? "bg-primary text-white"
+												: "bg-light text-dark"
+										}`}
+										style={{ transition: "all 0.2s ease", cursor: "pointer" }}>
+										<div>
+											<strong>{student.name}</strong> <br />
+											<small>{student.email}</small>
+										</div>
+										<div>
+											{isSelected ? (
+												<span className="badge bg-white text-primary">
+													Selected
+												</span>
+											) : (
+												<span className="badge bg-primary">
+													Click to Select
+												</span>
+											)}
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					</>
 				)}
 			</ModalBody>
 			<ModalFooter>

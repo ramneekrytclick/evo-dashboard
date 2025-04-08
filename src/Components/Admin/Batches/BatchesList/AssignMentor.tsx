@@ -21,7 +21,6 @@ const AssignMentorModal = ({
 	batchId,
 	isOpen,
 	toggle,
-	batchCourseId,
 	fetchData,
 	currentMentor,
 }: {
@@ -55,7 +54,6 @@ const AssignMentorModal = ({
 	const fetchMentors = async () => {
 		try {
 			const response = await getMentors();
-			// Filter only approved and active mentors
 			const filtered = response.filter(
 				(mentor: any) => mentor.isApproved && mentor.status === "Active"
 			);
@@ -64,6 +62,12 @@ const AssignMentorModal = ({
 			console.error(err);
 		}
 	};
+	useEffect(() => {
+		if (isOpen) {
+			fetchMentors();
+			setMentorId(currentMentor); // ⬅️ Set the selected mentor on open
+		}
+	}, [isOpen, currentMentor]);
 
 	useEffect(() => {
 		if (isOpen) {
@@ -88,7 +92,6 @@ const AssignMentorModal = ({
 					<Label>Select a Mentor</Label>
 					<Input
 						type="select"
-						defaultValue={currentMentor}
 						value={mentorId}
 						onChange={handleMentorChange}>
 						<option value="">-- Select Mentor --</option>

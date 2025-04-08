@@ -47,8 +47,7 @@ const BatchesList = () => {
 					return value.toLowerCase().includes(filterText.toLowerCase());
 				}
 				if (typeof value === "object" && value !== null) {
-					return Object.values(value)
-						.join(" ")
+					return JSON.stringify(value)
 						.toLowerCase()
 						.includes(filterText.toLowerCase());
 				}
@@ -72,6 +71,7 @@ const BatchesList = () => {
 			cell: (row) =>
 				row.course ? (
 					<Link
+						className="text-center"
 						href={`/admin/lessons/${
 							typeof row.course === "object" ? row.course._id : row.course
 						}`}>
@@ -113,12 +113,14 @@ const BatchesList = () => {
 			center: true,
 			cell: (row) =>
 				row.mentor ? (
-					<Badge
-						style={{ fontSize: "15px" }}
-						color="dark"
-						pill>
+					<span
+						style={{
+							fontSize: "13px",
+							fontWeight: 500,
+							color: "ActiveBorder",
+						}}>
 						{typeof row.mentor === "object" ? row.mentor.name : row.mentor}
-					</Badge>
+					</span>
 				) : (
 					<Badge color="warning">Unassigned</Badge>
 				),
@@ -129,12 +131,13 @@ const BatchesList = () => {
 			width: "15%",
 			cell: (row: BatchProps) => (
 				<div
-					className="d-flex flex-column gap-1 align-items-center justify-content-center "
+					className="d-flex flex-column gap-1 align-items-center justify-content-center"
 					style={{ minWidth: 200 }}>
 					<Button
 						color="primary"
 						size="sm"
-						onClick={() => {
+						onClick={(e) => {
+							e.stopPropagation(); // Prevent row click
 							setAssignStudentsModalOpen(row._id || "");
 							setSelectedBatch(row);
 						}}>
@@ -143,7 +146,8 @@ const BatchesList = () => {
 					<Button
 						color="success"
 						size="sm"
-						onClick={() => {
+						onClick={(e) => {
+							e.stopPropagation(); // Prevent row click
 							setAssignMentorModalOpen(row._id || "");
 							setSelectedBatch(row);
 						}}>
@@ -177,7 +181,10 @@ const BatchesList = () => {
 							persistTableHead
 							className="display"
 							noDataComponent="No batches found."
-							onRowClicked={(row) => setSelectedBatchForDetails(row)}
+							onRowClicked={(row, e) => {
+								if ((e.target as HTMLElement).closest("button")) return; // block modal if button clicked
+								setSelectedBatchForDetails(row);
+							}}
 							highlightOnHover
 							pointerOnHover
 						/>
@@ -191,13 +198,15 @@ const BatchesList = () => {
 					batchId={assignStudentsModalOpen}
 					batchCourseId={
 						typeof selectedBatch.course === "object"
-							? selectedBatch.course._id || ""
-							: selectedBatch.course || ""
+							? selectedBatch.course?._id ?? ""
+							: selectedBatch.course ?? ""
 					}
 					isOpen={!!assignStudentsModalOpen}
 					toggle={() => setAssignStudentsModalOpen(null)}
 					fetchData={fetchBatches}
-					currentStudents={selectedBatch.students || []}
+					currentStudents={
+						Array.isArray(selectedBatch.students) ? selectedBatch.students : []
+					}
 				/>
 			)}
 
@@ -206,13 +215,17 @@ const BatchesList = () => {
 					batchId={assignMentorModalOpen}
 					batchCourseId={
 						typeof selectedBatch.course === "object"
-							? selectedBatch.course._id
-							: selectedBatch.course || ""
+							? selectedBatch.course?._id ?? ""
+							: selectedBatch.course ?? ""
 					}
 					isOpen={!!assignMentorModalOpen}
 					toggle={() => setAssignMentorModalOpen(null)}
 					fetchData={fetchBatches}
-					currentMentor={selectedBatch.mentor?._id || ""}
+					currentMentor={
+						typeof selectedBatch.mentor === "object"
+							? selectedBatch.mentor?._id ?? ""
+							: selectedBatch.mentor ?? ""
+					}
 				/>
 			)}
 

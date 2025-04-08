@@ -1,14 +1,20 @@
 export type BlogStatus = "Pending" | "Approved" | "Rejected";
 
+export interface BlogCreator {
+	_id: string;
+	name: string;
+	email: string;
+}
+
 export interface BlogProps {
 	_id: string;
 	title: string;
 	content: string;
-	tags?: string[]; // Optional, can be empty
-	image?: string; // Optional, not always present
+	tags: string[];
+	image?: string;
 	conclusion: string;
 	status: BlogStatus;
-	creator: string;
+	creator: BlogCreator;
 	createdAt: string;
 	updatedAt: string;
 	__v?: number;

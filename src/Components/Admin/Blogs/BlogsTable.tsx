@@ -1,53 +1,76 @@
 "use client";
+
 import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { BlogsApprovalTitle } from "@/Constant";
 import { Badge, Card, CardBody } from "reactstrap";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import { BlogProps } from "@/Types/Blogs.type";
 import { getBlogs } from "@/app/api/admin/blogs/blog";
 import BlogModal from "./BlogModal";
+import { BlogProps } from "@/Types/Blogs.type";
+import { toast } from "react-toastify";
 
 const BlogsTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [blogs, setBlogs] = useState<BlogProps[]>([]);
+
+	const fetchBlogs = async () => {
+		try {
+			const response = await getBlogs();
+			setBlogs(response.blogs);
+		} catch (error) {
+			console.error(error);
+			toast.error("Failed to fetch blogs");
+		}
+	};
+
+	useEffect(() => {
+		fetchBlogs();
+	}, []);
+
+	const filteredItems = useMemo(() => {
+		return blogs.filter((item) => {
+			return (
+				item.title.toLowerCase().includes(filterText.toLowerCase()) ||
+				item.content.toLowerCase().includes(filterText.toLowerCase()) ||
+				item.creator?.name?.toLowerCase().includes(filterText.toLowerCase())
+			);
+		});
+	}, [blogs, filterText]);
+
 	const blogTableColumns: TableColumn<BlogProps>[] = [
 		{
 			name: "Title",
-			selector: (row) => row["title"],
+			selector: (row) => row.title,
 			sortable: true,
-			center: false,
 			cell: (row) => (
 				<BlogModal
 					fetchData={fetchBlogs}
 					item={{
-						id: row._id!,
+						id: row._id,
 						title: row.title,
 						text: row.content,
-						status: row.status!,
+						status: row.status,
 					}}
 				/>
 			),
 		},
 		{
 			name: "Content",
-			selector: (row) => row["content"],
+			selector: (row) => row.content,
 			sortable: true,
-			center: false,
 			cell: (row) => `${row.content.substring(0, 100)}...`,
 		},
 		{
 			name: "Creator",
+			selector: (row) => row.creator.name,
 			sortable: true,
-			center: false,
-			cell: (row) => row.creator,
 		},
 		{
 			name: "Status",
-			selector: (row) => row["status"]!,
+			selector: (row) => row.status,
 			sortable: true,
-			center: false,
 			cell: (row) => (
 				<Badge
 					color=""
@@ -65,37 +88,13 @@ const BlogsTable = () => {
 		},
 		{
 			name: "Created At",
-			selector: (row) => new Date(row.createdAt!).toDateString(),
+			selector: (row) => new Date(row.createdAt).toDateString(),
 			sortable: true,
-			center: false,
 		},
 	];
-	const fetchBlogs = async () => {
-		try {
-			const response = await getBlogs();
-			console.log(response?.blogs);
-			setBlogs(response.blogs);
-			return response;
-		} catch (error) {
-			console.error(error);
-		}
-	};
-	useEffect(() => {
-		fetchBlogs();
-	}, []);
-	const filteredItems: BlogProps[] = blogs.filter((item: BlogProps) => {
-		return Object.values(item).some(
-			(value) =>
-				value &&
-				value.toString().toLowerCase().includes(filterText.toLowerCase())
-		);
-	});
+
 	return (
 		<Card>
-			<CommonCardHeader
-				headClass="pb-0 card-no-border"
-				title={BlogsApprovalTitle}
-			/>
 			<CardBody>
 				<FilterComponent
 					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -107,10 +106,11 @@ const BlogsTable = () => {
 					<DataTable
 						data={filteredItems}
 						columns={blogTableColumns}
-						striped={true}
+						striped
 						fixedHeader
 						fixedHeaderScrollHeight="40vh"
 						className="display"
+						noDataComponent="No blogs found."
 					/>
 				</div>
 			</CardBody>

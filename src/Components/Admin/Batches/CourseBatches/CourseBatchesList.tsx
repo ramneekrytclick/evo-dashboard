@@ -151,6 +151,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 	return (
 		<div>
 			<Card>
+				{JSON.stringify(batches)}
 				<CardBody>
 					<FilterComponent
 						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>

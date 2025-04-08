@@ -36,10 +36,12 @@ const CourseViewPageContainer = ({ id }: { id: string }) => {
 		try {
 			const response = await getLessonsByCourseID(id);
 			setLessons(response.lessons);
+			console.log("====================================");
+			console.log("Lessons fetched successfully", response.lessons);
+			console.log("====================================");
 			// toast.success("Course Lessons fetched successfully");
 		} catch (error: any) {
 			setError(error);
-			toast.error("API NOT WORKING");
 			toast.error(error.message);
 		} finally {
 			setLoading(false);
