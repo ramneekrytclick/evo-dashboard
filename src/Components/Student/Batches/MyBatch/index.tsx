@@ -44,7 +44,7 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 					className="d-flex"
 					style={{ height: "75vh" }}>
 					{/* Left: Group Chat */}
-					<GroupChat />
+					<GroupChat batchId={id} />
 
 					{/* Right: Mentor Card */}
 					<Card className="shadow-sm bg-light text-dark rounded-0">
