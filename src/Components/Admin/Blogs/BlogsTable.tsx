@@ -41,7 +41,7 @@ const BlogsTable = () => {
 			name: "Creator",
 			sortable: true,
 			center: false,
-			cell: (row) => row.creator?.name,
+			cell: (row) => row.creator,
 		},
 		{
 			name: "Status",

@@ -25,7 +25,7 @@ const RightHeaderIcon = () => {
 				{/* <DarkMode /> */}
 				{/* <HeaderMessage /> */}
 				{/* <HeaderCart /> */}
-				<HeaderCartCourse />
+				{/* <HeaderCartCourse /> */}
 				<UserProfile />
 			</ul>
 		</Col>
