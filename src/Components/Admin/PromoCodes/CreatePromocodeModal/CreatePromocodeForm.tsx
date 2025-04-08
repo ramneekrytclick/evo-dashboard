@@ -1,5 +1,15 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { Button, Col, Form, Input, Label, Row } from "reactstrap";
+import {
+	Button,
+	Col,
+	Form,
+	Input,
+	Label,
+	Row,
+	Card,
+	CardBody,
+	CardTitle,
+} from "reactstrap";
 import { toast } from "react-toastify";
 import { CourseProps, PromoCodeProps } from "@/Types/Course.type";
 import { createPromoCode } from "@/app/api/admin/promo-codes";
@@ -19,7 +29,7 @@ const PromoCodeCreationForm = ({
 		discountPercentage: 0,
 		validUntil: "",
 		isActive: true,
-		course: { _id: "", name: "" },
+		course: { _id: "", title: "" },
 		usageLimit: undefined,
 	});
 
@@ -91,113 +101,112 @@ const PromoCodeCreationForm = ({
 	};
 
 	return (
-		<Form onSubmit={handleSubmit}>
-			<Row className="g-3">
-				<Col md={12}>
-					<Label>Promo Code</Label>
-					<Input
-						name="code"
-						type="text"
-						value={formData.code || ""}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>Discount (%)</Label>
-					<Input
-						name="discountPercentage"
-						type="number"
-						value={formData.discountPercentage || 0}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>Valid Until</Label>
-					<Input
-						name="validUntil"
-						type="date"
-						value={formData.validUntil?.toString().split("T")[0] || ""}
-						onChange={handleChange}
-						required
-					/>
-				</Col>
+		<Card className="shadow border-0">
+			<CardBody>
+				<Form onSubmit={handleSubmit}>
+					<Row className="g-4">
+						<Col md={12}>
+							<Label className="fw-semibold">Promo Code</Label>
+							<Input
+								name="code"
+								type="text"
+								value={formData.code || ""}
+								onChange={handleChange}
+								placeholder="E.g. WELCOME50"
+								required
+							/>
+						</Col>
+						<Col md={6}>
+							<Label className="fw-semibold">Discount (%)</Label>
+							<Input
+								name="discountPercentage"
+								type="number"
+								value={formData.discountPercentage || 0}
+								onChange={handleChange}
+								min={1}
+								max={100}
+								required
+							/>
+						</Col>
+						<Col md={6}>
+							<Label className="fw-semibold">Valid Until</Label>
+							<Input
+								name="validUntil"
+								type="date"
+								value={formData.validUntil?.toString().split("T")[0] || ""}
+								onChange={handleChange}
+								required
+							/>
+						</Col>
 
-				<Col md={12}>
-					<Label check>
-						<Input
-							type="checkbox"
-							name="isOverall"
-							checked={isOverall}
-							onChange={handleChange}
-						/>{" "}
-						Apply as Overall Promo (not course-specific)
-					</Label>
-				</Col>
+						<Col md={12}>
+							<Label
+								check
+								className="fw-semibold">
+								<Input
+									type="checkbox"
+									name="isOverall"
+									checked={isOverall}
+									onChange={handleChange}
+								/>{" "}
+								Apply as Overall Promo (not course-specific)
+							</Label>
+						</Col>
 
-				{!isOverall && (
-					<Col md={12}>
-						<Label>Apply to Course</Label>
-						<Input
-							type="select"
-							name="course"
-							value={formData.course?._id || ""}
-							onChange={(e) =>
-								setFormData({
-									...formData,
-									course: e.target.value
-										? { _id: e.target.value, name: "" }
-										: undefined,
-								})
-							}>
-							<option value="">-- Select Course --</option>
-							{courses?.map((course) => (
-								<option
-									key={course._id}
-									value={course._id}>
-									{course.title}
-								</option>
-							))}
-						</Input>
-					</Col>
-				)}
+						{!isOverall && (
+							<Col md={12}>
+								<Label className="fw-semibold">Apply to Course</Label>
+								<Input
+									type="select"
+									name="course"
+									value={formData.course?._id || ""}
+									onChange={(e) =>
+										setFormData({
+											...formData,
+											course: e.target.value
+												? { _id: e.target.value, title: "" }
+												: undefined,
+										})
+									}>
+									<option value="">-- Select Course --</option>
+									{courses?.map((course) => (
+										<option
+											key={course._id}
+											value={course._id}>
+											{course.title}
+										</option>
+									))}
+								</Input>
+							</Col>
+						)}
 
-				{isOverall && (
-					<Col md={12}>
-						<Label>Usage Limit</Label>
-						<Input
-							name="usageLimit"
-							type="number"
-							value={formData.usageLimit || 1}
-							min={1}
-							onChange={handleChange}
-							required
-						/>
-					</Col>
-				)}
+						{isOverall && (
+							<Col md={12}>
+								<Label className="fw-semibold">Usage Limit</Label>
+								<Input
+									name="usageLimit"
+									type="number"
+									value={formData.usageLimit || 1}
+									min={1}
+									onChange={handleChange}
+									required
+								/>
+							</Col>
+						)}
 
-				<Col md={12}>
-					<Label check>
-						<Input
-							type="checkbox"
-							name="isActive"
-							checked={formData.isActive ?? true}
-							onChange={handleChange}
-						/>{" "}
-						Is Active
-					</Label>
-				</Col>
-
-				<Col md={12}>
-					<Button
-						color="primary"
-						type="submit">
-						Create Promo Code
-					</Button>
-				</Col>
-			</Row>
-		</Form>
+						<Col
+							md={12}
+							className="text-end">
+							<Button
+								color="primary"
+								type="submit">
+								Create Promo Code
+							</Button>
+						</Col>
+					</Row>
+				</Form>
+			</CardBody>
+		</Card>
 	);
 };
 

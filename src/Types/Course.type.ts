@@ -108,7 +108,7 @@ export interface PromoCodeProps {
 	code: string;
 	discountPercentage: number;
 	validUntil: string;
-	course?: { _id: string; name: string };
+	course?: { _id: string; title: string };
 	usageLimit?: number;
 	usageCount?: number;
 	isActive: boolean;

@@ -161,9 +161,9 @@ const BatchesList = () => {
 	];
 
 	return (
-		<div>
-			<CreateBatchModal fetchData={fetchBatches} />
+		<>
 			<Card>
+				<CreateBatchModal fetchData={fetchBatches} />
 				<CardBody>
 					<FilterComponent
 						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -236,7 +236,7 @@ const BatchesList = () => {
 					toggle={() => setSelectedBatchForDetails(null)}
 				/>
 			)}
-		</div>
+		</>
 	);
 };
 

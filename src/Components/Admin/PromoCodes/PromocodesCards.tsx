@@ -22,6 +22,13 @@ const PromocodesCards = () => {
 		fetchPromoCodes();
 	}, []);
 
+	const formatDate = (date: string | null | undefined) => {
+		if (!date) return "—";
+		return new Date(date).toLocaleDateString();
+	};
+
+	const isCourseSpecific = (promo: PromoCodeProps) => !!promo.course;
+
 	return (
 		<Col>
 			<Row className="ms-1 mb-4">
@@ -39,24 +46,43 @@ const PromocodesCards = () => {
 								{promoCode.discountPercentage}% OFF
 							</div>
 							<CardBody>
-								<p>
-									Promo Code: <strong>{promoCode.code}</strong>
-									<br />
-									Valid Until:{" "}
-									<em className="txt-danger">
-										{new Date(promoCode.validUntil).toLocaleDateString()}
-									</em>
-									<br />
-									Applicable On:{" "}
-									{promoCode.course ? (
-										<span>
-											Course - <strong>{promoCode.course.name}</strong>
-										</span>
-									) : (
-										<span className="text-warning">Overall</span>
-									)}
-									<br />
-									Status:{" "}
+								<p className="mb-1">
+									<strong>Promo Code:</strong> {promoCode.code}
+								</p>
+
+								{isCourseSpecific(promoCode) ? (
+									<>
+										<p className="mb-1">
+											<strong>Applicable On:</strong>{" "}
+											<span>
+												Course – <strong>{promoCode.course?.title}</strong>
+											</span>
+										</p>
+										<p className="mb-1">
+											<strong>Valid Until:</strong>{" "}
+											<em className="txt-danger">
+												{formatDate(promoCode.validUntil)}
+											</em>
+										</p>
+									</>
+								) : (
+									<>
+										<p className="mb-1">
+											<strong>Applicable On:</strong>{" "}
+											<span className="text-warning">Overall</span>
+										</p>
+										<p className="mb-1">
+											<strong>Usage Limit:</strong>{" "}
+											{promoCode.usageLimit ?? "∞"}
+										</p>
+										<p className="mb-1">
+											<strong>Used:</strong> {promoCode.usageCount}
+										</p>
+									</>
+								)}
+
+								<p className="mb-1">
+									<strong>Status:</strong>{" "}
 									{promoCode.isActive ? (
 										<span className="text-success">Active</span>
 									) : (
@@ -64,6 +90,7 @@ const PromocodesCards = () => {
 									)}
 								</p>
 							</CardBody>
+
 							<div className="d-flex justify-content-end mt-3 gap-2">
 								{promoCode._id && (
 									<PausePromoModal

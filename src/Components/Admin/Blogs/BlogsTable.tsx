@@ -102,17 +102,15 @@ const BlogsTable = () => {
 					}
 					filterText={filterText}
 				/>
-				<div className="table-responsive custom-scrollbar user-datatable mt-3">
-					<DataTable
-						data={filteredItems}
-						columns={blogTableColumns}
-						striped
-						fixedHeader
-						fixedHeaderScrollHeight="40vh"
-						className="display"
-						noDataComponent="No blogs found."
-					/>
-				</div>
+				<DataTable
+					data={filteredItems}
+					columns={blogTableColumns}
+					striped
+					pagination
+					fixedHeader
+					className="display"
+					noDataComponent="No blogs found."
+				/>
 			</CardBody>
 		</Card>
 	);

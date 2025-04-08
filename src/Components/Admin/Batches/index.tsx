@@ -17,11 +17,7 @@ const BatchesPageContainer = () => {
 			<Container fluid>
 				<Row>
 					<Col sm={12}>
-						<Card>
-							<CardBody>
-								<BatchesList />
-							</CardBody>
-						</Card>
+						<BatchesList />
 					</Col>
 				</Row>
 			</Container>

@@ -1,14 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+	Button,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	Card,
+	CardBody,
+	Badge,
+} from "reactstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { approveJob, getAllJobs } from "@/app/api/admin/jobs";
 import { toast } from "react-toastify";
 
-// ---------------------------
-// Interfaces for Type Safety
-// ---------------------------
 interface Employer {
 	_id: string;
 	name: string;
@@ -33,9 +39,6 @@ interface Job {
 	createdAt: string;
 }
 
-// ---------------------------
-// Main Component
-// ---------------------------
 export default function JobTable(): JSX.Element {
 	const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
@@ -71,9 +74,7 @@ export default function JobTable(): JSX.Element {
 	const confirmApprove = async () => {
 		if (!jobToApprove) return;
 		try {
-			// Replace with actual approve API call
-			console.log("Approving job:", jobToApprove._id);
-			const response = await approveJob(jobToApprove._id);
+			await approveJob(jobToApprove._id);
 			toast.success(`Job "${jobToApprove.title}" approved`);
 			setConfirmModalOpen(false);
 			setJobToApprove(null);
@@ -81,6 +82,18 @@ export default function JobTable(): JSX.Element {
 		} catch (error) {
 			toast.error("Failed to approve job");
 			console.error(error);
+		}
+	};
+
+	const statusBadge = (status: string) => {
+		switch (status) {
+			case "Approved":
+				return <Badge color="success">Approved</Badge>;
+			case "Rejected":
+				return <Badge color="danger">Rejected</Badge>;
+			case "Pending":
+			default:
+				return <Badge color="warning">Pending</Badge>;
 		}
 	};
 
@@ -92,26 +105,31 @@ export default function JobTable(): JSX.Element {
 			sortable: true,
 		},
 		{ name: "Type", selector: (row) => row.jobType || "-", sortable: true },
-		{ name: "Status", selector: (row) => row.status, sortable: true },
+		{
+			name: "Status",
+			selector: (row) => row.status,
+			cell: (row) => statusBadge(row.status),
+			sortable: true,
+		},
 		{
 			name: "Actions",
 			cell: (row) => (
 				<div className="d-flex gap-2">
 					<Button
-						color="secondary"
+						color="outline-success"
 						size="sm"
 						onClick={() => {
 							setSelectedJob(row);
 							setModalOpen(true);
 						}}>
-						View
+						<i className="fa fa-eye me-1" /> View
 					</Button>
 					{row.status === "Pending" && (
 						<Button
 							color="success"
 							size="sm"
 							onClick={() => handleApproveClick(row)}>
-							Approve
+							<i className="fa fa-check me-1" /> Approve
 						</Button>
 					)}
 				</div>
@@ -120,106 +138,123 @@ export default function JobTable(): JSX.Element {
 	];
 
 	return (
-		<div className="container mt-4">
-			<h2 className="mb-4">Job Listings</h2>
+		<>
+			<Card className="shadow-sm">
+				<CardBody>
+					<h4 className="mb-4 fw-bold">All Job Listings</h4>
+					<DataTable
+						columns={columns}
+						data={jobs}
+						progressPending={loading}
+						pagination
+						responsive
+						striped
+						highlightOnHover
+					/>
 
-			<DataTable
-				columns={columns}
-				data={jobs}
-				progressPending={loading}
-				pagination
-				responsive
-				striped
-				highlightOnHover
-			/>
+					{/* Job Details Modal */}
+					<Modal
+						isOpen={modalOpen}
+						toggle={toggleModal}
+						size="lg">
+						<ModalHeader
+							toggle={toggleModal}
+							className="fw-bold">
+							Job Details
+						</ModalHeader>
+						<ModalBody className="py-3 px-4">
+							{selectedJob && (
+								<div className="row">
+									<div className="col-md-6">
+										<p>
+											<strong>Title:</strong> {selectedJob.title}
+										</p>
+										<p>
+											<strong>Company:</strong>{" "}
+											{selectedJob.companyName ||
+												selectedJob.employer?.companyName}
+										</p>
+										<p>
+											<strong>Type:</strong> {selectedJob.jobType}
+										</p>
+										<p>
+											<strong>Experience:</strong>{" "}
+											{selectedJob.experienceRequired || "-"}
+										</p>
+										<p>
+											<strong>Salary:</strong> {selectedJob.salary || "-"}
+										</p>
+										<p>
+											<strong>Openings:</strong> {selectedJob.openings}
+										</p>
+										<p>
+											<strong>Status:</strong> {statusBadge(selectedJob.status)}
+										</p>
+									</div>
+									<div className="col-md-6">
+										<p>
+											<strong>Description:</strong> {selectedJob.description}
+										</p>
+										<p>
+											<strong>Location:</strong> {selectedJob.location || "-"}
+										</p>
+										<p>
+											<strong>Deadline:</strong>{" "}
+											{selectedJob.applicationDeadline
+												? new Date(
+														selectedJob.applicationDeadline
+												  ).toLocaleDateString()
+												: "-"}
+										</p>
+										<p>
+											<strong>Skills:</strong>{" "}
+											{selectedJob.skillsRequired?.length
+												? selectedJob.skillsRequired.join(", ")
+												: "N/A"}
+										</p>
+										<p>
+											<strong>Posted On:</strong>{" "}
+											{new Date(selectedJob.createdAt).toLocaleDateString()}
+										</p>
+									</div>
+								</div>
+							)}
+						</ModalBody>
+					</Modal>
 
-			{/* Job Details Modal */}
-			<Modal
-				isOpen={modalOpen}
-				toggle={toggleModal}
-				size="lg">
-				<ModalHeader toggle={toggleModal}>Job Details</ModalHeader>
-				<ModalBody>
-					{selectedJob && (
-						<div>
-							<p>
-								<strong>Title:</strong> {selectedJob.title}
-							</p>
-							<p>
-								<strong>Description:</strong> {selectedJob.description}
-							</p>
-							<p>
-								<strong>Company:</strong>{" "}
-								{selectedJob.companyName || selectedJob.employer?.companyName}
-							</p>
-							<p>
-								<strong>Location:</strong> {selectedJob.location || "-"}
-							</p>
-							<p>
-								<strong>Job Type:</strong> {selectedJob.jobType}
-							</p>
-							<p>
-								<strong>Experience:</strong>{" "}
-								{selectedJob.experienceRequired || "-"}
-							</p>
-							<p>
-								<strong>Salary:</strong> {selectedJob.salary || "-"}
-							</p>
-							<p>
-								<strong>Deadline:</strong>{" "}
-								{selectedJob.applicationDeadline
-									? new Date(
-											selectedJob.applicationDeadline
-									  ).toLocaleDateString()
-									: "-"}
-							</p>
-							<p>
-								<strong>Skills:</strong>{" "}
-								{selectedJob.skillsRequired?.length
-									? selectedJob.skillsRequired.join(", ")
-									: "N/A"}
-							</p>
-							<p>
-								<strong>Openings:</strong> {selectedJob.openings}
-							</p>
-							<p>
-								<strong>Status:</strong> {selectedJob.status}
-							</p>
-							<p>
-								<strong>Posted On:</strong>{" "}
-								{new Date(selectedJob.createdAt).toLocaleDateString()}
-							</p>
-						</div>
-					)}
-				</ModalBody>
-			</Modal>
-
-			{/* Approval Confirmation Modal */}
-			<Modal
-				isOpen={confirmModalOpen}
-				toggle={toggleConfirmModal}>
-				<ModalHeader toggle={toggleConfirmModal}>Confirm Approval</ModalHeader>
-				<ModalBody>
-					{jobToApprove && (
-						<p>
-							Are you sure you want to approve{" "}
-							<strong>{jobToApprove.title}</strong>?
-						</p>
-					)}
-				</ModalBody>
-				<ModalFooter>
-					<Button
-						color="success"
-						onClick={confirmApprove}>
-						Yes, Approve
-					</Button>
-					<Button
-						color="secondary"
-						onClick={toggleConfirmModal}>
-						Cancel
-					</Button>
-				</ModalFooter>
-			</Modal>
-		</div>
+					{/* Approval Confirmation Modal */}
+					<Modal
+						isOpen={confirmModalOpen}
+						toggle={toggleConfirmModal}
+						centered>
+						<ModalHeader
+							toggle={toggleConfirmModal}
+							className="fw-bold">
+							Confirm Approval
+						</ModalHeader>
+						<ModalBody>
+							{jobToApprove && (
+								<p>
+									Are you sure you want to approve{" "}
+									<strong>{jobToApprove.title}</strong>?
+								</p>
+							)}
+						</ModalBody>
+						<ModalFooter>
+							<Button
+								color="success"
+								onClick={confirmApprove}>
+								Yes, Approve
+							</Button>
+							<Button
+								color="outline-secondary"
+								onClick={toggleConfirmModal}>
+								Cancel
+							</Button>
+						</ModalFooter>
+					</Modal>
+				</CardBody>
+			</Card>
+		</>
 	);
 }

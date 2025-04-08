@@ -14,17 +14,21 @@ interface PausePromoModalProps {
 const PausePromoModal = ({ id, isActive, fetchData }: PausePromoModalProps) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => setModal(!modal);
+	const [loading, setLoading] = useState(false);
 
 	const handleToggle = async () => {
 		try {
+			setLoading(true);
 			await updatePromoStatus(id, !isActive);
 			toast.success(
 				`Promo code ${!isActive ? "activated" : "paused"} successfully`
 			);
 			toggle();
-			fetchData();
+			await fetchData();
 		} catch (err) {
 			toast.error("Failed to update status");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -32,9 +36,12 @@ const PausePromoModal = ({ id, isActive, fetchData }: PausePromoModalProps) => {
 		<>
 			<Button
 				color={isActive ? "warning" : "success"}
-				onClick={toggle}>
-				<i className={isActive ? "icon-minus" : "icon-plus"}></i>
+				onClick={toggle}
+				size="sm">
+				<i className={`me-1 ${isActive ? "icon-pause" : "icon-play"}`} />
+				{isActive ? "Pause" : "Activate"}
 			</Button>
+
 			<CommonModal
 				modalData={{
 					isOpen: modal,
@@ -42,19 +49,29 @@ const PausePromoModal = ({ id, isActive, fetchData }: PausePromoModalProps) => {
 					center: true,
 					bodyClass: "dark-sign-up",
 				}}>
-				<div className="text-center">
-					<h5>{isActive ? "Pause Promo Code?" : "Activate Promo Code?"}</h5>
-					<Button
-						outline
-						onClick={toggle}>
-						Cancel
-					</Button>
-					<Button
-						color={isActive ? "warning" : "success"}
-						className="ms-2"
-						onClick={handleToggle}>
-						Confirm
-					</Button>
+				<div className="text-center py-3 px-2">
+					<h5 className="fw-bold mb-3">
+						{isActive ? "Pause this Promo Code?" : "Activate this Promo Code?"}
+					</h5>
+					<p className="text-muted mb-4">
+						Are you sure you want to {isActive ? "pause" : "activate"} this
+						promo?
+					</p>
+					<div className="d-flex justify-content-center gap-3">
+						<Button
+							outline
+							color="secondary"
+							onClick={toggle}
+							disabled={loading}>
+							Cancel
+						</Button>
+						<Button
+							color={isActive ? "warning" : "success"}
+							onClick={handleToggle}
+							disabled={loading}>
+							{loading ? "Processing..." : "Confirm"}
+						</Button>
+					</div>
 				</div>
 			</CommonModal>
 		</>
