@@ -1,6 +1,7 @@
 "use client";
 import { getMyBlogs } from "@/app/api/publisher/blogs/blog";
 import { BlogProps } from "@/Types/Blogs.type";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
@@ -58,10 +59,12 @@ const MyBlogs = () => {
 							)}
 							<CardBody>
 								<div className="d-flex justify-content-between align-items-center mb-2">
-									<CardTitle
-										tag="h5"
-										className="mb-0">
-										{blog.title}
+									<CardTitle className="mb-0">
+										<Link
+											className="text-decoration-none text-dark fw-bold text-capitalize"
+											href={`/publisher/my-blogs/${blog._id}`}>
+											{blog.title}
+										</Link>
 									</CardTitle>
 									<Badge
 										color={

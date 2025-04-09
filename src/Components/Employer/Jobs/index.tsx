@@ -5,24 +5,22 @@ import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import JobApplicationsTable from "./JobsTable";
 
 const JobApplicationsContainer = () => {
-    return (
-        <>
-            <Breadcrumbs mainTitle={jobApplicationsTitle} parent={EmployerTitle} title={jobApplicationsTitle}/>
-            <Container fluid>
-            <Row>
+	return (
+		<>
+			<Breadcrumbs
+				mainTitle={jobApplicationsTitle}
+				parent={EmployerTitle}
+				title={jobApplicationsTitle}
+			/>
+			<Container fluid>
+				<Row>
 					<Col xs={12}>
-						<Card>
-							<CommonCardHeader title={jobApplicationsTitle} />
-							<CardBody className="add-post">
-								<JobApplicationsTable />
-							</CardBody>
-						</Card>
+						<JobApplicationsTable />
 					</Col>
 				</Row>
-                
-            </Container>
-        </>
-    );
-}
+			</Container>
+		</>
+	);
+};
 
 export default JobApplicationsContainer;

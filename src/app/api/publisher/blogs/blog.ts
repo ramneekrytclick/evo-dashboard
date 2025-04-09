@@ -20,3 +20,6 @@ export const getMyBlogs = async () => {
 		console.error(error);
 	}
 };
+export const getBlog = async (id: string) => {
+	return (await apiClient.get(`/blogs/${id}`)).data;
+};

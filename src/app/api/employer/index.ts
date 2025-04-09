@@ -19,20 +19,16 @@ export const createJob = async (data: CreateJobPayload) => {
 	return response.data;
 };
 
-export const getStudents = async () => {
-	try {
-		const response = await apiClient.get("/employer/students");
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+export const getApplicants = async (jobId: string) => {
+	const response = await apiClient.get(`/jobs/${jobId}/applicants`);
+	return response.data;
 };
 
 export const getJobs = async () => {
-	try {
-		const response = await apiClient.get("/employer/jobs");
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	const response = await apiClient.get("/jobs");
+	return response.data;
+};
+export const getStudentDetailsById = async (studentId: string) => {
+	const response = await apiClient.get(`/jobs/student/${studentId}`);
+	return response.data;
 };

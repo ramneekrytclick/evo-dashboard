@@ -48,6 +48,7 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 			});
 			toast.success(`Applied to ${selectedJob.title}`);
 			setIsModalOpen(false);
+			fetchData();
 		} catch (error) {
 			toast.error("Error applying to job!");
 		}
@@ -115,12 +116,16 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 								<span>
 									Openings: <strong>{item.openings}</strong>
 								</span>
-								<Button
-									color="primary"
-									size="sm"
-									onClick={() => openConfirmationModal(item)}>
-									Apply
-								</Button>
+								{item.applicants.includes(id) ? (
+									"Already Applied"
+								) : (
+									<Button
+										color="primary"
+										size="sm"
+										onClick={() => openConfirmationModal(item)}>
+										Apply
+									</Button>
+								)}
 							</div>
 						</CardBody>
 					</Card>
@@ -133,7 +138,10 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 
 			<JobApplyConfirmationModal
 				isOpen={isModalOpen}
-				toggle={() => setIsModalOpen(false)}
+				toggle={() => {
+					setIsModalOpen(false);
+					fetchData();
+				}}
 				onConfirm={handleConfirmApply}
 				job={selectedJob}
 			/>

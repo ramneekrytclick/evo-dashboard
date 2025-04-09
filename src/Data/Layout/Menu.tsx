@@ -202,12 +202,6 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Create Job",
 			},
 			{
-				id: 3,
-				path: "/employer/students",
-				icon: "user",
-				title: "Students",
-			},
-			{
 				id: 4,
 				path: "/employer/jobs",
 				icon: "ui-kits",
