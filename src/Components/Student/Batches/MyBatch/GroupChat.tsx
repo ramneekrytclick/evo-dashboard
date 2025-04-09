@@ -16,6 +16,7 @@ import {
 import { format } from "date-fns";
 import { useAuth } from "@/app/AuthProvider";
 import io from "socket.io-client";
+import ChatMessageBubble from "@/CommonComponent/ChatBubble";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string);
 
@@ -123,12 +124,12 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 
 	return (
 		<Card className="d-flex flex-column h-100 w-100">
-			<CardHeader className="bg-white text-primary w-100">
-				<h5 className="mb-0">Group Chat</h5>
+			<CardHeader className="bg-white border-bottom w-100">
+				<h5 className="mb-0 text-primary">Group Chat</h5>
 			</CardHeader>
 
 			{latestMentorMessage && (
-				<div className="bg-warning-subtle p-3 border-bottom">
+				<div className="bg-warning-subtle p-3 border-bottom w-100">
 					<h6 className="text-dark mb-1">
 						📌 Latest Mentor Message
 						<Badge
@@ -146,7 +147,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 				</div>
 			)}
 
-			<CardBody className="flex-grow-1 overflow-auto bg-light p-3 w-100">
+			<CardBody className="flex-grow-1 overflow-auto bg-light px-4 py-3 w-100">
 				{loading ? (
 					<div className="text-center mt-4">
 						<Spinner color="primary" />
@@ -154,70 +155,21 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 				) : messages.length === 0 ? (
 					<p className="text-center text-muted">No messages yet</p>
 				) : (
-					messages.map((msg, index) => {
-						const isOnline = onlineUsers.some(
-							(u: any) => u.userId === msg.sender?._id
-						);
-						const isMe = msg.sender?._id === userId;
-						return (
-							<div
-								key={index}
-								className={`d-flex flex-column mb-2 ${
-									isMe ? "align-items-end" : "align-items-start"
-								}`}>
-								<div
-									className={`p-2 rounded shadow-sm ${
-										isMe ? "bg-dark text-white" : "bg-white text-dark border"
-									}`}
-									style={{
-										maxWidth: "75%",
-										wordBreak: "break-word",
-										position: "relative",
-									}}>
-									<div className="d-flex justify-content-between align-items-center mb-1">
-										<span
-											className={`fw-semibold ${
-												isMe ? "text-warning" : "text-muted"
-											}`}>
-											{msg.sender?.name}
-										</span>
-										{isMe ? (
-											<></>
-										) : (
-											<span
-												className={`ms-2 ${
-													isOnline ? "text-success" : "text-danger"
-												}`}>
-												●
-											</span>
-										)}
-										{msg.senderType === "mentor" && (
-											<Badge
-												color="info"
-												pill
-												className="ms-2">
-												Mentor
-											</Badge>
-										)}
-									</div>
-									<div className={`fw-bold ${isMe ? "text-end" : ""}`}>
-										{msg.message}
-									</div>
-									<small
-										className={`${
-											isMe ? "text-white" : ""
-										} mt-1 d-block text-end`}>
-										{format(new Date(msg.timestamp), "hh:mm a")}
-									</small>
-								</div>
-							</div>
-						);
-					})
+					messages.map((msg, index) => (
+						<ChatMessageBubble
+							key={index}
+							msg={msg}
+							isMe={msg.sender?._id === userId}
+							isOnline={onlineUsers.some(
+								(u: any) => u.userId === msg.sender?._id
+							)}
+						/>
+					))
 				)}
 				<div ref={messagesEndRef} />
 			</CardBody>
 
-			<InputGroup className="p-3 border-top">
+			<InputGroup className="p-3 border-top bg-white">
 				<Input
 					type="text"
 					placeholder="Type a message..."
