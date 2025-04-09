@@ -8,35 +8,34 @@ const ChatMessageBubble = ({ msg, isMe, isOnline }: any) => {
 				isMe ? "align-items-end" : "align-items-start"
 			}`}>
 			<div
-				className={`px-3 py-2 rounded shadow-sm ${
+				className={`px-4 py-3 shadow-sm ${
 					isMe ? "bg-dark text-white" : "bg-white text-dark border"
 				}`}
 				style={{
-					maxWidth: "75%",
-					borderRadius: "12px",
+					maxWidth: "80%",
+					borderTopLeftRadius: "16px",
+					borderTopRightRadius: "16px",
+					borderBottomLeftRadius: isMe ? "16px" : "0px",
+					borderBottomRightRadius: isMe ? "0px" : "16px",
+					backgroundColor: isMe ? "#212529" : "#fff",
 				}}>
-				<div className="d-flex align-items-center gap-2 mb-1">
+				<div className="d-flex align-items-center flex-wrap gap-2 mb-2">
 					<span
-						className={`fw-semibold fs-6 ${
-							isMe ? "text-warning" : "text-primary"
-						}`}>
+						className={`fw-semibold ${isMe ? "text-warning" : "text-primary"}`}>
 						{msg.sender?.name}
 					</span>
+
 					{!isMe && (
 						<span
-							className={`fs-6 d-flex align-items-center gap-1 ${
-								isOnline ? "text-success" : "text-muted"
-							}`}>
-							●{" "}
-							<h5
-								className={`fs-6 ${
-									isOnline ? "text-success" : "text-muted"
-								} fw-light`}>
-								{" "}
-								{/* {isOnline ? "Online" : "Offline"} */}
-							</h5>
-						</span>
+							className="rounded-circle d-inline-block"
+							style={{
+								width: "10px",
+								height: "10px",
+								backgroundColor: isOnline ? "#28a745" : "#6c757d",
+							}}
+						/>
 					)}
+
 					{msg.senderType === "mentor" && (
 						<Badge
 							color="info"
@@ -45,11 +44,15 @@ const ChatMessageBubble = ({ msg, isMe, isOnline }: any) => {
 						</Badge>
 					)}
 				</div>
-				<div className={`fw-semibold fs-5 ${isMe ? "text-end" : "text-start"}`}>
+
+				<div
+					className={`fw-semibold ${isMe ? "text-end" : "text-start"} fs-5`}
+					style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
 					{msg.message}
 				</div>
+
 				<small
-					className={`d-block mt-1 text-end ${
+					className={`d-block mt-2 text-end ${
 						isMe ? "text-white-50" : "text-muted"
 					}`}>
 					{format(new Date(msg.timestamp), "hh:mm a")}
@@ -58,4 +61,5 @@ const ChatMessageBubble = ({ msg, isMe, isOnline }: any) => {
 		</div>
 	);
 };
+
 export default ChatMessageBubble;
