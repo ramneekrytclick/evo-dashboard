@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getBookedSessions, updateBookingStatus } from "@/app/api/mentor";
+import {
+	getBookedSessions,
+	updateBookingStatus,
+	replyToSessionBooking,
+} from "@/app/api/mentor";
 import { useAuth } from "@/app/AuthProvider";
 import {
 	Card,
@@ -13,16 +17,19 @@ import {
 	Button,
 	Input,
 	Spinner,
+	FormGroup,
+	Label,
 } from "reactstrap";
 import { toast } from "react-toastify";
 
 const ScheduledSessions = () => {
 	const [sessions, setSessions] = useState<any[]>([]);
 	const { user } = useAuth();
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
 	const [statusUpdates, setStatusUpdates] = useState<{ [key: string]: string }>(
 		{}
 	);
+	const [replies, setReplies] = useState<{ [key: string]: string }>({});
 
 	const fetchSessions = async () => {
 		try {
@@ -38,9 +45,13 @@ const ScheduledSessions = () => {
 		setStatusUpdates((prev) => ({ ...prev, [bookingId]: newStatus }));
 	};
 
+	const handleReplyChange = (bookingId: string, reply: string) => {
+		setReplies((prev) => ({ ...prev, [bookingId]: reply }));
+	};
+
 	const handleUpdateStatus = async (bookingId: string) => {
 		try {
-			setLoading(true);
+			setLoading((prev) => ({ ...prev, [bookingId]: true }));
 			await updateBookingStatus(bookingId, statusUpdates[bookingId]);
 			toast.success("Status updated successfully!");
 			await fetchSessions();
@@ -48,7 +59,25 @@ const ScheduledSessions = () => {
 			console.error(err);
 			toast.error("Failed to update status.");
 		} finally {
-			setLoading(false);
+			setLoading((prev) => ({ ...prev, [bookingId]: false }));
+		}
+	};
+
+	const handleSendReply = async (bookingId: string) => {
+		if (!replies[bookingId]) {
+			toast.warning("Reply message cannot be empty.");
+			return;
+		}
+		try {
+			setLoading((prev) => ({ ...prev, [bookingId]: true }));
+			await replyToSessionBooking(replies[bookingId], bookingId);
+			toast.success("Reply sent successfully!");
+			setReplies((prev) => ({ ...prev, [bookingId]: "" }));
+		} catch (err) {
+			console.error(err);
+			toast.error("Failed to send reply.");
+		} finally {
+			setLoading((prev) => ({ ...prev, [bookingId]: false }));
 		}
 	};
 
@@ -63,49 +92,84 @@ const ScheduledSessions = () => {
 	}
 
 	return (
-		<div className="container mt-4 bg-light">
-			{sessions.map((session) => (
-				<Col
-					md="6"
-					className="mb-4"
-					key={session._id}>
-					<Card>
-						<CardBody>
-							<CardTitle tag="h5">Student: {session.student.name}</CardTitle>
-							<CardText>
-								<strong>Email:</strong> {session.student.email} <br />
-								<strong>Date:</strong>{" "}
-								{new Date(session.date).toLocaleDateString()} <br />
-								<strong>Time:</strong> {session.timeSlot} <br />
-								<strong>Current Status:</strong>{" "}
-								<span className="text-primary">{session.status}</span>
-							</CardText>
-							<div className="d-flex gap-2 align-items-center">
-								<Input
-									type="select"
-									value={statusUpdates[session._id] || session.status}
-									onChange={(e) =>
-										handleStatusChange(session._id, e.target.value)
-									}
-									style={{ maxWidth: "150px" }}>
-									<option value="Pending">Pending</option>
-									<option value="Confirmed">Confirmed</option>
-									<option value="Cancelled">Cancelled</option>
-								</Input>
-								<Button
-									color="primary"
-									size="sm"
-									disabled={
-										loading || statusUpdates[session._id] === session.status
-									}
-									onClick={() => handleUpdateStatus(session._id)}>
-									{loading ? <Spinner size="sm" /> : "Update Status"}
-								</Button>
-							</div>
-						</CardBody>
-					</Card>
-				</Col>
-			))}
+		<div className="container mt-4">
+			<Row>
+				{sessions.map((session) => (
+					<Col
+						md="6"
+						className="mb-4"
+						key={session._id}>
+						<Card>
+							<CardBody>
+								<CardTitle tag="h5">Student: {session.student.name}</CardTitle>
+								<CardText>
+									<strong>Email:</strong> {session.student.email} <br />
+									<strong>Date:</strong>{" "}
+									{new Date(session.date).toLocaleDateString()} <br />
+									<strong>Time:</strong> {session.timeSlot} <br />
+									<strong>Status:</strong>{" "}
+									<span className="text-primary">{session.status}</span>
+								</CardText>
+
+								<FormGroup className="d-flex gap-2 align-items-center mb-3">
+									<Label
+										for="statusSelect"
+										className="me-2 mb-0">
+										Update Status:
+									</Label>
+									<Input
+										id="statusSelect"
+										type="select"
+										value={statusUpdates[session._id] || session.status}
+										onChange={(e) =>
+											handleStatusChange(session._id, e.target.value)
+										}
+										style={{ maxWidth: "150px" }}>
+										<option value="Pending">Pending</option>
+										<option value="Confirmed">Confirmed</option>
+										<option value="Cancelled">Cancelled</option>
+									</Input>
+									<Button
+										color="primary"
+										size="sm"
+										disabled={
+											loading[session._id] ||
+											statusUpdates[session._id] === session.status
+										}
+										onClick={() => handleUpdateStatus(session._id)}>
+										{loading[session._id] ? <Spinner size="sm" /> : "Update"}
+									</Button>
+								</FormGroup>
+
+								<FormGroup>
+									<Label for="replyMessage">Reply to Student:</Label>
+									<Input
+										id="replyMessage"
+										type="textarea"
+										value={replies[session._id] || ""}
+										onChange={(e) =>
+											handleReplyChange(session._id, e.target.value)
+										}
+										placeholder="Type your reply here..."
+									/>
+									<Button
+										color="success"
+										size="sm"
+										className="mt-2"
+										onClick={() => handleSendReply(session._id)}
+										disabled={loading[session._id]}>
+										{loading[session._id] ? (
+											<Spinner size="sm" />
+										) : (
+											"Send Reply"
+										)}
+									</Button>
+								</FormGroup>
+							</CardBody>
+						</Card>
+					</Col>
+				))}
+			</Row>
 		</div>
 	);
 };

@@ -26,3 +26,13 @@ export const updateBookingStatus = async (id: string, status: string) => {
 		})
 	).data;
 };
+export const replyToSessionBooking = async (
+	reply: string,
+	bookingId: string
+) => {
+	return (
+		await apiClient.put(`/mentor-bookings/reply-booking/${bookingId}`, {
+			reply,
+		})
+	).data;
+};
