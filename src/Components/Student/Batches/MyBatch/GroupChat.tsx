@@ -95,6 +95,27 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 		scrollToBottom();
 	}, [messages]);
 
+	useEffect(() => {
+		if (!userId || !user?.name) return;
+
+		socket.emit("userOnline", {
+			userId,
+			name: user.name,
+			role: user.role, // either "mentor" or "student"
+			batchId,
+		});
+	}, [userId, user?.name, batchId]);
+	const [onlineUsers, setOnlineUsers] = useState<any>([]);
+
+	useEffect(() => {
+		socket.on("onlineUsers", (list) => {
+			setOnlineUsers(list);
+		});
+
+		return () => {
+			socket.off("onlineUsers");
+		};
+	}, []);
 	// ✅ Get the latest mentor message (if any)
 	const latestMentorMessage = [...messages]
 		.reverse()
@@ -134,6 +155,9 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 					<p className="text-center text-muted">No messages yet</p>
 				) : (
 					messages.map((msg, index) => {
+						const isOnline = onlineUsers.some(
+							(u: any) => u.userId === msg.sender?._id
+						);
 						const isMe = msg.sender?._id === userId;
 						return (
 							<div
@@ -153,10 +177,20 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 									<div className="d-flex justify-content-between align-items-center mb-1">
 										<span
 											className={`fw-semibold ${
-												isMe ? "text-warning" : "text-success"
+												isMe ? "text-warning" : "text-muted"
 											}`}>
 											{msg.sender?.name}
 										</span>
+										{isMe ? (
+											<></>
+										) : (
+											<span
+												className={`ms-2 ${
+													isOnline ? "text-success" : "text-danger"
+												}`}>
+												●
+											</span>
+										)}
 										{msg.senderType === "mentor" && (
 											<Badge
 												color="info"

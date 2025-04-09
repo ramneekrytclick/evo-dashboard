@@ -95,6 +95,27 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 		scrollToBottom();
 	}, [messages]);
 
+	useEffect(() => {
+		if (!userId || !user?.name) return;
+
+		socket.emit("userOnline", {
+			userId,
+			name: user.name,
+			role: user.role, // either "mentor" or "student"
+			batchId,
+		});
+	}, [userId, user?.name, batchId]);
+	const [onlineUsers, setOnlineUsers] = useState<any>([]);
+
+	useEffect(() => {
+		socket.on("onlineUsers", (list) => {
+			setOnlineUsers(list);
+		});
+
+		return () => {
+			socket.off("onlineUsers");
+		};
+	}, []);
 	// ✅ Get the latest mentor message (if any)
 	const latestMentorMessage = [...messages]
 		.reverse()
@@ -135,6 +156,9 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 				) : (
 					messages.map((msg, index) => {
 						const isMe = msg.sender?._id === userId;
+						const isOnline = onlineUsers.some(
+							(u: any) => u.userId === msg.sender?._id
+						);
 						return (
 							<div
 								key={index}
@@ -157,6 +181,16 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 											}`}>
 											{msg.sender?.name}
 										</span>
+										{isMe ? (
+											<></>
+										) : (
+											<span
+												className={`ms-2 ${
+													isOnline ? "text-success" : "text-danger"
+												}`}>
+												●
+											</span>
+										)}
 										{msg.senderType === "mentor" && (
 											<Badge
 												color="info"
