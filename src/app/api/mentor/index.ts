@@ -36,3 +36,9 @@ export const replyToSessionBooking = async (
 		})
 	).data;
 };
+export const getMentorBatches = async () => {
+	return (await apiClient.get("/mentor-bookings/my-batches")).data;
+};
+export const getBatchByID = async (id: string) => {
+	return (await apiClient.get(`/mentor-bookings/batch/${id}`)).data;
+};

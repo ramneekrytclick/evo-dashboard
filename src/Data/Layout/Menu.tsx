@@ -233,6 +233,12 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Scheduled Sessions",
 			},
 			{
+				id: 3,
+				path: "/mentor/batches",
+				icon: "learning",
+				title: "My Batches",
+			},
+			{
 				id: 4,
 				path: "/mentor/assignments",
 				icon: "layout",
