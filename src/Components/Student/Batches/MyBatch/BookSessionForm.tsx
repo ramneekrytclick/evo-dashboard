@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { bookMentorSession } from "@/app/api/student";
 import { useAuth } from "@/app/AuthProvider";
-import { Button, Form, FormGroup, Label, Input, Alert } from "reactstrap";
+import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { toast } from "react-toastify";
 
 const BookSessionForm = ({
@@ -17,11 +17,12 @@ const BookSessionForm = ({
 	const [mentorId, setMentorId] = useState(mentorIdProp);
 	const [date, setDate] = useState("");
 	const [timeSlot, setTimeSlot] = useState("");
+	const [message, setMessage] = useState("");
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!mentorId || !date || !timeSlot) {
+		if (!mentorId || !date || !timeSlot || !message.trim()) {
 			toast.error("Please fill all fields.");
 			return;
 		}
@@ -32,11 +33,12 @@ const BookSessionForm = ({
 				mentorId: mentorIdProp,
 				date,
 				timeSlot,
+				message,
 			};
 
 			await bookMentorSession(data);
 			toast.success(
-				`Session booked successfully with mentor on ${date} at ${timeSlot} !`
+				`Session booked successfully with mentor on ${date} at ${timeSlot}!`
 			);
 			toggle();
 		} catch (error: any) {
@@ -63,6 +65,17 @@ const BookSessionForm = ({
 					id="timeSlot"
 					value={timeSlot}
 					onChange={(e) => setTimeSlot(e.target.value)}
+				/>
+			</FormGroup>
+
+			<FormGroup>
+				<Label for="message">Discussion Topic / Message</Label>
+				<Input
+					type="textarea"
+					id="message"
+					placeholder="What would you like to discuss in the session?"
+					value={message}
+					onChange={(e) => setMessage(e.target.value)}
 				/>
 			</FormGroup>
 

@@ -108,7 +108,9 @@ const ScheduledSessions = () => {
 									{new Date(session.date).toLocaleDateString()} <br />
 									<strong>Time:</strong> {session.timeSlot} <br />
 									<strong>Status:</strong>{" "}
-									<span className="text-primary">{session.status}</span>
+									<span className="text-primary">{session.status}</span> <br />
+									<strong>Discussion Topic:</strong>{" "}
+									{session.message?.trim() ? session.message : "-"}
 								</CardText>
 
 								<FormGroup className="d-flex gap-2 align-items-center mb-3">

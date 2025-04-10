@@ -50,6 +50,7 @@ export const bookMentorSession = async (data: {
 	mentorId: string;
 	date: any;
 	timeSlot: any;
+	message: string;
 }) => {
 	return (await apiClient.post(`/mentor-bookings/book`, data)).data;
 };
