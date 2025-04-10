@@ -1,7 +1,8 @@
-import { Badge } from "reactstrap";
+// ======================= UPDATED: ChatMessageBubble.tsx =======================
+import { Badge, Button } from "reactstrap";
 import { format } from "date-fns";
 
-const ChatMessageBubble = ({ msg, isMe, isOnline }: any) => {
+const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 	return (
 		<div
 			className={`d-flex flex-column mb-3 ${
@@ -42,6 +43,16 @@ const ChatMessageBubble = ({ msg, isMe, isOnline }: any) => {
 							pill>
 							Mentor
 						</Badge>
+					)}
+
+					{onPin && (
+						<Button
+							size="sm"
+							color="link"
+							onClick={() => onPin(msg._id)}
+							className="text-warning text-decoration-none p-0">
+							📌 Pin
+						</Button>
 					)}
 				</div>
 

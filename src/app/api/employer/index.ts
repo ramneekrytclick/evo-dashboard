@@ -25,8 +25,8 @@ export const getApplicants = async (jobId: string) => {
 };
 
 export const getJobs = async () => {
-	const response = await apiClient.get("/jobs");
-	return response.data;
+	const response = await apiClient.get("/jobs/my-jobs");
+	return response.data.jobs;
 };
 export const getStudentDetailsById = async (studentId: string) => {
 	const response = await apiClient.get(`/jobs/student/${studentId}`);

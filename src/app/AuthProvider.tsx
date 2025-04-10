@@ -102,18 +102,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const fetchProfile = async (role: string, token: string) => {
 		try {
 			const response = await getMyProfile(role);
-			const data = response.user;
+			const data = response.user || response;
 			dispatch(
 				setUser({
 					id: data._id,
 					name: data.name,
 					email: data.email,
-					role: data.role,
+					role: data.role || "Admin",
 					token,
 				})
 			);
 		} catch (error) {
 			toast.error("Failed to fetch profile");
+			console.log("Failed to fetch profile", error);
 		}
 	};
 	useEffect(() => {

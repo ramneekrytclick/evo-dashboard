@@ -15,5 +15,5 @@ export const createCategory = async (data: FormData) => {
 	return response.data;
 };
 export const deleteCategory = async (id: string) => {
-	return (await apiClient.delete(`/categories/${id}`)).data;
+	return (await apiClient.delete(`/categories/category/${id}`)).data;
 };

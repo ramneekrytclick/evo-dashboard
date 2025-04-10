@@ -13,5 +13,5 @@ export const createSubcategory = async (data: FormData) => {
 };
 
 export const deleteSubcategory = async (id: string) => {
-	return (await apiClient.delete(`/subcategories/${id}`)).data;
+	return (await apiClient.delete(`/subcategories/subcategory/${id}`)).data;
 };

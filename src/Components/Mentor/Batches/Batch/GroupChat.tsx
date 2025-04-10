@@ -1,5 +1,9 @@
 "use client";
-import { getMentorChats, sendMessageMentor } from "@/app/api/chat";
+import {
+	getMentorChats,
+	sendMessageMentor,
+	pinMessageMentor,
+} from "@/app/api/chat";
 import { useEffect, useRef, useState } from "react";
 import { Send } from "react-feather";
 import { toast } from "react-toastify";
@@ -25,6 +29,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 	const [messages, setMessages] = useState<any[]>([]);
 	const [newMessage, setNewMessage] = useState("");
 	const [sending, setSending] = useState(false);
+	const [pinnedMessage, setPinnedMessage] = useState<any>(null);
 	const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
 	const { user } = useAuth();
@@ -35,6 +40,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 		try {
 			const response = await getMentorChats(batchId);
 			setMessages(response.chat || []);
+			setPinnedMessage(response.pinnedMessage || null);
 		} catch (error) {
 			toast.error("Error fetching chats");
 		} finally {
@@ -53,7 +59,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 		const messagePayload = {
 			sender: { _id: userId, name: user?.name },
 			message: newMessage,
-			senderType: "mentor", // must be passed from auth context
+			senderType: "mentor",
 			timestamp: new Date(),
 		};
 
@@ -63,7 +69,6 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 				batchId,
 				messageData: messagePayload,
 			});
-			// setMessages((prev) => [...prev, messagePayload]);
 			setNewMessage("");
 			scrollToBottom();
 		} catch (error) {
@@ -87,8 +92,13 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 			scrollToBottom();
 		});
 
+		socket.on("pinnedMessageUpdated", (data) => {
+			setPinnedMessage(data);
+		});
+
 		return () => {
 			socket.off("receiveMessage");
+			socket.off("pinnedMessageUpdated");
 		};
 	}, []);
 
@@ -102,10 +112,11 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 		socket.emit("userOnline", {
 			userId,
 			name: user.name,
-			role: user.role, // either "mentor" or "student"
+			role: user.role,
 			batchId,
 		});
 	}, [userId, user?.name, batchId]);
+
 	const [onlineUsers, setOnlineUsers] = useState<any>([]);
 
 	useEffect(() => {
@@ -117,10 +128,16 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 			socket.off("onlineUsers");
 		};
 	}, []);
-	// ✅ Get the latest mentor message (if any)
-	const latestMentorMessage = [...messages]
-		.reverse()
-		.find((msg) => msg.senderType === "mentor");
+
+	const handlePin = async (messageId: string) => {
+		try {
+			const res = await pinMessageMentor(batchId, messageId);
+			setPinnedMessage(res.pinnedMessage);
+			toast.success("Message pinned");
+		} catch (error) {
+			toast.error("Failed to pin message");
+		}
+	};
 
 	return (
 		<Card className="d-flex flex-column h-100 w-100">
@@ -128,21 +145,21 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 				<h5 className="mb-0 text-primary">Group Chat</h5>
 			</CardHeader>
 
-			{latestMentorMessage && (
+			{pinnedMessage && (
 				<div className="bg-warning-subtle p-3 border-bottom w-100">
 					<h6 className="text-dark mb-1">
-						📌 Latest Mentor Message
+						📌 Pinned Message
 						<Badge
 							color="info"
 							pill
 							className="ms-2">
-							Mentor
+							{pinnedMessage.senderType}
 						</Badge>
 					</h6>
-					<p className="mb-1 fw-semibold">{latestMentorMessage.message}</p>
+					<p className="mb-1 fw-semibold">{pinnedMessage.message}</p>
 					<small className="text-muted">
-						{format(new Date(latestMentorMessage.timestamp), "PPpp")} —{" "}
-						{latestMentorMessage.sender?.name}
+						{format(new Date(pinnedMessage.timestamp), "PPpp")} —{" "}
+						{pinnedMessage.sender?.name}
 					</small>
 				</div>
 			)}
@@ -163,6 +180,11 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 							isOnline={onlineUsers.some(
 								(u: any) => u.userId === msg.sender?._id
 							)}
+							onPin={
+								user?.role === "mentor" && msg.senderType === "mentor"
+									? handlePin
+									: undefined
+							}
 						/>
 					))
 				)}

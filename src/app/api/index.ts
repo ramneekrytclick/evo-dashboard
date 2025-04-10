@@ -8,7 +8,7 @@ export const getMyProfile = async (role: string) => {
 		return (await apiClient.get(`/mentors/mentor/me`)).data;
 	}
 	if (role === "Admin") {
-		return (await apiClient.get(`/mentors/admin/me`)).data;
+		return (await apiClient.get(`/admin/me`)).data.admin;
 	}
 	if (role === "Manager") {
 		return (await apiClient.get(`/mentors/manager/me`)).data;

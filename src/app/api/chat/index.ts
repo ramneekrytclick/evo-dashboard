@@ -13,3 +13,7 @@ export const sendMessageMentor = async (batchId: string, message: string) => {
 export const getMentorChats = async (batchId: string) => {
 	return (await apiClient.get(`/chat/mentor/${batchId}`)).data;
 };
+export const pinMessageMentor = async (batchId: string, messageId: string) => {
+	return (await apiClient.post(`/chat/mentor/pin`, { batchId, messageId }))
+		.data;
+};

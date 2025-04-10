@@ -1,6 +1,7 @@
 "use client";
 import { getCategories, deleteCategory } from "@/app/api/admin/categories";
 import { Category } from "@/Types/Category.type";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
@@ -25,11 +26,24 @@ const CategoriesCards = () => {
 			console.log(error);
 		}
 	};
+	const [deleteModal, setDeleteModal] = useState(false);
+	const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
+		null
+	);
 
-	const handleDelete = async (id: string) => {
+	const toggleDeleteModal = () => setDeleteModal(!deleteModal);
+	const confirmDelete = (category: Category) => {
+		setCategoryToDelete(category);
+		setDeleteModal(true);
+	};
+	const handleConfirmedDelete = async () => {
+		if (!categoryToDelete) return;
+
 		try {
-			await deleteCategory(id);
+			await deleteCategory(categoryToDelete._id || "");
 			toast.success("Category deleted");
+			setDeleteModal(false);
+			setCategoryToDelete(null);
 			fetchCategories();
 		} catch (error) {
 			console.error(error);
@@ -88,7 +102,7 @@ const CategoriesCards = () => {
 									<Button
 										color="danger"
 										size="sm"
-										onClick={() => handleDelete(item._id || "")}>
+										onClick={() => confirmDelete(item)}>
 										Delete
 									</Button>
 								</CardFooter>
@@ -97,6 +111,30 @@ const CategoriesCards = () => {
 					))
 				)}
 			</Row>
+			<Modal
+				isOpen={deleteModal}
+				toggle={toggleDeleteModal}>
+				<ModalHeader toggle={toggleDeleteModal}>Delete Category</ModalHeader>
+				<ModalBody>
+					<p>
+						Are you sure you want to delete{" "}
+						<strong>{categoryToDelete?.title}</strong>?<br />
+						This will also remove all its subcategories and associated courses.
+					</p>
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color="danger"
+						onClick={handleConfirmedDelete}>
+						Yes, Delete
+					</Button>{" "}
+					<Button
+						color="outline-danger"
+						onClick={toggleDeleteModal}>
+						Cancel
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</Col>
 	);
 };

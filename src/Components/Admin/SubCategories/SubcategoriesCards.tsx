@@ -11,6 +11,10 @@ import {
 	CardFooter,
 	CardHeader,
 	Col,
+	Modal,
+	ModalBody,
+	ModalFooter,
+	ModalHeader,
 	Row,
 } from "reactstrap";
 import CreateSubcategoryModal from "./CreateSubcategoryModal";
@@ -26,6 +30,11 @@ export interface SubCategory {
 
 const SubcategoriesCards = ({ id }: { id: string }) => {
 	const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
+	const [deleteModal, setDeleteModal] = useState(false);
+	const [subcategoryToDelete, setSubcategoryToDelete] =
+		useState<SubCategory | null>(null);
+
+	const toggleDeleteModal = () => setDeleteModal(!deleteModal);
 
 	const fetchSubcategories = async () => {
 		try {
@@ -36,10 +45,18 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 		}
 	};
 
-	const handleDelete = async (subId: string) => {
+	const confirmDelete = (subcategory: SubCategory) => {
+		setSubcategoryToDelete(subcategory);
+		setDeleteModal(true);
+	};
+
+	const handleConfirmedDelete = async () => {
+		if (!subcategoryToDelete) return;
 		try {
-			await deleteSubcategory(subId);
+			await deleteSubcategory(subcategoryToDelete._id);
 			toast.success("Subcategory deleted");
+			setDeleteModal(false);
+			setSubcategoryToDelete(null);
 			fetchSubcategories();
 		} catch (error) {
 			console.error(error);
@@ -53,6 +70,7 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 
 	return (
 		<Col>
+			{/* Create Subcategory */}
 			<Row
 				sm={6}
 				className="ms-1 mb-4">
@@ -61,6 +79,8 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 					id={id}
 				/>
 			</Row>
+
+			{/* Subcategories Cards */}
 			<Row className="g-sm-4 g-3">
 				{subcategories.length === 0 ? (
 					<Col className="text-center text-muted py-5">
@@ -91,15 +111,9 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 								</CardBody>
 								<CardFooter className="d-flex justify-content-end gap-2">
 									<Button
-										color="warning"
-										size="sm"
-										disabled>
-										Update
-									</Button>
-									<Button
 										color="danger"
 										size="sm"
-										onClick={() => handleDelete(item._id)}>
+										onClick={() => confirmDelete(item)}>
 										Delete
 									</Button>
 								</CardFooter>
@@ -108,6 +122,32 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 					))
 				)}
 			</Row>
+
+			{/* Delete Confirmation Modal */}
+			<Modal
+				isOpen={deleteModal}
+				toggle={toggleDeleteModal}>
+				<ModalHeader toggle={toggleDeleteModal}>Delete Subcategory</ModalHeader>
+				<ModalBody>
+					<p>
+						Are you sure you want to delete{" "}
+						<strong>{subcategoryToDelete?.title}</strong>?<br />
+						This will also remove any related courses or content under it.
+					</p>
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color="danger"
+						onClick={handleConfirmedDelete}>
+						Yes, Delete
+					</Button>
+					<Button
+						color="outline-danger"
+						onClick={toggleDeleteModal}>
+						Cancel
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</Col>
 	);
 };
