@@ -1,9 +1,7 @@
+import ManagerDashboardContainer from "@/Components/Manager/Dashboard";
+
 const page = () => {
-    return (
-        <div>
-            Enter
-        </div>
-    );
-}
+	return <ManagerDashboardContainer />;
+};
 
 export default page;

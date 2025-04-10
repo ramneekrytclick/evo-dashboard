@@ -1,5 +1,7 @@
+import AssignedMentorsContainer from "@/Components/Manager/AssignedMentors";
+
 const page = () => {
-	return <div>Assigned Mentors will be shown here</div>;
+	return <AssignedMentorsContainer />;
 };
 
 export default page;
