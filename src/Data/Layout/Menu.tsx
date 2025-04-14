@@ -270,6 +270,12 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "My Courses",
 			},
 			{
+				id: 3,
+				path: "/student/paths",
+				icon: "maps",
+				title: "Suggested Paths",
+			},
+			{
 				id: 4,
 				path: "/student/batches",
 				icon: "learning",

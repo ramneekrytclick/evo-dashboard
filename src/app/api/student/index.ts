@@ -1,5 +1,7 @@
 import { apiClient } from "@/utils/api";
 import { lessonSampleData } from "../admin/lessons/lessonSampleData";
+import { getPaths } from "../admin/path";
+import { PathProps } from "@/Types/Path.type";
 
 export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
@@ -11,7 +13,21 @@ export const getEnrolledCourses = async () => {
 	return (await apiClient.get(`/students/enrolled-courses`)).data;
 };
 export const getEnrolledPaths = async () => {
-	return (await apiClient.get(`/students/enrolled-paths`)).data;
+	const enrolledCoursesRes = await apiClient.get(`/students/enrolled-courses`);
+	const enrolledCourseIds = enrolledCoursesRes.data.enrolledCourses.map(
+		(item: any) => item.course._id
+	);
+
+	// Fetch all paths
+	const allPathsRes = await getPaths();
+	const allPaths = allPathsRes.paths;
+
+	// Filter paths that include at least one enrolled course
+	const filteredPaths = allPaths.filter((path: any) =>
+		path.courses?.some((course: any) => enrolledCourseIds.includes(course._id))
+	);
+
+	return filteredPaths;
 };
 export const enrollInCourse = async (courseId: string) => {
 	return (await apiClient.post(`/students/course`, { courseId })).data;
@@ -73,4 +89,7 @@ export const applyJobApplication = async (data: {
 	studentId: string;
 }) => {
 	return (await apiClient.post(`/jobs/apply`, data)).data;
+};
+export const getPathById = async (id: string) => {
+	return (await apiClient.get(`/paths/${id}`)).data;
 };

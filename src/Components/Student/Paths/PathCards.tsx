@@ -1,79 +1,114 @@
 "use client";
+
 import { getEnrolledPaths } from "@/app/api/student";
 import { Href, ImagePath } from "@/Constant";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Badge, Card, CardBody, Col, Progress } from "reactstrap";
+import {
+	Badge,
+	Card,
+	CardBody,
+	CardFooter,
+	CardTitle,
+	Col,
+	Container,
+	Progress,
+	Row,
+} from "reactstrap";
+import { toast } from "react-toastify";
 
 export interface PathProps {
 	_id?: string;
-	name: string;
+	title: string;
 	description: string;
-	courses: { _id: string; name: string }[];
+	courses: { _id: string; title: string }[];
 	roadmapSuggestions?: string[];
+	photo?: string | null;
 }
 
 const MyLearningPaths = () => {
 	const [learningPaths, setPaths] = useState<PathProps[]>([]);
+
 	const fetchData = async () => {
 		try {
 			const response = await getEnrolledPaths();
 			setPaths(response);
 		} catch (error) {
+			toast.error("Error fetching your learning paths.");
 			console.error("Error fetching learning paths:", error);
 		}
 	};
+
 	useEffect(() => {
 		fetchData();
 	}, []);
+
 	return (
-		<>
-			{learningPaths?.map((path) => (
-				<Col
-					xl={6}
-					className="box-col-6"
-					key={path._id}>
-					<Card className="path-card">
-						<CardBody>
-							<div className="d-flex">
-								<Image
-									priority
-									width={50}
-									height={50}
-									className="img-50 img-fluid m-r-20"
-									src={`${ImagePath}/job-search/${path._id}.jpg`}
-									alt={path.name}
-								/>
-								<div className="flex-grow-1">
-									<h6 className="f-w-600">
-										<Link href={`/student/my-courses`}>{path.name}</Link>
-										<Badge
-											color="success"
-											className="pull-right">
-											Roadmap
-										</Badge>
-									</h6>
-								</div>
-							</div>
-							<p>{path.description}</p>
-							<p>
-								<strong>Courses Included:</strong>
-							</p>
-							<ul>
-								{path.courses.map((course) => (
-									<li key={course._id}>{course.name}</li>
-								))}
-							</ul>
-							<div>
-								<p className="mb-2">Progress</p>
-								<Progress value={Math.floor(Math.random() * 100)} />
-							</div>
-						</CardBody>
-					</Card>
-				</Col>
-			))}
-		</>
+		<Container className='py-4'>
+			<h4 className='mb-3 fw-bold'>
+				🎓 Suggested Learning Paths Based on Your Enrollments
+			</h4>
+			<p className='text-muted mb-4'>
+				These paths are personalized journeys based on your enrolled courses.
+				Follow them to master topics in a structured way and achieve your goals
+				faster.
+			</p>
+			<Row className='g-4'>
+				{learningPaths.length === 0 ? (
+					<Col xs={12}>
+						<p className='text-center text-muted'>
+							No learning paths available for your current enrollments.
+						</p>
+					</Col>
+				) : (
+					learningPaths.map((path) => (
+						<Col
+							xl={6}
+							md={12}
+							key={path._id}>
+							<Link
+								href={`/student/paths/${path._id}`}
+								className='text-decoration-none text-dark'>
+								<Card className='shadow-sm path-card h-100 hover-shadow'>
+									<CardBody>
+										<div className='d-flex align-items-center mb-3'>
+											<Image
+												width={60}
+												height={60}
+												className='rounded me-3'
+												src={
+													path.photo
+														? `/${path.photo}`
+														: `${ImagePath}/job-search/default-path.png`
+												}
+												alt={path.title}
+											/>
+											<div className='flex-grow-1'>
+												<CardTitle
+													tag='h5'
+													className='mb-1'>
+													{path.title}
+												</CardTitle>
+											</div>
+										</div>
+
+										<p
+											className='text-muted'
+											style={{ minHeight: 50 }}>
+											{path.description}
+										</p>
+									</CardBody>
+									<CardFooter className='text-end'>
+										<small className='text-primary'>View Full Path ➜</small>
+									</CardFooter>
+								</Card>
+							</Link>
+						</Col>
+					))
+				)}
+			</Row>
+		</Container>
 	);
 };
 
