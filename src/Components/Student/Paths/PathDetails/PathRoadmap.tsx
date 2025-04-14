@@ -41,8 +41,8 @@ const PathRoadmap = ({ path, enrolledCourses }: PathRoadmapProps) => {
 						const buttonLabel = isEnrolled ? "Continue Learning" : "Enroll Now";
 						const buttonColor = isEnrolled ? "success" : "primary";
 						const courseLink = isEnrolled
-							? `/student/my-courses`
-							: `/courses/${course._id}`;
+							? `/student/course/${course._id}`
+							: `/student/dashboard/`; //has to be changed
 
 						return (
 							<VerticalTimelineElement
