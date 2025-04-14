@@ -1,9 +1,7 @@
-const CreatorDashboard = () => {
-    return (
-        <div>
-            Enter
-        </div>
-    );
-}
+import PublisherDashboardContainer from "@/Components/Publisher/Dashboard";
 
-export default CreatorDashboard;
+const page = () => {
+	return <PublisherDashboardContainer />;
+};
+
+export default page;

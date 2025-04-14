@@ -144,32 +144,6 @@ const AdminDashboardContainer = () => {
 		  ]
 		: [];
 
-	const renderList = (list: ListItem[], fields: string[]) => (
-		<ul className='list-unstyled m-0'>
-			{list.slice(0, 9).map((item, idx) => (
-				<li
-					key={idx}
-					className='mb-2 border-bottom pb-2'>
-					{fields.map((f) => {
-						const value = f.includes(".")
-							? f
-									.split(".")
-									.reduce(
-										(o, k) => (o && o[k] !== undefined ? o[k] : "-"),
-										item
-									)
-							: item[f] ?? "-";
-						return (
-							<div key={f}>
-								<strong>{f}:</strong> {value}
-							</div>
-						);
-					})}
-				</li>
-			))}
-		</ul>
-	);
-
 	return (
 		<>
 			<Breadcrumbs
