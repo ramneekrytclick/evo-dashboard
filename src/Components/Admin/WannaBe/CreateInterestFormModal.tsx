@@ -69,36 +69,36 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 			<ModalBody>
 				<Form>
 					<FormGroup>
-						<Label for="title">Title</Label>
+						<Label for='title'>Title</Label>
 						<Input
-							id="title"
-							name="title"
-							type="text"
+							id='title'
+							name='title'
+							type='text'
 							value={formData.title}
 							onChange={handleChange}
 							invalid={!!errors.title}
-							placeholder="Enter title"
+							placeholder='Enter title'
 						/>
 						<FormFeedback>{errors.title}</FormFeedback>
 					</FormGroup>
 					<FormGroup>
-						<Label for="description">Description</Label>
+						<Label for='description'>Description</Label>
 						<Input
-							id="description"
-							name="description"
-							type="textarea"
+							id='description'
+							name='description'
+							type='textarea'
 							value={formData.description}
 							onChange={handleChange}
-							placeholder="Enter description (optional)"
+							placeholder='Enter description (optional)'
 						/>
 					</FormGroup>
 					<FormGroup>
-						<Label for="image">Image</Label>
+						<Label for='image'>Image</Label>
 						<Input
-							id="image"
-							name="image"
-							type="file"
-							accept="image/*"
+							id='image'
+							name='image'
+							type='file'
+							accept='image/*'
 							onChange={handleFileChange}
 							invalid={!!errors.image}
 						/>
@@ -108,12 +108,12 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 			</ModalBody>
 			<ModalFooter>
 				<Button
-					color="secondary"
+					color='outline-primary'
 					onClick={toggleModal}>
 					Cancel
 				</Button>
 				<Button
-					color="primary"
+					color='primary'
 					onClick={onSubmit}>
 					Submit
 				</Button>

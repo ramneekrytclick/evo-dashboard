@@ -9,7 +9,7 @@ const CreateSubcategoryModal = ({
 	id,
 }: {
 	fetchData: () => Promise<void>;
-	id: string;
+	id?: string;
 }) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
@@ -24,15 +24,19 @@ const CreateSubcategoryModal = ({
 	return (
 		<>
 			<Button
-				color="primary"
-				className="me-2 px-2"
+				color='primary'
+				className='me-2 px-2'
 				onClick={toggle}>
-				<i className="fa fa-plus me-2 py-1" /> Create New Subcategory
+				<i className='fa fa-plus me-2 py-1' /> Create New Subcategory
 			</Button>
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
-				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{`Create New Subcategory under Category ${id}`}</h3>
+				<div className='modal-toggle-wrapper'>
+					{id ? (
+						<h3 className='mb-3'>{`Create New Subcategory under Category ${id}`}</h3>
+					) : (
+						<h3 className='mb-3'>{createSubcategoryTitle}</h3>
+					)}
 					{/* <p>{"Fill in your information below to continue."}</p> */}
 					<CreateSubcategoryForm
 						fetchData={fetchData}
