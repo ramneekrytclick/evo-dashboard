@@ -98,7 +98,7 @@ const EmployerDashboardContainer = () => {
 								<div className='d-flex flex-wrap gap-3 w-100'>
 									<Button
 										color='primary'
-										onClick={() => router.push("/employer/jobs/create")}>
+										onClick={() => router.push("/employer/create-job")}>
 										<i className='fa fa-plus me-2 py-1' /> Post New Job
 									</Button>
 								</div>
