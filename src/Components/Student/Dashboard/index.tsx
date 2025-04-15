@@ -148,12 +148,12 @@ const StudentDashboardContainer = () => {
 									</div>
 									<div
 										ref={scrollRef2}
-										className='d-flex overflow-auto gap-3 pb-2'>
+										className='d-flex overflow-auto gap-3 pb-1'>
 										{mentorBookings.map((booking) => (
 											<div
 												key={booking._id}
 												className='border rounded shadow-sm p-3 d-flex flex-column justify-content-between'
-												style={{ minWidth: "300px", height: "220px" }}>
+												style={{ minWidth: "300px", minHeight: "220px" }}>
 												<h6 className='mb-1 text-primary'>
 													Mentor: {booking.mentor.name}
 												</h6>
