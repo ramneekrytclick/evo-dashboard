@@ -70,6 +70,9 @@ export const bookMentorSession = async (data: {
 }) => {
 	return (await apiClient.post(`/mentor-bookings/book`, data)).data;
 };
+export const getMyMentorBookings = async () => {
+	return (await apiClient.get(`/students/my-mentor-sessions`)).data;
+};
 export const getLessonsByCourseID = async (courseId: string) => {
 	// return (await apiClient.get(`/lessons/course/${courseId}`)).data;
 	return (await apiClient.get(`/students/lessons/${courseId}`)).data;
