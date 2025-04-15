@@ -10,7 +10,7 @@ export const getTransactionsCSV = async () => {
 };
 export const getTransactions = async () => {
 	try {
-		const response = await apiClient.get("/admin");
+		const response = await apiClient.get("/admin/transactions");
 		return response.data;
 	} catch (error: any) {
 		throw new Error(error);

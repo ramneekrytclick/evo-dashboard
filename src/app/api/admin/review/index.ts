@@ -5,5 +5,6 @@ export const addReview = async (
 	rating: number,
 	comment: string
 ) => {
-	return (await apiClient.post(`/reviews`, { rating, comment, courseId })).data;
+	return (await apiClient.post(`/admin/review`, { rating, comment, courseId }))
+		.data;
 };
