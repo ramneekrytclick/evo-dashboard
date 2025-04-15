@@ -40,19 +40,21 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 		setIsModalOpen(true);
 	};
 
-	const handleConfirmApply = async () => {
+	const handleConfirmApply = async (resumeFile?: File | null) => {
 		try {
-			const response = await applyJobApplication({
-				jobId: selectedJob._id,
-				studentId: id,
-			});
+			const formData = new FormData();
+			formData.append("jobId", selectedJob._id);
+			formData.append("studentId", id);
+			if (resumeFile) formData.append("resume", resumeFile);
+
+			const response = await applyJobApplication(formData);
+
 			toast.success(`Applied to ${selectedJob.title}`);
 			setIsModalOpen(false);
 			fetchData();
 		} catch (error) {
 			toast.error("Error applying to job!");
 		}
-		// TODO: Call API to apply to job here
 	};
 	const filteredJobs = jobs.filter((job: any) => {
 		const matchTitle = job.title
@@ -82,21 +84,21 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 				filteredJobs.map((item: any, index: number) => (
 					<Card
 						key={item._id}
-						className="job-search">
+						className='job-search'>
 						<CardBody>
-							<div className="d-flex">
+							<div className='d-flex'>
 								<Image
 									priority
 									width={40}
 									height={40}
-									className="img-40 img-fluid m-r-20"
+									className='img-40 img-fluid m-r-20'
 									src={`${ImagePath}/job-search/${
 										Math.floor(index + 1) % 4
 									}.jpg`}
-									alt="job logo"
+									alt='job logo'
 								/>
-								<div className="flex-grow-1">
-									<h6 className="f-w-600">
+								<div className='flex-grow-1'>
+									<h6 className='f-w-600'>
 										<Link href={Href}>{item.title}</Link>
 									</h6>
 									{/* <p className="text-muted mb-1">
@@ -111,8 +113,8 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 								</p> */}
 								</div>
 							</div>
-							<p className="mt-2 mb-2">{item.description}</p>
-							<div className="d-flex justify-content-between align-items-center">
+							<p className='mt-2 mb-2'>{item.description}</p>
+							<div className='d-flex justify-content-between align-items-center'>
 								<span>
 									Openings: <strong>{item.openings}</strong>
 								</span>
@@ -120,8 +122,8 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 									"Already Applied"
 								) : (
 									<Button
-										color="primary"
-										size="sm"
+										color='primary'
+										size='sm'
 										onClick={() => openConfirmationModal(item)}>
 										Apply
 									</Button>
@@ -131,7 +133,7 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 					</Card>
 				))
 			) : (
-				<Card className="text-center p-4">
+				<Card className='text-center p-4'>
 					No jobs found matching the filters.
 				</Card>
 			)}
