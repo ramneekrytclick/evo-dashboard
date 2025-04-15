@@ -188,7 +188,7 @@ const AdminDashboardContainer = () => {
 						<Row className='mb-4 bg-white p-4 rounded shadow-sm'>
 							<Col className='mb-2 fw-bold'>Action Bar</Col>
 							<Col xs={12}>
-								<div className='d-flex flex-wrap gap-3 w-100'>
+								<div className='d-flex justify-content-between '>
 									<CreateCategoryModal fetchData={fetchData} />
 									<CreateSubcategoryModal fetchData={fetchData} />
 									<CreateInterestFormModal

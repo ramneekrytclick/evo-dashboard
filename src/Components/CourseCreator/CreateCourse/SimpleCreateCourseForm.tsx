@@ -6,19 +6,20 @@ import { toast } from "react-toastify";
 import {
 	createCourse,
 	getAllCategories,
-	getAllSubcategories,
 	getAllWannaBeInterests,
 } from "@/app/api/cc";
 import { useAuth } from "@/app/AuthProvider";
+import { getSubcategories } from "@/app/api/admin/subcategories";
 
 const SimpleCreateCourseForm = () => {
 	const { user } = useAuth();
+
 	const [formData, setFormData] = useState({
-		name: "",
+		title: "",
 		description: "",
 		categoryId: "",
 		subcategoryId: "",
-		wannaBeInterest: "",
+		wannaBeInterest: [] as string[],
 	});
 
 	const [categories, setCategories] = useState([]);
@@ -29,9 +30,16 @@ const SimpleCreateCourseForm = () => {
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
 
-		if (name === "categoryId") fetchSubcategories(value);
+		if (name === "wannaBeInterest") {
+			const selectedOptions = Array.from(
+				(e.target as HTMLSelectElement).selectedOptions
+			).map((opt) => opt.value);
+			setFormData((prev) => ({ ...prev, [name]: selectedOptions }));
+		} else {
+			setFormData((prev) => ({ ...prev, [name]: value }));
+			if (name === "categoryId") fetchSubcategories(value);
+		}
 	};
 
 	const fetchInitialData = async () => {
@@ -49,27 +57,25 @@ const SimpleCreateCourseForm = () => {
 
 	const fetchSubcategories = async (categoryId: string) => {
 		try {
-			const res = await getAllSubcategories();
-			setSubcategories(
-				res.subcategories.filter((sub: any) => sub.categoryId === categoryId)
-			);
-		} catch {
+			const res = await getSubcategories(categoryId);
+			setSubcategories(res);
+		} catch (err) {
+			console.error(err);
 			toast.error("Failed to fetch subcategories");
 		}
 	};
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-
-		const { name, description, categoryId, subcategoryId, wannaBeInterest } =
+		const { title, description, categoryId, subcategoryId, wannaBeInterest } =
 			formData;
 
 		if (
-			!name ||
+			!title ||
 			!description ||
 			!categoryId ||
 			!subcategoryId ||
-			!wannaBeInterest
+			wannaBeInterest.length === 0
 		) {
 			return toast.error("Please fill all required fields");
 		}
@@ -78,11 +84,11 @@ const SimpleCreateCourseForm = () => {
 			await createCourse(formData);
 			toast.success("Course created successfully");
 			setFormData({
-				name: "",
+				title: "",
 				description: "",
 				categoryId: "",
 				subcategoryId: "",
-				wannaBeInterest: "",
+				wannaBeInterest: [],
 			});
 		} catch (err) {
 			console.error(err);
@@ -94,17 +100,23 @@ const SimpleCreateCourseForm = () => {
 		fetchInitialData();
 	}, []);
 
+	useEffect(() => {
+		if (formData.categoryId) {
+			fetchSubcategories(formData.categoryId);
+		}
+	}, [formData.categoryId]);
+
 	return (
 		<Form
 			onSubmit={handleSubmit}
-			className="p-4 rounded">
-			<Row className="g-3">
+			className='p-4 rounded'>
+			<Row className='g-3'>
 				<Col md={6}>
 					<Label>Course Title</Label>
 					<Input
-						type="text"
-						name="name"
-						value={formData.name}
+						type='text'
+						name='title'
+						value={formData.title}
 						onChange={handleChange}
 						required
 					/>
@@ -112,8 +124,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Description</Label>
 					<Input
-						type="text"
-						name="description"
+						type='text'
+						name='description'
 						value={formData.description}
 						onChange={handleChange}
 						required
@@ -122,12 +134,12 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Category</Label>
 					<Input
-						type="select"
-						name="categoryId"
+						type='select'
+						name='categoryId'
 						value={formData.categoryId}
 						onChange={handleChange}
 						required>
-						<option value="">Select Category</option>
+						<option value=''>Select Category</option>
 						{categories.map((cat: any) => (
 							<option
 								key={cat._id}
@@ -140,12 +152,12 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Subcategory</Label>
 					<Input
-						type="select"
-						name="subcategoryId"
+						type='select'
+						name='subcategoryId'
 						value={formData.subcategoryId}
 						onChange={handleChange}
 						required>
-						<option value="">Select Subcategory</option>
+						<option value=''>Select Subcategory</option>
 						{subcategories.map((sub: any) => (
 							<option
 								key={sub._id}
@@ -158,12 +170,12 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Wanna Be Interest</Label>
 					<Input
-						type="select"
-						name="wannaBeInterest"
+						type='select'
+						name='wannaBeInterest'
 						value={formData.wannaBeInterest}
 						onChange={handleChange}
+						multiple
 						required>
-						<option value="">Select Interest</option>
 						{interests.map((int: any) => (
 							<option
 								key={int._id}
@@ -175,10 +187,10 @@ const SimpleCreateCourseForm = () => {
 				</Col>
 				<Col
 					md={12}
-					className="text-end">
+					className='text-end'>
 					<Button
-						type="submit"
-						color="primary">
+						type='submit'
+						color='primary'>
 						Create Course
 					</Button>
 				</Col>

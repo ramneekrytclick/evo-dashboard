@@ -114,11 +114,11 @@ const CreatePathForm = () => {
 
 	return (
 		<Form onSubmit={(e) => e.preventDefault()}>
-			<Row className="g-3">
+			<Row className='g-3'>
 				<Col md={6}>
 					<Label>Path Title *</Label>
 					<Input
-						name="title"
+						name='title'
 						value={formData.title}
 						onChange={handleChange}
 					/>
@@ -126,7 +126,7 @@ const CreatePathForm = () => {
 				<Col md={6}>
 					<Label>Description *</Label>
 					<Input
-						name="description"
+						name='description'
 						value={formData.description}
 						onChange={handleChange}
 					/>
@@ -134,24 +134,15 @@ const CreatePathForm = () => {
 				<Col md={6}>
 					<Label>Timing *</Label>
 					<Input
-						name="timing"
+						name='timing'
 						value={formData.timing}
-						onChange={handleChange}
-					/>
-				</Col>
-				<Col md={6}>
-					<Label>Price *</Label>
-					<Input
-						type="number"
-						name="price"
-						value={formData.price}
 						onChange={handleChange}
 					/>
 				</Col>
 				<Col md={6}>
 					<Label>Photo</Label>
 					<Input
-						type="file"
+						type='file'
 						onChange={(e) => setPhoto(e.target.files?.[0] || null)}
 					/>
 				</Col>
@@ -162,11 +153,11 @@ const CreatePathForm = () => {
 							{courses?.map((course) => (
 								<ListGroupItem key={course._id}>
 									<Input
-										type="checkbox"
+										type='checkbox'
 										checked={formData.courses.includes(course._id!)}
 										onChange={() => toggleCourse(course._id!)}
 									/>
-									<span className="ms-2">{course.title}</span>
+									<span className='ms-2'>{course.title}</span>
 								</ListGroupItem>
 							))}
 						</ListGroup>
@@ -179,11 +170,11 @@ const CreatePathForm = () => {
 							{wannaBeInterests?.map((item) => (
 								<ListGroupItem key={item._id}>
 									<Input
-										type="checkbox"
+										type='checkbox'
 										checked={formData.wannaBeInterest.includes(item._id)}
 										onChange={() => toggleWannaBe(item._id)}
 									/>
-									<span className="ms-2">{item.title}</span>
+									<span className='ms-2'>{item.title}</span>
 								</ListGroupItem>
 							))}
 						</ListGroup>
@@ -191,9 +182,9 @@ const CreatePathForm = () => {
 				</Col>
 				<Col
 					xs={12}
-					className="text-end mt-3">
+					className='text-end mt-3'>
 					<Button
-						color="primary"
+						color='primary'
 						onClick={handleSubmit}>
 						Create Path
 					</Button>
