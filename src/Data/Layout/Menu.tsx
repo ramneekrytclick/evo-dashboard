@@ -283,6 +283,12 @@ export const MenuList: MenuItem[] | undefined = [
 			},
 			{
 				id: 4,
+				path: "/student/certificates",
+				icon: "star",
+				title: "My Certificates",
+			},
+			{
+				id: 4,
 				path: "/student/job-portal",
 				icon: "learning",
 				title: "Job Portal",

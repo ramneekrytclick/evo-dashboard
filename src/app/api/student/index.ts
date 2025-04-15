@@ -96,3 +96,6 @@ export const applyJobApplication = async (data: {
 export const getPathById = async (id: string) => {
 	return (await apiClient.get(`/paths/${id}`)).data;
 };
+export const getMyCertificates = async () => {
+	return (await apiClient.get(`/students/certificates`)).data;
+};
