@@ -1,12 +1,6 @@
 import { Course } from "@/Types/Course.type";
 import { apiClient } from "@/utils/api";
-export const createCourse = async (data: {
-	title: string;
-	description: string;
-	categoryId: string;
-	subcategoryId: string;
-	wannaBeInterest: string[];
-}) => {
+export const createCourseByCreator = async (data: any) => {
 	return (await apiClient.post(`/course-creators/auth/create`, data)).data;
 };
 export const getMyCourses = async () => {

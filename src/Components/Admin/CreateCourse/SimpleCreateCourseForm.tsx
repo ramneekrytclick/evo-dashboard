@@ -115,13 +115,13 @@ const SimpleCreateCourseForm = () => {
 	return (
 		<Form
 			onSubmit={handleSubmit}
-			className="p-4 rounded">
-			<Row className="g-3">
+			className='p-4 rounded'>
+			<Row className='g-3'>
 				<Col md={6}>
 					<Label>Course Title</Label>
 					<Input
-						type="text"
-						name="title"
+						type='text'
+						name='title'
 						value={formData.title}
 						onChange={handleChange}
 						required
@@ -130,8 +130,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Description</Label>
 					<Input
-						type="text"
-						name="description"
+						type='text'
+						name='description'
 						value={formData.description}
 						onChange={handleChange}
 						required
@@ -140,8 +140,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>What You Will Learn</Label>
 					<Input
-						type="textarea"
-						name="whatYouWillLearn"
+						type='textarea'
+						name='whatYouWillLearn'
 						value={formData.whatYouWillLearn}
 						onChange={handleChange}
 						required
@@ -150,8 +150,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>YouTube Link</Label>
 					<Input
-						type="text"
-						name="youtubeLink"
+						type='text'
+						name='youtubeLink'
 						value={formData.youtubeLink}
 						onChange={handleChange}
 						required
@@ -160,8 +160,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Timing</Label>
 					<Input
-						type="text"
-						name="timing"
+						type='text'
+						name='timing'
 						value={formData.timing}
 						onChange={handleChange}
 						required
@@ -170,8 +170,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Real Price</Label>
 					<Input
-						type="number"
-						name="realPrice"
+						type='number'
+						name='realPrice'
 						value={formData.realPrice}
 						onChange={handleChange}
 						required
@@ -180,8 +180,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Discounted Price</Label>
 					<Input
-						type="number"
-						name="discountedPrice"
+						type='number'
+						name='discountedPrice'
 						value={formData.discountedPrice}
 						onChange={handleChange}
 						required
@@ -190,8 +190,8 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Tags (comma-separated)</Label>
 					<Input
-						type="text"
-						name="tags"
+						type='text'
+						name='tags'
 						value={formData.tags}
 						onChange={handleChange}
 						required
@@ -200,12 +200,12 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Category</Label>
 					<Input
-						type="select"
-						name="categoryId"
+						type='select'
+						name='categoryId'
 						value={formData.categoryId}
 						onChange={handleChange}
 						required>
-						<option value="">Select Category</option>
+						<option value=''>Select Category</option>
 						{categories.map((cat: any) => (
 							<option
 								key={cat._id}
@@ -218,12 +218,12 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Subcategory</Label>
 					<Input
-						type="select"
-						name="subcategoryId"
+						type='select'
+						name='subcategoryId'
 						value={formData.subcategoryId}
 						onChange={handleChange}
 						required>
-						<option value="">Select Subcategory</option>
+						<option value=''>Select Subcategory</option>
 						{subcategories.map((sub: any) => (
 							<option
 								key={sub._id}
@@ -236,12 +236,12 @@ const SimpleCreateCourseForm = () => {
 				<Col md={6}>
 					<Label>Wanna Be Interest</Label>
 					<Input
-						type="select"
-						name="wannaBeInterestId"
+						type='select'
+						name='wannaBeInterestId'
 						value={formData.wannaBeInterestId}
 						onChange={handleChange}
 						required>
-						<option value="">Select Interest</option>
+						<option value=''>Select Interest</option>
 						{interests.map((int: any) => (
 							<option
 								key={int._id}
@@ -253,10 +253,10 @@ const SimpleCreateCourseForm = () => {
 				</Col>
 				<Col
 					md={12}
-					className="text-end">
+					className='text-end'>
 					<Button
-						type="submit"
-						color="primary">
+						type='submit'
+						color='primary'>
 						Create Course
 					</Button>
 				</Col>

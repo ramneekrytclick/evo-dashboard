@@ -1,25 +1,28 @@
 "use client";
 
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
 import { toast } from "react-toastify";
 import {
-	createCourse,
+	createCourseByCreator,
 	getAllCategories,
 	getAllWannaBeInterests,
 } from "@/app/api/cc";
-import { useAuth } from "@/app/AuthProvider";
 import { getSubcategories } from "@/app/api/admin/subcategories";
 
-const SimpleCreateCourseForm = () => {
-	const { user } = useAuth();
-
+const CourseCreatorForm = () => {
 	const [formData, setFormData] = useState({
 		title: "",
 		description: "",
+		whatYouWillLearn: "",
+		youtubeLink: "",
+		timing: "",
+		realPrice: "",
+		discountedPrice: "",
+		tags: "",
 		categoryId: "",
 		subcategoryId: "",
-		wannaBeInterest: [] as string[],
+		wannaBeInterestIds: [] as string[],
 	});
 
 	const [categories, setCategories] = useState([]);
@@ -30,16 +33,18 @@ const SimpleCreateCourseForm = () => {
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
+		setFormData((prev) => ({ ...prev, [name]: value }));
+		if (name === "categoryId") fetchSubcategories(value);
+	};
 
-		if (name === "wannaBeInterest") {
-			const selectedOptions = Array.from(
-				(e.target as HTMLSelectElement).selectedOptions
-			).map((opt) => opt.value);
-			setFormData((prev) => ({ ...prev, [name]: selectedOptions }));
-		} else {
-			setFormData((prev) => ({ ...prev, [name]: value }));
-			if (name === "categoryId") fetchSubcategories(value);
-		}
+	const handleCheckboxChange = (id: string) => {
+		setFormData((prev) => {
+			const exists = prev.wannaBeInterestIds.includes(id);
+			const updated = exists
+				? prev.wannaBeInterestIds.filter((item) => item !== id)
+				: [...prev.wannaBeInterestIds, id];
+			return { ...prev, wannaBeInterestIds: updated };
+		});
 	};
 
 	const fetchInitialData = async () => {
@@ -59,52 +64,67 @@ const SimpleCreateCourseForm = () => {
 		try {
 			const res = await getSubcategories(categoryId);
 			setSubcategories(res);
-		} catch (err) {
-			console.error(err);
+		} catch {
 			toast.error("Failed to fetch subcategories");
 		}
 	};
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		const { title, description, categoryId, subcategoryId, wannaBeInterest } =
-			formData;
+		const {
+			title,
+			description,
+			whatYouWillLearn,
+			youtubeLink,
+			timing,
+			categoryId,
+			subcategoryId,
+			wannaBeInterestIds,
+			realPrice,
+			discountedPrice,
+			tags,
+		} = formData;
 
 		if (
 			!title ||
 			!description ||
+			!whatYouWillLearn ||
+			!youtubeLink ||
+			!timing ||
 			!categoryId ||
 			!subcategoryId ||
-			wannaBeInterest.length === 0
+			!realPrice ||
+			!discountedPrice ||
+			!tags ||
+			!wannaBeInterestIds.length
 		) {
 			return toast.error("Please fill all required fields");
 		}
 
 		try {
-			await createCourse(formData);
+			await createCourseByCreator(formData);
 			toast.success("Course created successfully");
 			setFormData({
 				title: "",
 				description: "",
+				whatYouWillLearn: "",
+				youtubeLink: "",
+				timing: "",
+				realPrice: "",
+				discountedPrice: "",
+				tags: "",
 				categoryId: "",
 				subcategoryId: "",
-				wannaBeInterest: [],
+				wannaBeInterestIds: [],
 			});
-		} catch (err) {
-			console.error(err);
-			toast.error("Failed to create course");
+		} catch {
+			toast.error("Course creation failed");
 		}
 	};
 
 	useEffect(() => {
 		fetchInitialData();
 	}, []);
-
-	useEffect(() => {
-		if (formData.categoryId) {
-			fetchSubcategories(formData.categoryId);
-		}
-	}, [formData.categoryId]);
 
 	return (
 		<Form
@@ -127,6 +147,66 @@ const SimpleCreateCourseForm = () => {
 						type='text'
 						name='description'
 						value={formData.description}
+						onChange={handleChange}
+						required
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>What You Will Learn</Label>
+					<Input
+						type='textarea'
+						name='whatYouWillLearn'
+						value={formData.whatYouWillLearn}
+						onChange={handleChange}
+						required
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>YouTube Link</Label>
+					<Input
+						type='text'
+						name='youtubeLink'
+						value={formData.youtubeLink}
+						onChange={handleChange}
+						required
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Timing</Label>
+					<Input
+						type='text'
+						name='timing'
+						value={formData.timing}
+						onChange={handleChange}
+						required
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Real Price</Label>
+					<Input
+						type='number'
+						name='realPrice'
+						value={formData.realPrice}
+						onChange={handleChange}
+						required
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Discounted Price</Label>
+					<Input
+						type='number'
+						name='discountedPrice'
+						value={formData.discountedPrice}
+						onChange={handleChange}
+						required
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Tags (comma-separated)</Label>
+					<Input
+						type='text'
+						name='tags'
+						value={formData.tags}
 						onChange={handleChange}
 						required
 					/>
@@ -167,23 +247,31 @@ const SimpleCreateCourseForm = () => {
 						))}
 					</Input>
 				</Col>
-				<Col md={6}>
-					<Label>Wanna Be Interest</Label>
-					<Input
-						type='select'
-						name='wannaBeInterest'
-						value={formData.wannaBeInterest}
-						onChange={handleChange}
-						multiple
-						required>
+				<Col md={12}>
+					<Label>Wanna Be Interests</Label>
+					<Row>
 						{interests.map((int: any) => (
-							<option
-								key={int._id}
-								value={int._id}>
-								{int.title}
-							</option>
+							<Col
+								xs={6}
+								md={4}
+								key={int._id}>
+								<div className='form-check'>
+									<Input
+										className='form-check-input'
+										type='checkbox'
+										id={`interest-${int._id}`}
+										checked={formData.wannaBeInterestIds.includes(int._id)}
+										onChange={() => handleCheckboxChange(int._id)}
+									/>
+									<Label
+										className='form-check-label'
+										htmlFor={`interest-${int._id}`}>
+										{int.title}
+									</Label>
+								</div>
+							</Col>
 						))}
-					</Input>
+					</Row>
 				</Col>
 				<Col
 					md={12}
@@ -199,4 +287,4 @@ const SimpleCreateCourseForm = () => {
 	);
 };
 
-export default SimpleCreateCourseForm;
+export default CourseCreatorForm;
