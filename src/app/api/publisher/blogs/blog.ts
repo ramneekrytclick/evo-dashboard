@@ -23,3 +23,12 @@ export const getMyBlogs = async () => {
 export const getBlog = async (id: string) => {
 	return (await apiClient.get(`/blogs/${id}`)).data;
 };
+export const deleteBlogById = async (id: string) => {
+	return (await apiClient.delete(`/blogs/${id}`)).data;
+};
+export const updateBlogById = async (
+	id: string,
+	data: { title: string; content: string }
+) => {
+	return (await apiClient.put(`/blogs/${id}`, data)).data;
+};
