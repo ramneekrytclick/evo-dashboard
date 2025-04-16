@@ -15,7 +15,8 @@ import {
 } from "reactstrap";
 import CreateCategoryModal from "./CreateCategoryModal";
 import { toast } from "react-toastify";
-
+import Image from "next/image";
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 const CategoriesCards = () => {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const fetchCategories = async () => {
@@ -59,13 +60,13 @@ const CategoriesCards = () => {
 		<Col>
 			<Row
 				sm={6}
-				className="ms-1 mb-4">
+				className='ms-1 mb-4'>
 				<CreateCategoryModal fetchData={fetchCategories} />
 			</Row>
 
-			<Row className="g-sm-4 g-3">
+			<Row className='g-sm-4 g-3'>
 				{categories.length === 0 ? (
-					<Col className="text-center text-muted py-5">No categories found</Col>
+					<Col className='text-center text-muted py-5'>No categories found</Col>
 				) : (
 					categories.map((item: Category) => (
 						<Col
@@ -73,26 +74,38 @@ const CategoriesCards = () => {
 							md={4}
 							sm={6}
 							key={item._id}>
-							<Card className="shadow-sm rounded-3 border-0">
-								{item.photo && (
-									<img
-										src={`/${item.photo}`}
-										alt={item.title}
-										className="img-fluid rounded-top"
-										style={{ height: "160px", objectFit: "cover" }}
-									/>
-								)}
-								<CardHeader className="fw-bold text-primary">
+							<Card className='shadow-sm rounded-3 border-0'>
+								<Image
+									src={
+										item.photo
+											? `${backendURL}/uploads/${item.photo.replace(
+													/\\/g,
+													"/"
+											  )}`
+											: "/assets/images/user-card/5.jpg"
+									}
+									width={400}
+									height={200}
+									alt={item.title}
+									className='img-fluid rounded-top'
+									style={{
+										width: "100%",
+										height: "160px",
+										objectFit: "cover",
+									}}
+								/>
+
+								<CardHeader className='fw-bold text-primary'>
 									<Link href={`subcategories/${item._id}`}>{item.title}</Link>
 								</CardHeader>
 								<CardBody>
 									{item.description && (
-										<p className="text-secondary small mb-2">
+										<p className='text-secondary small mb-2'>
 											{item.description}
 										</p>
 									)}
 								</CardBody>
-								<CardFooter className="d-flex justify-content-end gap-2">
+								<CardFooter className='d-flex justify-content-end gap-2'>
 									{/* <Button
 										color="warning"
 										size="sm"
@@ -100,8 +113,8 @@ const CategoriesCards = () => {
 										Update
 									</Button> */}
 									<Button
-										color="danger"
-										size="sm"
+										color='danger'
+										size='sm'
 										onClick={() => confirmDelete(item)}>
 										Delete
 									</Button>
@@ -124,12 +137,12 @@ const CategoriesCards = () => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color="danger"
+						color='danger'
 						onClick={handleConfirmedDelete}>
 						Yes, Delete
 					</Button>{" "}
 					<Button
-						color="outline-danger"
+						color='outline-danger'
 						onClick={toggleDeleteModal}>
 						Cancel
 					</Button>

@@ -19,6 +19,7 @@ import {
 } from "reactstrap";
 import { FaTrash } from "react-icons/fa";
 import Image from "next/image";
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const InterestsTable = ({
 	fetchData,
@@ -50,8 +51,8 @@ const InterestsTable = ({
 	};
 
 	return (
-		<div className="p-4">
-			<Row className="g-3">
+		<div className='p-4'>
+			<Row className='g-3'>
 				{interests.length === 0 && (
 					<Col>No Interests Found, Please create new</Col>
 				)}
@@ -61,20 +62,22 @@ const InterestsTable = ({
 						xl={3}
 						md={4}
 						sm={6}>
-						<Card className="shadow-sm border-0 rounded-3 overflow-hidden h-100">
+						<Card className='shadow-sm border-0 rounded-3 overflow-hidden h-100'>
 							{interest.image && (
-								<div className="position-relative">
+								<div className='position-relative'>
 									<Image
-										src={`/assets/images/user/1.jpg`}
+										src={backendURL + "/" + interest.image}
 										alt={interest.title}
-										width={160}
-										height={160}
+										width={400}
+										height={200}
 										style={{
+											width: "100%",
+											height: "200px",
 											objectFit: "cover",
 										}}
 									/>
 									<div
-										className="position-absolute bottom-0 start-0 w-100 px-3 py-2"
+										className='position-absolute bottom-0 start-0 w-100 px-3 py-2'
 										style={{
 											background: "rgba(0, 0, 0, 0.5)",
 											color: "#fff",
@@ -86,19 +89,19 @@ const InterestsTable = ({
 							)}
 							<CardBody>
 								{interest.description && (
-									<p className="text-secondary small mb-2">
+									<p className='text-secondary small mb-2'>
 										{interest.description}
 									</p>
 								)}
-								<p className="text-muted small mb-0">
+								<p className='text-muted small mb-0'>
 									Created: {new Date(interest.createdAt).toLocaleString()}
 								</p>
 							</CardBody>
-							<CardFooter className="bg-transparent border-top-0 text-end">
+							<CardFooter className='bg-transparent border-top-0 text-end'>
 								<Button
-									color="danger"
-									size="sm"
-									title="Delete Interest"
+									color='danger'
+									size='sm'
+									title='Delete Interest'
 									onClick={() => openModal(interest)}>
 									<FaTrash />
 								</Button>
@@ -116,12 +119,12 @@ const InterestsTable = ({
 				<ModalBody>Do you want to delete this interest?</ModalBody>
 				<ModalFooter>
 					<Button
-						color="secondary"
+						color='secondary'
 						onClick={toggleModal}>
 						Cancel
 					</Button>
 					<Button
-						color="danger"
+						color='danger'
 						onClick={onSubmit}>
 						Yes, Delete
 					</Button>

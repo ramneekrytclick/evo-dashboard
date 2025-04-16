@@ -19,6 +19,7 @@ import {
 } from "reactstrap";
 import CreateSubcategoryModal from "./CreateSubcategoryModal";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 export interface SubCategory {
 	_id: string;
@@ -27,6 +28,7 @@ export interface SubCategory {
 	category: string;
 	photo?: string;
 }
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const SubcategoriesCards = ({ id }: { id: string }) => {
 	const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
@@ -73,7 +75,7 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 			{/* Create Subcategory */}
 			<Row
 				sm={6}
-				className="ms-1 mb-4">
+				className='ms-1 mb-4'>
 				<CreateSubcategoryModal
 					fetchData={fetchSubcategories}
 					id={id}
@@ -81,9 +83,9 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 			</Row>
 
 			{/* Subcategories Cards */}
-			<Row className="g-sm-4 g-3">
+			<Row className='g-sm-4 g-3'>
 				{subcategories.length === 0 ? (
-					<Col className="text-center text-muted py-5">
+					<Col className='text-center text-muted py-5'>
 						No subcategories found
 					</Col>
 				) : (
@@ -92,27 +94,38 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 							xl={4}
 							md={6}
 							key={item._id}>
-							<Card className="shadow-sm rounded-3 border-0">
-								{item.photo && (
-									<img
-										src={`/${item.photo}`}
-										alt={item.title}
-										className="img-fluid rounded-top"
-										style={{ height: "160px", objectFit: "cover" }}
-									/>
-								)}
-								<CardHeader className="fw-bold text-success">
+							<Card className='shadow-sm rounded-3 border-0'>
+								<Image
+									src={
+										item.photo
+											? `${backendURL}/uploads/${item.photo.replace(
+													/\\/g,
+													"/"
+											  )}`
+											: "/assets/images/user-card/5.jpg"
+									}
+									width={400}
+									height={200}
+									alt={item.title}
+									className='img-fluid rounded-top'
+									style={{
+										width: "100%",
+										height: "160px",
+										objectFit: "cover",
+									}}
+								/>
+								<CardHeader className='fw-bold text-success'>
 									{item.title}
 								</CardHeader>
 								<CardBody>
 									{item.description && (
-										<p className="text-muted small">{item.description}</p>
+										<p className='text-muted small'>{item.description}</p>
 									)}
 								</CardBody>
-								<CardFooter className="d-flex justify-content-end gap-2">
+								<CardFooter className='d-flex justify-content-end gap-2'>
 									<Button
-										color="danger"
-										size="sm"
+										color='danger'
+										size='sm'
 										onClick={() => confirmDelete(item)}>
 										Delete
 									</Button>
@@ -137,12 +150,12 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color="danger"
+						color='danger'
 						onClick={handleConfirmedDelete}>
 						Yes, Delete
 					</Button>
 					<Button
-						color="outline-danger"
+						color='outline-danger'
 						onClick={toggleDeleteModal}>
 						Cancel
 					</Button>
