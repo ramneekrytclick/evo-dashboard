@@ -96,3 +96,6 @@ export const getPathById = async (id: string) => {
 export const getMyCertificates = async () => {
 	return (await apiClient.get(`/students/certificates`)).data;
 };
+export const getMyApplications = async () => {
+	return (await apiClient.get(`/students/my-applications`)).data;
+};

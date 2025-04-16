@@ -32,3 +32,10 @@ export const getStudentDetailsById = async (studentId: string) => {
 	const response = await apiClient.get(`/jobs/student/${studentId}`);
 	return response.data;
 };
+export const updateApplicationStatus = async (data: {
+	jobId: string;
+	studentId: string;
+	newStatus: "Accepted" | "Rejected" | "Pending";
+}) => {
+	return (await apiClient.put(`/jobs/update-status`, data)).data;
+};

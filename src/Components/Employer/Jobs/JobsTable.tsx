@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getJobs } from "@/app/api/employer";
@@ -16,15 +17,17 @@ import { toast } from "react-toastify";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { Eye, EyeOff } from "react-feather";
 import ApplicantDetailsModal from "./ApplicantDetailsModal";
-
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
 const JobApplicationsTable = () => {
 	const [jobs, setJobs] = useState<any[]>([]);
 	const [openJobId, setOpenJobId] = useState<string | null>(null);
 	const [selectedApplicantId, setSelectedApplicantId] = useState<string | null>(
 		null
 	);
-	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedResume, setSelectedResume] = useState<string | null>(null);
+	const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
 	const fetchJobs = async () => {
 		try {
 			const response = await getJobs();
@@ -38,8 +41,13 @@ const JobApplicationsTable = () => {
 		setOpenJobId(openJobId === jobId ? null : jobId);
 	};
 
-	const openApplicantModal = (id: string, resume: string | null) => {
-		setSelectedApplicantId(id);
+	const openApplicantModal = (
+		jobId: string,
+		studentId: string,
+		resume: string | null
+	) => {
+		setSelectedJobId(jobId);
+		setSelectedApplicantId(studentId);
 		setSelectedResume(resume);
 		setIsModalOpen(true);
 	};
@@ -48,7 +56,7 @@ const JobApplicationsTable = () => {
 		fetchJobs();
 	}, []);
 
-	const renderApplicantTable = (applicants: any[]) => {
+	const renderApplicantTable = (applicants: any[], jobId: string) => {
 		const columns: TableColumn<any>[] = [
 			{
 				name: "#",
@@ -58,12 +66,11 @@ const JobApplicationsTable = () => {
 			},
 			{
 				name: "Applicant ID",
-				selector: (row: any) => row.student, // extract student ID
-				sortable: true,
+				selector: (row: any) => row.student,
 				cell: (row: any) => (
 					<Button
 						color='link'
-						onClick={() => openApplicantModal(row.student, row.resume)}>
+						onClick={() => openApplicantModal(jobId, row.student, row.resume)}>
 						{row.student}
 					</Button>
 				),
@@ -74,7 +81,7 @@ const JobApplicationsTable = () => {
 				cell: (row: any) =>
 					row.resume ? (
 						<a
-							href={row.resume}
+							href={backendURL + row.resume}
 							target='_blank'
 							rel='noopener noreferrer'>
 							Download
@@ -165,7 +172,11 @@ const JobApplicationsTable = () => {
 													<strong>Status:</strong>{" "}
 													<Badge
 														color={
-															job.status === "Approved" ? "success" : "warning"
+															job.status === "Approved"
+																? job.status === "Pending"
+																	? "warning"
+																	: "success"
+																: "danger"
 														}>
 														{job.status}
 													</Badge>
@@ -177,7 +188,6 @@ const JobApplicationsTable = () => {
 											</Col>
 										</Row>
 									</Col>
-
 									<Col
 										md={3}
 										className='d-flex align-items-center justify-content-end'>
@@ -194,13 +204,12 @@ const JobApplicationsTable = () => {
 										</Button>
 									</Col>
 								</Row>
-
 								<Collapse
 									isOpen={openJobId === job._id}
 									className='mt-3'>
 									<h6>Applicants</h6>
 									{job.applicants && job.applicants.length > 0 ? (
-										renderApplicantTable(job.applicants)
+										renderApplicantTable(job.applicants, job._id)
 									) : (
 										<p className='text-muted'>No applicants yet.</p>
 									)}
@@ -211,12 +220,16 @@ const JobApplicationsTable = () => {
 				)}
 			</div>
 
-			{/* Applicant Details Modal */}
 			<ApplicantDetailsModal
 				isOpen={isModalOpen}
-				toggle={() => setIsModalOpen(false)}
+				toggle={() => {
+					setIsModalOpen(false);
+					fetchJobs();
+				}}
+				jobId={selectedJobId || ""}
 				studentId={selectedApplicantId || ""}
 				resume={selectedResume}
+				currentStatus='Accepted'
 			/>
 		</Container>
 	);

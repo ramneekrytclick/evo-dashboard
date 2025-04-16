@@ -5,19 +5,24 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Badge, Card, CardBody, Button } from "reactstrap";
 import Image from "next/image";
-import { Rating } from "react-simple-star-rating";
 import Link from "next/link";
 import { ImagePath, Href } from "@/Constant";
 import JobApplyConfirmationModal from "./JobApplyModal";
 import { useAuth } from "@/app/AuthProvider";
 
-const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
+const JobsCardView = ({
+	searchQuery,
+	location,
+	selectedFilters,
+	appliedJobs,
+}: any) => {
 	const [jobs, setJobs] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [selectedJob, setSelectedJob] = useState<any>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { user } = useAuth();
 	const id = user?.id || "";
+
 	const fetchData = async () => {
 		setLoading(true);
 		try {
@@ -47,8 +52,7 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 			formData.append("studentId", id);
 			if (resumeFile) formData.append("resume", resumeFile);
 
-			const response = await applyJobApplication(formData);
-
+			await applyJobApplication(formData);
 			toast.success(`Applied to ${selectedJob.title}`);
 			setIsModalOpen(false);
 			fetchData();
@@ -56,6 +60,7 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 			toast.error("Error applying to job!");
 		}
 	};
+
 	const filteredJobs = jobs.filter((job: any) => {
 		const matchTitle = job.title
 			.toLowerCase()
@@ -70,9 +75,13 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 					.map((s: string) => s.toLowerCase())
 					.includes(filter.toLowerCase())
 			);
-
 		return matchTitle && matchLocation && matchFilters;
 	});
+
+	const getApplicationStatus = (jobId: string) => {
+		const found = appliedJobs?.find((app: any) => app.jobId === jobId);
+		return found ? found.status : null;
+	};
 
 	if (loading) {
 		return <Card>Loading...</Card>;
@@ -81,57 +90,48 @@ const JobsCardView = ({ searchQuery, location, selectedFilters }: any) => {
 	return (
 		<>
 			{filteredJobs.length > 0 ? (
-				filteredJobs.map((item: any, index: number) => (
-					<Card
-						key={item._id}
-						className='job-search'>
-						<CardBody>
-							<div className='d-flex'>
-								<Image
-									priority
-									width={40}
-									height={40}
-									className='img-40 img-fluid m-r-20'
-									src={`${ImagePath}/job-search/${
-										Math.floor(index + 1) % 4
-									}.jpg`}
-									alt='job logo'
-								/>
-								<div className='flex-grow-1'>
-									<h6 className='f-w-600'>
-										<Link href={Href}>{item.title}</Link>
-									</h6>
-									{/* <p className="text-muted mb-1">
-									Remote, India
-									<Rating
-										className="ms-1"
-										fillColor="#FFAE1A"
-										initialValue={4 + Math.random()}
-										size={14}
-										readonly
+				filteredJobs.map((item: any, index: number) => {
+					const status = getApplicationStatus(item._id);
+					return (
+						<Card
+							key={item._id}
+							className='job-search'>
+							<CardBody>
+								<div className='d-flex'>
+									<Image
+										priority
+										width={40}
+										height={40}
+										className='img-40 img-fluid m-r-20'
+										src={`${ImagePath}/job-search/${(index % 4) + 1}.jpg`}
+										alt='job logo'
 									/>
-								</p> */}
+									<div className='flex-grow-1'>
+										<h6 className='f-w-600'>
+											<Link href={Href}>{item.title}</Link>
+										</h6>
+									</div>
 								</div>
-							</div>
-							<p className='mt-2 mb-2'>{item.description}</p>
-							<div className='d-flex justify-content-between align-items-center'>
-								<span>
-									Openings: <strong>{item.openings}</strong>
-								</span>
-								{item.applicants.includes(id) ? (
-									"Already Applied"
-								) : (
-									<Button
-										color='primary'
-										size='sm'
-										onClick={() => openConfirmationModal(item)}>
-										Apply
-									</Button>
-								)}
-							</div>
-						</CardBody>
-					</Card>
-				))
+								<p className='mt-2 mb-2'>{item.description}</p>
+								<div className='d-flex justify-content-between align-items-center'>
+									<span>
+										Openings: <strong>{item.openings}</strong>
+									</span>
+									{status ? (
+										<Badge color='secondary'>Status: {status}</Badge>
+									) : (
+										<Button
+											color='primary'
+											size='sm'
+											onClick={() => openConfirmationModal(item)}>
+											Apply
+										</Button>
+									)}
+								</div>
+							</CardBody>
+						</Card>
+					);
+				})
 			) : (
 				<Card className='text-center p-4'>
 					No jobs found matching the filters.

@@ -14,9 +14,14 @@ import {
 	CardBody,
 	ListGroup,
 	ListGroupItem,
+	Input,
+	Button,
 } from "reactstrap";
 import { toast } from "react-toastify";
-import { getStudentDetailsById } from "@/app/api/employer";
+import {
+	getStudentDetailsById,
+	updateApplicationStatus,
+} from "@/app/api/employer";
 import { getAllCourses } from "@/app/api/cc";
 
 const ApplicantDetailsModal = ({
@@ -24,16 +29,24 @@ const ApplicantDetailsModal = ({
 	toggle,
 	studentId,
 	resume,
+	jobId,
+	currentStatus,
+	onStatusUpdate,
 }: {
 	isOpen: boolean;
 	toggle: () => void;
 	studentId: string;
 	resume: string | null;
+	jobId: string;
+	currentStatus: "Accepted" | "Rejected" | "Pending";
+	onStatusUpdate?: () => void; // Optional parent callback
 }) => {
 	const [student, setStudent] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [courses, setCourses] = useState<any[]>([]);
+	const [newStatus, setNewStatus] = useState(currentStatus);
+	const [updating, setUpdating] = useState(false);
 
 	const getDetails = async () => {
 		try {
@@ -50,18 +63,35 @@ const ApplicantDetailsModal = ({
 		}
 	};
 
+	const handleStatusUpdate = async () => {
+		try {
+			setUpdating(true);
+			await updateApplicationStatus({ jobId, studentId, newStatus });
+			toast.success("Status updated successfully!");
+			if (onStatusUpdate) onStatusUpdate();
+			toggle();
+		} catch (error) {
+			toast.error("Failed to update status");
+		} finally {
+			setUpdating(false);
+		}
+	};
+
 	const getCourseTitle = (id: string) => {
 		const match = courses.find((course) => course.id === id);
 		return match?.title || "(Course Deleted)";
 	};
+
 	const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
+
 	useEffect(() => {
 		if (studentId) {
 			setLoading(true);
 			setError("");
 			getDetails();
+			setNewStatus(currentStatus); // Sync when modal opens
 		}
-	}, [studentId]);
+	}, [studentId, currentStatus]);
 
 	return (
 		<Modal
@@ -94,7 +124,7 @@ const ApplicantDetailsModal = ({
 											<strong>Resume:</strong>{" "}
 											{resume ? (
 												<a
-													href={backendURL + resume}
+													href={`${backendURL}${resume}`}
 													target='_blank'
 													rel='noopener noreferrer'>
 													Download
@@ -105,19 +135,25 @@ const ApplicantDetailsModal = ({
 										</p>
 									</Col>
 									<Col md={6}>
-										<h6 className='text-muted mb-2'>Status</h6>
-										<p className='mb-1'>
-											<strong>Account:</strong>{" "}
-											<Badge
-												color={
-													student.status === "Banned" ? "danger" : "success"
-												}>
-												{student.status}
-											</Badge>
-										</p>
-										<p className='mb-1'>
-											<strong>Student ID:</strong> {student._id}
-										</p>
+										<h6 className='text-muted mb-2'>
+											Update Application Status
+										</h6>
+										<div className='d-flex flex-column gap-2'>
+											<Input
+												type='select'
+												value={newStatus}
+												onChange={(e) => setNewStatus(e.target.value as any)}>
+												<option value='Pending'>Pending</option>
+												<option value='Accepted'>Accepted</option>
+												<option value='Rejected'>Rejected</option>
+											</Input>
+											<Button
+												color='primary'
+												onClick={handleStatusUpdate}
+												disabled={updating}>
+												{updating ? "Updating..." : "Update Status"}
+											</Button>
+										</div>
 									</Col>
 								</Row>
 							</CardBody>
