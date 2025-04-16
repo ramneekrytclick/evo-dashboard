@@ -15,6 +15,7 @@ import {
 } from "reactstrap";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
@@ -49,12 +50,12 @@ const PendingListTable = () => {
 			selector: (row) => row.photo,
 			cell: (row) => (
 				<>
-					<img
+					<Image
 						src={`${backendURL}/${row.photo?.replace(/\\/g, "/")}`}
 						alt={row.name}
+						width={50}
+						height={50}
 						style={{
-							width: 50,
-							height: 50,
 							borderRadius: "50%",
 							objectFit: "cover",
 						}}

@@ -23,7 +23,7 @@ import { getMentors } from "@/app/api/admin/mentors";
 import { assignMentorsToManager } from "@/app/api/admin/managers";
 import { toast } from "react-toastify";
 import Image from "next/image";
-
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 const UserProfile = ({ id }: { id: string }) => {
 	const [profile, setProfile] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
@@ -98,34 +98,38 @@ const UserProfile = ({ id }: { id: string }) => {
 			<Breadcrumbs
 				mainTitle={`${profile.name} Profile`}
 				parent={profile.role}
-				title="Profile"
+				title='Profile'
 			/>
-			<Card className="hovercard text-center">
+			<Card className='hovercard text-center'>
 				{/* <div
 					className="cardheader bg-cover"
 					style={{ backgroundImage: "url('/images/bg.jpg')", height: 250 }}
 				/> */}
-				<div className="user-image">
-					<div className="avatar">
+				<div className='user-image'>
+					<div className='avatar'>
 						<Image
-							src={`/${profile.photo || "assets/images/user/1.jpg"}`}
+							src={
+								profile.photo
+									? `${backendURL}/${profile.photo.replace(/\\/g, "/")}`
+									: "/assets/images/user/1.jpg"
+							}
 							width={100}
 							height={100}
-							className="rounded-circle border border-white mt-2"
-							alt="Profile"
+							className='rounded-circle border border-white mt-2'
+							alt='Profile Photo'
 						/>
 					</div>
 				</div>
 				<CardBody>
-					<h4 className="mb-0 mt-5 text-uppercase fw-bold">{profile.name}</h4>
-					<p className="text-muted text-capitalize">{profile.role}</p>
-					<Row className="my-4 text-start px-4 justify-content-center">
+					<h4 className='mb-0 mt-5 text-uppercase fw-bold'>{profile.name}</h4>
+					<p className='text-muted text-capitalize'>{profile.role}</p>
+					<Row className='my-4 text-start px-4 justify-content-center'>
 						<Col
 							sm={6}
 							md={3}
-							className="mb-3">
+							className='mb-3'>
 							<h6>
-								<i className="fa fa-envelope me-2" />
+								<i className='fa fa-envelope me-2' />
 								Email
 							</h6>
 							<p>{profile.email}</p>
@@ -134,9 +138,9 @@ const UserProfile = ({ id }: { id: string }) => {
 							<Col
 								sm={6}
 								md={3}
-								className="mb-3">
+								className='mb-3'>
 								<h6>
-									<i className="fa fa-calendar me-2" />
+									<i className='fa fa-calendar me-2' />
 									DOB
 								</h6>
 								<p>{new Date(profile.dob).toDateString()}</p>
@@ -146,9 +150,9 @@ const UserProfile = ({ id }: { id: string }) => {
 							<Col
 								sm={6}
 								md={3}
-								className="mb-3">
+								className='mb-3'>
 								<h6>
-									<i className="fa fa-phone me-2" />
+									<i className='fa fa-phone me-2' />
 									Contact
 								</h6>
 								<p>{profile.contactNumber}</p>
@@ -158,9 +162,9 @@ const UserProfile = ({ id }: { id: string }) => {
 							<Col
 								sm={6}
 								md={3}
-								className="mb-3">
+								className='mb-3'>
 								<h6>
-									<i className="fa fa-map-marker me-2" />
+									<i className='fa fa-map-marker me-2' />
 									Location
 								</h6>
 								<p>{profile.address}</p>
@@ -168,7 +172,7 @@ const UserProfile = ({ id }: { id: string }) => {
 						)}
 					</Row>
 
-					<Row className="mb-3 px-4 justify-content-center">
+					<Row className='mb-3 px-4 justify-content-center'>
 						{isStudent && profile.wannaBeInterest && (
 							<Col md={3}>
 								<strong>WannaBe Interest:</strong> {profile.wannaBeInterest}
@@ -197,13 +201,13 @@ const UserProfile = ({ id }: { id: string }) => {
 							)}
 					</Row>
 
-					<Row className="mb-3 justify-content-center">
+					<Row className='mb-3 justify-content-center'>
 						{isStudent && (
 							<Col
 								xs={6}
 								md={3}
-								className="border-end">
-								<h5 className="counter">
+								className='border-end'>
+								<h5 className='counter'>
 									{profile.enrolledCourses?.length || 0}
 								</h5>
 								<span>Enrolled Courses</span>
@@ -213,7 +217,7 @@ const UserProfile = ({ id }: { id: string }) => {
 							<Col
 								xs={6}
 								md={3}>
-								<h5 className="counter">
+								<h5 className='counter'>
 									{profile.assignedMentors?.length || 0}
 								</h5>
 								<span>Assigned Mentors</span>
@@ -221,25 +225,25 @@ const UserProfile = ({ id }: { id: string }) => {
 						)}
 					</Row>
 
-					<ul className="list-inline">
-						<li className="list-inline-item">
-							<i className="fa fa-facebook" />
+					<ul className='list-inline'>
+						<li className='list-inline-item'>
+							<i className='fa fa-facebook' />
 						</li>
-						<li className="list-inline-item">
-							<i className="fa fa-google-plus" />
+						<li className='list-inline-item'>
+							<i className='fa fa-google-plus' />
 						</li>
-						<li className="list-inline-item">
-							<i className="fa fa-twitter" />
+						<li className='list-inline-item'>
+							<i className='fa fa-twitter' />
 						</li>
-						<li className="list-inline-item">
-							<i className="fa fa-instagram" />
+						<li className='list-inline-item'>
+							<i className='fa fa-instagram' />
 						</li>
-						<li className="list-inline-item">
-							<i className="fa fa-rss" />
+						<li className='list-inline-item'>
+							<i className='fa fa-rss' />
 						</li>
 					</ul>
 
-					<div className="mt-3">
+					<div className='mt-3'>
 						<span
 							className={`badge bg-${
 								profile.isApproved ? "success" : "danger"
@@ -260,8 +264,8 @@ const UserProfile = ({ id }: { id: string }) => {
 
 					{isManager && (
 						<Button
-							color="dark"
-							className="mt-4"
+							color='dark'
+							className='mt-4'
 							onClick={openAssignModal}>
 							Assign Mentors
 						</Button>
@@ -273,7 +277,7 @@ const UserProfile = ({ id }: { id: string }) => {
 				isOpen={modalOpen}
 				toggle={toggleModal}
 				centered
-				size="lg">
+				size='lg'>
 				<ModalHeader toggle={toggleModal}>
 					Assign Mentors to {profile.name}
 				</ModalHeader>
@@ -286,11 +290,11 @@ const UserProfile = ({ id }: { id: string }) => {
 								<Col
 									md={6}
 									key={mentor._id}
-									className="mb-2">
+									className='mb-2'>
 									<FormGroup check>
 										<Label check>
 											<Input
-												type="checkbox"
+												type='checkbox'
 												checked={selectedMentorIds.includes(mentor._id)}
 												onChange={() => handleMentorSelection(mentor._id)}
 											/>
@@ -300,7 +304,7 @@ const UserProfile = ({ id }: { id: string }) => {
 												}>
 												{mentor.name}
 											</Badge>{" "}
-											<span className="text-muted">({mentor.email})</span>
+											<span className='text-muted'>({mentor.email})</span>
 										</Label>
 									</FormGroup>
 								</Col>
@@ -310,12 +314,12 @@ const UserProfile = ({ id }: { id: string }) => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color="dark"
+						color='dark'
 						onClick={toggleModal}>
 						Cancel
 					</Button>
 					<Button
-						color="success"
+						color='success'
 						onClick={handleAssignMentors}
 						disabled={selectedMentorIds.length === 0}>
 						Assign Selected
