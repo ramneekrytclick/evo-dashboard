@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
@@ -48,20 +49,30 @@ const PendingListTable = () => {
 		{
 			name: "Photo",
 			selector: (row) => row.photo,
-			cell: (row) => (
-				<>
-					<Image
-						src={`${backendURL}/${row.photo?.replace(/\\/g, "/")}`}
-						alt={row.name}
-						width={50}
-						height={50}
-						style={{
-							borderRadius: "50%",
-							objectFit: "cover",
-						}}
-					/>
-				</>
-			),
+			cell: (row) => {
+				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
+
+				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
+					? `${backendURL}/${resolvedPhoto}`
+					: `${backendURL}/uploads/${resolvedPhoto}`;
+				const photoURL = row.photo
+					? profilePhotoUrl
+					: "/assets/avatar-placeholder.png";
+				return (
+					<>
+						<Image
+							src={photoURL}
+							alt={row.name}
+							width={50}
+							height={50}
+							style={{
+								borderRadius: "50%",
+								objectFit: "cover",
+							}}
+						/>
+					</>
+				);
+			},
 			width: "80px",
 		},
 		{
@@ -151,6 +162,7 @@ const PendingListTable = () => {
 	useEffect(() => {
 		fetchData();
 	}, []);
+	const navigate = useRouter();
 
 	const filteredItems = teamListTableData.filter((item) =>
 		Object.values(item).some((val) =>
@@ -173,6 +185,9 @@ const PendingListTable = () => {
 					pagination
 					striped
 					responsive
+					onRowClicked={(row: any) => {
+						navigate.push(`/admin/users/${row._id}`);
+					}}
 				/>
 
 				<Modal

@@ -16,6 +16,8 @@ import { getEmployers } from "@/app/api/admin/employers";
 import { updateUserStatus } from "@/app/api/admin/team";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const EmployerListTable = () => {
@@ -57,17 +59,31 @@ const EmployerListTable = () => {
 			name: "Photo",
 			selector: (row) => row.photo || "",
 			sortable: false,
-			cell: (row) => (
-				<img
-					src={
-						row.photo
-							? `${backendURL}/${row.photo.replace(/\\/g, "/")}`
-							: "/assets/images/user/1.jpg"
-					}
-					alt={row.name}
-					style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-				/>
-			),
+			cell: (row) => {
+				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
+
+				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
+					? `${backendURL}/${resolvedPhoto}`
+					: `${backendURL}/uploads/${resolvedPhoto}`;
+				const photoURL = row.photo
+					? profilePhotoUrl
+					: "/assets/avatar-placeholder.png";
+				return (
+					<>
+						<Image
+							src={photoURL}
+							alt={row.name}
+							width={50}
+							height={50}
+							style={{
+								borderRadius: "50%",
+								objectFit: "cover",
+							}}
+						/>
+					</>
+				);
+			},
+			width: "80px",
 		},
 		{
 			name: "Name",
@@ -160,7 +176,7 @@ const EmployerListTable = () => {
 			setLoading(false);
 		}
 	};
-
+	const navigate = useRouter();
 	useEffect(() => {
 		fetchEmployers();
 	}, []);
@@ -182,6 +198,9 @@ const EmployerListTable = () => {
 						fixedHeaderScrollHeight='40vh'
 						pagination
 						progressPending={loading}
+						onRowClicked={(row: any) => {
+							navigate.push(`/admin/users/${row._id}`);
+						}}
 					/>
 				</div>
 

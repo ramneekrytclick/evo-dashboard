@@ -16,6 +16,7 @@ import {
 import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 const TeamListTable = () => {
 	const [loading, setLoading] = useState(true);
@@ -163,7 +164,7 @@ const TeamListTable = () => {
 	}, []);
 
 	const [filterText, setFilterText] = useState("");
-
+	const navigate = useRouter();
 	const filteredItems: UserProps[] = teamListTableData.filter(
 		(item: UserProps) =>
 			Object.values(item).some(
@@ -188,6 +189,9 @@ const TeamListTable = () => {
 					columns={teamListColumns}
 					progressPending={loading}
 					pagination
+					onRowClicked={(row: any) => {
+						navigate.push(`/admin/users/${row._id}`);
+					}}
 				/>
 				{/* Status Modal */}
 				<Modal

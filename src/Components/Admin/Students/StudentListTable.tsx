@@ -17,6 +17,7 @@ import { approveUser, updateUserStatus } from "@/app/api/admin/team";
 import { getStudents } from "@/app/api/admin/students";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
@@ -58,21 +59,30 @@ const MentorListTable = () => {
 		{
 			name: "Photo",
 			selector: (row) => row.photo || "",
-			cell: (row) => (
-				<>
-					<Image
-						width={40}
-						height={40}
-						src={
-							row.photo
-								? `${backendURL}/uploads/${row.photo.replace(/\\/g, "/")}`
-								: "/assets/images/user/1.jpg"
-						}
-						alt={row.name}
-						style={{ borderRadius: "50%" }}
-					/>
-				</>
-			),
+			cell: (row) => {
+				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
+
+				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
+					? `${backendURL}/${resolvedPhoto}`
+					: `${backendURL}/uploads/${resolvedPhoto}`;
+				const photoURL = row.photo
+					? profilePhotoUrl
+					: "/assets/avatar-placeholder.png";
+				return (
+					<>
+						<Image
+							src={photoURL}
+							alt={row.name}
+							width={50}
+							height={50}
+							style={{
+								borderRadius: "50%",
+								objectFit: "cover",
+							}}
+						/>
+					</>
+				);
+			},
 			width: "80px",
 		},
 		{
@@ -167,6 +177,7 @@ const MentorListTable = () => {
 	useEffect(() => {
 		fetchData();
 	}, []);
+	const navigate = useRouter();
 
 	return (
 		<Card>
@@ -184,6 +195,9 @@ const MentorListTable = () => {
 					fixedHeaderScrollHeight='40vh'
 					progressPending={loading}
 					pagination
+					onRowClicked={(row: any) => {
+						navigate.push(`/admin/users/${row._id}`);
+					}}
 				/>
 			</CardBody>
 
