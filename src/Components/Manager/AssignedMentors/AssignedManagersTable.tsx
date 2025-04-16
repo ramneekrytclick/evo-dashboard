@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { getMentorStats, getMyMentors } from "@/app/api/managers";
 import { Card, Input, Spinner, Alert } from "reactstrap";
-
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+const defaultAvatar = "/assets/avatar-placeholder.png"; // Make sure this exists in /public
 const AssignedManagersTable = () => {
 	const [managers, setManagers] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -30,34 +31,54 @@ const AssignedManagersTable = () => {
 		{
 			name: "Photo",
 			selector: (row: any) => row.photo,
-			cell: (row: any) => (
-				<img
-					src={`/${row.photo}`}
-					alt={row.name}
-					style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-				/>
-			),
+			cell: (row: any) => {
+				const imageUrl = row.photo
+					? `${backendURL}/uploads/${row.photo.replace(/^\/+/, "")}`
+					: defaultAvatar;
+
+				return (
+					<img
+						src={imageUrl}
+						alt={row.name}
+						onError={(e) => {
+							(e.target as HTMLImageElement).src = defaultAvatar;
+						}}
+						style={{
+							width: "40px",
+							height: "40px",
+							borderRadius: "50%",
+							objectFit: "cover",
+						}}
+					/>
+				);
+			},
 			width: "80px",
 		},
 		{
 			name: "Name",
 			selector: (row: any) => row.name,
+			center: true,
 			sortable: true,
 		},
 		{
 			name: "Email",
 			selector: (row: any) => row.email,
+			center: true,
+			cell: (row: any) => <a href={`mailto:${row.email}`}>{row.email}</a>,
 		},
 		{
 			name: "Expertise",
 			selector: (row: any) => row.expertise || "N/A",
+			center: true,
 		},
 		{
 			name: "Working Mode",
 			selector: (row: any) => row.workingMode || "N/A",
+			center: true,
 		},
 		{
 			name: "Status",
+			center: true,
 			selector: (row: any) => row.status,
 			cell: (row: any) => (
 				<span
@@ -70,6 +91,7 @@ const AssignedManagersTable = () => {
 		},
 		{
 			name: "Approved",
+			center: true,
 			selector: (row: any) => row.isApproved,
 			cell: (row: any) => (
 				<span className={`badge bg-${row.isApproved ? "primary" : "danger"}`}>
@@ -87,21 +109,21 @@ const AssignedManagersTable = () => {
 	);
 
 	return (
-		<Card className="p-3">
-			<h5 className="mb-3">Assigned Mentors</h5>
+		<Card className='p-3'>
+			<h5 className='mb-3'>Assigned Mentors</h5>
 
 			<Input
-				type="text"
-				placeholder="Search by name or email..."
-				className="mb-3"
+				type='text'
+				placeholder='Search by name or email...'
+				className='mb-3'
 				value={searchQuery}
 				onChange={(e) => setSearchQuery(e.target.value)}
 			/>
 
-			{error && <Alert color="danger">{error}</Alert>}
+			{error && <Alert color='danger'>{error}</Alert>}
 
 			{loading ? (
-				<div className="text-center">
+				<div className='text-center'>
 					<Spinner />
 				</div>
 			) : (
@@ -111,7 +133,7 @@ const AssignedManagersTable = () => {
 					pagination
 					responsive
 					highlightOnHover
-					noDataComponent="No mentors found"
+					noDataComponent='No mentors found'
 				/>
 			)}
 		</Card>
