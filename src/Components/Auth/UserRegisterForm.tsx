@@ -177,32 +177,32 @@ const MultiStepRegister = () => {
 	return (
 		<Col
 			xl={6}
-			className="mx-auto">
-			<div className="text-center mb-4">
+			className='mx-auto'>
+			<div className='text-center mb-4'>
 				<Link
-					className="logo"
-					href="/admin/dashboard">
+					className='logo'
+					href='/admin/dashboard'>
 					<Image
 						priority
 						width={200}
 						height={34}
-						className="img-fluid for-light"
+						className='img-fluid for-light'
 						src={imageOne}
-						alt="login page"
+						alt='login page'
 					/>
 					<Image
 						priority
 						width={200}
 						height={34}
-						className="img-fluid for-dark"
+						className='img-fluid for-dark'
 						src={imageTwo}
-						alt="login page"
+						alt='login page'
 					/>
 				</Link>
 			</div>
 			<Card>
 				<CardBody>
-					<Form className="form-wizard">
+					<Form className='form-wizard'>
 						{step === 1 && (
 							<BasicInfoForm
 								formData={formData}
@@ -212,24 +212,24 @@ const MultiStepRegister = () => {
 							/>
 						)}
 						{step === 2 && isMultiStep && (
-							<Row className="g-3 avatar-upload">
+							<Row className='g-3 avatar-upload'>
 								<Col xs={12}>
-									<div className="avatar-edit">
+									<div className='avatar-edit'>
 										<Input
 											onChange={handleChange}
 											innerRef={fileInputRef}
-											type="file"
-											accept=".png, .jpg, .jpeg"
-											name="photo"
+											type='file'
+											accept='.png, .jpg, .jpeg'
+											name='photo'
 										/>
 										<Label
-											htmlFor="photo"
+											htmlFor='photo'
 											onClick={() => fileInputRef.current?.click()}
 										/>
 									</div>
-									<div className="avatar-preview">
+									<div className='avatar-preview'>
 										<div
-											id="image"
+											id='image'
 											style={{
 												backgroundImage: photoPreview
 													? `url(${photoPreview})`
@@ -237,23 +237,23 @@ const MultiStepRegister = () => {
 											}}
 										/>
 									</div>
-									<h3 className="mt-2 text-center">Upload Profile Photo</h3>
+									<h3 className='mt-2 text-center'>Upload Profile Photo</h3>
 								</Col>
 							</Row>
 						)}
 						{step === 3 && isMultiStep && getRoleForm()}
-						<div className="text-end pt-3">
+						<div className='text-end pt-3'>
 							{step > 1 && step < 4 && (
 								<Button
-									color="secondary"
+									color='secondary'
 									onClick={handleBack}
-									className="me-1">
+									className='me-1'>
 									Back
 								</Button>
 							)}
 							{step < 4 && (
 								<Button
-									color="primary"
+									color='primary'
 									onClick={() => {
 										if (role === "admin" && step === 1) {
 											handleSubmitAdmin();
@@ -275,8 +275,8 @@ const MultiStepRegister = () => {
 									{sendingOtp ? (
 										<>
 											<Spinner
-												size="sm"
-												className="me-1"
+												size='sm'
+												className='me-1'
 											/>{" "}
 											Sending...
 										</>
@@ -297,10 +297,10 @@ const MultiStepRegister = () => {
 								</Button>
 							)}
 						</div>
-						<div className="text-center mt-3">
+						<div className='text-center mt-3'>
 							<Link
-								href="/auth/login"
-								className="text-primary">
+								href='/auth/login'
+								className='text-primary'>
 								Already have an account? Login
 							</Link>
 						</div>

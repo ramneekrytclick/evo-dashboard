@@ -60,16 +60,20 @@ const StudentDashboardContainer = () => {
 			radialBar: {
 				hollow: { size: "70%" },
 				dataLabels: {
-					name: { show: true, fontSize: "22px" },
+					name: {
+						show: true,
+						fontSize: "18px",
+						offsetY: -10,
+					},
 					value: {
 						show: true,
 						fontSize: "16px",
-						formatter: (val) => `${val}%`,
+						formatter: () => `${evoScore.toFixed(1)} / 10`,
 					},
 				},
 			},
 		},
-		labels: ["Evo Score"],
+		labels: ["EVO Score"],
 		colors: [evoColor],
 	};
 
@@ -195,7 +199,7 @@ const StudentDashboardContainer = () => {
 						<h6 className='fw-bold'>EVO Score</h6>
 						<ReactApexChart
 							options={chartOptions}
-							series={[evoScore]}
+							series={[evoScore * 10]} // scale to percentage for chart
 							type='radialBar'
 							height={250}
 						/>
@@ -204,13 +208,16 @@ const StudentDashboardContainer = () => {
 						</p>
 					</div>
 				</div>
+				{/* Other dashboard sections... */}
 			</div>
 		</div>
 	);
 };
 
 export default StudentDashboardContainer;
+
 const getEvoComment = (score: number) => {
+	const score10 = score * 10;
 	const comments = {
 		"0-25": [
 			"Let's put in some more effort. Every expert was once a beginner!",
@@ -275,13 +282,13 @@ const getEvoComment = (score: number) => {
 	};
 
 	const getBucket = (s: number) =>
-		s <= 25
+		s <= 2.5
 			? "0-25"
-			: s <= 50
+			: s <= 5
 			? "26-50"
-			: s <= 75
+			: s <= 7.5
 			? "51-75"
-			: s <= 90
+			: s <= 9
 			? "76-90"
 			: "91-100";
 
@@ -290,9 +297,9 @@ const getEvoComment = (score: number) => {
 };
 
 const getEvoColor = (score: number) => {
-	if (score <= 25) return "#FF4D4F";
-	if (score <= 50) return "#FAAD14";
-	if (score <= 75) return "#52C41A";
-	if (score <= 90) return "#1890FF";
+	if (score <= 2.5) return "#FF4D4F";
+	if (score <= 5) return "#FAAD14";
+	if (score <= 7.5) return "#52C41A";
+	if (score <= 9) return "#1890FF";
 	return "#722ED1";
 };

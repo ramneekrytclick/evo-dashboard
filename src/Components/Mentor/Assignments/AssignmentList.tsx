@@ -14,6 +14,7 @@ import {
 	FormGroup,
 } from "reactstrap";
 import { toast } from "react-toastify";
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const AssignmentList = () => {
 	const [assignments, setAssignments] = useState<any[]>([]);
@@ -59,6 +60,10 @@ const AssignmentList = () => {
 	};
 
 	const handleGradeSubmit = async () => {
+		if (score < 0 || score > 10) {
+			return toast.error("Score must be between 0 and 10.");
+		}
+
 		try {
 			await gradeAssignment({
 				assignmentId: selectedSubmission._id,
@@ -77,19 +82,19 @@ const AssignmentList = () => {
 	const columns = [
 		{
 			name: "Student Name",
-			selector: (row: any) => row.student.name,
+			selector: (row: any) => row.student?.name,
 			sortable: true,
 		},
 		{
 			name: "Email",
-			selector: (row: any) => row.student.email,
+			selector: (row: any) => row.student?.email,
 			sortable: true,
 		},
 		{
 			name: "Submission",
 			cell: (row: any) => (
 				<Button
-					color="primary"
+					color='primary'
 					onClick={() => handleViewSubmission(row)}>
 					View Submission
 				</Button>
@@ -99,10 +104,10 @@ const AssignmentList = () => {
 			name: "Grade",
 			cell: (row: any) =>
 				row.score ? (
-					<h3 className="fw-100">{row.score}</h3>
+					<h3 className='fw-100'>{row.score}</h3>
 				) : (
 					<Button
-						color="success"
+						color='success'
 						onClick={() => handleGradeClick(row)}>
 						Give Grade
 					</Button>
@@ -111,8 +116,8 @@ const AssignmentList = () => {
 	];
 
 	return (
-		<div className="p-4">
-			<h2 className="text-xl font-semibold mb-4">Submitted Assignments</h2>
+		<div className='p-4'>
+			<h2 className='text-xl font-semibold mb-4'>Submitted Assignments</h2>
 			<DataTable
 				columns={columns}
 				data={assignments}
@@ -123,20 +128,20 @@ const AssignmentList = () => {
 			<Modal
 				isOpen={isModalOpen}
 				toggle={closeModal}
-				size="lg">
+				size='lg'>
 				<ModalHeader toggle={closeModal}>Submission Details</ModalHeader>
 				<ModalBody>
 					{selectedSubmission && (
-						<div className="space-y-3">
+						<div className='space-y-3'>
 							<p>
-								<strong>Student:</strong> {selectedSubmission.student.name}
+								<strong>Student:</strong> {selectedSubmission.student?.name}
 							</p>
 							<p>
-								<strong>Email:</strong> {selectedSubmission.student.email}
+								<strong>Email:</strong> {selectedSubmission.student?.email}
 							</p>
 							<iframe
-								src={`/${selectedSubmission.fileUrl}`}
-								className="w-100"
+								src={`${backendURL}/uploads/${selectedSubmission.fileUrl}`}
+								className='w-100'
 								style={{
 									height: "400px",
 									border: "1px solid #ccc",
@@ -148,16 +153,16 @@ const AssignmentList = () => {
 				<ModalFooter>
 					{selectedSubmission && (
 						<a
-							href={`/${selectedSubmission.fileUrl}`}
+							href={`${backendURL}/uploads/${selectedSubmission.fileUrl}`}
 							download
-							target="_blank"
-							rel="noopener noreferrer"
-							className="btn btn-success">
+							target='_blank'
+							rel='noopener noreferrer'
+							className='btn btn-primary'>
 							Download File
 						</a>
 					)}
 					<Button
-						color="secondary"
+						color='outline-primary'
 						onClick={closeModal}>
 						Close
 					</Button>
@@ -171,21 +176,21 @@ const AssignmentList = () => {
 				<ModalHeader toggle={closeGradeModal}>Grade Assignment</ModalHeader>
 				<ModalBody>
 					<FormGroup>
-						<Label for="score">Score (out of 100)</Label>
+						<Label for='score'>Score (out of 10)</Label>
 						<Input
-							type="number"
-							id="score"
+							type='number'
+							id='score'
 							value={score}
 							min={0}
-							max={100}
+							max={10}
 							onChange={(e) => setScore(Number(e.target.value))}
 						/>
 					</FormGroup>
 					<FormGroup>
-						<Label for="feedback">Feedback</Label>
+						<Label for='feedback'>Feedback</Label>
 						<Input
-							type="textarea"
-							id="feedback"
+							type='textarea'
+							id='feedback'
 							value={feedback}
 							rows={4}
 							onChange={(e) => setFeedback(e.target.value)}
@@ -194,12 +199,12 @@ const AssignmentList = () => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color="success"
+						color='success'
 						onClick={handleGradeSubmit}>
 						Submit Grade
 					</Button>
 					<Button
-						color="secondary"
+						color='outline-success'
 						onClick={closeGradeModal}>
 						Cancel
 					</Button>
