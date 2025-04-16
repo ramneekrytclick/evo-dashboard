@@ -7,6 +7,7 @@ export interface EmployerProps {
 	isApproved: boolean;
 	companyName: string;
 	role: string;
+	photo: string;
 	status: string;
 }
 export interface EmployerDataProps {

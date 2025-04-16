@@ -1,5 +1,5 @@
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import { MentorDataProps } from "@/Types/Mentor.type";
+import { MentorInitialValue } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import {
@@ -16,12 +16,19 @@ import { getMentors } from "@/app/api/admin/mentors";
 import { updateUserStatus } from "@/app/api/admin/team";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import Image from "next/image";
+
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const MentorListTable = () => {
 	const [loading, setLoading] = useState(false);
 	const [filterText, setFilterText] = useState("");
-	const [mentorTableData, setMentorTableData] = useState<MentorDataProps[]>([]);
-	const [selectedRow, setSelectedRow] = useState<MentorDataProps | null>(null);
+	const [mentorTableData, setMentorTableData] = useState<MentorInitialValue[]>(
+		[]
+	);
+	const [selectedRow, setSelectedRow] = useState<MentorInitialValue | null>(
+		null
+	);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [actionType, setActionType] = useState<
 		"Active" | "Inactive" | "Banned"
@@ -30,7 +37,7 @@ const MentorListTable = () => {
 	const toggleModal = () => setModalOpen(!modalOpen);
 
 	const openStatusModal = (
-		row: MentorDataProps,
+		row: MentorInitialValue,
 		action: "Active" | "Inactive" | "Banned"
 	) => {
 		setSelectedRow(row);
@@ -41,24 +48,42 @@ const MentorListTable = () => {
 	const handleAction = async () => {
 		if (!selectedRow) return;
 		try {
-			await updateUserStatus(selectedRow._id, actionType);
-			toast.success(`${selectedRow.name}'s status updated to ${actionType}`);
+			await updateUserStatus(selectedRow._id || "", actionType);
 			toggleModal();
+			toast.success(`${selectedRow.name}'s status updated to ${actionType}`);
 			fetchData();
 		} catch (error) {
-			console.log("Status update error:", error);
+			console.error("Status update error:", error);
 			toast.error("Failed to update status");
 		}
 	};
 
-	const mentorTableColumns: TableColumn<MentorDataProps>[] = [
+	const mentorTableColumns: TableColumn<MentorInitialValue>[] = [
+		{
+			name: "Photo",
+			selector: (row) => row.photo,
+			cell: (row) => (
+				<Image
+					width={40}
+					height={40}
+					src={
+						row.photo
+							? `${backendURL}/uploads/${row.photo.replace(/\\/g, "/")}`
+							: "/assets/images/user/1.jpg"
+					}
+					alt={row.name}
+					style={{ borderRadius: "50%" }}
+				/>
+			),
+			width: "70px",
+		},
 		{
 			name: "Name",
 			selector: (row) => row.name,
 			sortable: true,
 			cell: (row) => (
 				<Link
-					className="text-dark fw-bold"
+					className='text-dark fw-bold'
 					href={`/admin/users/${row._id}`}>
 					{row.name}
 				</Link>
@@ -70,6 +95,11 @@ const MentorListTable = () => {
 			selector: (row) => row.email,
 			sortable: true,
 			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
+		},
+		{
+			name: "Expertise",
+			selector: (row) => row.expertise || "-",
+			center: true,
 		},
 		{
 			name: "Status",
@@ -94,10 +124,10 @@ const MentorListTable = () => {
 			sortable: false,
 			center: true,
 			cell: (row) => (
-				<div className="d-flex gap-1">
+				<div className='d-flex gap-1'>
 					<Button
 						color={row.status === "Active" ? "warning" : "success"}
-						size="sm"
+						size='sm'
 						onClick={() =>
 							openStatusModal(
 								row,
@@ -107,8 +137,8 @@ const MentorListTable = () => {
 						{row.status === "Active" ? "Deactivate" : "Activate"}
 					</Button>
 					<Button
-						color="danger"
-						size="sm"
+						color='danger'
+						size='sm'
 						onClick={() => openStatusModal(row, "Banned")}>
 						Ban
 					</Button>
@@ -117,13 +147,14 @@ const MentorListTable = () => {
 		},
 	];
 
-	const filteredItems: MentorDataProps[] = mentorTableData?.filter(
-		(item: MentorDataProps) =>
-			Object.values(item).some(
+	const filteredItems: MentorInitialValue[] = mentorTableData?.filter(
+		(item: MentorInitialValue) => {
+			return Object.values(item).some(
 				(value) =>
 					value &&
 					value.toString().toLowerCase().includes(filterText.toLowerCase())
-			)
+			);
+		}
 	);
 
 	const fetchData = async () => {
@@ -157,11 +188,9 @@ const MentorListTable = () => {
 					columns={mentorTableColumns}
 					progressPending={loading}
 					striped
-					fixedHeaderScrollHeight="40vh"
+					fixedHeaderScrollHeight='40vh'
 					pagination
 				/>
-
-				{/* Status Modal */}
 				<Modal
 					isOpen={modalOpen}
 					toggle={toggleModal}
@@ -184,7 +213,7 @@ const MentorListTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color="secondary"
+							color='secondary'
 							onClick={toggleModal}>
 							Cancel
 						</Button>

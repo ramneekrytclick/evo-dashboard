@@ -15,7 +15,8 @@ import {
 } from "reactstrap";
 import { toast } from "react-toastify";
 import Link from "next/link";
-
+import Image from "next/image";
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 const TeamListTable = () => {
 	const [loading, setLoading] = useState(true);
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
@@ -51,16 +52,35 @@ const TeamListTable = () => {
 
 	const teamListColumns: TableColumn<TeamListType>[] = [
 		{
-			name: "Name",
+			name: "User",
 			selector: (row) => row.name,
 			sortable: true,
-			cell: (row) => (
-				<Link
-					className="text-dark fw-bold"
-					href={`/admin/users/${row._id}`}>
-					{row.name}
-				</Link>
-			),
+			cell: (row) => {
+				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
+
+				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
+					? `${backendURL}/${resolvedPhoto}`
+					: `${backendURL}/uploads/${resolvedPhoto}`;
+				const photoURL = row.photo
+					? profilePhotoUrl
+					: "/assets/images/user/1.jpg";
+				return (
+					<div className='d-flex align-items-center gap-2'>
+						<Image
+							src={photoURL}
+							alt={row.name}
+							width={40}
+							height={40}
+							style={{ borderRadius: "50%", objectFit: "cover" }}
+						/>
+						<Link
+							href={`/admin/users/${row._id}`}
+							className='fw-bold text-dark'>
+							{row.name}
+						</Link>
+					</div>
+				);
+			},
 		},
 		{
 			name: "Email",
@@ -101,10 +121,10 @@ const TeamListTable = () => {
 			width: "30%",
 			center: true,
 			cell: (row) => (
-				<div className="d-flex gap-1">
+				<div className='d-flex gap-1'>
 					<Button
 						color={row.status === "Active" ? "warning" : "success"}
-						size="sm"
+						size='sm'
 						onClick={() =>
 							openStatusModal(
 								row,
@@ -114,8 +134,8 @@ const TeamListTable = () => {
 						{row.status === "Active" ? "Deactivate" : "Activate"}
 					</Button>
 					<Button
-						color="danger"
-						size="sm"
+						color='danger'
+						size='sm'
 						onClick={() => openStatusModal(row, "Banned")}>
 						Ban
 					</Button>
@@ -154,7 +174,7 @@ const TeamListTable = () => {
 	);
 
 	return (
-		<Card className="list-product">
+		<Card className='list-product'>
 			<CardBody>
 				<FilterComponent
 					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -163,7 +183,7 @@ const TeamListTable = () => {
 					filterText={filterText}
 				/>
 				<DataTable
-					className="custom-scrollbar"
+					className='custom-scrollbar'
 					data={filteredItems}
 					columns={teamListColumns}
 					progressPending={loading}
@@ -192,7 +212,7 @@ const TeamListTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color="secondary"
+							color='secondary'
 							onClick={toggleModal}>
 							Cancel
 						</Button>

@@ -36,6 +36,7 @@ export interface MentorDataProps {
 	coursesEnrolled: string[]; // Array of enrolled course IDs
 	createdAt: string; // ISO string representing creation date
 	createdCourses: string[]; // Array of created course IDs
+	expertise: string;
 	education: {
 		degree: string;
 		institute: string;
@@ -91,6 +92,8 @@ export interface MentorCommonType {
 }
 
 export interface MentorInitialValue {
+	_id?: string;
+	status: string;
 	name: string;
 	dob: string;
 	username: string;

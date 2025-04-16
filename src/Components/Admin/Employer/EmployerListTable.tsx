@@ -16,6 +16,7 @@ import { getEmployers } from "@/app/api/admin/employers";
 import { updateUserStatus } from "@/app/api/admin/team";
 import { toast } from "react-toastify";
 import Link from "next/link";
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const EmployerListTable = () => {
 	const [loading, setLoading] = useState(true);
@@ -53,12 +54,28 @@ const EmployerListTable = () => {
 
 	const employerTableColumns: TableColumn<EmployerProps>[] = [
 		{
+			name: "Photo",
+			selector: (row) => row.photo || "",
+			sortable: false,
+			cell: (row) => (
+				<img
+					src={
+						row.photo
+							? `${backendURL}/${row.photo.replace(/\\/g, "/")}`
+							: "/assets/images/user/1.jpg"
+					}
+					alt={row.name}
+					style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+				/>
+			),
+		},
+		{
 			name: "Name",
 			selector: (row) => row.name,
 			sortable: true,
 			cell: (row) => (
 				<Link
-					className="text-dark fw-bold"
+					className='text-dark fw-bold'
 					href={`/admin/users/${row._id}`}>
 					{row.name}
 				</Link>
@@ -100,10 +117,10 @@ const EmployerListTable = () => {
 			sortable: false,
 			center: true,
 			cell: (row) => (
-				<div className="d-flex gap-1">
+				<div className='d-flex gap-1'>
 					<Button
 						color={row.status === "Active" ? "warning" : "success"}
-						size="sm"
+						size='sm'
 						onClick={() =>
 							openStatusModal(
 								row,
@@ -113,8 +130,8 @@ const EmployerListTable = () => {
 						{row.status === "Active" ? "Deactivate" : "Activate"}
 					</Button>
 					<Button
-						color="danger"
-						size="sm"
+						color='danger'
+						size='sm'
 						onClick={() => openStatusModal(row, "Banned")}>
 						Ban
 					</Button>
@@ -157,12 +174,12 @@ const EmployerListTable = () => {
 					}
 					filterText={filterText}
 				/>
-				<div className="table-responsive custom-scrollbar user-datatable mt-3">
+				<div className='table-responsive custom-scrollbar user-datatable mt-3'>
 					<DataTable
 						data={filteredItems}
 						columns={employerTableColumns}
 						striped
-						fixedHeaderScrollHeight="40vh"
+						fixedHeaderScrollHeight='40vh'
 						pagination
 						progressPending={loading}
 					/>
@@ -191,7 +208,7 @@ const EmployerListTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color="secondary"
+							color='secondary'
 							onClick={toggleModal}>
 							Cancel
 						</Button>

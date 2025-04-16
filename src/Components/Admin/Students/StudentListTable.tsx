@@ -1,5 +1,4 @@
 import FilterComponent from "@/CommonComponent/FilterComponent";
-
 import { MentorDataProps } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -13,11 +12,13 @@ import {
 	ModalFooter,
 	ModalHeader,
 } from "reactstrap";
-
 import Link from "next/link";
 import { approveUser, updateUserStatus } from "@/app/api/admin/team";
 import { getStudents } from "@/app/api/admin/students";
 import { toast } from "react-toastify";
+import Image from "next/image";
+
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const MentorListTable = () => {
 	const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ const MentorListTable = () => {
 		setActionType(action);
 		setModalOpen(true);
 	};
+
 	const handleAction = async () => {
 		if (!selectedRow) return;
 		try {
@@ -51,20 +53,38 @@ const MentorListTable = () => {
 			toast.error("Failed to update status");
 		}
 	};
+
 	const mentorTableColumns: TableColumn<MentorDataProps>[] = [
+		{
+			name: "Photo",
+			selector: (row) => row.photo || "",
+			cell: (row) => (
+				<>
+					<Image
+						width={40}
+						height={40}
+						src={
+							row.photo
+								? `${backendURL}/uploads/${row.photo.replace(/\\/g, "/")}`
+								: "/assets/images/user/1.jpg"
+						}
+						alt={row.name}
+						style={{ borderRadius: "50%" }}
+					/>
+				</>
+			),
+			width: "80px",
+		},
 		{
 			name: "Name",
 			selector: (row) => row.name,
 			sortable: true,
-			center: false,
 			cell: (row) => (
-				<>
-					<Link
-						className="text-dark fw-bold"
-						href={`/admin/users/${row._id}`}>
-						{row.name}
-					</Link>
-				</>
+				<Link
+					className='text-dark fw-bold'
+					href={`/admin/users/${row._id}`}>
+					{row.name}
+				</Link>
 			),
 		},
 		{
@@ -95,13 +115,13 @@ const MentorListTable = () => {
 		},
 		{
 			name: "Action",
-			sortable: true,
+			sortable: false,
 			center: true,
 			cell: (row) => (
-				<div className="d-flex gap-1">
+				<div className='d-flex gap-1'>
 					<Button
 						color={row.status === "Active" ? "warning" : "success"}
-						size="sm"
+						size='sm'
 						onClick={() =>
 							openStatusModal(
 								row,
@@ -111,8 +131,8 @@ const MentorListTable = () => {
 						{row.status === "Active" ? "Deactivate" : "Activate"}
 					</Button>
 					<Button
-						color="danger"
-						size="sm"
+						color='danger'
+						size='sm'
 						onClick={() => openStatusModal(row, "Banned")}>
 						Ban
 					</Button>
@@ -120,6 +140,7 @@ const MentorListTable = () => {
 			),
 		},
 	];
+
 	const filteredItems: MentorDataProps[] = mentorTableData?.filter(
 		(item: MentorDataProps) => {
 			return Object.values(item).some(
@@ -129,12 +150,12 @@ const MentorListTable = () => {
 			);
 		}
 	);
+
 	const fetchData = async () => {
 		try {
 			setLoading(true);
 			const response = await getStudents();
-			const data = response;
-			setMentorTableData(data);
+			setMentorTableData(response);
 		} catch (error) {
 			console.log(error);
 			toast.error("Failed to fetch data");
@@ -142,9 +163,11 @@ const MentorListTable = () => {
 			setLoading(false);
 		}
 	};
+
 	useEffect(() => {
 		fetchData();
 	}, []);
+
 	return (
 		<Card>
 			<CardBody>
@@ -154,19 +177,16 @@ const MentorListTable = () => {
 					}
 					filterText={filterText}
 				/>
-				{/* <div className="table-responsive custom-scrollbar user-datatable mt-3"> */}
 				<DataTable
 					data={filteredItems}
 					columns={mentorTableColumns}
 					striped={true}
-					// fixedHeader
-					fixedHeaderScrollHeight="40vh"
-					// className="display"
+					fixedHeaderScrollHeight='40vh'
 					progressPending={loading}
 					pagination
 				/>
-				{/* </div> */}
 			</CardBody>
+
 			<Modal
 				isOpen={modalOpen}
 				toggle={toggleModal}
@@ -189,7 +209,7 @@ const MentorListTable = () => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color="secondary"
+						color='secondary'
 						onClick={toggleModal}>
 						Cancel
 					</Button>

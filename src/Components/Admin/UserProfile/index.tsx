@@ -18,7 +18,11 @@ import {
 	FormGroup,
 } from "reactstrap";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { getUserProfile } from "@/app/api/admin/team";
+import {
+	approveUser,
+	getUserProfile,
+	updateUserStatus,
+} from "@/app/api/admin/team";
 import { getMentors } from "@/app/api/admin/mentors";
 import { assignMentorsToManager } from "@/app/api/admin/managers";
 import { toast } from "react-toastify";
@@ -31,10 +35,17 @@ const UserProfile = ({ id }: { id: string }) => {
 	const [modalOpen, setModalOpen] = useState(false);
 	const [mentors, setMentors] = useState<any[]>([]);
 	const [selectedMentorIds, setSelectedMentorIds] = useState<string[]>([]);
+	const [photoModalOpen, setPhotoModalOpen] = useState(false);
+	const [statusModalOpen, setStatusModalOpen] = useState(false);
+	const [actionType, setActionType] = useState<
+		"Active" | "Inactive" | "Banned"
+	>("Active");
+	const [approveModalOpen, setApproveModalOpen] = useState(false);
 
 	const toggleModal = () => setModalOpen(!modalOpen);
-	const openAssignModal = () => setModalOpen(true);
-
+	const togglePhotoModal = () => setPhotoModalOpen(!photoModalOpen);
+	const toggleStatusModal = () => setStatusModalOpen(!statusModalOpen);
+	const toggleApproveModal = () => setApproveModalOpen(!approveModalOpen);
 	const handleMentorSelection = (mentorId: string) => {
 		setSelectedMentorIds((prev) =>
 			prev.includes(mentorId)
@@ -42,7 +53,12 @@ const UserProfile = ({ id }: { id: string }) => {
 				: [...prev, mentorId]
 		);
 	};
+	const openAssignModal = () => setModalOpen(true);
 
+	const openStatusChangeModal = (action: "Active" | "Inactive" | "Banned") => {
+		setActionType(action);
+		setStatusModalOpen(true);
+	};
 	const handleAssignMentors = async () => {
 		try {
 			await assignMentorsToManager({
@@ -56,7 +72,27 @@ const UserProfile = ({ id }: { id: string }) => {
 		}
 		toggleModal();
 	};
+	const handleStatusChange = async () => {
+		try {
+			await updateUserStatus(profile._id, actionType);
+			toggleStatusModal();
+			toast.success(`${profile.name} status updated to ${actionType}`);
+			fetchData();
+		} catch (error) {
+			toast.error("Failed to update status");
+		}
+	};
 
+	const handleApproveUser = async () => {
+		try {
+			await approveUser(profile._id, "approve");
+			toggleApproveModal();
+			toast.success(`${profile.name} approved successfully`);
+			fetchData();
+		} catch (error) {
+			toast.error("Failed to approve user");
+		}
+	};
 	const fetchData = async () => {
 		try {
 			const response = await getUserProfile(id);
@@ -85,14 +121,16 @@ const UserProfile = ({ id }: { id: string }) => {
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>{error}</div>;
 	if (!profile) return <div>No profile found.</div>;
-
+	const resolvedPhoto = profile.photo ? profile.photo.replace(/\\/g, "/") : "";
+	const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
+		? `${backendURL}/${resolvedPhoto}`
+		: `${backendURL}/uploads/${resolvedPhoto}`;
 	const isStudent = profile.role === "Student";
 	const isMentor = profile.role === "Mentor";
 	const isManager = profile.role === "Manager";
 	const isPublisher = profile.role === "Publisher";
 	const isCourseCreator = profile.role === "Course Creator";
 	const isEmployer = profile.role === "Employer";
-
 	return (
 		<Container fluid>
 			<Breadcrumbs
@@ -105,13 +143,15 @@ const UserProfile = ({ id }: { id: string }) => {
 					className="cardheader bg-cover"
 					style={{ backgroundImage: "url('/images/bg.jpg')", height: 250 }}
 				/> */}
-				<div className='user-image'>
+				{/* {JSON.stringify(profile)} */}
+				<div
+					className='user-image'
+					style={{ cursor: "pointer" }}
+					onClick={togglePhotoModal}>
 					<div className='avatar'>
 						<Image
 							src={
-								profile.photo
-									? `${backendURL}/${profile.photo.replace(/\\/g, "/")}`
-									: "/assets/images/user/1.jpg"
+								profile.photo ? profilePhotoUrl : "/assets/images/user/1.jpg"
 							}
 							width={100}
 							height={100}
@@ -225,24 +265,6 @@ const UserProfile = ({ id }: { id: string }) => {
 						)}
 					</Row>
 
-					<ul className='list-inline'>
-						<li className='list-inline-item'>
-							<i className='fa fa-facebook' />
-						</li>
-						<li className='list-inline-item'>
-							<i className='fa fa-google-plus' />
-						</li>
-						<li className='list-inline-item'>
-							<i className='fa fa-twitter' />
-						</li>
-						<li className='list-inline-item'>
-							<i className='fa fa-instagram' />
-						</li>
-						<li className='list-inline-item'>
-							<i className='fa fa-rss' />
-						</li>
-					</ul>
-
 					<div className='mt-3'>
 						<span
 							className={`badge bg-${
@@ -270,8 +292,115 @@ const UserProfile = ({ id }: { id: string }) => {
 							Assign Mentors
 						</Button>
 					)}
+
+					<div className='mt-3 d-flex justify-content-center gap-2 flex-wrap'>
+						{!profile.isApproved && (
+							<Button
+								color='success'
+								onClick={toggleApproveModal}>
+								Approve
+							</Button>
+						)}
+						<Button
+							color={profile.status === "Active" ? "warning" : "success"}
+							onClick={() =>
+								openStatusChangeModal(
+									profile.status === "Active" ? "Inactive" : "Active"
+								)
+							}>
+							{profile.status === "Active" ? "Deactivate" : "Activate"}
+						</Button>
+						<Button
+							color='danger'
+							onClick={() => openStatusChangeModal("Banned")}>
+							Ban
+						</Button>
+					</div>
 				</CardBody>
 			</Card>
+			<Modal
+				isOpen={photoModalOpen}
+				toggle={togglePhotoModal}
+				centered
+				size='lg'>
+				<ModalHeader toggle={togglePhotoModal}>
+					Profile Photo - {profile.name}
+				</ModalHeader>
+				<ModalBody className='text-center'>
+					<Image
+						src={profile.photo ? profilePhotoUrl : "/assets/images/user/1.jpg"}
+						alt='Full Profile'
+						width={500}
+						height={500}
+						style={{ objectFit: "contain", borderRadius: 8 }}
+					/>
+				</ModalBody>
+			</Modal>
+			<Modal
+				isOpen={statusModalOpen}
+				toggle={toggleStatusModal}
+				centered>
+				<ModalHeader toggle={toggleStatusModal}>
+					Confirm Status Change
+				</ModalHeader>
+				<ModalBody>
+					Are you sure you want to set <strong>{profile.name}</strong> as{" "}
+					<Badge
+						color={
+							actionType === "Active"
+								? "success"
+								: actionType === "Inactive"
+								? "warning"
+								: "danger"
+						}
+						pill>
+						{actionType}
+					</Badge>
+					?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color='secondary'
+						onClick={toggleStatusModal}>
+						Cancel
+					</Button>
+					<Button
+						color={
+							actionType === "Active"
+								? "success"
+								: actionType === "Inactive"
+								? "warning"
+								: "danger"
+						}
+						onClick={handleStatusChange}>
+						Yes, Change Status
+					</Button>
+				</ModalFooter>
+			</Modal>
+
+			{/* Approval Modal */}
+			<Modal
+				isOpen={approveModalOpen}
+				toggle={toggleApproveModal}
+				centered>
+				<ModalHeader toggle={toggleApproveModal}>Confirm Approval</ModalHeader>
+				<ModalBody>
+					Approve <strong>{profile.name}</strong> as{" "}
+					<strong>{profile.role}</strong>?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color='secondary'
+						onClick={toggleApproveModal}>
+						Cancel
+					</Button>
+					<Button
+						color='success'
+						onClick={handleApproveUser}>
+						Yes, Approve
+					</Button>
+				</ModalFooter>
+			</Modal>
 
 			<Modal
 				isOpen={modalOpen}
