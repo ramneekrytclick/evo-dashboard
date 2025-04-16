@@ -20,7 +20,7 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 					borderBottomRightRadius: isMe ? "0px" : "16px",
 					backgroundColor: isMe ? "#212529" : "#fff",
 				}}>
-				<div className="d-flex align-items-center flex-wrap gap-2 mb-2">
+				<div className='d-flex align-items-center flex-wrap gap-2 mb-2'>
 					<span
 						className={`fw-semibold ${isMe ? "text-warning" : "text-primary"}`}>
 						{msg.sender?.name}
@@ -28,7 +28,7 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 
 					{!isMe && (
 						<span
-							className="rounded-circle d-inline-block"
+							className='rounded-circle d-inline-block'
 							style={{
 								width: "10px",
 								height: "10px",
@@ -39,18 +39,17 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 
 					{msg.senderType === "mentor" && (
 						<Badge
-							color="info"
+							color='info'
 							pill>
 							Mentor
 						</Badge>
 					)}
-
 					{onPin && (
 						<Button
-							size="sm"
-							color="link"
+							size='sm'
+							color='link'
 							onClick={() => onPin(msg._id)}
-							className="text-warning text-decoration-none p-0">
+							className='text-warning text-decoration-none p-0'>
 							📌 Pin
 						</Button>
 					)}

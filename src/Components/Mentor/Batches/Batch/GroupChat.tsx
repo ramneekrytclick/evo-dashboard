@@ -34,7 +34,6 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 
 	const { user } = useAuth();
 	const userId = user?.id;
-
 	const fetchChats = async () => {
 		setLoading(true);
 		try {
@@ -140,37 +139,37 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 	};
 
 	return (
-		<Card className="d-flex flex-column h-100 w-100">
-			<CardHeader className="bg-white border-bottom w-100">
-				<h5 className="mb-0 text-primary">Group Chat</h5>
+		<Card className='d-flex flex-column h-100 w-100'>
+			<CardHeader className='bg-white border-bottom w-100'>
+				<h5 className='mb-0 text-primary'>Group Chat</h5>
 			</CardHeader>
 
 			{pinnedMessage && (
-				<div className="bg-warning-subtle p-3 border-bottom w-100">
-					<h6 className="text-dark mb-1">
+				<div className='bg-warning-subtle p-3 border-bottom w-100'>
+					<h6 className='text-dark mb-1'>
 						📌 Pinned Message
 						<Badge
-							color="info"
+							color='info'
 							pill
-							className="ms-2">
+							className='ms-2'>
 							{pinnedMessage.senderType}
 						</Badge>
 					</h6>
-					<p className="mb-1 fw-semibold">{pinnedMessage.message}</p>
-					<small className="text-muted">
+					<p className='mb-1 fw-semibold'>{pinnedMessage.message}</p>
+					<small className='text-muted'>
 						{format(new Date(pinnedMessage.timestamp), "PPpp")} —{" "}
 						{pinnedMessage.sender?.name}
 					</small>
 				</div>
 			)}
 
-			<CardBody className="flex-grow-1 overflow-auto bg-light px-4 py-3 w-100">
+			<CardBody className='flex-grow-1 overflow-auto bg-light px-4 py-3 w-100'>
 				{loading ? (
-					<div className="text-center mt-4">
-						<Spinner color="primary" />
+					<div className='text-center mt-4'>
+						<Spinner color='primary' />
 					</div>
 				) : messages.length === 0 ? (
-					<p className="text-center text-muted">No messages yet</p>
+					<p className='text-center text-muted'>No messages yet</p>
 				) : (
 					messages.map((msg, index) => (
 						<ChatMessageBubble
@@ -180,27 +179,23 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 							isOnline={onlineUsers.some(
 								(u: any) => u.userId === msg.sender?._id
 							)}
-							onPin={
-								user?.role === "mentor" && msg.senderType === "mentor"
-									? handlePin
-									: undefined
-							}
+							onPin={msg.senderType === "mentor" ? handlePin : undefined}
 						/>
 					))
 				)}
 				<div ref={messagesEndRef} />
 			</CardBody>
 
-			<InputGroup className="p-3 border-top bg-white">
+			<InputGroup className='p-3 border-top bg-white'>
 				<Input
-					type="text"
-					placeholder="Type a message..."
+					type='text'
+					placeholder='Type a message...'
 					value={newMessage}
 					onChange={handleMessageChange}
 					onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
 				/>
 				<Button
-					color="primary"
+					color='primary'
 					onClick={handleSendMessage}
 					disabled={sending || !newMessage.trim()}>
 					<Send size={18} />
