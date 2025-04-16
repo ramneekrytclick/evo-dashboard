@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
-import { createCourse } from "@/app/api/admin/course";
 import { getCategories } from "@/app/api/admin/categories";
 import { getSubcategories } from "@/app/api/admin/subcategories";
 import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { toast } from "react-toastify";
+import { createCourse } from "@/app/api/admin/course";
 
 const SimpleCreateCourseForm = () => {
-	const [formData, setFormData] = useState({
+	const [formData, setFormData] = useState<any>({
 		title: "",
 		description: "",
 		whatYouWillLearn: "",
@@ -24,6 +24,8 @@ const SimpleCreateCourseForm = () => {
 		createdBy: "admin-id-placeholder", // Replace with actual logic
 		review: "No reviews yet",
 	});
+	const [photoFile, setPhotoFile] = useState<File | null>(null);
+	const [previewUrl, setPreviewUrl] = useState<string>("");
 
 	const [categories, setCategories] = useState([]);
 	const [subcategories, setSubcategories] = useState([]);
@@ -33,9 +35,17 @@ const SimpleCreateCourseForm = () => {
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
+		setFormData((prev: any) => ({ ...prev, [name]: value }));
 
 		if (name === "categoryId") fetchSubcategories(value);
+	};
+
+	const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (file) {
+			setPhotoFile(file);
+			setPreviewUrl(URL.createObjectURL(file));
+		}
 	};
 
 	const fetchInitialData = async () => {
@@ -62,31 +72,20 @@ const SimpleCreateCourseForm = () => {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		const requiredFields = [
-			"title",
-			"description",
-			"whatYouWillLearn",
-			"youtubeLink",
-			"timing",
-			"categoryId",
-			"subcategoryId",
-			"wannaBeInterestId",
-			"realPrice",
-			"discountedPrice",
-			"tags",
-			"createdBy",
-			"review",
-		];
-
+		const requiredFields = Object.keys(formData);
 		for (const field of requiredFields) {
-			if (!formData[field as keyof typeof formData]) {
-				return toast.error("All fields are required");
-			}
+			if (!formData[field]) return toast.error("All fields are required");
 		}
+		if (!photoFile) return toast.error("Photo is required");
+
+		const payload = new FormData();
+		for (const key in formData) {
+			payload.append(key, formData[key]);
+		}
+		payload.append("photo", photoFile);
 
 		try {
-			// No split — send tags as a comma-separated string
-			await createCourse(formData);
+			await createCourse(payload);
 			toast.success("Course created successfully");
 			setFormData({
 				title: "",
@@ -103,6 +102,8 @@ const SimpleCreateCourseForm = () => {
 				createdBy: "admin-id-placeholder",
 				review: "No reviews yet",
 			});
+			setPhotoFile(null);
+			setPreviewUrl("");
 		} catch (err) {
 			toast.error("Failed to create course");
 		}
@@ -127,6 +128,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>Description</Label>
 					<Input
@@ -137,6 +139,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>What You Will Learn</Label>
 					<Input
@@ -147,6 +150,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>YouTube Link</Label>
 					<Input
@@ -157,6 +161,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>Timing</Label>
 					<Input
@@ -167,6 +172,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>Real Price</Label>
 					<Input
@@ -177,6 +183,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>Discounted Price</Label>
 					<Input
@@ -187,6 +194,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>Tags (comma-separated)</Label>
 					<Input
@@ -197,6 +205,7 @@ const SimpleCreateCourseForm = () => {
 						required
 					/>
 				</Col>
+
 				<Col md={6}>
 					<Label>Category</Label>
 					<Input
@@ -215,6 +224,7 @@ const SimpleCreateCourseForm = () => {
 						))}
 					</Input>
 				</Col>
+
 				<Col md={6}>
 					<Label>Subcategory</Label>
 					<Input
@@ -233,6 +243,7 @@ const SimpleCreateCourseForm = () => {
 						))}
 					</Input>
 				</Col>
+
 				<Col md={6}>
 					<Label>Wanna Be Interest</Label>
 					<Input
@@ -251,6 +262,26 @@ const SimpleCreateCourseForm = () => {
 						))}
 					</Input>
 				</Col>
+
+				<Col md={6}>
+					<Label>Course Photo</Label>
+					<Input
+						type='file'
+						name='photo'
+						onChange={handlePhotoChange}
+						accept='image/*'
+						required
+					/>
+					{previewUrl && (
+						<img
+							src={previewUrl}
+							alt='Preview'
+							className='mt-2 rounded'
+							style={{ height: 100 }}
+						/>
+					)}
+				</Col>
+
 				<Col
 					md={12}
 					className='text-end'>

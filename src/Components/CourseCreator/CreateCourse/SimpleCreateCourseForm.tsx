@@ -23,6 +23,7 @@ const CourseCreatorForm = () => {
 		categoryId: "",
 		subcategoryId: "",
 		wannaBeInterestIds: [] as string[],
+		photo: null as File | null,
 	});
 
 	const [categories, setCategories] = useState([]);
@@ -32,9 +33,18 @@ const CourseCreatorForm = () => {
 	const handleChange = (
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
 	) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({ ...prev, [name]: value }));
-		if (name === "categoryId") fetchSubcategories(value);
+		const { name, value, type } = e.target;
+
+		if (type === "file") {
+			setFormData((prev) => ({
+				...prev,
+				photo: (e.target as HTMLInputElement).files?.[0] || null,
+			}));
+		} else {
+			setFormData((prev) => ({ ...prev, [name]: value }));
+
+			if (name === "categoryId") fetchSubcategories(value);
+		}
 	};
 
 	const handleCheckboxChange = (id: string) => {
@@ -71,6 +81,7 @@ const CourseCreatorForm = () => {
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
+
 		const {
 			title,
 			description,
@@ -83,6 +94,7 @@ const CourseCreatorForm = () => {
 			realPrice,
 			discountedPrice,
 			tags,
+			photo,
 		} = formData;
 
 		if (
@@ -96,14 +108,32 @@ const CourseCreatorForm = () => {
 			!realPrice ||
 			!discountedPrice ||
 			!tags ||
-			!wannaBeInterestIds.length
+			!wannaBeInterestIds.length ||
+			!photo
 		) {
-			return toast.error("Please fill all required fields");
+			return toast.error("Please fill all required fields including photo");
 		}
 
 		try {
-			await createCourseByCreator(formData);
+			const submissionData = new FormData();
+			submissionData.append("title", title);
+			submissionData.append("description", description);
+			submissionData.append("whatYouWillLearn", whatYouWillLearn);
+			submissionData.append("youtubeLink", youtubeLink);
+			submissionData.append("timing", timing);
+			submissionData.append("realPrice", realPrice);
+			submissionData.append("discountedPrice", discountedPrice);
+			submissionData.append("tags", tags);
+			submissionData.append("categoryId", categoryId);
+			submissionData.append("subcategoryId", subcategoryId);
+			submissionData.append("photo", photo);
+			wannaBeInterestIds.forEach((id) =>
+				submissionData.append("wannaBeInterestIds", id)
+			);
+
+			await createCourseByCreator(submissionData);
 			toast.success("Course created successfully");
+
 			setFormData({
 				title: "",
 				description: "",
@@ -116,6 +146,7 @@ const CourseCreatorForm = () => {
 				categoryId: "",
 				subcategoryId: "",
 				wannaBeInterestIds: [],
+				photo: null,
 			});
 		} catch {
 			toast.error("Course creation failed");
@@ -207,6 +238,15 @@ const CourseCreatorForm = () => {
 						type='text'
 						name='tags'
 						value={formData.tags}
+						onChange={handleChange}
+						required
+					/>
+				</Col>
+				<Col md={6}>
+					<Label>Course Photo</Label>
+					<Input
+						type='file'
+						name='photo'
 						onChange={handleChange}
 						required
 					/>
