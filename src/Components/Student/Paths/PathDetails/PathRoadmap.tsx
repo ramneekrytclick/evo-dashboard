@@ -10,6 +10,7 @@ import { Button, Card, CardBody } from "reactstrap";
 import Link from "next/link";
 
 interface PathRoadmapProps {
+	role: string;
 	path: {
 		title: string;
 		description: string;
@@ -21,7 +22,7 @@ interface PathRoadmapProps {
 	enrolledCourses: { course: { _id: string } }[];
 }
 
-const PathRoadmap = ({ path, enrolledCourses }: PathRoadmapProps) => {
+const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 	const enrolledCourseIds = enrolledCourses.map((item) => item.course._id);
 
 	return (
@@ -33,7 +34,9 @@ const PathRoadmap = ({ path, enrolledCourses }: PathRoadmapProps) => {
 					<strong>Duration:</strong> {path.timing}
 				</p>
 
-				<h5 className='mb-4 mt-4'>🚀 Your Learning Journey</h5>
+				<h5 className='mb-4 mt-4'>
+					{role !== "Admin" ? "🚀 Your Learning Journey" : "Path Journey"}
+				</h5>
 
 				<VerticalTimeline lineColor='#007bff'>
 					{path.courses.map((course, idx) => {
@@ -56,13 +59,15 @@ const PathRoadmap = ({ path, enrolledCourses }: PathRoadmapProps) => {
 									{course.title}
 								</h4>
 								<p>Core skill-building course to advance your journey.</p>
-								<Link href={courseLink}>
-									<Button
-										color={buttonColor}
-										size='sm'>
-										{buttonLabel}
-									</Button>
-								</Link>
+								{role !== "Admin" && (
+									<Link href={courseLink}>
+										<Button
+											color={buttonColor}
+											size='sm'>
+											{buttonLabel}
+										</Button>
+									</Link>
+								)}
 							</VerticalTimelineElement>
 						);
 					})}

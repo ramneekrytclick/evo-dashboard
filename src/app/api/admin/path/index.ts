@@ -42,6 +42,6 @@ export const updatePath = async (id: string, data: PathProps) => {
 };
 
 export const deletePath = async (id: string) => {
-	const response = await apiClient.delete(`/path/delete/${id}`);
+	const response = await apiClient.delete(`/paths/${id}`);
 	return response.data;
 };

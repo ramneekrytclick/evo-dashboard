@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import PathRoadmap from "./PathRoadmap";
 import { Spinner } from "reactstrap";
+import { useAuth } from "@/app/AuthProvider";
 
 const PathDetails = ({ id }: { id: string }) => {
 	const [data, setData] = useState();
 	const [enrolledCourses, setEnrolledCourses] = useState([]);
+	const { user } = useAuth();
+	const role = user?.role;
 	const fetchData = async () => {
 		try {
 			const response = await getPathById(id);
@@ -27,12 +30,15 @@ const PathDetails = ({ id }: { id: string }) => {
 	};
 	useEffect(() => {
 		fetchData();
-		fetchEnrolledCourses();
+		if (role === "Student") {
+			fetchEnrolledCourses();
+		}
 	}, []);
 	return (
 		<>
 			{data ? (
 				<PathRoadmap
+					role={role || "Student"}
 					path={data}
 					enrolledCourses={enrolledCourses}
 				/>
