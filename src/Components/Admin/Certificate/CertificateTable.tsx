@@ -1,178 +1,79 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+	getAllStudentsProgress,
+	getAllCertificates,
+	generateCertificate,
+} from "@/app/api/admin/certificate";
 import { toast } from "react-toastify";
-import DataTable, { TableColumn } from "react-data-table-component";
+import DataTable from "react-data-table-component";
 import {
 	Button,
-	Card,
-	CardBody,
+	Spinner,
 	Modal,
-	ModalHeader,
 	ModalBody,
 	ModalFooter,
+	ModalHeader,
 	Label,
 	Input,
-	Spinner,
 } from "reactstrap";
-
-import { getCourses } from "@/app/api/admin/course";
-import { getStudents } from "@/app/api/admin/students";
-import {
-	generateCertificate,
-	getAllCertificates,
-	getSubmittedAssignments,
-} from "@/app/api/admin/certificate";
-
-// Types
-interface Course {
-	_id: string;
-	title: string;
-}
-interface Assignment {
-	_id: string;
-	lesson: { _id: string; course: string };
-	student: { _id: string };
-}
-interface EnrolledCourse {
-	course: string;
-	assignmentScore?: number;
-	quizScore?: number;
-	evoScore?: number;
-}
-interface Student {
-	_id: string;
-	name: string;
-	enrolledCourses: EnrolledCourse[];
-}
-interface Certificate {
-	_id: string;
-	student: { _id: string };
-	course: { _id: string };
-	fileUrl: string;
-	createdAt: string;
-}
-interface TableRow {
-	studentId: string;
-	studentName: string;
-	courseId: string;
-	course: string;
-	assignmentsDone: number;
-	totalAssignments: number;
-	quizzesDone: number;
-	totalQuizzes: number;
-	progress: number;
-	evoScore: number;
-	certificateUrl?: string;
-}
-
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 const CertificateTable = () => {
-	const [students, setStudents] = useState<Student[]>([]);
-	const [assignments, setAssignments] = useState<Assignment[]>([]);
-	const [courses, setCourses] = useState<Course[]>([]);
-	const [certificates, setCertificates] = useState<Certificate[]>([]);
-	const [tableData, setTableData] = useState<TableRow[]>([]);
-
+	const [rows, setRows] = useState<any[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [certificates, setCertificates] = useState<any[]>([]);
 	const [modalOpen, setModalOpen] = useState(false);
-	const [selectedStudent, setSelectedStudent] = useState<TableRow | null>(null);
+	const [previewOpen, setPreviewOpen] = useState(false);
+	const [selectedRow, setSelectedRow] = useState<any>(null);
 	const [certificateFile, setCertificateFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-
-	const toggleModal = () => {
-		setModalOpen(!modalOpen);
-		if (modalOpen) {
-			setSelectedStudent(null);
-			setCertificateFile(null);
-			if (previewUrl) URL.revokeObjectURL(previewUrl);
-			setPreviewUrl(null);
-		}
-	};
+	const [isIssuing, setIsIssuing] = useState(false);
 
 	const fetchData = async () => {
 		try {
-			const [studentList, assignmentList, courseList, certificateList] =
-				await Promise.all([
-					getStudents(),
-					getSubmittedAssignments(),
-					getCourses(),
-					getAllCertificates(),
-				]);
+			const response = await getAllStudentsProgress();
+			const students = response.students || [];
+			const certRes = await getAllCertificates();
+			const issuedCerts = certRes.certificates || [];
+			setCertificates(issuedCerts);
 
-			setStudents(studentList);
-			setAssignments(assignmentList.submissions);
-			setCourses(courseList);
-			setCertificates(certificateList.certificates);
+			const flattened: any[] = [];
+			students.forEach((student: any) => {
+				(student.courses || []).forEach((course: any) => {
+					const existingCert = issuedCerts.find(
+						(cert: any) =>
+							cert.student._id === student.studentId &&
+							cert.course._id === course.courseId
+					);
+
+					flattened.push({
+						studentId: student.studentId,
+						name: student.name,
+						email: student.email,
+						courseId: course.courseId,
+						courseTitle: course.title,
+						progressPercent: course.progressPercent,
+						completedLessons: course.completedLessons,
+						totalLessons: course.totalLessons,
+						isCourseComplete: course.isCourseComplete,
+						certificateUrl: existingCert?.fileUrl || null,
+					});
+				});
+			});
+
+			setRows(flattened);
 		} catch (error) {
 			console.error(error);
-			toast.error("Error fetching data");
+			toast.error("Error fetching student progress");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		fetchData();
 	}, []);
-
-	useEffect(() => {
-		if (!students.length || !assignments.length || !courses.length) return;
-
-		const assignmentMap: Record<string, number> = {};
-		assignments.forEach((a) => {
-			if (a.lesson?.course) {
-				assignmentMap[a.lesson.course] =
-					(assignmentMap[a.lesson.course] || 0) + 1;
-			}
-		});
-
-		const table: TableRow[] = [];
-
-		students.forEach((student) => {
-			const submissionMap: Record<string, number> = {};
-			assignments.forEach((a) => {
-				if (a.student._id === student._id && a.lesson?.course) {
-					submissionMap[a.lesson.course] =
-						(submissionMap[a.lesson.course] || 0) + 1;
-				}
-			});
-
-			student.enrolledCourses.forEach((enrolled) => {
-				const course = courses.find((c) => c._id === enrolled.course);
-				if (!course) return;
-
-				const totalAssignments = assignmentMap[enrolled.course] || 0;
-				const assignmentsDone = submissionMap[enrolled.course] || 0;
-				const progress = totalAssignments
-					? Math.round((assignmentsDone / totalAssignments) * 100)
-					: 0;
-
-				const matchingCertificates = certificates.filter(
-					(cert) =>
-						cert.student._id === student._id && cert.course._id === course._id
-				);
-
-				const latestCert = matchingCertificates.sort(
-					(a, b) =>
-						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-				)[0];
-
-				table.push({
-					studentId: student._id,
-					studentName: student.name,
-					courseId: course._id,
-					course: course.title,
-					assignmentsDone,
-					totalAssignments,
-					quizzesDone: enrolled.quizScore || 0,
-					totalQuizzes: 1,
-					progress,
-					evoScore: enrolled.evoScore || 0,
-					certificateUrl: latestCert?.fileUrl,
-				});
-			});
-		});
-
-		setTableData(table.sort((a, b) => b.progress - a.progress));
-	}, [students, assignments, courses, certificates]);
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0] || null;
@@ -182,112 +83,133 @@ const CertificateTable = () => {
 	};
 
 	const handleIssueCertificate = async () => {
-		if (!selectedStudent || !certificateFile) {
+		if (!selectedRow || !certificateFile) {
 			toast.error("Please upload a certificate file.");
 			return;
 		}
 		try {
-			setIsLoading(true);
+			setIsIssuing(true);
 			const formData = new FormData();
-			formData.append("studentId", selectedStudent.studentId);
-			formData.append("courseId", selectedStudent.courseId);
+			formData.append("studentId", selectedRow.studentId);
+			formData.append("courseId", selectedRow.courseId);
 			formData.append("certificate", certificateFile);
 			await generateCertificate(formData);
-			toggleModal();
 			toast.success("Certificate issued successfully!");
-			fetchData(); // Refresh certificate list
+			setModalOpen(false);
+			setCertificateFile(null);
+			setPreviewUrl(null);
+			fetchData();
 		} catch (err) {
 			toast.error("Certificate issue failed");
 		} finally {
-			setIsLoading(false);
+			setIsIssuing(false);
 		}
 	};
 
-	const columns: TableColumn<TableRow>[] = [
-		{ name: "Student", selector: (row) => row.studentName, sortable: true },
-		{ name: "Course", selector: (row) => row.course, sortable: true },
+	const columns = [
+		{ name: "Name", selector: (row: any) => row.name, sortable: true },
+		{ name: "Email", selector: (row: any) => row.email, wrap: true },
 		{
-			name: "Assignments",
-			selector: (row) => `${row.assignmentsDone}/${row.totalAssignments}`,
+			name: "Course Title",
+			selector: (row: any) => row.courseTitle,
+			wrap: true,
 		},
 		{
-			name: "Quizzes",
-			selector: (row) => `${row.quizzesDone}/${row.totalQuizzes}`,
+			name: "Lessons",
+			selector: (row: any) => `${row.completedLessons}/${row.totalLessons}`,
+			center: true,
 		},
-		{ name: "Progress", selector: (row) => `${row.progress}%` },
-		{ name: "Evo Score", selector: (row) => row.evoScore },
+		{
+			name: "Progress %",
+			selector: (row: any) => `${row.progressPercent}%`,
+			center: true,
+		},
 		{
 			name: "Action",
-			cell: (row) =>
-				row.certificateUrl ? (
-					<a
-						className="btn btn-success btn-sm"
-						href={`/${row.certificateUrl}`}
-						target="_blank"
-						rel="noopener noreferrer">
-						View
-					</a>
-				) : (
+			cell: (row: any) => {
+				if (row.certificateUrl) {
+					return (
+						<Button
+							color='success'
+							size='sm'
+							onClick={() => {
+								setSelectedRow(row);
+								setPreviewUrl(`${backendURL}/uploads/${row.certificateUrl}`);
+								setPreviewOpen(true);
+							}}>
+							View
+						</Button>
+					);
+				}
+				const eligible = row.progressPercent >= 90 && !row.isCourseComplete;
+				return eligible ? (
 					<Button
-						color="info"
-						size="sm"
+						color='primary'
+						size='sm'
 						onClick={() => {
-							setSelectedStudent(row);
-							toggleModal();
+							setSelectedRow(row);
+							setModalOpen(true);
 						}}>
 						Issue
 					</Button>
-				),
+				) : (
+					<span className='text-muted'>Not eligible</span>
+				);
+			},
+			center: true,
 		},
 	];
 
 	return (
-		<>
-			<Card>
-				<CardBody>
-					<DataTable
-						columns={columns}
-						data={tableData}
-						pagination
-						striped
-						highlightOnHover
-						persistTableHead
-					/>
-				</CardBody>
-			</Card>
+		<div className='p-3'>
+			{loading ? (
+				<div className='text-center py-5'>
+					<Spinner color='primary' />
+				</div>
+			) : (
+				<DataTable
+					columns={columns}
+					data={rows}
+					pagination
+					highlightOnHover
+					dense
+					noDataComponent='No student progress found.'
+				/>
+			)}
 
+			{/* Modal to upload certificate */}
 			<Modal
 				isOpen={modalOpen}
-				toggle={toggleModal}>
-				<ModalHeader toggle={toggleModal}>
-					Generate Certificate for {selectedStudent?.studentName}
+				toggle={() => setModalOpen(false)}>
+				<ModalHeader toggle={() => setModalOpen(false)}>
+					Generate Certificate for {selectedRow?.name}
 				</ModalHeader>
 				<ModalBody>
-					<Label>Upload Certificate (PDF or Image)</Label>
+					<Label>Upload Certificate</Label>
 					<Input
-						type="file"
-						accept="application/pdf,image/*"
+						type='file'
+						accept='application/pdf,image/*'
 						onChange={handleFileChange}
 					/>
 					{!certificateFile && (
-						<small className="text-danger">
+						<small className='text-danger'>
 							* Certificate file is required
 						</small>
 					)}
 					{previewUrl && (
-						<div className="mt-3">
+						<div className='mt-3'>
 							<Label>Preview:</Label>
 							{certificateFile?.type === "application/pdf" ? (
 								<iframe
 									src={previewUrl}
-									width="100%"
-									height="400px"
-									title="PDF Preview"
+									width='100%'
+									height='400px'
+									title='PDF Preview'
 								/>
 							) : (
 								<img
 									src={previewUrl}
-									alt="Certificate Preview"
+									alt='Certificate Preview'
 									style={{ maxWidth: "100%", maxHeight: "400px" }}
 								/>
 							)}
@@ -296,19 +218,45 @@ const CertificateTable = () => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color="primary"
+						color='primary'
 						onClick={handleIssueCertificate}
-						disabled={!certificateFile || isLoading}>
-						{isLoading ? <Spinner size="sm" /> : "Give Certificate"}
+						disabled={!certificateFile || isIssuing}>
+						{isIssuing ? <Spinner size='sm' /> : "Give Certificate"}
 					</Button>
 					<Button
-						color="secondary"
-						onClick={toggleModal}>
+						color='secondary'
+						onClick={() => setModalOpen(false)}>
 						Cancel
 					</Button>
 				</ModalFooter>
 			</Modal>
-		</>
+
+			{/* View Certificate Modal */}
+			<Modal
+				isOpen={previewOpen}
+				toggle={() => setPreviewOpen(false)}
+				size='lg'>
+				<ModalHeader toggle={() => setPreviewOpen(false)}>
+					Certificate for {selectedRow?.name}
+				</ModalHeader>
+				<ModalBody>
+					{previewUrl && previewUrl.endsWith(".pdf") ? (
+						<iframe
+							src={previewUrl}
+							width='100%'
+							height='500px'
+							title='Certificate PDF'
+						/>
+					) : (
+						<img
+							src={previewUrl || ""}
+							alt='Certificate'
+							style={{ width: "100%" }}
+						/>
+					)}
+				</ModalBody>
+			</Modal>
+		</div>
 	);
 };
 

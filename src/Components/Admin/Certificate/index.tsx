@@ -15,7 +15,9 @@ const CertificatePageContainer = () => {
 			<Container fluid>
 				<Row>
 					<Col sm={12}>
-						<CertificateTable />
+						<Card>
+							<CertificateTable />
+						</Card>
 					</Col>
 				</Row>
 			</Container>

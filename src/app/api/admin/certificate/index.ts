@@ -9,3 +9,6 @@ export const getSubmittedAssignments = async () => {
 export const getAllCertificates = async () => {
 	return (await apiClient.get("/admin/certificates")).data;
 };
+export const getAllStudentsProgress = async () => {
+	return (await apiClient.get("/admin/admin/all-progress")).data;
+};
