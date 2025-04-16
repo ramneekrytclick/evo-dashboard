@@ -14,6 +14,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import { approveJob, getAllJobs } from "@/app/api/admin/jobs";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 interface Employer {
 	_id: string;
@@ -88,12 +89,12 @@ export default function JobTable(): JSX.Element {
 	const statusBadge = (status: string) => {
 		switch (status) {
 			case "Approved":
-				return <Badge color="success">Approved</Badge>;
+				return <Badge color='success'>Approved</Badge>;
 			case "Rejected":
-				return <Badge color="danger">Rejected</Badge>;
+				return <Badge color='danger'>Rejected</Badge>;
 			case "Pending":
 			default:
-				return <Badge color="warning">Pending</Badge>;
+				return <Badge color='warning'>Pending</Badge>;
 		}
 	};
 
@@ -103,33 +104,43 @@ export default function JobTable(): JSX.Element {
 			name: "Employer",
 			selector: (row) => row.employer?.companyName || row.companyName || "-",
 			sortable: true,
+			center: true,
+			cell: (row) => (
+				<Link href={`/admin/users/${row.employer?._id}`}>
+					{row.employer?.name || "-"}
+				</Link>
+			),
 		},
 		{ name: "Type", selector: (row) => row.jobType || "-", sortable: true },
 		{
 			name: "Status",
 			selector: (row) => row.status,
 			cell: (row) => statusBadge(row.status),
+			center: true,
+
 			sortable: true,
 		},
 		{
 			name: "Actions",
+			center: true,
+
 			cell: (row) => (
-				<div className="d-flex gap-2">
+				<div className='d-flex gap-2'>
 					<Button
-						color="outline-success"
-						size="sm"
+						color='outline-success'
+						size='sm'
 						onClick={() => {
 							setSelectedJob(row);
 							setModalOpen(true);
 						}}>
-						<i className="fa fa-eye me-1" /> View
+						<i className='fa fa-eye me-1' /> View
 					</Button>
 					{row.status === "Pending" && (
 						<Button
-							color="success"
-							size="sm"
+							color='success'
+							size='sm'
 							onClick={() => handleApproveClick(row)}>
-							<i className="fa fa-check me-1" /> Approve
+							<i className='fa fa-check me-1' /> Approve
 						</Button>
 					)}
 				</div>
@@ -139,9 +150,9 @@ export default function JobTable(): JSX.Element {
 
 	return (
 		<>
-			<Card className="shadow-sm">
+			<Card className='shadow-sm'>
 				<CardBody>
-					<h4 className="mb-4 fw-bold">All Job Listings</h4>
+					<h4 className='mb-4 fw-bold'>All Job Listings</h4>
 					<DataTable
 						columns={columns}
 						data={jobs}
@@ -156,16 +167,16 @@ export default function JobTable(): JSX.Element {
 					<Modal
 						isOpen={modalOpen}
 						toggle={toggleModal}
-						size="lg">
+						size='lg'>
 						<ModalHeader
 							toggle={toggleModal}
-							className="fw-bold">
+							className='fw-bold'>
 							Job Details
 						</ModalHeader>
-						<ModalBody className="py-3 px-4">
+						<ModalBody className='py-3 px-4'>
 							{selectedJob && (
-								<div className="row">
-									<div className="col-md-6">
+								<div className='row'>
+									<div className='col-md-6'>
 										<p>
 											<strong>Title:</strong> {selectedJob.title}
 										</p>
@@ -191,7 +202,7 @@ export default function JobTable(): JSX.Element {
 											<strong>Status:</strong> {statusBadge(selectedJob.status)}
 										</p>
 									</div>
-									<div className="col-md-6">
+									<div className='col-md-6'>
 										<p>
 											<strong>Description:</strong> {selectedJob.description}
 										</p>
@@ -229,7 +240,7 @@ export default function JobTable(): JSX.Element {
 						centered>
 						<ModalHeader
 							toggle={toggleConfirmModal}
-							className="fw-bold">
+							className='fw-bold'>
 							Confirm Approval
 						</ModalHeader>
 						<ModalBody>
@@ -242,12 +253,12 @@ export default function JobTable(): JSX.Element {
 						</ModalBody>
 						<ModalFooter>
 							<Button
-								color="success"
+								color='success'
 								onClick={confirmApprove}>
 								Yes, Approve
 							</Button>
 							<Button
-								color="outline-secondary"
+								color='outline-secondary'
 								onClick={toggleConfirmModal}>
 								Cancel
 							</Button>
