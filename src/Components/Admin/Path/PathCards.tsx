@@ -53,14 +53,6 @@ const PathCards = () => {
 			sortable: true,
 		},
 		{
-			name: "Price (₹)",
-			selector: (row: PathProps) => row.price.toFixed(2),
-			sortable: true,
-			cell: (row: PathProps) => (
-				<span className='badge bg-secondary'>₹{row.price?.toFixed(2)}</span>
-			),
-		},
-		{
 			name: "Courses Count",
 			selector: (row: PathProps) => row.courses.length || 0,
 			sortable: true,

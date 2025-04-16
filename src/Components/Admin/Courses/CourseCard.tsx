@@ -9,6 +9,7 @@ import {
 	Col,
 	Badge,
 	Button,
+	CardFooter,
 } from "reactstrap";
 import { CourseProps } from "@/Types/Course.type";
 import CourseModal from "./CourseModal";
@@ -18,20 +19,53 @@ import ViewReviewsModal from "./ReviewModal";
 interface CourseCardProps {
 	data: CourseProps;
 	fetchData: () => void;
+	categories: any[];
+	subcategories: any[];
+	wannaBeInterests: any[];
 }
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
-const CourseCard = ({ data, fetchData }: CourseCardProps) => {
+
+const CourseCard = ({
+	data,
+	fetchData,
+	categories,
+	subcategories,
+	wannaBeInterests,
+}: CourseCardProps) => {
+	const router = useRouter();
 	const discountPercent = data.realPrice
 		? Math.round(
 				((data.realPrice - data.discountedPrice) / data.realPrice) * 100
 		  )
 		: 0;
 
-	const router = useRouter();
 	const goToBatches = () => {
 		router.push(`/admin/batches/${data._id}`);
 	};
 
+	// Mapping IDs to names
+	const categoryName =
+		categories?.find(
+			(c: any) => c._id?.toString() === data.category?.toString()
+		)?.title || data.category;
+
+	const subcategoryName =
+		subcategories?.find(
+			(s: any) => s._id?.toString() === data.subcategory?.toString()
+		)?.title || data.subcategory;
+
+	const mappedWannaBe = Array.isArray(data.wannaBeInterest)
+		? data.wannaBeInterest.map((w: any) => {
+				const matched = wannaBeInterests?.find(
+					(i: any) => i._id?.toString() === w?.toString()
+				);
+				return matched?.title || w;
+		  })
+		: [
+				wannaBeInterests?.find(
+					(i: any) => i._id?.toString() === data.wannaBeInterest?.toString()
+				)?.title || data.wannaBeInterest,
+		  ];
 	return (
 		<Col
 			xl={4}
@@ -46,8 +80,6 @@ const CourseCard = ({ data, fetchData }: CourseCardProps) => {
 						alt={data.title}
 						className='object-fit-cover'
 					/>
-
-					{/* Discount badge */}
 					{discountPercent > 0 && (
 						<Badge
 							color='danger'
@@ -57,19 +89,10 @@ const CourseCard = ({ data, fetchData }: CourseCardProps) => {
 						</Badge>
 					)}
 				</div>
-
+				{/* {JSON.stringify(categories)}
+				{JSON.stringify(subcategories)}
+				{JSON.stringify(wannaBeInterests)} */}
 				<CardBody className='text-start p-4 d-flex flex-column'>
-					{/* <div className="d-flex justify-content-between small text-muted mb-2">
-						<span>
-							<i className="bi bi-journal-text me-1" />
-							12 Lessons
-						</span>
-						<span>
-							<i className="bi bi-people me-1" />
-							50 Students
-						</span>
-					</div> */}
-
 					<CardTitle
 						tag='h5'
 						className='fw-bold text-dark mb-2'>
@@ -79,37 +102,29 @@ const CourseCard = ({ data, fetchData }: CourseCardProps) => {
 							{data.title}
 						</Link>
 					</CardTitle>
+					<p>Raw Category: {data.category}</p>
+					<p>Mapped Category: {categoryName}</p>
 
-					{/* Category/Subcategory */}
 					<div className='mb-2'>
 						<Badge
 							color='primary'
 							className='me-2'>
-							{data.category}
+							{categoryName}
 						</Badge>
-						<Badge color='success'>{data.subcategory}</Badge>
+						<Badge color='success'>{subcategoryName}</Badge>
 					</div>
 
-					{/* WannaBeInterest with pencil */}
 					<div className='d-flex justify-content-between align-items-center mb-3'>
 						<div className='text-muted small'>
 							<strong>WannaBe:</strong>{" "}
-							{Array.isArray(data.wannaBeInterest) ? (
-								data.wannaBeInterest.map((w, i) => (
-									<Badge
-										key={i}
-										color='light'
-										className='me-1 text-dark border'>
-										{w}
-									</Badge>
-								))
-							) : (
+							{mappedWannaBe.map((w, i) => (
 								<Badge
+									key={i}
 									color='light'
-									className='text-dark border'>
-									{data.wannaBeInterest}
+									className='me-1 text-dark border'>
+									{w}
 								</Badge>
-							)}
+							))}
 						</div>
 						<CourseModal
 							values={data}
@@ -123,14 +138,16 @@ const CourseCard = ({ data, fetchData }: CourseCardProps) => {
 							"It is a long established fact that a reader will be distracted."}
 					</CardText>
 
-					{/* Creator */}
-					<div className='d-flex align-items-center mb-3'>
-						<span className='small text-dark'>
-							Created by <strong>{data.createdBy?.trim()}</strong>
-						</span>
-					</div>
+					<Link href={`/admin/lessons/${data._id}`}>
+						<div className='d-flex align-items-center mb-3'>
+							<span className='small text-dark'>
+								Created by <strong>{data.createdBy?.trim()}</strong>
+							</span>
+						</div>
+					</Link>
+				</CardBody>
 
-					{/* Price + Buttons */}
+				<CardFooter>
 					<div className='d-flex justify-content-between align-items-center mb-3'>
 						<div className='fs-5 fw-semibold text-dark'>
 							₹{data.discountedPrice}
@@ -143,7 +160,7 @@ const CourseCard = ({ data, fetchData }: CourseCardProps) => {
 						<Link
 							href={`/admin/lessons/${data._id}`}
 							className='btn btn-sm btn-outline-primary'>
-							Learn More
+							View Lessons
 						</Link>
 						<Button
 							color='primary'
@@ -156,7 +173,7 @@ const CourseCard = ({ data, fetchData }: CourseCardProps) => {
 							courseId={data._id || ""}
 						/>
 					</div>
-				</CardBody>
+				</CardFooter>
 			</Card>
 		</Col>
 	);

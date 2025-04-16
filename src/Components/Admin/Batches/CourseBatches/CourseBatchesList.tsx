@@ -107,12 +107,12 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 			cell: (row) =>
 				row.mentor ? (
 					<Badge
-						color="info"
+						color='info'
 						pill>
 						{typeof row.mentor === "object" ? row.mentor.name : row.mentor}
 					</Badge>
 				) : (
-					<Badge color="warning">Unassigned</Badge>
+					<Badge color='warning'>Unassigned</Badge>
 				),
 		},
 		{
@@ -120,11 +120,11 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 			center: true,
 			cell: (row) => (
 				<div
-					className="d-flex flex-column gap-1"
+					className='d-flex flex-column gap-1'
 					style={{ minWidth: 200 }}>
 					<Button
-						color="primary"
-						size="sm"
+						color='primary'
+						size='sm'
 						onClick={() => {
 							setAssignStudentsModalOpen(row._id || "");
 							setSelectedBatch(row);
@@ -132,8 +132,8 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 						Assign Students
 					</Button>
 					<Button
-						color="success"
-						size="sm"
+						color='success'
+						size='sm'
 						onClick={() => {
 							setAssignMentorModalOpen(row._id || "");
 							setSelectedBatch(row);
@@ -151,7 +151,6 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 	return (
 		<div>
 			<Card>
-				{JSON.stringify(batches)}
 				<CardBody>
 					<FilterComponent
 						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -159,7 +158,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 						}
 						filterText={filterText}
 					/>
-					<div className="table-responsive custom-scrollbar user-datatable mt-3">
+					<div className='table-responsive custom-scrollbar user-datatable mt-3'>
 						<DataTable
 							data={filteredItems}
 							columns={columns}
@@ -167,8 +166,8 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 							pagination
 							fixedHeader
 							persistTableHead
-							className="display"
-							noDataComponent="No batches found."
+							className='display'
+							noDataComponent='No batches found.'
 							highlightOnHover
 							pointerOnHover
 							onRowClicked={(row) => setSelectedBatchForDetails(row)}

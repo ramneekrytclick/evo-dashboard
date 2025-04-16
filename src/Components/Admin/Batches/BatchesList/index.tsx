@@ -30,7 +30,7 @@ const BatchesList = () => {
 	const fetchBatches = async () => {
 		try {
 			const response = await getBatches();
-			setBatches(response.batches || []);
+			setBatches(response.batches.reverse() || []);
 		} catch (error) {
 			console.error("Error fetching batches:", error);
 		}
@@ -71,7 +71,7 @@ const BatchesList = () => {
 			cell: (row) =>
 				row.course ? (
 					<Link
-						className="text-center"
+						className='text-center'
 						href={`/admin/lessons/${
 							typeof row.course === "object" ? row.course._id : row.course
 						}`}>
@@ -122,7 +122,7 @@ const BatchesList = () => {
 						{typeof row.mentor === "object" ? row.mentor.name : row.mentor}
 					</span>
 				) : (
-					<Badge color="warning">Unassigned</Badge>
+					<Badge color='warning'>Unassigned</Badge>
 				),
 		},
 		{
@@ -131,11 +131,11 @@ const BatchesList = () => {
 			width: "15%",
 			cell: (row: BatchProps) => (
 				<div
-					className="d-flex flex-column gap-1 align-items-center justify-content-center"
+					className='d-flex flex-column gap-1 align-items-center justify-content-center'
 					style={{ minWidth: 200 }}>
 					<Button
-						color="primary"
-						size="sm"
+						color='primary'
+						size='sm'
 						onClick={(e) => {
 							e.stopPropagation(); // Prevent row click
 							setAssignStudentsModalOpen(row._id || "");
@@ -144,8 +144,8 @@ const BatchesList = () => {
 						Assign Students
 					</Button>
 					<Button
-						color="success"
-						size="sm"
+						color='success'
+						size='sm'
 						onClick={(e) => {
 							e.stopPropagation(); // Prevent row click
 							setAssignMentorModalOpen(row._id || "");
@@ -171,7 +171,7 @@ const BatchesList = () => {
 						}
 						filterText={filterText}
 					/>
-					<div className="table-responsive custom-scrollbar user-datatable mt-3">
+					<div className='table-responsive custom-scrollbar user-datatable mt-3'>
 						<DataTable
 							data={filteredItems}
 							columns={columns}
@@ -179,8 +179,8 @@ const BatchesList = () => {
 							pagination
 							fixedHeader
 							persistTableHead
-							className="display"
-							noDataComponent="No batches found."
+							className='display'
+							noDataComponent='No batches found.'
 							onRowClicked={(row, e) => {
 								if ((e.target as HTMLElement).closest("button")) return; // block modal if button clicked
 								setSelectedBatchForDetails(row);

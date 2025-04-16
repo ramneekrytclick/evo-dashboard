@@ -15,16 +15,11 @@ const CoursesPageContainer = () => {
 			/>
 			<Container fluid>
 				<Row>
-					<Col className="box-col-8">
-						<Card color="light">
-							<CardBody>
-								<CourseHeader />
-								<div style={{ height: "75vh", overflowY: "scroll" }}>
-									<CourseCards />
-								</div>
-							</CardBody>
-							<Row></Row>
-						</Card>
+					<Col className='box-col-8'>
+						<CourseHeader />
+						<div style={{ height: "75vh", overflowY: "scroll" }}>
+							<CourseCards />
+						</div>
 					</Col>
 				</Row>
 			</Container>
