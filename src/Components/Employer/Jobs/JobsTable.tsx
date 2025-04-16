@@ -24,7 +24,7 @@ const JobApplicationsTable = () => {
 		null
 	);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
+	const [selectedResume, setSelectedResume] = useState<string | null>(null);
 	const fetchJobs = async () => {
 		try {
 			const response = await getJobs();
@@ -38,8 +38,9 @@ const JobApplicationsTable = () => {
 		setOpenJobId(openJobId === jobId ? null : jobId);
 	};
 
-	const openApplicantModal = (id: string) => {
+	const openApplicantModal = (id: string, resume: string | null) => {
 		setSelectedApplicantId(id);
+		setSelectedResume(resume);
 		setIsModalOpen(true);
 	};
 
@@ -47,7 +48,7 @@ const JobApplicationsTable = () => {
 		fetchJobs();
 	}, []);
 
-	const renderApplicantTable = (applicants: string[]) => {
+	const renderApplicantTable = (applicants: any[]) => {
 		const columns: TableColumn<any>[] = [
 			{
 				name: "#",
@@ -57,14 +58,38 @@ const JobApplicationsTable = () => {
 			},
 			{
 				name: "Applicant ID",
-				selector: (row: string) => row,
+				selector: (row: any) => row.student, // extract student ID
 				sortable: true,
-				cell: (row) => (
+				cell: (row: any) => (
 					<Button
-						color="link"
-						onClick={() => openApplicantModal(row)}>
-						{row}
+						color='link'
+						onClick={() => openApplicantModal(row.student, row.resume)}>
+						{row.student}
 					</Button>
+				),
+			},
+			{
+				name: "Resume",
+				selector: (row: any) => row.resume || "-",
+				cell: (row: any) =>
+					row.resume ? (
+						<a
+							href={row.resume}
+							target='_blank'
+							rel='noopener noreferrer'>
+							Download
+						</a>
+					) : (
+						<span className='text-muted'>No resume</span>
+					),
+			},
+			{
+				name: "Status",
+				selector: (row: any) => row.status,
+				cell: (row: any) => (
+					<Badge color={row.status === "Pending" ? "warning" : "success"}>
+						{row.status}
+					</Badge>
 				),
 			},
 		];
@@ -85,7 +110,7 @@ const JobApplicationsTable = () => {
 	return (
 		<Container fluid>
 			<div
-				className="overflow-auto"
+				className='overflow-auto'
 				style={{ maxHeight: "80vh" }}>
 				{jobs.length === 0 ? (
 					<p>No jobs posted yet.</p>
@@ -93,11 +118,11 @@ const JobApplicationsTable = () => {
 					jobs.map((job) => (
 						<Card
 							key={job._id}
-							className="mb-3 shadow-sm border-0">
+							className='mb-3 shadow-sm border-0'>
 							<CardBody>
 								<Row>
 									<Col md={9}>
-										<h5 className="text-primary">{job.title}</h5>
+										<h5 className='text-primary'>{job.title}</h5>
 										<Row>
 											<Col sm={6}>
 												<p>
@@ -108,7 +133,7 @@ const JobApplicationsTable = () => {
 												</p>
 												<p>
 													<strong>Type:</strong>{" "}
-													<Badge color="info">{job.jobType || "N/A"}</Badge>
+													<Badge color='info'>{job.jobType || "N/A"}</Badge>
 												</p>
 												<p>
 													<strong>Experience:</strong> {job.experienceRequired}
@@ -122,8 +147,8 @@ const JobApplicationsTable = () => {
 																(skill: string, index: number) => (
 																	<Badge
 																		key={index}
-																		color="secondary"
-																		className="me-1">
+																		color='secondary'
+																		className='me-1'>
 																		{skill}
 																	</Badge>
 																)
@@ -155,10 +180,10 @@ const JobApplicationsTable = () => {
 
 									<Col
 										md={3}
-										className="d-flex align-items-center justify-content-end">
+										className='d-flex align-items-center justify-content-end'>
 										<Button
-											color="primary"
-											size="sm"
+											color='primary'
+											size='sm'
 											onClick={() => toggleApplications(job._id)}>
 											{openJobId === job._id ? (
 												<EyeOff size={16} />
@@ -172,12 +197,12 @@ const JobApplicationsTable = () => {
 
 								<Collapse
 									isOpen={openJobId === job._id}
-									className="mt-3">
+									className='mt-3'>
 									<h6>Applicants</h6>
 									{job.applicants && job.applicants.length > 0 ? (
 										renderApplicantTable(job.applicants)
 									) : (
-										<p className="text-muted">No applicants yet.</p>
+										<p className='text-muted'>No applicants yet.</p>
 									)}
 								</Collapse>
 							</CardBody>
@@ -191,6 +216,7 @@ const JobApplicationsTable = () => {
 				isOpen={isModalOpen}
 				toggle={() => setIsModalOpen(false)}
 				studentId={selectedApplicantId || ""}
+				resume={selectedResume}
 			/>
 		</Container>
 	);
