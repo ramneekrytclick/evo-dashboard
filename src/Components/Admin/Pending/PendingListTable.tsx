@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
-
 import { TeamListType, UserProps } from "@/Types/Team.type";
 import DataTable, { TableColumn } from "react-data-table-component";
-// import { teamListColumns } from "@/Data/Admin/Team/TeamList";
 import FilterComponent from "@/CommonComponent/FilterComponent";
-import {
-	approveUser,
-	getPendingApprovals,
-	getUsers,
-} from "@/app/api/admin/team";
+import { approveUser, getPendingApprovals } from "@/app/api/admin/team";
 import {
 	Badge,
 	Button,
@@ -19,155 +13,184 @@ import {
 	ModalFooter,
 	ModalHeader,
 } from "reactstrap";
-import { toast } from "react-toastify";
 import Link from "next/link";
+import { toast } from "react-toastify";
+
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const PendingListTable = () => {
 	const [loading, setLoading] = useState(false);
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
 	const [selectedRow, setSelectedRow] = useState<TeamListType | null>(null);
 	const [modalOpen, setModalOpen] = useState(false);
+	const [filterText, setFilterText] = useState("");
+
 	const toggleModal = () => setModalOpen(!modalOpen);
 	const openApproveModal = (row: TeamListType) => {
 		setSelectedRow(row);
 		setModalOpen(true);
 	};
+
 	const handleApproveUser = async () => {
 		if (!selectedRow) return;
 		try {
 			await approveUser(selectedRow._id, "approve");
 			toggleModal();
-			toast.success(
-				`${selectedRow.name} approved successfully as a ${selectedRow.role}`
-			);
-			fetchData(); // Refresh list
+			toast.success(`${selectedRow.name} approved successfully`);
+			fetchData();
 		} catch (error) {
-			console.log("Approval error:", error);
+			toast.error("Failed to approve user");
 		}
 	};
+
 	const teamListColumns: TableColumn<TeamListType>[] = [
+		{
+			name: "Photo",
+			selector: (row) => row.photo,
+			cell: (row) => (
+				<>
+					<img
+						src={`${backendURL}/${row.photo?.replace(/\\/g, "/")}`}
+						alt={row.name}
+						style={{
+							width: 50,
+							height: 50,
+							borderRadius: "50%",
+							objectFit: "cover",
+						}}
+					/>
+				</>
+			),
+			width: "80px",
+		},
 		{
 			name: "Name",
 			selector: (row) => row.name,
-			sortable: true,
 			cell: (row) => (
 				<Link
-					className="text-dark fw-bold"
-					href={`/admin/users/${row._id}`}>
+					href={`/admin/users/${row._id}`}
+					className='fw-bold text-dark'>
 					{row.name}
 				</Link>
 			),
+			sortable: true,
 		},
 		{
 			name: "Email",
-			center: true,
 			selector: (row) => row.email,
-			sortable: true,
 			cell: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
+			sortable: true,
+		},
+		{
+			name: "Contact",
+			selector: (row) => row.contactNumber,
+			cell: (row) => row.contactNumber || "N/A",
 		},
 		{
 			name: "Role",
-			selector: (row) => row.role.toUpperCase(),
-			sortable: true,
-			center: true,
+			selector: (row) => row.role,
 			cell: (row) => (
 				<Badge
-					color=""
-					pill
-					style={{ fontSize: 13 }}
-					className={`badge-${
-						row.role.toLowerCase() === "admin"
+					color={
+						row.role === "Admin"
 							? "primary"
-							: row.role.toLowerCase() === "manager"
+							: row.role === "Manager"
 							? "danger"
-							: row.role.toLowerCase() === "publisher"
+							: row.role === "Publisher"
 							? "info"
-							: row.role.toLowerCase() === "course creator"
+							: row.role === "Course Creator"
 							? "warning"
 							: "secondary"
-					}`}>
+					}>
 					{row.role}
 				</Badge>
 			),
 		},
 		{
+			name: "Status",
+			selector: (row) => row.status,
+			cell: (row) => (
+				<Badge color={row.status === "Banned" ? "danger" : "success"}>
+					{row.status}
+				</Badge>
+			),
+		},
+		{
+			name: "Mode",
+			selector: (row) => row.workingMode,
+			cell: (row) => row.workingMode || "N/A",
+		},
+		{
 			name: "Action",
-			center: true,
 			cell: (row) => (
 				<Button
-					color="success"
+					color='success'
+					size='sm'
 					onClick={() => openApproveModal(row)}>
-					Approve User
+					Approve
 				</Button>
 			),
-			sortable: false,
+			button: true,
 		},
 	];
+
 	const fetchData = async () => {
 		try {
 			setLoading(true);
-			const response = await getPendingApprovals();
-			setTeamListTableData(
-				response.filter((item: UserProps) => {
-					return item.role !== "Student";
-				})
-			);
-		} catch (error) {
-			console.log(error);
-			toast.error("Error fetching Team Data");
+			const res = await getPendingApprovals();
+			const filtered = res.filter((user: UserProps) => user.role !== "Student");
+			setTeamListTableData(filtered.reverse());
+		} catch (err) {
+			toast.error("Error loading team list");
 		} finally {
 			setLoading(false);
 		}
 	};
+
 	useEffect(() => {
 		fetchData();
 	}, []);
-	const [filterText, setFilterText] = useState("");
 
-	const filteredItems: UserProps[] = teamListTableData?.filter(
-		(item: UserProps) => {
-			return Object.values(item).some(
-				(value) =>
-					value &&
-					value.toString().toLowerCase().includes(filterText.toLowerCase())
-			);
-		}
+	const filteredItems = teamListTableData.filter((item) =>
+		Object.values(item).some((val) =>
+			val?.toString().toLowerCase().includes(filterText.toLowerCase())
+		)
 	);
 
 	return (
 		<Card>
 			<CardBody>
 				<FilterComponent
-					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setFilterText(e.target.value)
-					}
 					filterText={filterText}
+					onFilter={(e) => setFilterText(e.target.value)}
 				/>
+
 				<DataTable
-					className="custom-scrollbar"
-					data={filteredItems.reverse()}
 					columns={teamListColumns}
+					data={filteredItems}
 					progressPending={loading}
 					pagination
+					striped
+					responsive
 				/>
+
 				<Modal
 					isOpen={modalOpen}
 					toggle={toggleModal}
 					centered>
 					<ModalHeader toggle={toggleModal}>Confirm Approval</ModalHeader>
 					<ModalBody>
-						Are you sure you want to approve{" "}
-						<strong>{selectedRow?.name}</strong> as a{" "}
+						Approve <strong>{selectedRow?.name}</strong> as{" "}
 						<strong>{selectedRow?.role}</strong>?
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color="secondary"
+							color='secondary'
 							onClick={toggleModal}>
 							Cancel
 						</Button>
 						<Button
-							color="success"
+							color='success'
 							onClick={handleApproveUser}>
 							Yes, Approve
 						</Button>
