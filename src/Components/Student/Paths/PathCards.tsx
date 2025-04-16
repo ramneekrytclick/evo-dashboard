@@ -13,10 +13,11 @@ import {
 	CardTitle,
 	Col,
 	Container,
-	Progress,
 	Row,
 } from "reactstrap";
 import { toast } from "react-toastify";
+
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 export interface PathProps {
 	_id?: string;
@@ -62,50 +63,54 @@ const MyLearningPaths = () => {
 						</p>
 					</Col>
 				) : (
-					learningPaths.map((path) => (
-						<Col
-							xl={6}
-							md={12}
-							key={path._id}>
-							<Link
-								href={`/student/paths/${path._id}`}
-								className='text-decoration-none text-dark'>
-								<Card className='shadow-sm path-card h-100 hover-shadow'>
-									<CardBody>
-										<div className='d-flex align-items-center mb-3'>
-											<Image
-												width={60}
-												height={60}
-												className='rounded me-3'
-												src={
-													path.photo
-														? `/${path.photo}`
-														: `${ImagePath}/job-search/default-path.png`
-												}
-												alt={path.title}
-											/>
-											<div className='flex-grow-1'>
-												<CardTitle
-													tag='h5'
-													className='mb-1'>
-													{path.title}
-												</CardTitle>
-											</div>
-										</div>
+					learningPaths.map((path) => {
+						const resolvedPhoto = path.photo?.replace(/\\/g, "/") || "";
+						const imageUrl = path.photo
+							? `${backendURL}/uploads/${resolvedPhoto}`
+							: `${ImagePath}/job-search/default-path.png`;
 
-										<p
-											className='text-muted'
-											style={{ minHeight: 50 }}>
-											{path.description}
-										</p>
-									</CardBody>
-									<CardFooter className='text-end'>
-										<small className='text-primary'>View Full Path ➜</small>
-									</CardFooter>
-								</Card>
-							</Link>
-						</Col>
-					))
+						return (
+							<Col
+								xl={6}
+								md={12}
+								key={path._id}>
+								<Link
+									href={`/student/paths/${path._id}`}
+									className='text-decoration-none text-dark'>
+									<Card className='shadow-sm path-card h-100 hover-shadow'>
+										<CardBody>
+											<div className='d-flex align-items-center mb-3'>
+												<Image
+													width={60}
+													height={60}
+													className='rounded me-3'
+													style={{ objectFit: "cover" }}
+													src={imageUrl}
+													alt={path.title}
+												/>
+												<div className='flex-grow-1'>
+													<CardTitle
+														tag='h5'
+														className='mb-1'>
+														{path.title}
+													</CardTitle>
+												</div>
+											</div>
+
+											<p
+												className='text-muted mb-0'
+												style={{ minHeight: 50 }}>
+												{path.description}
+											</p>
+										</CardBody>
+										<CardFooter className='text-end'>
+											<small className='text-primary'>View Full Path ➜</small>
+										</CardFooter>
+									</Card>
+								</Link>
+							</Col>
+						);
+					})
 				)}
 			</Row>
 		</Container>

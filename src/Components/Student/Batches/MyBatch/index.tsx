@@ -41,20 +41,20 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 			/>
 			<Card>
 				<div
-					className="d-flex"
+					className='d-flex'
 					style={{ height: "75vh" }}>
 					{/* Left: Group Chat */}
 					<GroupChat batchId={id} />
 
 					{/* Right: Mentor Card */}
-					<Card className="shadow-sm bg-light text-dark rounded-0">
+					<Card className='shadow-sm bg-light text-dark rounded-0'>
 						<CardBody>
-							<CardTitle tag="h5">{batch.mentor?.name}</CardTitle>
+							<CardTitle tag='h5'>{batch.mentor?.name}</CardTitle>
 							<CardText>
 								<strong>Email:</strong> {batch.mentor?.email}
 							</CardText>
 							<Button
-								color="primary"
+								color='primary'
 								block
 								onClick={toggleModal}>
 								Book 1:1 Session
