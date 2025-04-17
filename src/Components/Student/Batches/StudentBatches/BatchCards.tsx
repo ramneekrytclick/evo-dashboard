@@ -32,46 +32,55 @@ const BatchCards = () => {
 
 	return (
 		<Row>
-			{batches.map((batch) => (
-				<Col
-					xl={4}
-					md={6}
-					key={batch._id}>
-					<Card className="border-0 shadow rounded-4">
-						<CardBody className="d-flex flex-column">
-							<Link href={`/student/batches/${batch._id}`}>
-								<CardTitle
-									tag="h5"
-									className="fw-bold text-dark mb-2">
-									{batch.course?.title || "Untitled Course"}
-								</CardTitle>
-							</Link>
+			{batches.length > 0 ? (
+				batches.map((batch) => (
+					<Col
+						xl={4}
+						md={6}
+						key={batch._id}>
+						<Card className='border-0 shadow rounded-4'>
+							<CardBody className='d-flex flex-column'>
+								<Link href={`/student/batches/${batch._id}`}>
+									<CardTitle
+										tag='h5'
+										className='fw-bold text-dark mb-2'>
+										{batch.course?.title || "Untitled Course"}
+									</CardTitle>
+								</Link>
 
-							<div className="mb-2">
-								<Badge
-									color="info"
-									className="me-2">
-									{batch.batchWeekType}
-								</Badge>
-								<Badge color="warning">{batch.time}</Badge>
-							</div>
+								<div className='mb-2'>
+									<Badge
+										color='info'
+										className='me-2'>
+										{batch.batchWeekType}
+									</Badge>
+									<Badge color='warning'>{batch.time}</Badge>
+								</div>
 
-							<CardText className="text-muted small mb-3">
-								{batch.description || "No description provided."}
-							</CardText>
+								<CardText className='text-muted small mb-3'>
+									{batch.description || "No description provided."}
+								</CardText>
 
-							<div className="mt-auto">
-								<p className="small text-muted mb-1">
-									<strong>Mentor:</strong> {batch.mentor?.name || "N/A"}
-								</p>
-								<p className="small text-muted">
-									<strong>Email:</strong> {batch.mentor?.email || "N/A"}
-								</p>
-							</div>
-						</CardBody>
-					</Card>
-				</Col>
-			))}
+								<div className='mt-auto'>
+									<p className='small text-muted mb-1'>
+										<strong>Mentor:</strong> {batch.mentor?.name || "N/A"}
+									</p>
+									<p className='small text-muted'>
+										<strong>Email:</strong> {batch.mentor?.email || "N/A"}
+									</p>
+								</div>
+							</CardBody>
+						</Card>
+					</Col>
+				))
+			) : (
+				<>
+					<p className='text-center text-muted h6'>
+						Not assigned batches yet. Enroll in a course and Contact the Admin
+						if still not assigned.
+					</p>
+				</>
+			)}
 		</Row>
 	);
 };

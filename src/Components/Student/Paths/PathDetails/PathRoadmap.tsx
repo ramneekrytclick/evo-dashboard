@@ -8,17 +8,11 @@ import "react-vertical-timeline-component/style.min.css";
 import { BookOpen, Award } from "react-feather";
 import { Button, Card, CardBody } from "reactstrap";
 import Link from "next/link";
+import { Path } from ".";
 
 interface PathRoadmapProps {
 	role: string;
-	path: {
-		title: string;
-		description: string;
-		timing: string;
-		price: number;
-		courses: { _id: string; title: string }[];
-		wannaBeInterest: { _id: string; title: string }[];
-	};
+	path: Path;
 	enrolledCourses: { course: { _id: string } }[];
 }
 

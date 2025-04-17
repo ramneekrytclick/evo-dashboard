@@ -99,3 +99,6 @@ export const getMyCertificates = async () => {
 export const getMyApplications = async () => {
 	return (await apiClient.get(`/students/my-applications`)).data;
 };
+export const getMyCourseProgress = async () => {
+	return (await apiClient.get(`/students/my-progress`)).data;
+};
