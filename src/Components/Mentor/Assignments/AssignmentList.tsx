@@ -27,7 +27,7 @@ const AssignmentList = () => {
 	const fetchAssignments = async () => {
 		try {
 			const response = await getSubmittedAssignments();
-			setAssignments(response);
+			setAssignments(response.reverse());
 		} catch (error) {
 			console.error("Error fetching assignments:", error);
 		}
@@ -104,7 +104,7 @@ const AssignmentList = () => {
 			name: "Grade",
 			cell: (row: any) =>
 				row.score ? (
-					<h3 className='fw-100'>{row.score}</h3>
+					<h4 className='fw-100'>{row.score}</h4>
 				) : (
 					<Button
 						color='success'
@@ -116,8 +116,7 @@ const AssignmentList = () => {
 	];
 
 	return (
-		<div className='p-4'>
-			<h2 className='text-xl font-semibold mb-4'>Submitted Assignments</h2>
+		<div className='p-2'>
 			<DataTable
 				columns={columns}
 				data={assignments}

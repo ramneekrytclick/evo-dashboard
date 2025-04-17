@@ -5,13 +5,13 @@ import { getMyMentorBookings, getStudentProfile } from "@/app/api/student";
 import { toast } from "react-toastify";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import ContinueWatching from "./ContinueWatching";
 
 const StudentDashboardContainer = () => {
 	const [evoScore, setEvoScore] = useState<number>(0);
 	const [mentorBookings, setMentorBookings] = useState<any[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState<boolean>(true);
 
-	const scrollRef1 = useRef<HTMLDivElement>(null);
 	const scrollRef2 = useRef<HTMLDivElement>(null);
 
 	const evoColor = getEvoColor(evoScore);
@@ -81,49 +81,10 @@ const StudentDashboardContainer = () => {
 		<div className='container py-4'>
 			<div className='row'>
 				{/* Continue Learning */}
-				<div className='col-12 mb-4 position-relative'>
-					<h4 className='mb-3 fw-bold'>Continue Your Learning</h4>
-					{loading ? (
-						<p>Loading videos...</p>
-					) : (
-						<>
-							<div className='position-absolute top-0 end-0'>
-								<button
-									className='btn btn-sm btn-outline-secondary me-2'
-									onClick={() => scroll(scrollRef1, "left")}
-									disabled={10 <= 3}>
-									←
-								</button>
-								<button
-									className='btn btn-sm btn-outline-secondary'
-									onClick={() => scroll(scrollRef1, "right")}
-									disabled={10 <= 3}>
-									→
-								</button>
-							</div>
-							<div
-								ref={scrollRef1}
-								className='d-flex overflow-auto gap-3'>
-								{10 > 0 ? (
-									new Array(10).fill("j").map((_, i) => (
-										<div
-											key={i}
-											className='card shadow-sm rounded'
-											style={{ minWidth: "200px", height: "160px" }}>
-											<div className='card-body d-flex justify-content-center align-items-center text-muted'>
-												Video Placeholder
-											</div>
-										</div>
-									))
-								) : (
-									<p className='text-muted'>
-										No continue watching videos found.
-									</p>
-								)}
-							</div>
-						</>
-					)}
-				</div>
+				<ContinueWatching
+					loading={loading}
+					setLoading={setLoading}
+				/>
 
 				{/* Mentor Bookings */}
 				<div className='col-lg-9 mb-4 position-relative'>

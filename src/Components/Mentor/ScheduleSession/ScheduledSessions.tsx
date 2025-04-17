@@ -87,81 +87,83 @@ const ScheduledSessions = () => {
 
 	if (sessions.length === 0) {
 		return (
-			<p className="text-center text-muted mt-4">No sessions booked yet.</p>
+			<p className='text-center text-muted mt-4'>No sessions booked yet.</p>
 		);
 	}
 
 	return (
-		<div className="container mt-4">
+		<div className='container'>
 			<Row>
 				{sessions.map((session) => (
 					<Col
-						md="6"
-						className="mb-4"
+						md='4'
+						className='mb-4'
 						key={session._id}>
 						<Card>
 							<CardBody>
-								<CardTitle tag="h5">Student: {session.student.name}</CardTitle>
+								<CardTitle tag='h5'>
+									{session.message?.trim() ? session.message : "-"}
+								</CardTitle>
 								<CardText>
+									<strong>Student: {session.student.name}</strong>
+									<br />
 									<strong>Email:</strong> {session.student.email} <br />
 									<strong>Date:</strong>{" "}
 									{new Date(session.date).toLocaleDateString()} <br />
 									<strong>Time:</strong> {session.timeSlot} <br />
 									<strong>Status:</strong>{" "}
-									<span className="text-primary">{session.status}</span> <br />
-									<strong>Discussion Topic:</strong>{" "}
-									{session.message?.trim() ? session.message : "-"}
+									<span className='text-primary'>{session.status}</span> <br />
 								</CardText>
 
-								<FormGroup className="d-flex gap-2 align-items-center mb-3">
+								<FormGroup className='d-flex gap-2 align-items-center mb-3'>
 									<Label
-										for="statusSelect"
-										className="me-2 mb-0">
+										for='statusSelect'
+										className='me-2 mb-0'>
 										Update Status:
 									</Label>
 									<Input
-										id="statusSelect"
-										type="select"
+										id='statusSelect'
+										type='select'
 										value={statusUpdates[session._id] || session.status}
 										onChange={(e) =>
 											handleStatusChange(session._id, e.target.value)
 										}
 										style={{ maxWidth: "150px" }}>
-										<option value="Pending">Pending</option>
-										<option value="Confirmed">Confirmed</option>
-										<option value="Cancelled">Cancelled</option>
+										<option value='Pending'>Pending</option>
+										<option value='Confirmed'>Confirmed</option>
+										<option value='Cancelled'>Cancelled</option>
 									</Input>
 									<Button
-										color="primary"
-										size="sm"
+										color='primary'
+										size='sm'
 										disabled={
 											loading[session._id] ||
 											statusUpdates[session._id] === session.status
 										}
 										onClick={() => handleUpdateStatus(session._id)}>
-										{loading[session._id] ? <Spinner size="sm" /> : "Update"}
+										{loading[session._id] ? <Spinner size='sm' /> : "Update"}
 									</Button>
 								</FormGroup>
 
 								<FormGroup>
-									<Label for="replyMessage">Reply to Student:</Label>
+									<Label for='replyMessage'>Reply to Student:</Label>
 									<Input
-										id="replyMessage"
-										type="textarea"
+										id='replyMessage'
+										type='textarea'
 										value={replies[session._id] || ""}
 										onChange={(e) =>
 											handleReplyChange(session._id, e.target.value)
 										}
-										placeholder="Type your reply here..."
+										placeholder='Type your reply here...'
 									/>
 									<Button
-										color="success"
-										size="sm"
-										className="mt-2"
+										color='success'
+										size='sm'
+										className='mt-2'
 										onClick={() => handleSendReply(session._id)}
 										disabled={loading[session._id]}>
 										{loading[session._id] ? (
-											<Spinner size="sm" />
+											<Spinner size='sm' />
 										) : (
 											"Send Reply"
 										)}

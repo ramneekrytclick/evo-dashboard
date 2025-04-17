@@ -15,11 +15,7 @@ const ScheduleSessionContainer = () => {
 			/>
 			<Container fluid>
 				<Row>
-					<Col
-						xs={12}
-						lg={9}>
-						<ScheduledSessions />
-					</Col>
+					<ScheduledSessions />
 				</Row>
 			</Container>
 		</>

@@ -90,7 +90,7 @@ const MyEnrolledCourses = () => {
 						sm={12}
 						className='mb-4'
 						key={course._id}>
-						<Card className='border-0 shadow rounded-4 overflow-hidden h-50 course-card'>
+						<Card className='border-0 shadow rounded-4 overflow-hidden h-100 course-card'>
 							<CardImg
 								top
 								width='100%'
