@@ -88,7 +88,7 @@ const ContinueWatching = ({
 	);
 
 	return (
-		<div className='col-12 mb-4 position-relative'>
+		<div className='col-12 mb-3 position-relative bg-light-subtle card p-3'>
 			<h4 className='mb-3 fw-bold'>Continue Your Learning</h4>
 			{loading ? (
 				<p>Loading...</p>
@@ -98,14 +98,16 @@ const ContinueWatching = ({
 						<p className='text-muted'>No courses to continue.</p>
 					) : (
 						<>
-							<div className='position-absolute top-0 end-0'>
+							<div className='position-absolute bottom-0 start-0'>
 								<button
-									className='btn btn-sm btn-outline-secondary me-2'
+									className='btn btn-outline-primary me-2 z-100'
 									onClick={() => scroll(scrollRef1, "left")}>
 									←
 								</button>
+							</div>
+							<div className='position-absolute bottom-0 end-0'>
 								<button
-									className='btn btn-sm btn-outline-secondary'
+									className='btn btn-outline-primary z-100'
 									onClick={() => scroll(scrollRef1, "right")}>
 									→
 								</button>
@@ -113,7 +115,7 @@ const ContinueWatching = ({
 
 							<div
 								ref={scrollRef1}
-								className='d-flex overflow-scroll gap-3 h-100'>
+								className='d-flex overflow-scroll gap-3 h-100 pb-3'>
 								{visibleCourses.map((item, i) => {
 									const nextLesson = getNextLesson(
 										item.courseId,
@@ -130,8 +132,8 @@ const ContinueWatching = ({
 											key={i}
 											className='text-decoration-none'>
 											<div
-												className='card shadow-sm rounded text-dark'
-												style={{ minWidth: "260px", minHeight: "260px" }}>
+												className='card shadow-sm rounded text-dark overflow-hidden'
+												style={{ width: "260px", minHeight: "260px" }}>
 												{course?.photo && (
 													<img
 														src={`${backendURL}/uploads/${course.photo}`}
@@ -144,9 +146,9 @@ const ContinueWatching = ({
 													/>
 												)}
 												<div className='card-body d-flex flex-column justify-content-between'>
-													<h6 className='fw-bold text-truncate mb-1'>
+													<span className='fw-bold text-truncate mb-1 fs-5'>
 														{course?.title || "Course Title"}
-													</h6>
+													</span>
 													<small className='text-muted text-truncate'>
 														Lesson: {nextLesson?.title || "Untitled Lesson"}
 													</small>

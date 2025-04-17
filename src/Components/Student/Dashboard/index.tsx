@@ -6,6 +6,9 @@ import { toast } from "react-toastify";
 import ReactApexChart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import ContinueWatching from "./ContinueWatching";
+import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
+import Link from "next/link";
+import { Container } from "reactstrap";
 
 const StudentDashboardContainer = () => {
 	const [evoScore, setEvoScore] = useState<number>(0);
@@ -78,100 +81,115 @@ const StudentDashboardContainer = () => {
 	};
 
 	return (
-		<div className='container py-4'>
-			<div className='row'>
-				{/* Continue Learning */}
-				<ContinueWatching
-					loading={loading}
-					setLoading={setLoading}
-				/>
+		<>
+			<Breadcrumbs
+				mainTitle='Dashboard'
+				parent='Student'
+				title='Dashboard'
+			/>
+			<div className='pt-2'>
+				<div className='row'>
+					{/* Continue Learning */}
+					<Container>
+						<ContinueWatching
+							loading={loading}
+							setLoading={setLoading}
+						/>
+					</Container>
 
-				{/* Mentor Bookings */}
-				<div className='col-lg-9 mb-4 position-relative'>
-					<div className='card shadow-sm h-100'>
-						<div className='card-body'>
-							<h5 className='fw-bold mb-3'>Your Mentor Bookings</h5>
-							{loading ? (
-								<p>Loading bookings...</p>
-							) : mentorBookings.length === 0 ? (
-								<p className='text-muted'>No bookings yet.</p>
-							) : (
-								<>
-									<div className='position-absolute top-0 end-0'>
-										<button
-											className='btn btn-sm btn-outline-primary me-2'
-											onClick={() => scroll(scrollRef2, "left")}
-											disabled={mentorBookings.length <= 2}>
-											←
-										</button>
-										<button
-											className='btn btn-sm btn-outline-primary'
-											onClick={() => scroll(scrollRef2, "right")}
-											disabled={mentorBookings.length <= 2}>
-											→
-										</button>
-									</div>
-									<div
-										ref={scrollRef2}
-										className='d-flex overflow-auto gap-3 pb-1'>
-										{mentorBookings.map((booking) => (
-											<div
-												key={booking._id}
-												className='border rounded shadow-sm p-3 d-flex flex-column justify-content-between'
-												style={{ minWidth: "300px", minHeight: "220px" }}>
-												<h6 className='mb-1 text-primary'>
-													Mentor: {booking.mentor.name}
-												</h6>
-												<p className='mb-1 small'>
-													<b>Date:</b>{" "}
-													{new Date(booking.date).toLocaleDateString()}
-													<br />
-													<b>Time:</b> {booking.timeSlot}
-													<br />
-													<b>Status:</b>{" "}
-													<span
-														className={`badge bg-${
-															booking.status === "Confirmed"
-																? "success"
-																: "warning"
-														}`}>
-														{booking.status}
-													</span>
-												</p>
-												<p className='mb-1 small'>
-													<b>Your Message:</b> {booking.message || "-"}
-												</p>
-												<div className='alert alert-primary p-2 mt-2 mb-0'>
-													<b>Mentor Reply:</b>{" "}
-													{booking.replyFromMentor || "No reply yet."}
+					{/* Mentor Bookings */}
+					<div className='col-lg-9 mb-4 position-relative'>
+						<div className='card shadow-sm h-100'>
+							<div className='card-body'>
+								<h5 className='fw-bold mb-3'>Your Mentor Bookings</h5>
+								{loading ? (
+									<p>Loading bookings...</p>
+								) : mentorBookings.length === 0 ? (
+									<>
+										<p className='text-muted'>
+											No bookings yet.
+											<Link href={`/student/batches`}> View Batches</Link> to
+											book session
+										</p>
+									</>
+								) : (
+									<>
+										<div className='position-absolute top-0 end-0'>
+											<button
+												className='btn btn-sm btn-outline-primary me-2'
+												onClick={() => scroll(scrollRef2, "left")}
+												disabled={mentorBookings.length <= 2}>
+												←
+											</button>
+											<button
+												className='btn btn-sm btn-outline-primary'
+												onClick={() => scroll(scrollRef2, "right")}
+												disabled={mentorBookings.length <= 2}>
+												→
+											</button>
+										</div>
+										<div
+											ref={scrollRef2}
+											className='d-flex overflow-auto gap-3 pb-1'>
+											{mentorBookings.map((booking) => (
+												<div
+													key={booking._id}
+													className='border rounded shadow-sm p-3 d-flex flex-column justify-content-between'
+													style={{ minWidth: "300px", minHeight: "220px" }}>
+													<h6 className='mb-1 text-primary'>
+														Mentor: {booking.mentor.name}
+													</h6>
+													<p className='mb-1 small'>
+														<b>Date:</b>{" "}
+														{new Date(booking.date).toLocaleDateString()}
+														<br />
+														<b>Time:</b> {booking.timeSlot}
+														<br />
+														<b>Status:</b>{" "}
+														<span
+															className={`badge bg-${
+																booking.status === "Confirmed"
+																	? "success"
+																	: "warning"
+															}`}>
+															{booking.status}
+														</span>
+													</p>
+													<p className='mb-1 small'>
+														<b>Your Message:</b> {booking.message || "-"}
+													</p>
+													<div className='alert alert-primary p-2 mt-2 mb-0'>
+														<b>Mentor Reply:</b>{" "}
+														{booking.replyFromMentor || "No reply yet."}
+													</div>
 												</div>
-											</div>
-										))}
-									</div>
-								</>
-							)}
+											))}
+										</div>
+									</>
+								)}
+							</div>
 						</div>
 					</div>
-				</div>
 
-				{/* EVO Score */}
-				<div className='col-lg-3 mb-4'>
-					<div className='card shadow-sm p-3'>
-						<h6 className='fw-bold'>EVO Score</h6>
-						<ReactApexChart
-							options={chartOptions}
-							series={[evoScore * 10]} // scale to percentage for chart
-							type='radialBar'
-							height={250}
-						/>
-						<p className='mt-3 fw-semibold text-center small text-muted'>
-							{evoComment}
-						</p>
+					{/* EVO Score */}
+					<div className='col-lg-3 '>
+						<div className='card shadow-sm p-3'>
+							<h6 className='fw-bold'>EVO Score</h6>
+							<ReactApexChart
+								options={chartOptions}
+								series={[evoScore * 10]} // scale to percentage for chart
+								type='radialBar'
+								height={250}
+							/>
+							<p className='my-3 fw-semibold text-center small text-muted'>
+								{evoComment}
+							</p>
+						</div>
 					</div>
+					{/* Other dashboard sections... */}
 				</div>
-				{/* Other dashboard sections... */}
 			</div>
-		</div>
+		</>
 	);
 };
 

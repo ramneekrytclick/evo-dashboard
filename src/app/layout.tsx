@@ -16,7 +16,7 @@ const lexend = Lexend({
 });
 
 const roboto = Outfit({
-	weight: ["300", "400", "500", "700", "900"],
+	weight: ["100", "300", "400", "500", "700", "900"],
 	style: ["normal"],
 	subsets: ["latin"],
 	display: "swap",

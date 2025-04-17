@@ -20,12 +20,11 @@ export const getUsers = async () => {
 	}
 };
 export const getPendingApprovals = async () => {
-	try {
-		const response = await apiClient.get("/admin/pending-approvals");
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
+	const response = await apiClient.get("/admin/pending-approvals");
+	const filteredData = response.data.filter(
+		(item: any) => item.role !== "Student"
+	);
+	return filteredData;
 };
 export const createNewUser = async (data: AddUserFormProps) => {
 	// console.log(data);

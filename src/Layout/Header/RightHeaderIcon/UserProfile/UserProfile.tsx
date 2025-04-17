@@ -26,17 +26,17 @@ const UserProfile = () => {
 	}, []);
 	if (!user) return null;
 	return (
-		<li className='onhover-dropdown text-dark position-relative border rounded border-primary btn btn-success'>
+		<li className='onhover-dropdown text-dark position-relative border rounded border-dark hover-shadow-sm'>
 			<div className='notification-box d-flex align-items-center gap-2'>
-				<span className='fw-semibold'>
+				<span className='fw-semibold text-primary'>
 					{user.name?.split(" ")[0] || "User"}
 				</span>
 				<Image
 					src={`/assets/avatar-placeholder.png`}
 					alt='Profile'
-					width={20}
-					height={20}
-					className='rounded-circle'
+					width={25}
+					height={25}
+					className='rounded'
 				/>
 			</div>
 
@@ -44,7 +44,7 @@ const UserProfile = () => {
 				<ul className='list-unstyled mb-0'>
 					<li className='d-flex align-items-center justify-content-between'>
 						<div className='d-flex flex-column align-items-start'>
-							{user.name}
+							<span className='fs-5 fw-medium'>{user.name}</span>
 							<p className='text-muted link-underline-primary'>
 								({user.email})
 							</p>

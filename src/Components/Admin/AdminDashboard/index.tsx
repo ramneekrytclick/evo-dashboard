@@ -114,21 +114,47 @@ const AdminDashboardContainer = () => {
 				highlightOnHover
 				dense
 				onRowClicked={onRowClicked}
+				customStyles={{
+					headCells: {
+						style: {
+							fontSize: "20px",
+							fontWeight: "bold",
+						},
+					},
+					rows: {
+						style: {
+							fontSize: "15px",
+							fontWeight: "normal",
+						},
+					},
+					headRow: {
+						style: {
+							backgroundColor: "#f8f9fa",
+						},
+					},
+					pagination: {
+						style: {
+							backgroundColor: "#f8f9fa",
+							fontSize: "18px",
+							fontWeight: "normal",
+						},
+					},
+				}}
 			/>
 		);
 	};
 	const cardData = data
 		? [
 				{ amount: data.totalUsers, title: "Total Users", link: "/admin/team" },
-				{ amount: data.managers, title: "Total Managers", link: "/admin/team" },
+				{ amount: data.managers, title: "Managers", link: "/admin/team" },
 				{
 					amount: data.mentors,
-					title: "Total Mentors",
+					title: "Mentors",
 					link: "/admin/mentors",
 				},
 				{
 					amount: data.students,
-					title: "Total Students",
+					title: "Students",
 					link: "/admin/students",
 				},
 				{
@@ -138,7 +164,7 @@ const AdminDashboardContainer = () => {
 				},
 				{
 					amount: data.employers,
-					title: "Total Employers",
+					title: "Employers",
 					link: "/admin/employers",
 				},
 		  ]
@@ -162,8 +188,58 @@ const AdminDashboardContainer = () => {
 					</div>
 				) : (
 					<>
+						{/* Action Bar */}
+						<Row className='mb-4 bg-white p-4 card shadow-sm'>
+							<Col className='mb-2 fw-bold'>Action Bar</Col>
+							<div className='d-flex justify-content-between row place-items-center'>
+								<Col
+									className='my-2 w-full place-items-center text-center'
+									xs={12}
+									md={3}>
+									<CreateCategoryModal fetchData={fetchData} />
+								</Col>
+								<Col
+									className='my-2 w-full place-items-center text-center'
+									xs={12}
+									md={3}>
+									<CreateSubcategoryModal fetchData={fetchData} />
+								</Col>
+
+								<Col
+									className='my-2 w-full place-items-center text-center'
+									xs={12}
+									md={3}>
+									<Button
+										color='primary'
+										className='me-2 px-2 w-full'
+										onClick={toggleWannaBeModal}>
+										<i className='fa fa-plus me-2 py-1' />
+										Add Wanna Be Interests
+									</Button>
+									<CreateInterestFormModal
+										modalOpen={wannaBeModal}
+										toggleModal={toggleWannaBeModal}
+										handleSubmit={handleWannaBeSubmit}
+									/>
+								</Col>
+								<Col
+									className='my-2 w-full place-items-center text-center'
+									xs={12}
+									md={3}>
+									<Button
+										className='w-full'
+										color='primary'
+										onClick={() => {
+											navigation.push(`/admin/create-course`);
+										}}>
+										<i className='fa fa-plus me-2 py-1' />
+										Add Course
+									</Button>
+								</Col>
+							</div>
+						</Row>
 						{/* Stats */}
-						<Row className='mb-4'>
+						<Row className='mb-1'>
 							{cardData.map((item, index) => (
 								<Col
 									xs={6}
@@ -174,45 +250,16 @@ const AdminDashboardContainer = () => {
 										<Card className='text-center shadow-sm border-0 p-3'>
 											<h2
 												className='text-dark mb-1'
-												style={{ fontSize: "2rem" }}>
-												{item.amount}
+												style={{ fontSize: "3rem" }}>
+												{item.amount || "-"}
 											</h2>
-											<p className='text-muted mb-0'>{item.title}</p>
+											<p className='text-muted mb-0 fs-6'>
+												{item.title || "-"}
+											</p>
 										</Card>
 									</Link>
 								</Col>
 							))}
-						</Row>
-
-						{/* Action Bar */}
-						<Row className='mb-4 bg-white p-4 rounded shadow-sm'>
-							<Col className='mb-2 fw-bold'>Action Bar</Col>
-							<Col xs={12}>
-								<div className='d-flex justify-content-between '>
-									<CreateCategoryModal fetchData={fetchData} />
-									<CreateSubcategoryModal fetchData={fetchData} />
-									<CreateInterestFormModal
-										modalOpen={wannaBeModal}
-										toggleModal={toggleWannaBeModal}
-										handleSubmit={handleWannaBeSubmit}
-									/>
-									<Button
-										color='primary'
-										className='me-2 px-2'
-										onClick={toggleWannaBeModal}>
-										<i className='fa fa-plus me-2 py-1' />
-										Add Wanna Be Interests
-									</Button>
-									<Button
-										color='primary'
-										onClick={() => {
-											navigation.push(`/admin/create-course`);
-										}}>
-										<i className='fa fa-plus me-2 py-1' />
-										Add Course
-									</Button>
-								</div>
-							</Col>
 						</Row>
 
 						{/* Data Cards */}
@@ -258,11 +305,16 @@ const AdminDashboardContainer = () => {
 								<Col
 									md={6}
 									xl={3}
-									className='mb-4'
 									key={index}>
-									<Card className='shadow-sm border-0 h-100'>
+									<Card
+										className='shadow-sm border-0'
+										style={{ height: "30em", overflow: "hidden" }}>
 										<CardHeader className='d-flex justify-content-between align-items-center'>
-											<CardTitle tag='h5'>{title}</CardTitle>
+											<CardTitle
+												tag='h6'
+												className='fw-medium'>
+												{title}
+											</CardTitle>
 											<Link href={link}>
 												<Button
 													size='sm'
@@ -272,7 +324,13 @@ const AdminDashboardContainer = () => {
 												</Button>
 											</Link>
 										</CardHeader>
-										<CardBody>{renderTable(data, fields, onClick)}</CardBody>
+										<CardBody
+											style={{
+												overflow: "auto",
+												height: "calc(100% - 4.5rem)",
+											}}>
+											{renderTable(data.reverse(), fields, onClick)}
+										</CardBody>
 									</Card>
 								</Col>
 							))}
