@@ -5,4 +5,6 @@ export interface IAnnouncement {
 	roles: string[];
 	image?: string | null;
 	createdAt: string;
+	message?: string;
+	link?: string;
 }

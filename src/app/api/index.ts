@@ -24,3 +24,12 @@ export const getMyProfile = async (role: string) => {
 	}
 	return (await apiClient.get(`/mentors/mentor/me`)).data;
 };
+export const getMyAnnouncements = async (role: string) => {
+	const data = (await apiClient.get(`/announcements`)).data;
+	console.log(role);
+
+	if (role == "") {
+		return data;
+	}
+	return data.filter((item: any) => item.roles.includes(role));
+};

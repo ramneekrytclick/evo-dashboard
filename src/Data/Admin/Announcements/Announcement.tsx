@@ -42,9 +42,10 @@ export const announcementTableColumns: TableColumn<IAnnouncement>[] = [
 		),
 	},
 	{
-		name: "Message",
+		name: "Description",
 		selector: (row) => row.description,
 		sortable: true,
+		center: true,
 		cell: (row) => (
 			<div
 				id={`desc-tooltip-${row._id}`}
@@ -56,7 +57,7 @@ export const announcementTableColumns: TableColumn<IAnnouncement>[] = [
 				}}>
 				{row.description}
 				<UncontrolledTooltip
-					placement="top"
+					placement='top'
 					target={`desc-tooltip-${row._id}`}>
 					{row.description}
 				</UncontrolledTooltip>
@@ -65,14 +66,15 @@ export const announcementTableColumns: TableColumn<IAnnouncement>[] = [
 	},
 	{
 		name: "Target Roles",
+		center: true,
 		selector: (row) => row.roles?.join(", "),
 		cell: (row) => (
-			<div className="d-flex flex-wrap gap-1">
+			<div className='d-flex flex-wrap gap-1'>
 				{row.roles?.map((role, i) => (
 					<Badge
 						key={i}
-						color="info"
-						className="text-uppercase">
+						color='info'
+						className='text-uppercase'>
 						{role}
 					</Badge>
 				))}
