@@ -7,10 +7,10 @@ $main-body-color: #F2F5FA;
 // Theme colors variables
 $primary-color: #237ffe;
 $secondary-color: #FF9766;
-$success-color: #32a800;
+$success-color: #3fc505;
 $info-color : #298fbf;
-$warning-color: #E7AE2F;
-$danger-color: #ea003e;
+$warning-color: #ffc443;
+$danger-color: #ff2f2f;
 $light-color : #F2F5FA;
 $badge-light-color: #52526c;
 $light-gray : rgba(106, 113, 133, 0.20);
@@ -105,7 +105,7 @@ $dark-datatable-sorting: $dark-card-background;
 $dark-datatable-sorting-even: $dark-body-background;
 $dark-even-hover-sorting: #171829;
 //General tag settings
-$body-font-size: 14px;
+$body-font-size: 24px;
 $body-font-color: $theme-body-font-color;
 $ul-padding-left: 0px;
 $ancher-color: var(--theme-default);

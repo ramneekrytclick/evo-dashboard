@@ -60,7 +60,7 @@ ul {
     margin: 0;
 }
 a {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     text-decoration: none;
     color: var(--theme-default);
     transition: 0.5s all;
@@ -73,7 +73,7 @@ a {
     }
 }
 .btn {
-    font-size: 14px;
+    font-size: 20px;
 }
 *.btn:focus {
     box-shadow: $btn-focus-box-shadow !important;
