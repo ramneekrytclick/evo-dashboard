@@ -63,16 +63,16 @@ const SidebarMenuList = () => {
 			{filteredMenuList &&
 				filteredMenuList.map((mainMenu: MenuItem, index) => (
 					<Fragment key={index}>
-						<li
+						{/* <li
 							className={`sidebar-main-title ${
 								shouldHideMenu(mainMenu) ? "d-none" : ""
 							}`}>
 							<div>
-								<h6 className={mainMenu.lanClass ? mainMenu.lanClass : ""}>
-									{t(mainMenu.title)}
-								</h6>
+								<h5 className={mainMenu.lanClass ? mainMenu.lanClass : ""}>
+									{"Menu"}
+								</h5>
 							</div>
-						</li>
+						</li> */}
 						<Menulist
 							menu={mainMenu.Items}
 							activeMenu={activeMenu}

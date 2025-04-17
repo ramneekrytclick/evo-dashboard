@@ -1,4 +1,4 @@
-// Final Refactored UserProfile with Role-Based Field Visibility
+// Final Refactored UserProfile with Left Image Layout
 "use client";
 import React, { useEffect, useState } from "react";
 import {
@@ -27,7 +27,9 @@ import { getMentors } from "@/app/api/admin/mentors";
 import { assignMentorsToManager } from "@/app/api/admin/managers";
 import { toast } from "react-toastify";
 import Image from "next/image";
+
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+
 const UserProfile = ({ id }: { id: string }) => {
 	const [profile, setProfile] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
@@ -46,6 +48,7 @@ const UserProfile = ({ id }: { id: string }) => {
 	const togglePhotoModal = () => setPhotoModalOpen(!photoModalOpen);
 	const toggleStatusModal = () => setStatusModalOpen(!statusModalOpen);
 	const toggleApproveModal = () => setApproveModalOpen(!approveModalOpen);
+
 	const handleMentorSelection = (mentorId: string) => {
 		setSelectedMentorIds((prev) =>
 			prev.includes(mentorId)
@@ -53,12 +56,13 @@ const UserProfile = ({ id }: { id: string }) => {
 				: [...prev, mentorId]
 		);
 	};
-	const openAssignModal = () => setModalOpen(true);
 
+	const openAssignModal = () => setModalOpen(true);
 	const openStatusChangeModal = (action: "Active" | "Inactive" | "Banned") => {
 		setActionType(action);
 		setStatusModalOpen(true);
 	};
+
 	const handleAssignMentors = async () => {
 		try {
 			await assignMentorsToManager({
@@ -72,6 +76,7 @@ const UserProfile = ({ id }: { id: string }) => {
 		}
 		toggleModal();
 	};
+
 	const handleStatusChange = async () => {
 		try {
 			await updateUserStatus(profile._id, actionType);
@@ -93,6 +98,7 @@ const UserProfile = ({ id }: { id: string }) => {
 			toast.error("Failed to approve user");
 		}
 	};
+
 	const fetchData = async () => {
 		try {
 			const response = await getUserProfile(id);
@@ -121,16 +127,19 @@ const UserProfile = ({ id }: { id: string }) => {
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>{error}</div>;
 	if (!profile) return <div>No profile found.</div>;
+
 	const resolvedPhoto = profile.photo ? profile.photo.replace(/\\/g, "/") : "";
 	const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
 		? `${backendURL}/${resolvedPhoto}`
 		: `${backendURL}/uploads/${resolvedPhoto}`;
+
 	const isStudent = profile.role === "Student";
 	const isMentor = profile.role === "Mentor";
 	const isManager = profile.role === "Manager";
 	const isPublisher = profile.role === "Publisher";
 	const isCourseCreator = profile.role === "Course Creator";
 	const isEmployer = profile.role === "Employer";
+
 	return (
 		<Container fluid>
 			<Breadcrumbs
@@ -138,186 +147,133 @@ const UserProfile = ({ id }: { id: string }) => {
 				parent={profile.role}
 				title='Profile'
 			/>
-			<Card className='hovercard text-center'>
-				{/* <div
-					className="cardheader bg-cover"
-					style={{ backgroundImage: "url('/images/bg.jpg')", height: 250 }}
-				/> */}
-				{/* {JSON.stringify(profile)} */}
-				<div
-					className='user-image'
-					style={{ cursor: "pointer" }}
-					onClick={togglePhotoModal}>
-					<div className='avatar'>
+			<Card className='p-4'>
+				<Row className='align-items-center'>
+					<Col
+						md={3}
+						className='text-center'>
 						<Image
 							src={
 								profile.photo ? profilePhotoUrl : "/assets/images/user/1.jpg"
 							}
-							width={100}
-							height={100}
-							className='rounded-circle border border-white mt-2'
+							width={300}
+							height={300}
 							alt='Profile Photo'
+							style={{ borderRadius: "12px", objectFit: "cover" }}
+							onClick={togglePhotoModal}
 						/>
-					</div>
-				</div>
-				<CardBody>
-					<h4 className='mb-0 mt-5 text-uppercase fw-bold'>{profile.name}</h4>
-					<p className='text-muted text-capitalize'>{profile.role}</p>
-					<Row className='my-4 text-start px-4 justify-content-center text-center'>
-						<Col
-							sm={6}
-							md={3}
-							className='mb-3'>
-							<h6>
-								<i className='fa fa-envelope me-2' />
-								Email
-							</h6>
-							<p>{profile.email}</p>
-						</Col>
-						{profile.dob && (
-							<Col
-								sm={6}
-								md={3}
-								className='mb-3'>
-								<h6>
-									<i className='fa fa-calendar me-2' />
-									DOB
-								</h6>
-								<p>{new Date(profile.dob).toDateString()}</p>
-							</Col>
-						)}
-						{profile.contactNumber && (
-							<Col
-								sm={6}
-								md={3}
-								className='mb-3'>
-								<h6>
-									<i className='fa fa-phone me-2' />
-									Contact
-								</h6>
-								<p>{profile.contactNumber}</p>
-							</Col>
-						)}
-						{profile.address && (
-							<Col
-								sm={6}
-								md={3}
-								className='mb-3'>
-								<h6>
-									<i className='fa fa-map-marker me-2' />
-									Location
-								</h6>
-								<p>{profile.address}</p>
-							</Col>
-						)}
-					</Row>
-
-					<Row className='mb-3 px-4 justify-content-center'>
-						{isStudent && profile.wannaBeInterest && (
-							<Col md={3}>
-								<strong>WannaBe Interest:</strong> {profile.wannaBeInterest}
-							</Col>
-						)}
-						{isMentor && profile.expertise && (
-							<Col md={3}>
-								<strong>Expertise:</strong> {profile.expertise}
-							</Col>
-						)}
-						{isPublisher && profile.bio && (
-							<Col md={3}>
-								<strong>Bio:</strong> {profile.bio}
-							</Col>
-						)}
-						{isEmployer && profile.companyName && (
-							<Col md={3}>
-								<strong>Company:</strong> {profile.companyName}
-							</Col>
-						)}
-						{(isManager || isCourseCreator || isMentor || isPublisher) &&
-							profile.workingMode && (
-								<Col md={3}>
-									<strong>Mode:</strong> {profile.workingMode}
+					</Col>
+					<Col md={9}>
+						<h4 className='fw-bold text-uppercase'>{profile.name}</h4>
+						<p className='text-muted'>{profile.role}</p>
+						<Row className='mb-2'>
+							{profile.email && (
+								<Col md={6}>
+									<strong>Email:</strong> {profile.email}
 								</Col>
 							)}
-					</Row>
-
-					<Row className='mb-3 justify-content-center'>
-						{isStudent && (
-							<Col
-								xs={6}
-								md={3}
-								className='border-end'>
-								<h5 className='counter'>
-									{profile.enrolledCourses?.length || 0}
-								</h5>
-								<span>Enrolled Courses</span>
-							</Col>
-						)}
-						{isManager && (
-							<Col
-								xs={6}
-								md={3}>
-								<h5 className='counter'>
-									{profile.assignedMentors?.length || 0}
-								</h5>
-								<span>Assigned Mentors</span>
-							</Col>
-						)}
-					</Row>
-
-					<div className='mt-3'>
-						<span
-							className={`badge bg-${
-								profile.isApproved ? "success" : "danger"
-							} me-2`}>
-							{profile.isApproved ? "Approved" : "Approval Pending"}
-						</span>
-						<span
-							className={`badge bg-${
-								profile.status === "Active"
-									? "primary"
-									: profile.status === "Banned"
-									? "danger"
-									: "secondary"
-							}`}>
-							{profile.status}
-						</span>
-					</div>
-
-					{isManager && (
-						<Button
-							color='dark'
-							className='mt-4'
-							onClick={openAssignModal}>
-							Assign Mentors
-						</Button>
-					)}
-
-					<div className='mt-3 d-flex justify-content-center gap-2 flex-wrap'>
-						{!profile.isApproved && (
+							{profile.contactNumber && (
+								<Col md={6}>
+									<strong>Contact:</strong> {profile.contactNumber}
+								</Col>
+							)}
+							{profile.dob && (
+								<Col md={6}>
+									<strong>DOB:</strong> {new Date(profile.dob).toDateString()}
+								</Col>
+							)}
+							{profile.address && (
+								<Col md={6}>
+									<strong>Address:</strong> {profile.address}
+								</Col>
+							)}
+						</Row>
+						<Row>
+							{isStudent && profile.wannaBeInterest && (
+								<Col md={6}>
+									<strong>WannaBe Interest:</strong> {profile.wannaBeInterest}
+								</Col>
+							)}
+							{isMentor && profile.expertise && (
+								<Col md={6}>
+									<strong>Expertise:</strong> {profile.expertise}
+								</Col>
+							)}
+							{isPublisher && profile.bio && (
+								<Col md={6}>
+									<strong>Bio:</strong> {profile.bio}
+								</Col>
+							)}
+							{isEmployer && profile.companyName && (
+								<Col md={6}>
+									<strong>Company:</strong> {profile.companyName}
+								</Col>
+							)}
+							{(isManager || isCourseCreator || isMentor || isPublisher) &&
+								profile.workingMode && (
+									<Col md={6}>
+										<strong>Mode:</strong> {profile.workingMode}
+									</Col>
+								)}
+							{isManager && (
+								<Col md={6}>
+									<strong>Assigned Mentors:</strong>
+									{JSON.stringify(profile.assignedMentors)}
+								</Col>
+							)}
+						</Row>
+						<div className='mt-3'>
+							<Badge
+								color={profile.isApproved ? "success" : "danger"}
+								className='me-2'>
+								{profile.isApproved ? "Approved" : "Approval Pending"}
+							</Badge>
+							<Badge
+								color={
+									profile.status === "Active"
+										? "primary"
+										: profile.status === "Banned"
+										? "danger"
+										: "secondary"
+								}>
+								{profile.status}
+							</Badge>
+						</div>
+						<div className='mt-3 d-flex gap-2 flex-wrap'>
+							{!profile.isApproved && (
+								<Button
+									color='success'
+									onClick={toggleApproveModal}>
+									Approve
+								</Button>
+							)}
 							<Button
-								color='success'
-								onClick={toggleApproveModal}>
-								Approve
+								color={profile.status === "Active" ? "warning" : "success"}
+								onClick={() =>
+									openStatusChangeModal(
+										profile.status === "Active" ? "Inactive" : "Active"
+									)
+								}>
+								{profile.status === "Active" ? "Deactivate" : "Activate"}
 							</Button>
-						)}
-						<Button
-							color={profile.status === "Active" ? "warning" : "success"}
-							onClick={() =>
-								openStatusChangeModal(
-									profile.status === "Active" ? "Inactive" : "Active"
-								)
-							}>
-							{profile.status === "Active" ? "Deactivate" : "Activate"}
-						</Button>
-						<Button
-							color='danger'
-							onClick={() => openStatusChangeModal("Banned")}>
-							Ban
-						</Button>
-					</div>
-				</CardBody>
+							<Button
+								color='danger'
+								onClick={() => openStatusChangeModal("Banned")}>
+								Ban
+							</Button>
+							{isManager && (
+								<Button
+									color='dark'
+									onClick={openAssignModal}>
+									Assign Mentors
+								</Button>
+							)}
+						</div>
+					</Col>
+				</Row>
 			</Card>
+
+			{/* Modals */}
 			<Modal
 				isOpen={photoModalOpen}
 				toggle={togglePhotoModal}
@@ -336,6 +292,7 @@ const UserProfile = ({ id }: { id: string }) => {
 					/>
 				</ModalBody>
 			</Modal>
+
 			<Modal
 				isOpen={statusModalOpen}
 				toggle={toggleStatusModal}
@@ -378,7 +335,6 @@ const UserProfile = ({ id }: { id: string }) => {
 				</ModalFooter>
 			</Modal>
 
-			{/* Approval Modal */}
 			<Modal
 				isOpen={approveModalOpen}
 				toggle={toggleApproveModal}
@@ -424,16 +380,20 @@ const UserProfile = ({ id }: { id: string }) => {
 										<Label check>
 											<Input
 												type='checkbox'
-												checked={selectedMentorIds.includes(mentor._id)}
+												defaultChecked={profile.assignedMentors?.includes(
+													mentor._id
+												)}
+												disabled={profile.assignedMentors?.includes(mentor._id)}
 												onChange={() => handleMentorSelection(mentor._id)}
 											/>
+											{mentor.name} -
 											<Badge
+												pill
 												color={
 													mentor.status === "Active" ? "success" : "secondary"
 												}>
-												{mentor.name}
+												<span className='fs-6'> {mentor.email}</span>
 											</Badge>{" "}
-											<span className='text-muted'>({mentor.email})</span>
 										</Label>
 									</FormGroup>
 								</Col>
