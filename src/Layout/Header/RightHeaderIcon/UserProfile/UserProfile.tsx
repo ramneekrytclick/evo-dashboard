@@ -28,23 +28,34 @@ const UserProfile = () => {
 	return (
 		<li className='onhover-dropdown text-dark position-relative border rounded border-primary btn btn-success'>
 			<div className='notification-box d-flex align-items-center gap-2'>
-				<User size={20} />
 				<span className='fw-semibold'>
 					{user.name?.split(" ")[0] || "User"}
 				</span>
+				<Image
+					src={`/assets/avatar-placeholder.png`}
+					alt='Profile'
+					width={20}
+					height={20}
+					className='rounded-circle'
+				/>
 			</div>
 
 			<div className='onhover-show-div shadow-lg'>
 				<ul className='list-unstyled mb-0'>
-					<li className='d-flex flex-column align-items-center justify-content-between'>
+					<li className='d-flex align-items-center justify-content-between'>
+						<div className='d-flex flex-column align-items-start'>
+							{user.name}
+							<p className='text-muted link-underline-primary'>
+								({user.email})
+							</p>
+						</div>
 						<Image
-							src={`/assets/images/user}`}
+							src={`/assets/avatar-placeholder.png`}
 							alt='Profile'
-							width={40}
-							height={40}
+							width={60}
+							height={60}
+							className='rounded-circle'
 						/>
-						{user.name}
-						<p className='text-muted link-underline-primary'>({user.email})</p>
 					</li>
 					<li className=''>
 						<Link

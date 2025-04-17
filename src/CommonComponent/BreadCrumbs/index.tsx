@@ -14,24 +14,28 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 	const role = user?.role;
 	return (
 		<Container fluid>
-			<div className="page-title">
+			<div className='page-title'>
 				<Row>
 					<Col
 						sm={6}
-						className="p-0">
-						<h3>{mainTitle}</h3>
+						className='p-0'>
+						<h2 className='fw-bold'>{mainTitle}</h2>
 					</Col>
 					<Col
 						sm={6}
-						className="p-0">
+						className='p-0'>
 						<Breadcrumb>
 							<BreadcrumbItem>
 								<Link href={`/${role?.toLowerCase()}/dashboard`}>
-									<SVG iconId="stroke-home" />
+									<SVG iconId='stroke-home' />
 								</Link>
 							</BreadcrumbItem>
-							<BreadcrumbItem>{parent}</BreadcrumbItem>
-							<BreadcrumbItem active>{title}</BreadcrumbItem>
+							<BreadcrumbItem className='fs-6'>{parent}</BreadcrumbItem>
+							<BreadcrumbItem
+								className='fs-6'
+								active>
+								{title}
+							</BreadcrumbItem>
 						</Breadcrumb>
 					</Col>
 				</Row>
