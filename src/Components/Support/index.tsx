@@ -9,15 +9,14 @@ const SupportPageContainer = () => {
 		<>
 			<Breadcrumbs
 				mainTitle={SupportTicket}
-				parent="Support"
-				title="Tickets"
+				parent='Support'
+				title='Tickets'
 			/>
 			<Container fluid>
 				<Row>
 					<Col xs={12}>
 						<Card>
-							<CommonCardHeader title={SupportTicketList} />
-							<CardBody className="add-post">
+							<CardBody className='add-post'>
 								<TicketTable />
 							</CardBody>
 						</Card>

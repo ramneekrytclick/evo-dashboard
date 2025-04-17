@@ -9,18 +9,31 @@ interface CreateTicketFormProps {
 	toggle: () => void;
 	fetchData: () => void;
 }
+
 const CreateTicketForm = ({ toggle, fetchData }: CreateTicketFormProps) => {
 	const { user } = useAuth();
-	const [ticketData, setTicketData] = useState({
-		subject: "",
-		message: "",
-		userId: user?.id,
-	});
+	const [subject, setSubject] = useState("");
+	const [message, setMessage] = useState("");
+	const [attachment, setAttachment] = useState<File | null>(null);
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
+
+		if (!user?.id) {
+			toast.error("User not authenticated");
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append("userId", user.id);
+		formData.append("subject", subject);
+		formData.append("message", message);
+		if (attachment) {
+			formData.append("file", attachment);
+		}
+
 		try {
-			await createTicket(ticketData);
+			await createTicket(formData);
 			toast.success("Ticket created successfully!");
 			fetchData();
 			toggle();
@@ -32,37 +45,41 @@ const CreateTicketForm = ({ toggle, fetchData }: CreateTicketFormProps) => {
 
 	return (
 		<Form onSubmit={handleSubmit}>
-			<Row className="g-3">
+			<Row className='g-3'>
 				<Col md={12}>
-					<Label htmlFor="subject">Subject</Label>
+					<Label htmlFor='subject'>Subject</Label>
 					<Input
-						id="subject"
-						type="text"
-						placeholder="Enter Subject"
+						id='subject'
+						type='text'
+						placeholder='Enter Subject'
 						required
-						value={ticketData.subject}
-						onChange={(e) =>
-							setTicketData({ ...ticketData, subject: e.target.value })
-						}
+						value={subject}
+						onChange={(e) => setSubject(e.target.value)}
 					/>
 				</Col>
 				<Col md={12}>
-					<Label htmlFor="message">Message</Label>
+					<Label htmlFor='message'>Message</Label>
 					<Input
-						id="message"
-						type="textarea"
-						placeholder="Enter Message"
+						id='message'
+						type='textarea'
+						placeholder='Enter Message'
 						required
-						value={ticketData.message}
-						onChange={(e) =>
-							setTicketData({ ...ticketData, message: e.target.value })
-						}
+						value={message}
+						onChange={(e) => setMessage(e.target.value)}
+					/>
+				</Col>
+				<Col md={12}>
+					<Label htmlFor='file'>Attachment (optional)</Label>
+					<Input
+						id='file'
+						type='file'
+						onChange={(e) => setAttachment(e.target.files?.[0] || null)}
 					/>
 				</Col>
 				<Col md={12}>
 					<Button
-						color="primary"
-						type="submit">
+						color='primary'
+						type='submit'>
 						Create Ticket
 					</Button>
 				</Col>

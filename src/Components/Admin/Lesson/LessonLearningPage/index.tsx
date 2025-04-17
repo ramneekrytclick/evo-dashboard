@@ -17,7 +17,9 @@ const LessonLearningPage = ({
 	refresh: () => void;
 	courseId: string;
 }) => {
-	const [selectedLesson, setSelectedLesson] = useState<LessonType | null>(null);
+	const [selectedLesson, setSelectedLesson] = useState<LessonType | null>(
+		lessons[0]
+	);
 	const [selectedView, setSelectedView] = useState<
 		"video" | "quiz" | "assignment"
 	>("video");
@@ -27,8 +29,8 @@ const LessonLearningPage = ({
 	return (
 		<Card
 			fluid
-			className="py-3">
-			<Row className="gx-0">
+			className='py-3'>
+			<Row className='gx-0'>
 				<Col xl={9}>
 					<LessonContent
 						lesson={selectedLesson}
@@ -57,9 +59,6 @@ const LessonLearningPage = ({
 						isOpen={quizModal}
 						toggle={() => {
 							setQuizModal(false);
-							console.log("====================================");
-							console.log("asd");
-							console.log("====================================");
 							refresh();
 						}}
 						id={selectedLesson._id}

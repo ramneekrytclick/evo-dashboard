@@ -163,7 +163,7 @@ const UserProfile = ({ id }: { id: string }) => {
 				<CardBody>
 					<h4 className='mb-0 mt-5 text-uppercase fw-bold'>{profile.name}</h4>
 					<p className='text-muted text-capitalize'>{profile.role}</p>
-					<Row className='my-4 text-start px-4 justify-content-center'>
+					<Row className='my-4 text-start px-4 justify-content-center text-center'>
 						<Col
 							sm={6}
 							md={3}

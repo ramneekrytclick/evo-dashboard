@@ -13,6 +13,7 @@ export interface LessonType {
 	videoUrl: string;
 	quizzes: QuizQuestion[];
 	assignments: Assignment[];
+	resources: any[];
 }
 
 export interface QuizQuestion {

@@ -9,5 +9,6 @@ export interface SupportTicketProps {
 	message: string;
 	status: "Open" | "Resolved" | "Closed";
 	adminResponse?: string;
+	attachment?: string;
 	createdAt: Date;
 }

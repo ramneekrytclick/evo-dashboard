@@ -2,7 +2,7 @@
 import { getAllTickets, getMyTickets } from "@/app/api/support/support";
 import { SupportTicketProps } from "@/Types/Support.type";
 import { useEffect, useState } from "react";
-import DataTable from "react-data-table-component";
+import DataTable, { TableColumn } from "react-data-table-component";
 import CreateTicketModal from "./CreateTicketModal";
 import {
 	Button,
@@ -19,6 +19,8 @@ import Link from "next/link";
 import { respondToTicket } from "@/app/api/admin/support";
 import { useAuth } from "@/app/AuthProvider";
 import { toast } from "react-toastify";
+
+const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const TicketTable = () => {
 	const auth = useAuth();
@@ -45,10 +47,10 @@ const TicketTable = () => {
 		try {
 			if (role === "Admin") {
 				const response = await getAllTickets();
-				setData(response);
+				setData(response.reverse());
 			} else {
 				const response = await getMyTickets(userId || "");
-				setData(response);
+				setData(response.reverse());
 			}
 		} catch (error) {
 			toast.error("Error fetching tickets!");
@@ -69,7 +71,20 @@ const TicketTable = () => {
 		}
 	};
 
-	const adminSupportTableColumns = [
+	const attachmentCell = (row: SupportTicketProps) =>
+		row.attachment ? (
+			<a
+				href={`${backendURL}/${row.attachment.replace(/\\/g, "/")}`}
+				target='_blank'
+				rel='noopener noreferrer'
+				className='btn btn-sm btn-outline-info'>
+				View
+			</a>
+		) : (
+			<span className='text-muted'>—</span>
+		);
+
+	const adminSupportTableColumns: TableColumn<SupportTicketProps>[] = [
 		{
 			name: "Ticket ID",
 			selector: (row: SupportTicketProps) => row._id || "N/A",
@@ -86,26 +101,26 @@ const TicketTable = () => {
 			name: "User",
 			selector: (row: SupportTicketProps) =>
 				row.user?.name + " (" + row.user?._id + ")",
-			sortable: true,
 		},
-		{
-			name: "Subject",
-			selector: (row: SupportTicketProps) => row.subject,
-			sortable: true,
-		},
+		{ name: "Subject", selector: (row) => row.subject },
 		{
 			name: "Message",
-			cell: (row: SupportTicketProps) => (
+			cell: (row) => (
 				<span title={row.message}>
 					{row.message.length > 50
-						? `${row.message.slice(0, 50)}...`
+						? row.message.slice(0, 50) + "..."
 						: row.message}
 				</span>
 			),
 		},
 		{
+			name: "Attachment",
+			cell: attachmentCell,
+			center: true,
+		},
+		{
 			name: "Admin Response",
-			cell: (row: SupportTicketProps) => (
+			cell: (row) => (
 				<span title={row.adminResponse}>
 					{row.adminResponse
 						? row.adminResponse.length > 50
@@ -117,7 +132,7 @@ const TicketTable = () => {
 		},
 		{
 			name: "Status",
-			cell: (row: SupportTicketProps) => (
+			cell: (row) => (
 				<span
 					style={{
 						color:
@@ -130,42 +145,36 @@ const TicketTable = () => {
 					{row.status}
 				</span>
 			),
-			sortable: true,
 			center: true,
 		},
 		{
 			name: "Created At",
-			selector: (row: SupportTicketProps) =>
-				new Date(row.createdAt).toLocaleString(),
-			sortable: true,
+			selector: (row) => new Date(row.createdAt).toLocaleString(),
 			center: true,
 		},
 	];
 
-	const userSupportTableColumns = [
-		{
-			name: "Ticket ID",
-			selector: (row: SupportTicketProps) => row._id || "N/A",
-			sortable: true,
-		},
-		{
-			name: "Subject",
-			selector: (row: SupportTicketProps) => row.subject,
-			sortable: true,
-		},
+	const userSupportTableColumns: TableColumn<SupportTicketProps>[] = [
+		{ name: "Ticket ID", selector: (row) => row._id || "N/A" },
+		{ name: "Subject", selector: (row) => row.subject },
 		{
 			name: "Message",
-			cell: (row: SupportTicketProps) => (
+			cell: (row) => (
 				<span title={row.message}>
 					{row.message.length > 50
-						? `${row.message.slice(0, 50)}...`
+						? row.message.slice(0, 50) + "..."
 						: row.message}
 				</span>
 			),
 		},
 		{
+			name: "Attachment",
+			cell: attachmentCell,
+			center: true,
+		},
+		{
 			name: "Response",
-			cell: (row: SupportTicketProps) => (
+			cell: (row) => (
 				<span title={row.adminResponse}>
 					{row.adminResponse
 						? row.adminResponse.length > 50
@@ -177,7 +186,7 @@ const TicketTable = () => {
 		},
 		{
 			name: "Status",
-			cell: (row: SupportTicketProps) => (
+			cell: (row) => (
 				<span
 					style={{
 						color:
@@ -190,14 +199,11 @@ const TicketTable = () => {
 					{row.status}
 				</span>
 			),
-			sortable: true,
 			center: true,
 		},
 		{
 			name: "Created At",
-			selector: (row: SupportTicketProps) =>
-				new Date(row.createdAt).toLocaleString(),
-			sortable: true,
+			selector: (row) => new Date(row.createdAt).toLocaleString(),
 			center: true,
 		},
 	];
@@ -207,8 +213,8 @@ const TicketTable = () => {
 	}, []);
 
 	return (
-		<div className="table-responsive custom-scrollbar">
-			<CreateTicketModal fetchData={fetchTickets} />
+		<div className='table-responsive custom-scrollbar'>
+			{role !== "Admin" && <CreateTicketModal fetchData={fetchTickets} />}
 			<DataTable
 				columns={
 					role === "Admin" ? adminSupportTableColumns : userSupportTableColumns
@@ -218,49 +224,48 @@ const TicketTable = () => {
 				pagination
 			/>
 
-			{/* Admin modal only */}
-			{role === "Admin" && (
+			{role === "Admin" && selectedRow && (
 				<Modal
 					isOpen={modalOpen}
 					toggle={toggleModal}
 					centered>
 					<ModalHeader toggle={toggleModal}>
-						Respond to Ticket #{selectedRow?._id}
+						Respond to Ticket #{selectedRow._id}
 					</ModalHeader>
 					<ModalBody>
 						<Form>
 							<FormGroup>
-								<Label for="responseText">Admin Response</Label>
+								<Label for='responseText'>Admin Response</Label>
 								<Input
-									id="responseText"
-									type="textarea"
+									id='responseText'
+									type='textarea'
 									value={responseText}
 									onChange={(e) => setResponseText(e.target.value)}
-									placeholder="Write your response here..."
+									placeholder='Write your response here...'
 								/>
 							</FormGroup>
 							<FormGroup>
-								<Label for="statusSelect">Ticket Status</Label>
+								<Label for='statusSelect'>Ticket Status</Label>
 								<Input
-									type="select"
-									id="statusSelect"
+									type='select'
+									id='statusSelect'
 									value={status}
 									onChange={(e) => setStatus(e.target.value)}>
-									<option value="Open">Open</option>
-									<option value="In Progress">In Progress</option>
-									<option value="Resolved">Resolved</option>
+									<option value='Open'>Open</option>
+									<option value='In Progress'>In Progress</option>
+									<option value='Resolved'>Resolved</option>
 								</Input>
 							</FormGroup>
 						</Form>
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color="secondary"
+							color='secondary'
 							onClick={toggleModal}>
 							Cancel
 						</Button>
 						<Button
-							color="primary"
+							color='primary'
 							onClick={handleAction}>
 							Submit Response
 						</Button>

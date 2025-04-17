@@ -1,11 +1,11 @@
 import { SupportTicketProps } from "@/Types/Support.type";
 import { apiClient } from "@/utils/api";
-
-export const createTicket = async (data: {
-	subject: string;
-	message: string;
-}) => {
-	const response = await apiClient.post("/tickets", data);
+export const createTicket = async (formData: FormData) => {
+	const response = await apiClient.post("/tickets", formData, {
+		headers: {
+			"Content-Type": "multipart/form-data",
+		},
+	});
 	return response.data;
 };
 

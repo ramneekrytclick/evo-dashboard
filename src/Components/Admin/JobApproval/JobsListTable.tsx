@@ -150,7 +150,7 @@ export default function JobTable(): JSX.Element {
 
 	return (
 		<>
-			<Card className='shadow-sm'>
+			<Card>
 				<CardBody>
 					<h4 className='mb-4 fw-bold'>All Job Listings</h4>
 					<DataTable

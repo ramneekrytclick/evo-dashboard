@@ -10,6 +10,7 @@ import { getBlogs } from "@/app/api/admin/blogs/blog";
 import BlogModal from "./BlogModal";
 import { BlogProps } from "@/Types/Blogs.type";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const BlogsTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -18,7 +19,7 @@ const BlogsTable = () => {
 	const fetchBlogs = async () => {
 		try {
 			const response = await getBlogs();
-			setBlogs(response.blogs);
+			setBlogs(response.blogs.reverse());
 		} catch (error) {
 			console.error(error);
 			toast.error("Failed to fetch blogs");
@@ -57,6 +58,12 @@ const BlogsTable = () => {
 			),
 		},
 		{
+			name: "Conclusion",
+			selector: (row) => row.conclusion,
+			sortable: true,
+			cell: (row) => `${row.conclusion?.substring(0, 100)}...`,
+		},
+		{
 			name: "Content",
 			selector: (row) => row.content,
 			sortable: true,
@@ -66,6 +73,11 @@ const BlogsTable = () => {
 			name: "Creator",
 			selector: (row) => row.creator.name,
 			sortable: true,
+			cell: (row) => (
+				<Link href={`/admin/users/${row.creator?._id}`}>
+					{row.creator.name}
+				</Link>
+			),
 		},
 		{
 			name: "Status",
@@ -73,7 +85,7 @@ const BlogsTable = () => {
 			sortable: true,
 			cell: (row) => (
 				<Badge
-					color=""
+					color=''
 					style={{ fontSize: "12px" }}
 					className={`badge-${
 						row.status === "Approved"
@@ -108,8 +120,8 @@ const BlogsTable = () => {
 					striped
 					pagination
 					fixedHeader
-					className="display"
-					noDataComponent="No blogs found."
+					className='display'
+					noDataComponent='No blogs found.'
 				/>
 			</CardBody>
 		</Card>
