@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const EmployerListTable = () => {
@@ -54,14 +55,19 @@ const EmployerListTable = () => {
 		}
 	};
 
+	const customTableStyles = {
+		rows: { style: { fontSize: "1rem" } },
+		headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
+		cells: { style: { fontSize: "1rem" } },
+	};
+
 	const employerTableColumns: TableColumn<EmployerProps>[] = [
 		{
-			name: "Photo",
-			selector: (row) => row.photo || "",
-			sortable: false,
+			name: "User",
+			selector: (row) => row.name || "",
+			sortable: true,
 			cell: (row) => {
 				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
-
 				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
 					? `${backendURL}/${resolvedPhoto}`
 					: `${backendURL}/uploads/${resolvedPhoto}`;
@@ -70,32 +76,22 @@ const EmployerListTable = () => {
 					: "/assets/avatar-placeholder.png";
 				return (
 					<>
-						<Image
-							src={photoURL}
-							alt={row.name}
-							width={50}
-							height={50}
-							style={{
-								borderRadius: "50%",
-								objectFit: "cover",
-							}}
-						/>
+						<Link
+							className='text-dark fw-bold d-flex align-items-center gap-2'
+							href={`/admin/users/${row._id}`}>
+							<Image
+								src={photoURL}
+								alt={row.name}
+								width={50}
+								height={50}
+								style={{ borderRadius: "50%", objectFit: "cover" }}
+							/>
+
+							{row.name}
+						</Link>
 					</>
 				);
 			},
-			width: "80px",
-		},
-		{
-			name: "Name",
-			selector: (row) => row.name,
-			sortable: true,
-			cell: (row) => (
-				<Link
-					className='text-dark fw-bold'
-					href={`/admin/users/${row._id}`}>
-					{row.name}
-				</Link>
-			),
 		},
 		{
 			name: "Email",
@@ -113,6 +109,7 @@ const EmployerListTable = () => {
 		{
 			name: "Status",
 			center: true,
+			sortable: true,
 			selector: (row) => row.status,
 			cell: (row) => (
 				<Badge
@@ -196,22 +193,21 @@ const EmployerListTable = () => {
 						columns={employerTableColumns}
 						striped
 						fixedHeaderScrollHeight='40vh'
-						pagination
 						progressPending={loading}
+						pagination
 						onRowClicked={(row: any) => {
 							navigate.push(`/admin/users/${row._id}`);
 						}}
+						customStyles={customTableStyles}
 					/>
 				</div>
-
-				{/* Status Modal */}
 				<Modal
 					isOpen={modalOpen}
 					toggle={toggleModal}
 					centered>
 					<ModalHeader toggle={toggleModal}>Confirm Status Change</ModalHeader>
 					<ModalBody>
-						Are you sure you want to set <strong>{selectedRow?.name}</strong> as{" "}
+						Are you sure you want to set <strong>{selectedRow?.name}</strong> as
 						<Badge
 							color={
 								actionType === "Active"

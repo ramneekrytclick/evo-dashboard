@@ -1,4 +1,5 @@
 import FilterComponent from "@/CommonComponent/FilterComponent";
+import FilterDropdown from "@/CommonComponent/FilterDropdown";
 import { MentorDataProps } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -30,6 +31,8 @@ const MentorListTable = () => {
 	const [actionType, setActionType] = useState<
 		"Active" | "Inactive" | "Banned"
 	>("Active");
+	const [filterStatus, setFilterStatus] = useState("");
+	const [showFilters, setShowFilters] = useState(false);
 
 	const toggleModal = () => setModalOpen(!modalOpen);
 
@@ -55,13 +58,18 @@ const MentorListTable = () => {
 		}
 	};
 
+	const customTableStyles = {
+		rows: { style: { fontSize: "1rem" } },
+		headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
+		cells: { style: { fontSize: "1rem" } },
+	};
+
 	const mentorTableColumns: TableColumn<MentorDataProps>[] = [
 		{
 			name: "Photo",
 			selector: (row) => row.photo || "",
 			cell: (row) => {
 				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
-
 				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
 					? `${backendURL}/${resolvedPhoto}`
 					: `${backendURL}/uploads/${resolvedPhoto}`;
@@ -69,18 +77,13 @@ const MentorListTable = () => {
 					? profilePhotoUrl
 					: "/assets/avatar-placeholder.png";
 				return (
-					<>
-						<Image
-							src={photoURL}
-							alt={row.name}
-							width={50}
-							height={50}
-							style={{
-								borderRadius: "50%",
-								objectFit: "cover",
-							}}
-						/>
-					</>
+					<Image
+						src={photoURL}
+						alt={row.name}
+						width={50}
+						height={50}
+						style={{ borderRadius: "50%", objectFit: "cover" }}
+					/>
 				);
 			},
 			width: "80px",
@@ -151,15 +154,27 @@ const MentorListTable = () => {
 		},
 	];
 
-	const filteredItems: MentorDataProps[] = mentorTableData?.filter(
-		(item: MentorDataProps) => {
-			return Object.values(item).some(
+	const getUniqueOptions = (key: keyof MentorDataProps): string[] => {
+		return Array.from(
+			new Set(
+				mentorTableData
+					.map((item) => item[key])
+					.filter(
+						(val): val is string => typeof val === "string" && val.trim() !== ""
+					)
+			)
+		);
+	};
+
+	const filteredItems: MentorDataProps[] = mentorTableData
+		.filter((item: MentorDataProps) =>
+			Object.values(item).some(
 				(value) =>
 					value &&
 					value.toString().toLowerCase().includes(filterText.toLowerCase())
-			);
-		}
-	);
+			)
+		)
+		.filter((item) => (filterStatus ? item.status === filterStatus : true));
 
 	const fetchData = async () => {
 		try {
@@ -174,72 +189,112 @@ const MentorListTable = () => {
 		}
 	};
 
+	const navigate = useRouter();
 	useEffect(() => {
 		fetchData();
 	}, []);
-	const navigate = useRouter();
 
 	return (
 		<Card>
 			<CardBody>
-				<FilterComponent
-					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setFilterText(e.target.value)
-					}
-					filterText={filterText}
-				/>
+				<div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 mt-3'>
+					<FilterComponent
+						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setFilterText(e.target.value)
+						}
+						filterText={filterText}
+					/>
+					<div
+						style={{
+							padding: "0.5rem 0",
+							transition: "all 0.3s ease",
+							opacity: showFilters ? 1 : 0,
+							visibility: showFilters ? "visible" : "hidden",
+							transform: showFilters ? "scaleY(1)" : "scaleY(0)",
+							transformOrigin: "top",
+							height: "auto",
+						}}>
+						<div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3'>
+							<div className='d-flex gap-3 flex-wrap justify-content-center align-items-center'>
+								<FilterDropdown
+									label='Status'
+									options={getUniqueOptions("status")}
+									value={filterStatus}
+									onChange={(e) => setFilterStatus(e)}
+								/>
+								<Button
+									color='outline-primary'
+									className='h-100'
+									onClick={() => {
+										setFilterStatus("");
+										setFilterText("");
+									}}>
+									Clear Filters
+								</Button>
+							</div>
+						</div>
+					</div>
+					<Button
+						color='outline-primary'
+						size='sm'
+						className='mb-3'
+						onClick={() => setShowFilters((prev) => !prev)}>
+						{showFilters ? "Hide Filters" : "Show Filters"}
+					</Button>
+				</div>
+
 				<DataTable
 					data={filteredItems}
 					columns={mentorTableColumns}
-					striped={true}
-					fixedHeaderScrollHeight='40vh'
 					progressPending={loading}
+					striped
 					pagination
+					customStyles={customTableStyles}
 					onRowClicked={(row: any) => {
 						navigate.push(`/admin/users/${row._id}`);
 					}}
 				/>
-			</CardBody>
 
-			<Modal
-				isOpen={modalOpen}
-				toggle={toggleModal}
-				centered>
-				<ModalHeader toggle={toggleModal}>Confirm Status Change</ModalHeader>
-				<ModalBody>
-					Are you sure you want to set <strong>{selectedRow?.name}</strong> as{" "}
-					<Badge
-						color={
-							actionType === "Active"
-								? "success"
-								: actionType === "Inactive"
-								? "warning"
-								: "danger"
-						}
-						pill>
-						{actionType}
-					</Badge>
-					?
-				</ModalBody>
-				<ModalFooter>
-					<Button
-						color='secondary'
-						onClick={toggleModal}>
-						Cancel
-					</Button>
-					<Button
-						color={
-							actionType === "Active"
-								? "success"
-								: actionType === "Inactive"
-								? "warning"
-								: "danger"
-						}
-						onClick={handleAction}>
-						Yes, Change Status
-					</Button>
-				</ModalFooter>
-			</Modal>
+				<Modal
+					isOpen={modalOpen}
+					toggle={toggleModal}
+					centered>
+					<ModalHeader toggle={toggleModal}>Confirm Status Change</ModalHeader>
+					<ModalBody>
+						Are you sure you want to set <strong>{selectedRow?.name}</strong> as{" "}
+						<Badge
+							color={
+								actionType === "Active"
+									? "success"
+									: actionType === "Inactive"
+									? "warning"
+									: "danger"
+							}
+							pill>
+							{actionType}
+						</Badge>
+						?
+					</ModalBody>
+					<ModalFooter>
+						<Button
+							color='secondary'
+							onClick={toggleModal}>
+							Cancel
+						</Button>
+						<Button
+							color={
+								actionType === "Active"
+									? "success"
+									: actionType === "Inactive"
+									? "warning"
+									: "danger"
+							}
+							onClick={handleAction}>
+							Yes, Change Status
+						</Button>
+					</ModalFooter>
+				</Modal>
+			</CardBody>
 		</Card>
 	);
 };

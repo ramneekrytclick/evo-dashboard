@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { TeamListType, UserProps } from "@/Types/Team.type";
 import DataTable, { TableColumn } from "react-data-table-component";
 import FilterComponent from "@/CommonComponent/FilterComponent";
+import FilterDropdown from "@/CommonComponent/FilterDropdown";
 import { getUsers, updateUserStatus } from "@/app/api/admin/team";
 import {
 	Badge,
@@ -18,6 +19,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+
 const TeamListTable = () => {
 	const [loading, setLoading] = useState(true);
 	const [teamListTableData, setTeamListTableData] = useState<UserProps[]>([]);
@@ -26,6 +28,11 @@ const TeamListTable = () => {
 	const [actionType, setActionType] = useState<
 		"Active" | "Inactive" | "Banned"
 	>("Active");
+	const [filterText, setFilterText] = useState("");
+	const [filterRole, setFilterRole] = useState<string>("");
+	const [filterStatus, setFilterStatus] = useState<string>("");
+	const [showFilters, setShowFilters] = useState<boolean>(false);
+	const navigate = useRouter();
 
 	const toggleModal = () => setModalOpen(!modalOpen);
 
@@ -42,13 +49,25 @@ const TeamListTable = () => {
 		if (!selectedRow) return;
 		try {
 			await updateUserStatus(selectedRow._id, actionType);
-			toast.success(`User status updated to ${actionType}`);
 			toggleModal();
+			toast.success(`User status updated to ${actionType}`);
 			fetchData();
 		} catch (error) {
 			console.error("Status update error:", error);
 			toast.error("Failed to update user status");
 		}
+	};
+
+	const getUniqueOptions = (key: keyof UserProps): string[] => {
+		return Array.from(
+			new Set(
+				teamListTableData
+					.map((item) => item[key])
+					.filter(
+						(val): val is string => typeof val === "string" && val.trim() !== ""
+					)
+			)
+		);
 	};
 
 	const teamListColumns: TableColumn<TeamListType>[] = [
@@ -58,7 +77,6 @@ const TeamListTable = () => {
 			sortable: true,
 			cell: (row) => {
 				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
-
 				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
 					? `${backendURL}/${resolvedPhoto}`
 					: `${backendURL}/uploads/${resolvedPhoto}`;
@@ -76,7 +94,7 @@ const TeamListTable = () => {
 						/>
 						<Link
 							href={`/admin/users/${row._id}`}
-							className='fw-bold text-dark'>
+							className='fw-bold fs-6 text-dark'>
 							{row.name}
 						</Link>
 					</div>
@@ -92,12 +110,10 @@ const TeamListTable = () => {
 		},
 		{
 			name: "Role",
-			selector: (row) => row.role.toUpperCase(),
+			selector: (row) => row.role,
 			sortable: true,
 			center: true,
-			cell: (row) => (
-				<span style={{ fontSize: 13, fontWeight: 600 }}>{row.role}</span>
-			),
+			cell: (row) => <span className='fw-semibold'>{row.role}</span>,
 		},
 		{
 			name: "Status",
@@ -146,13 +162,21 @@ const TeamListTable = () => {
 		},
 	];
 
+	const filteredItems: UserProps[] = teamListTableData
+		.filter((item: UserProps) =>
+			Object.values(item).some((value) =>
+				value?.toString().toLowerCase().includes(filterText.toLowerCase())
+			)
+		)
+		.filter((item) => (filterRole ? item.role === filterRole : true))
+		.filter((item) => (filterStatus ? item.status === filterStatus : true));
+
 	const fetchData = async () => {
 		try {
 			setLoading(true);
 			const response = await getUsers();
 			setTeamListTableData(response || []);
 		} catch (error) {
-			console.log(error);
 			toast.error("Error fetching Team Data");
 		} finally {
 			setLoading(false);
@@ -163,37 +187,70 @@ const TeamListTable = () => {
 		fetchData();
 	}, []);
 
-	const [filterText, setFilterText] = useState("");
-	const navigate = useRouter();
-	const filteredItems: UserProps[] = teamListTableData.filter(
-		(item: UserProps) =>
-			Object.values(item).some(
-				(value) =>
-					value &&
-					value.toString().toLowerCase().includes(filterText.toLowerCase())
-			)
-	);
-
 	return (
-		<Card className='list-product'>
+		<Card>
 			<CardBody>
-				<FilterComponent
-					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setFilterText(e.target.value)
-					}
-					filterText={filterText}
-				/>
+				<div className='d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4'>
+					<FilterComponent
+						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setFilterText(e.target.value)
+						}
+						filterText={filterText}
+					/>
+					<div
+						style={{
+							padding: "0.5rem 0",
+							transition: "all 0.3s ease",
+							opacity: showFilters ? 1 : 0,
+							visibility: showFilters ? "visible" : "hidden",
+							transform: showFilters ? "scaleY(1)" : "scaleY(0)",
+							transformOrigin: "top",
+							height: "auto",
+						}}>
+						<div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3'>
+							<div className='d-flex gap-3 flex-wrap justify-content-center align-items-center'>
+								<FilterDropdown
+									label='Role'
+									options={getUniqueOptions("role")}
+									value={filterRole}
+									onChange={(e) => setFilterRole(e)}
+								/>
+								<FilterDropdown
+									label='Status'
+									options={getUniqueOptions("status")}
+									value={filterStatus}
+									onChange={(e) => setFilterStatus(e)}
+								/>
+								<Button
+									color='outline-primary'
+									className='h-100'
+									onClick={() => {
+										setFilterRole("");
+										setFilterStatus("");
+										setFilterText("");
+									}}>
+									Clear Filters
+								</Button>
+							</div>
+						</div>
+					</div>
+					<Button
+						color='outline-primary'
+						size='sm'
+						className='mb-3'
+						onClick={() => setShowFilters((prev) => !prev)}>
+						{showFilters ? "Hide Filters" : "Show Filters"}
+					</Button>
+				</div>
 				<DataTable
 					className='custom-scrollbar'
 					data={filteredItems}
 					columns={teamListColumns}
 					progressPending={loading}
 					pagination
-					onRowClicked={(row: any) => {
-						navigate.push(`/admin/users/${row._id}`);
-					}}
+					onRowClicked={(row: any) => navigate.push(`/admin/users/${row._id}`)}
 				/>
-				{/* Status Modal */}
+
 				<Modal
 					isOpen={modalOpen}
 					toggle={toggleModal}

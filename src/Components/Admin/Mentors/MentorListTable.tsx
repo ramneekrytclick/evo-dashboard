@@ -1,7 +1,8 @@
-import FilterComponent from "@/CommonComponent/FilterComponent";
-import { MentorInitialValue } from "@/Types/Mentor.type";
 import { useEffect, useState } from "react";
+import { MentorInitialValue } from "@/Types/Mentor.type";
 import DataTable, { TableColumn } from "react-data-table-component";
+import FilterComponent from "@/CommonComponent/FilterComponent";
+import FilterDropdown from "@/CommonComponent/FilterDropdown";
 import {
 	Button,
 	Card,
@@ -34,6 +35,9 @@ const MentorListTable = () => {
 	const [actionType, setActionType] = useState<
 		"Active" | "Inactive" | "Banned"
 	>("Active");
+	const [filterStatus, setFilterStatus] = useState<string>("");
+	const [showFilters, setShowFilters] = useState(false);
+	const navigate = useRouter();
 
 	const toggleModal = () => setModalOpen(!modalOpen);
 
@@ -54,9 +58,20 @@ const MentorListTable = () => {
 			toast.success(`${selectedRow.name}'s status updated to ${actionType}`);
 			fetchData();
 		} catch (error) {
-			console.error("Status update error:", error);
 			toast.error("Failed to update status");
 		}
+	};
+
+	const getUniqueOptions = (key: keyof MentorInitialValue): string[] => {
+		return Array.from(
+			new Set(
+				mentorTableData
+					.map((item) => item[key])
+					.filter(
+						(val): val is string => typeof val === "string" && val.trim() !== ""
+					)
+			)
+		);
 	};
 
 	const mentorTableColumns: TableColumn<MentorInitialValue>[] = [
@@ -65,26 +80,17 @@ const MentorListTable = () => {
 			selector: (row) => row.photo,
 			cell: (row) => {
 				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
-
-				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
-					? `${backendURL}/${resolvedPhoto}`
-					: `${backendURL}/uploads/${resolvedPhoto}`;
 				const photoURL = row.photo
-					? profilePhotoUrl
+					? `${backendURL}/${resolvedPhoto}`
 					: "/assets/avatar-placeholder.png";
 				return (
-					<>
-						<Image
-							src={photoURL}
-							alt={row.name}
-							width={50}
-							height={50}
-							style={{
-								borderRadius: "50%",
-								objectFit: "cover",
-							}}
-						/>
-					</>
+					<Image
+						src={photoURL}
+						alt={row.name}
+						width={50}
+						height={50}
+						style={{ borderRadius: "50%", objectFit: "cover" }}
+					/>
 				);
 			},
 			width: "80px",
@@ -159,15 +165,13 @@ const MentorListTable = () => {
 		},
 	];
 
-	const filteredItems: MentorInitialValue[] = mentorTableData?.filter(
-		(item: MentorInitialValue) => {
-			return Object.values(item).some(
-				(value) =>
-					value &&
-					value.toString().toLowerCase().includes(filterText.toLowerCase())
-			);
-		}
-	);
+	const filteredItems = mentorTableData
+		.filter((item) =>
+			Object.values(item).some((val) =>
+				val?.toString().toLowerCase().includes(filterText.toLowerCase())
+			)
+		)
+		.filter((item) => (filterStatus ? item.status === filterStatus : true));
 
 	const fetchData = async () => {
 		try {
@@ -176,25 +180,66 @@ const MentorListTable = () => {
 			setMentorTableData(response);
 		} catch (error) {
 			toast.error("Error fetching Mentor Data");
-			console.log(error);
 		} finally {
 			setLoading(false);
 		}
 	};
-	const navigate = useRouter();
+
 	useEffect(() => {
 		fetchData();
 	}, []);
 
+	const customTableStyles = {
+		rows: { style: { fontSize: "1rem" } },
+		headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
+		cells: { style: { fontSize: "1rem" } },
+	};
+
 	return (
 		<Card>
 			<CardBody>
-				<FilterComponent
-					onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
-						setFilterText(e.target.value)
-					}
-					filterText={filterText}
-				/>
+				<div className='d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 mt-3'>
+					<FilterComponent
+						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
+							setFilterText(e.target.value)
+						}
+						filterText={filterText}
+					/>
+					<div
+						style={{
+							padding: "0.5rem 0",
+							transition: "all 0.3s ease",
+							opacity: showFilters ? 1 : 0,
+							visibility: showFilters ? "visible" : "hidden",
+							transform: showFilters ? "scaleY(1)" : "scaleY(0)",
+							transformOrigin: "top",
+							height: "auto",
+						}}>
+						<div className='d-flex flex-wrap gap-3 align-items-center'>
+							<FilterDropdown
+								label='Status'
+								options={getUniqueOptions("status")}
+								value={filterStatus}
+								onChange={(e) => setFilterStatus(e)}
+							/>
+							<Button
+								color='outline-primary'
+								className='h-100'
+								onClick={() => {
+									setFilterStatus("");
+									setFilterText("");
+								}}>
+								Clear Filters
+							</Button>
+						</div>
+					</div>
+					<Button
+						color='outline-primary'
+						size='sm'
+						onClick={() => setShowFilters((prev) => !prev)}>
+						{showFilters ? "Hide Filters" : "Show Filters"}
+					</Button>
+				</div>
 				<DataTable
 					data={filteredItems}
 					columns={mentorTableColumns}
@@ -202,9 +247,8 @@ const MentorListTable = () => {
 					striped
 					fixedHeaderScrollHeight='40vh'
 					pagination
-					onRowClicked={(row: any) => {
-						navigate.push(`/admin/users/${row._id}`);
-					}}
+					onRowClicked={(row: any) => navigate.push(`/admin/users/${row._id}`)}
+					customStyles={customTableStyles}
 				/>
 				<Modal
 					isOpen={modalOpen}
@@ -212,7 +256,7 @@ const MentorListTable = () => {
 					centered>
 					<ModalHeader toggle={toggleModal}>Confirm Status Change</ModalHeader>
 					<ModalBody>
-						Are you sure you want to set <strong>{selectedRow?.name}</strong> as{" "}
+						Are you sure you want to set <strong>{selectedRow?.name}</strong> as
 						<Badge
 							color={
 								actionType === "Active"
