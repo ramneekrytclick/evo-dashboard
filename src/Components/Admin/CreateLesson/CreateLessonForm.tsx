@@ -23,7 +23,7 @@ const CreateLessonForm = () => {
 		title: "",
 		content: "",
 		videoUrl: "",
-		resources: [] as string[],
+		resources: [""],
 	});
 
 	const fetchCourses = async () => {
@@ -39,32 +39,36 @@ const CreateLessonForm = () => {
 		fetchCourses();
 	}, []);
 
-	const handleChange = (e: any) => {
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+	) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
 
-	const handleResourceUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const files = e.target.files;
-		if (!files) return;
+	const handleResourceChange = (value: string, index: number) => {
+		const updatedResources = [...formData.resources];
+		updatedResources[index] = value;
+		setFormData((prev) => ({ ...prev, resources: updatedResources }));
+	};
 
-		const urls: string[] = [];
-		for (let i = 0; i < files.length; i++) {
-			const url = URL.createObjectURL(files[i]); // temp blob URL
-			urls.push(url);
-		}
-
+	const addResourceField = () => {
 		setFormData((prev) => ({
 			...prev,
-			resources: [...prev.resources, ...urls],
+			resources: [...prev.resources, ""],
 		}));
 	};
 
-	const handleSubmit = async (e: any) => {
+	const removeResourceField = (index: number) => {
+		const updatedResources = [...formData.resources];
+		updatedResources.splice(index, 1);
+		setFormData((prev) => ({ ...prev, resources: updatedResources }));
+	};
+
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		// Send formData to your API
 		try {
-			const response = await createLesson(formData);
+			await createLesson(formData);
 			console.log("Submitted:", formData);
 			toast.success("Lesson Created Successfully in Course");
 		} catch (error) {
@@ -74,22 +78,22 @@ const CreateLessonForm = () => {
 	};
 
 	return (
-		<Card className="p-3">
+		<Card className='p-3'>
 			<CardBody>
-				<h4 className="mb-3">Create New Lesson</h4>
+				<h4 className='mb-3'>Create New Lesson</h4>
 				<Form onSubmit={handleSubmit}>
-					<Row className="g-3">
+					<Row className='g-3'>
 						<Col md={6}>
 							<FormGroup>
-								<Label for="courseId">Course</Label>
+								<Label for='courseId'>Course</Label>
 								<Input
-									type="select"
-									name="courseId"
-									id="courseId"
+									type='select'
+									name='courseId'
+									id='courseId'
 									value={formData.courseId}
 									onChange={handleChange}
 									required>
-									<option value="">Select Course</option>
+									<option value=''>Select Course</option>
 									{courses.map((course) => (
 										<option
 											key={course._id}
@@ -102,11 +106,11 @@ const CreateLessonForm = () => {
 						</Col>
 						<Col md={6}>
 							<FormGroup>
-								<Label for="title">Title</Label>
+								<Label for='title'>Title</Label>
 								<Input
-									type="text"
-									name="title"
-									id="title"
+									type='text'
+									name='title'
+									id='title'
 									value={formData.title}
 									onChange={handleChange}
 									required
@@ -115,11 +119,11 @@ const CreateLessonForm = () => {
 						</Col>
 						<Col md={12}>
 							<FormGroup>
-								<Label for="content">Content</Label>
+								<Label for='content'>Content</Label>
 								<Input
-									type="textarea"
-									name="content"
-									id="content"
+									type='textarea'
+									name='content'
+									id='content'
 									value={formData.content}
 									onChange={handleChange}
 									required
@@ -128,52 +132,61 @@ const CreateLessonForm = () => {
 						</Col>
 						<Col md={6}>
 							<FormGroup>
-								<Label for="videoUrl">Video URL</Label>
+								<Label for='videoUrl'>Video URL</Label>
 								<Input
-									type="text"
-									name="videoUrl"
-									id="videoUrl"
+									type='text'
+									name='videoUrl'
+									id='videoUrl'
 									value={formData.videoUrl}
 									onChange={handleChange}
 								/>
 							</FormGroup>
 						</Col>
-						<Col md={6}>
+
+						<Col md={12}>
 							<FormGroup>
-								<Label for="resources">Upload Resources</Label>
-								<Input
-									type="file"
-									id="resources"
-									multiple
-									onChange={handleResourceUpload}
-								/>
+								<Label>Upload Resources (Google Drive Links)</Label>
+								{formData.resources.map((url, index) => (
+									<Row
+										key={index}
+										className='mb-2 align-items-center'>
+										<Col md={10}>
+											<Input
+												type='text'
+												placeholder={`Resource Link ${index + 1}`}
+												value={url}
+												onChange={(e) =>
+													handleResourceChange(e.target.value, index)
+												}
+											/>
+										</Col>
+										<Col md={2}>
+											<Button
+												color='danger'
+												size='sm'
+												type='button'
+												onClick={() => removeResourceField(index)}
+												disabled={formData.resources.length === 1}>
+												🗑️
+											</Button>
+										</Col>
+									</Row>
+								))}
+								<Button
+									color='info'
+									type='button'
+									size='sm'
+									className='mt-2'
+									onClick={addResourceField}>
+									+ Add Link
+								</Button>
 							</FormGroup>
 						</Col>
 
-						{formData.resources.length > 0 && (
-							<Col md={12}>
-								<p>
-									<strong>Preview Resources:</strong>
-								</p>
-								<ul>
-									{formData.resources.map((url, idx) => (
-										<li key={idx}>
-											<a
-												href={url}
-												target="_blank"
-												rel="noopener noreferrer">
-												Resource {idx + 1}
-											</a>
-										</li>
-									))}
-								</ul>
-							</Col>
-						)}
-
 						<Col md={12}>
 							<Button
-								type="submit"
-								color="primary">
+								type='submit'
+								color='primary'>
 								Submit Lesson
 							</Button>
 						</Col>
