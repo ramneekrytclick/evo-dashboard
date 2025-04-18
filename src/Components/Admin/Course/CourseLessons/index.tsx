@@ -72,7 +72,6 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 						<h4 className='mb-0 text-dark'>Course Lessons</h4>
 						<Button
 							color='primary'
-							size='sm'
 							onClick={() => setShowCreateModal(true)}>
 							<i className='fa fa-plus me-1' />
 							Create Lesson

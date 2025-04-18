@@ -12,6 +12,7 @@ import AssignStudentsModal from "./AssignStudents";
 import AssignMentorModal from "./AssignMentor";
 import BatchDetails from "./BatchDetails";
 import Link from "next/link";
+import { FontSizeTitle } from "@/Constant";
 
 const BatchesList = () => {
 	const [batches, setBatches] = useState<BatchProps[]>([]);
@@ -39,7 +40,11 @@ const BatchesList = () => {
 	useEffect(() => {
 		fetchBatches();
 	}, []);
-
+	const customTableStyles = {
+		rows: { style: { fontSize: "1rem" } },
+		headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
+		cells: { style: { fontSize: "1rem" } },
+	};
 	const filteredItems = useMemo(() => {
 		return batches.filter((item) =>
 			Object.values(item).some((value) => {
@@ -135,7 +140,6 @@ const BatchesList = () => {
 					style={{ minWidth: 200 }}>
 					<Button
 						color='primary'
-						size='sm'
 						onClick={(e) => {
 							e.stopPropagation(); // Prevent row click
 							setAssignStudentsModalOpen(row._id || "");
@@ -145,7 +149,6 @@ const BatchesList = () => {
 					</Button>
 					<Button
 						color='success'
-						size='sm'
 						onClick={(e) => {
 							e.stopPropagation(); // Prevent row click
 							setAssignMentorModalOpen(row._id || "");
@@ -163,14 +166,16 @@ const BatchesList = () => {
 	return (
 		<>
 			<Card>
-				<CreateBatchModal fetchData={fetchBatches} />
 				<CardBody>
-					<FilterComponent
-						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setFilterText(e.target.value)
-						}
-						filterText={filterText}
-					/>
+					<div className='d-flex justify-content-between align-items-center'>
+						<FilterComponent
+							onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
+								setFilterText(e.target.value)
+							}
+							filterText={filterText}
+						/>
+						<CreateBatchModal fetchData={fetchBatches} />
+					</div>
 					<div className='table-responsive custom-scrollbar user-datatable mt-3'>
 						<DataTable
 							data={filteredItems}
@@ -186,6 +191,7 @@ const BatchesList = () => {
 								setSelectedBatchForDetails(row);
 							}}
 							highlightOnHover
+							customStyles={customTableStyles}
 							pointerOnHover
 						/>
 					</div>

@@ -15,11 +15,7 @@ const CourseBatchContainer = ({ id }: { id: string }) => {
 			<Container fluid>
 				<Row>
 					<Col sm={12}>
-						<Card>
-							<CardBody>
-								<CourseBatchesList id={id} />
-							</CardBody>
-						</Card>
+						<CourseBatchesList id={id} />
 					</Col>
 				</Row>
 			</Container>

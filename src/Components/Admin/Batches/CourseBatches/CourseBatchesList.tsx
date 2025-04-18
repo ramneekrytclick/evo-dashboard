@@ -145,7 +145,6 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 					<Button
 						className='fs-6'
 						color='primary'
-						size='sm'
 						onClick={() => {
 							setAssignStudentsModalOpen(row._id || "");
 							setSelectedBatch(row);
@@ -155,7 +154,6 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 					<Button
 						className='fs-6'
 						color='success'
-						size='sm'
 						onClick={() => {
 							setAssignMentorModalOpen(row._id || "");
 							setSelectedBatch(row);
