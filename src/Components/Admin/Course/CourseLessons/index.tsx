@@ -7,13 +7,10 @@ import { getLessons } from "@/app/api/admin/lessons/lesson";
 import { toast } from "react-toastify";
 import { getAllCourses } from "@/app/api/cc";
 import { Button, Card, CardBody, CardHeader, Spinner } from "reactstrap";
-import { useAppDispatch } from "@/Redux/Hooks";
-import { setToggleSidebar } from "@/Redux/Reducers/Layout/LayoutSlice";
 import LessonsCardView from "./LessonsCardView";
 import CreateLessonModal from "./CreateLessonModal";
 
 const LessonsPageContainer = ({ id }: { id: string }) => {
-	const dispatch = useAppDispatch();
 	const [lessons, setLessons] = useState<LessonType[]>([]);
 	const [course, setCourse] = useState<any>([]);
 	const [loading, setLoading] = useState(false);
@@ -43,10 +40,6 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 	useEffect(() => {
 		fetchLessons();
 		fetchCourse();
-		dispatch(setToggleSidebar(true));
-		return () => {
-			dispatch(setToggleSidebar(false));
-		};
 	}, []);
 	if (loading) {
 		return (

@@ -18,7 +18,6 @@ const UserProfile = () => {
 	const fetchProfile = async () => {
 		try {
 			const response = await getMyProfile(role);
-			console.log(response);
 		} catch (error) {}
 	};
 	useEffect(() => {

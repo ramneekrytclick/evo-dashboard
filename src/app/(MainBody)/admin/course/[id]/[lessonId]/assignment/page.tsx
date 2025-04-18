@@ -1,8 +1,12 @@
-import LessonContainer from "@/Components/Admin/Course/Lesson";
 import LessonAssignmentContainer from "@/Components/Admin/Course/Lesson/Assignment";
 
-const Page = async ({ params }: { params: Promise<{ lessonId: string }> }) => {
-	return <LessonAssignmentContainer lessonId={(await params).lessonId} />;
+const Page = ({ params }: { params: { lessonId: string; id: string } }) => {
+	return (
+		<LessonAssignmentContainer
+			lessonId={params.lessonId}
+			courseId={params.id}
+		/>
+	);
 };
 
 export default Page;

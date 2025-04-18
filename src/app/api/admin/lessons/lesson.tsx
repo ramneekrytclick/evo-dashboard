@@ -10,9 +10,12 @@ export const createLesson = async (data: LessonFormProps) => {
 		console.error(error);
 	}
 };
-export const getLessonById = async (id: string) => {
-	const response = lessonSampleData.filter((l) => l._id === id);
-	return response;
+export const getLessonById = async (lessonId: string, courseId: string) => {
+	const response = await apiClient.get(`/lessons/${courseId}`);
+	const lesson = response.data.find(
+		(lesson: LessonFormProps) => lesson._id === lessonId
+	);
+	return lesson;
 };
 export const getLessons = async (id: string) => {
 	const response = await apiClient.get(`/lessons/${id}`);
