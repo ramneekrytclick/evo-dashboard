@@ -67,110 +67,110 @@ const UserForm = () => {
 		<div>
 			<div>
 				<Link
-					className="logo"
-					href="/admin/dashboard">
+					className='logo'
+					href='/admin/dashboard'>
 					<Image
 						priority
 						width={200}
 						height={34}
-						className="img-fluid for-light"
+						className='img-fluid for-light'
 						src={imageOne}
-						alt="login page"
+						alt='login page'
 					/>
 					<Image
 						priority
 						width={200}
 						height={34}
-						className="img-fluid for-dark"
+						className='img-fluid for-dark'
 						src={imageTwo}
-						alt="login page"
+						alt='login page'
 					/>
 				</Link>
 			</div>
 
-			<div className="login-main">
+			<div className='login-main'>
 				<Form
-					className="theme-form"
+					className='theme-form'
 					onSubmit={formSubmitHandle}>
 					<h4>Sign In to Your Account</h4>
 					<p>Enter your email & password to login</p>
 
 					<FormGroup>
-						<Label className="col-form-label">Email Address</Label>
+						<Label className='col-form-label fs-5'>Email Address</Label>
 						<Input
-							type="email"
+							type='email'
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
-							placeholder="Enter your email"
+							placeholder='Enter your email'
 							required
 						/>
 					</FormGroup>
 
 					<FormGroup>
-						<Label className="col-form-label">Password</Label>
-						<div className="form-input position-relative">
+						<Label className='col-form-label fs-5'>Password</Label>
+						<div className='form-input position-relative'>
 							<Input
 								type={show ? "text" : "password"}
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
-								placeholder="Enter your password"
+								placeholder='Enter your password'
 								required
 							/>
 							<div
-								className="show-hide"
+								className='show-hide'
 								onClick={() => setShow(!show)}>
-								<span className="show" />
+								<span className='show' />
 							</div>
 						</div>
 					</FormGroup>
 
 					<FormGroup>
-						<Label className="col-form-label">Select Role</Label>
+						<Label className='col-form-label fs-5'>Select Role</Label>
 						<Input
-							type="select"
+							type='select'
 							value={role}
 							onChange={(e) => setRole(e.target.value)}
 							required>
-							<option value="admin">Admin</option>
-							<option value="mentors">Mentor</option>
-							<option value="publishers/auth">Publisher</option>
-							<option value="managers/auth">Manager</option>
-							<option value="course-creators/auth">Course Creator</option>
-							<option value="students">Student</option>
-							<option value="jobs">Employer</option>
+							<option value='admin'>Admin</option>
+							<option value='mentors'>Mentor</option>
+							<option value='publishers/auth'>Publisher</option>
+							<option value='managers/auth'>Manager</option>
+							<option value='course-creators/auth'>Course Creator</option>
+							<option value='students'>Student</option>
+							<option value='jobs'>Employer</option>
 						</Input>
 					</FormGroup>
 
-					<div className="form-group mb-0">
-						<div className="checkbox p-0">
+					<div className='form-group mb-0'>
+						{/* <div className='checkbox p-0'>
 							<Input
-								id="checkbox1"
-								type="checkbox"
+								id='checkbox1'
+								type='checkbox'
 							/>
 							<Label
-								className="text-muted"
-								htmlFor="checkbox1">
+								className='text-muted'
+								htmlFor='checkbox1'>
 								Remember me
 							</Label>
-						</div>
+						</div> */}
 						<Link
-							className="link"
-							href="/auth/register">
+							className='link'
+							href='/auth/register'>
 							Register User
 						</Link>
 
-						<div className="text-end mt-3">
+						<div className='text-end mt-3'>
 							<Button
-								type="submit"
-								color="primary"
+								type='submit'
+								color='primary'
 								disabled={loading}
 								block>
 								Sign In
 								{loading && (
 									<span
-										className="spinner-border spinner-border-sm me-2"
-										role="status"
-										aria-hidden="true"
+										className='spinner-border spinner-border-sm me-2'
+										role='status'
+										aria-hidden='true'
 									/>
 								)}
 							</Button>

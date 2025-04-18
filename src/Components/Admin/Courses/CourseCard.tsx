@@ -70,7 +70,9 @@ const CourseCard = ({
 		<Col
 			xl={4}
 			className='mb-4'>
-			<Card className='border-0 shadow-md rounded-4 overflow-hidden h-100'>
+			<Card
+				className='border-0 shadow-md rounded-4 overflow-hidden'
+				style={{ height: "610px" }}>
 				<div className='position-relative'>
 					<CardImg
 						top
@@ -89,21 +91,16 @@ const CourseCard = ({
 						</Badge>
 					)}
 				</div>
-				{/* {JSON.stringify(categories)}
-				{JSON.stringify(subcategories)}
-				{JSON.stringify(wannaBeInterests)} */}
 				<CardBody className='text-start p-4 d-flex flex-column'>
-					<CardTitle
-						tag='h5'
-						className='fw-bold text-dark mb-2'>
-						<Link
-							className='fw-bold text-dark mb-2'
-							href={`/admin/lessons/${data._id}`}>
+					<Link
+						className='fw-semibold text-dark mb-2'
+						href={`/admin/lessons/${data._id}`}>
+						<CardTitle
+							tag='h2'
+							className='mb-2'>
 							{data.title}
-						</Link>
-					</CardTitle>
-					<p>Raw Category: {data.category}</p>
-					<p>Mapped Category: {categoryName}</p>
+						</CardTitle>
+					</Link>
 
 					<div className='mb-2'>
 						<Badge
@@ -116,7 +113,7 @@ const CourseCard = ({
 
 					<div className='d-flex justify-content-between align-items-center mb-3'>
 						<div className='text-muted small'>
-							<strong>WannaBe:</strong>{" "}
+							<strong>Interests:</strong>{" "}
 							{mappedWannaBe.map((w, i) => (
 								<Badge
 									key={i}
@@ -134,8 +131,7 @@ const CourseCard = ({
 					</div>
 
 					<CardText className='text-muted small mb-3 flex-grow-1'>
-						{data.description ||
-							"It is a long established fact that a reader will be distracted."}
+						{data.description || "-"}
 					</CardText>
 
 					<Link href={`/admin/lessons/${data._id}`}>

@@ -56,12 +56,23 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 			)
 		);
 	}, [batches, filterText]);
-
+	const customTableStyles = {
+		rows: { style: { fontSize: "1rem" } },
+		headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
+		cells: { style: { fontSize: "1rem" } },
+	};
 	const columns: TableColumn<BatchProps>[] = [
 		{
 			name: "Batch",
 			selector: (row) => row.name || "",
 			sortable: true,
+			cell: (row) => (
+				<Link
+					className='fs-5 text-black fw-semibold'
+					href={`#`}>
+					{row.name}
+				</Link>
+			),
 		},
 		{
 			name: "Course",
@@ -72,6 +83,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 			sortable: true,
 			cell: (row) => (
 				<Link
+					className='fs-5'
 					href={`/admin/lessons/${
 						typeof row.course === "object" ? row.course._id : ""
 					}`}>
@@ -100,29 +112,38 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 			name: "Students",
 			selector: (row) => row.students?.length || 0,
 			sortable: true,
+			center: true,
+			cell: (row) => (
+				<span
+					color='info'
+					className='fs-5'>
+					{row.students?.length || 0}
+				</span>
+			),
 		},
 		{
 			name: "Mentor",
 			sortable: true,
 			cell: (row) =>
 				row.mentor ? (
-					<Badge
+					<span
 						color='info'
-						pill>
+						className='fs-5'>
 						{typeof row.mentor === "object" ? row.mentor.name : row.mentor}
-					</Badge>
+					</span>
 				) : (
 					<Badge color='warning'>Unassigned</Badge>
 				),
 		},
 		{
 			name: "Actions",
-			center: true,
+			right: true,
 			cell: (row) => (
 				<div
-					className='d-flex flex-column gap-1'
+					className='d-flex flex-column align-items-end gap-1'
 					style={{ minWidth: 200 }}>
 					<Button
+						className='fs-6'
 						color='primary'
 						size='sm'
 						onClick={() => {
@@ -132,6 +153,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 						Assign Students
 					</Button>
 					<Button
+						className='fs-6'
 						color='success'
 						size='sm'
 						onClick={() => {
@@ -143,8 +165,6 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 				</div>
 			),
 			ignoreRowClick: true,
-			allowOverflow: true,
-			button: true,
 		},
 	];
 
@@ -171,6 +191,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 							highlightOnHover
 							pointerOnHover
 							onRowClicked={(row) => setSelectedBatchForDetails(row)}
+							customStyles={customTableStyles}
 						/>
 					</div>
 				</CardBody>
