@@ -30,11 +30,13 @@ const LessonContent = ({
 	);
 	const [file, setFile] = useState<File | null>(null);
 
-	const handleQuizSubmit = async (answers: string[]) => {
+	const handleQuizSubmit = async (
+		answers: { question: string; selectedAnswer: string }[]
+	) => {
 		try {
 			const formattedAnswers = answers.map((answer, index) => ({
-				question: `Question ${index + 1}`,
-				selectedAnswer: answer,
+				question: answer.question,
+				selectedAnswer: answer.selectedAnswer,
 			}));
 			const data = { lessonId: lesson._id, answers: formattedAnswers };
 			await submitQuiz(data);
@@ -74,9 +76,9 @@ const LessonContent = ({
 	if (!lesson) {
 		return (
 			<Card
-				className="rounded-0"
+				className='rounded-0'
 				style={{ minHeight: "600px" }}>
-				<CardBody className="text-center text-muted">
+				<CardBody className='text-center text-muted'>
 					Select a lesson to begin
 				</CardBody>
 			</Card>
@@ -85,20 +87,20 @@ const LessonContent = ({
 
 	return (
 		<Card
-			className="rounded-0"
+			className='rounded-0'
 			style={{ minHeight: "600px" }}>
 			<CardBody>
 				{view === "video" && (
 					<>
 						<h2>{lesson.title}</h2>
 						<iframe
-							width="100%"
-							height="600"
+							width='100%'
+							height='600'
 							src={getEmbedUrl(lesson.videoUrl)}
 							title={lesson.title}
 							style={{ borderRadius: "10px" }}
 							allowFullScreen></iframe>
-						<h3 className="mt-3">Content</h3>
+						<h3 className='mt-3'>Content</h3>
 						<p>{lesson.content}</p>
 					</>
 				)}
@@ -117,21 +119,21 @@ const LessonContent = ({
 							{lesson.assignments.map((ass, i) => (
 								<Card
 									key={i}
-									className="my-3 bg-light-warning">
+									className='my-3 bg-light-warning'>
 									<CardBody>
 										<b>{ass.title}</b>
 										<p>{ass.description}</p>
 										{ass.attachmentUrl && (
 											<a
 												href={`/uploads/${ass.attachmentUrl}`}
-												target="_blank"
-												rel="noopener noreferrer">
+												target='_blank'
+												rel='noopener noreferrer'>
 												View Attachment
 											</a>
 										)}
 										<Button
-											color="primary"
-											className="mt-2"
+											color='primary'
+											className='mt-2'
 											onClick={() => {
 												setSelectedAssignment(ass);
 												setAssignmentModal(true);
@@ -155,15 +157,15 @@ const LessonContent = ({
 					<ModalBody>
 						<Form>
 							<FormGroup>
-								<Label for="file">Upload PDF</Label>
+								<Label for='file'>Upload PDF</Label>
 								<Input
-									type="file"
-									accept="application/pdf"
+									type='file'
+									accept='application/pdf'
 									onChange={(e) => setFile(e.target.files?.[0] || null)}
 								/>
 							</FormGroup>
 							<Button
-								color="success"
+								color='success'
 								onClick={handleAssignmentSubmit}>
 								Submit Assignment
 							</Button>
