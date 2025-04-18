@@ -84,7 +84,7 @@ const CourseBatchesList = ({ id }: { id: string }) => {
 			cell: (row) => (
 				<Link
 					className='fs-5'
-					href={`/admin/lessons/${
+					href={`/admin/course/${
 						typeof row.course === "object" ? row.course._id : ""
 					}`}>
 					{typeof row.course === "object" && row.course?.title

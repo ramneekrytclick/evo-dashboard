@@ -94,7 +94,7 @@ const CourseCard = ({
 				<CardBody className='text-start p-4 d-flex flex-column'>
 					<Link
 						className='fw-semibold text-dark mb-2'
-						href={`/admin/lessons/${data._id}`}>
+						href={`/admin/course/${data._id}`}>
 						<CardTitle
 							tag='h2'
 							className='mb-2'>
@@ -134,7 +134,7 @@ const CourseCard = ({
 						{data.description || "-"}
 					</CardText>
 
-					<Link href={`/admin/lessons/${data._id}`}>
+					<Link href={`/admin/course/${data._id}`}>
 						<div className='d-flex align-items-center mb-3'>
 							<span className='small text-dark'>
 								Created by <strong>{data.createdBy?.trim()}</strong>
@@ -154,7 +154,7 @@ const CourseCard = ({
 					</div>
 					<div className='d-flex gap-2 w-100 justify-content-between align-items-center'>
 						<Link
-							href={`/admin/lessons/${data._id}`}
+							href={`/admin/course/${data._id}`}
 							className='btn btn-sm btn-outline-primary'>
 							View Lessons
 						</Link>

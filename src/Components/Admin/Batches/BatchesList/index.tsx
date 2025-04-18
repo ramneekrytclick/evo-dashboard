@@ -72,7 +72,7 @@ const BatchesList = () => {
 				row.course ? (
 					<Link
 						className='text-center'
-						href={`/admin/lessons/${
+						href={`/admin/course/${
 							typeof row.course === "object" ? row.course._id : row.course
 						}`}>
 						{typeof row.course === "object" ? row.course.title : row.course}

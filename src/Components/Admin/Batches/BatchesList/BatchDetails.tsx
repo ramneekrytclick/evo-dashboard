@@ -30,16 +30,16 @@ const BatchDetails = ({
 		return (
 			<>
 				<p>
-					<span className="fw-semibold">Course Title:</span>{" "}
+					<span className='fw-semibold'>Course Title:</span>{" "}
 					<Link
-						href={`/admin/lessons/${batch.course._id}`}
-						className="text-decoration-underline fw-bold text-primary"
-						target="_blank">
+						href={`/admin/course/${batch.course._id}`}
+						className='text-decoration-underline fw-bold text-primary'
+						target='_blank'>
 						{batch.course.title}
 					</Link>
 				</p>
 				<p>
-					<span className="fw-semibold">Course ID:</span>{" "}
+					<span className='fw-semibold'>Course ID:</span>{" "}
 					<code>{batch.course._id}</code>
 				</p>
 			</>
@@ -59,15 +59,15 @@ const BatchDetails = ({
 		<Modal
 			isOpen={isOpen}
 			toggle={toggle}
-			size="lg">
+			size='lg'>
 			<ModalHeader toggle={toggle}>Batch Details - {batch.name}</ModalHeader>
 			<ModalBody>
-				<Card className="shadow-sm border-0 mb-4">
+				<Card className='shadow-sm border-0 mb-4'>
 					<CardBody>
 						<Row>
-							<Col md="7">
-								<Row className="mb-3">
-									<Col md="6">
+							<Col md='7'>
+								<Row className='mb-3'>
+									<Col md='6'>
 										<p>
 											<strong>Description:</strong> {batch.description || "—"}
 										</p>
@@ -78,7 +78,7 @@ const BatchDetails = ({
 											<strong>Days:</strong> {batch.batchWeekType || "—"}
 										</p>
 									</Col>
-									<Col md="6">
+									<Col md='6'>
 										<p>
 											<strong>Start Date:</strong>{" "}
 											{formattedDate(batch.startDate)}
@@ -89,7 +89,7 @@ const BatchDetails = ({
 										<p>
 											<strong>Students:</strong>{" "}
 											<Badge
-												color="info"
+												color='info'
 												pill>
 												{batch.students?.length || 0}
 											</Badge>
@@ -100,8 +100,8 @@ const BatchDetails = ({
 								<hr />
 
 								<Row>
-									<Col md="6">
-										<h6 className="fw-semibold mb-2">Mentor Details</h6>
+									<Col md='6'>
+										<h6 className='fw-semibold mb-2'>Mentor Details</h6>
 										{typeof batch.mentor === "object" && batch.mentor ? (
 											<>
 												<p>
@@ -113,13 +113,13 @@ const BatchDetails = ({
 											</>
 										) : (
 											<p>
-												<Badge color="warning">Unassigned</Badge>
+												<Badge color='warning'>Unassigned</Badge>
 											</p>
 										)}
 									</Col>
 
-									<Col md="6">
-										<h6 className="fw-semibold mb-2">Course Details</h6>
+									<Col md='6'>
+										<h6 className='fw-semibold mb-2'>Course Details</h6>
 										{courseDisplay()}
 									</Col>
 								</Row>
@@ -127,23 +127,23 @@ const BatchDetails = ({
 
 							{/* Assigned Students - Scrollable Right Section */}
 							<Col
-								md="5"
-								className="border-start ps-4">
-								<h6 className="fw-semibold mb-3">Assigned Students</h6>
+								md='5'
+								className='border-start ps-4'>
+								<h6 className='fw-semibold mb-3'>Assigned Students</h6>
 								<div style={{ maxHeight: "260px", overflowY: "auto" }}>
 									{batch.students && batch.students.length > 0 ? (
-										<ul className="ps-3 mb-0">
+										<ul className='ps-3 mb-0'>
 											{batch.students.map((student: any) => (
 												<li key={student._id}>
 													<strong>{student.name}</strong>{" "}
-													<small className="text-muted">
+													<small className='text-muted'>
 														({student.email})
 													</small>
 												</li>
 											))}
 										</ul>
 									) : (
-										<p className="text-muted">No students assigned.</p>
+										<p className='text-muted'>No students assigned.</p>
 									)}
 								</div>
 							</Col>

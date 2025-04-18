@@ -14,6 +14,7 @@ export interface LessonType {
 	quizzes: QuizQuestion[];
 	assignments: Assignment[];
 	resources: any[];
+	course?: string;
 }
 
 export interface QuizQuestion {

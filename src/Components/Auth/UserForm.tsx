@@ -142,7 +142,7 @@ const UserForm = () => {
 					</FormGroup>
 
 					<div className='form-group mb-0'>
-						{/* <div className='checkbox p-0'>
+						<div className='checkbox p-0'>
 							<Input
 								id='checkbox1'
 								type='checkbox'
@@ -152,7 +152,7 @@ const UserForm = () => {
 								htmlFor='checkbox1'>
 								Remember me
 							</Label>
-						</div> */}
+						</div>
 						<Link
 							className='link'
 							href='/auth/register'>
