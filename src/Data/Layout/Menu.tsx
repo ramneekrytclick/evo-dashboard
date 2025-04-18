@@ -338,10 +338,16 @@ export const MenuList: MenuItem[] | undefined = [
 				type: "link",
 			},
 			{
-				id: 3,
+				id: 2,
 				path: "/course-creator/create-course",
 				icon: "form",
 				title: "Create Course",
+			},
+			{
+				id: 3,
+				path: "/course-creator/courses",
+				icon: "learning",
+				title: "View All Courses",
 			},
 			{
 				id: 4,
