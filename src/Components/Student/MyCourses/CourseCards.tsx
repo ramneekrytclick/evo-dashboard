@@ -80,7 +80,8 @@ const MyEnrolledCourses = () => {
 	return (
 		<Row style={{ height: "80vh", overflow: "auto" }}>
 			{enrolledCourses.map(({ course }, idx) => {
-				const prog = progressMap.get(course._id);
+				if (!course) return null;
+				const prog = progressMap.get(course?._id);
 				const percent = prog?.progressPercent || 0;
 
 				return (

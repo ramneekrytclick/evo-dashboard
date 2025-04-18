@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-	getQuizzesByLessonID,
-	updateQuiz,
-	createQuiz,
-} from "@/app/api/admin/lessons/quiz";
+import { getQuizzesByLessonID, updateQuiz } from "@/app/api/admin/lessons/quiz";
 import { QuizQuestion } from "@/Types/Lesson.type";
 import {
 	Spinner,
@@ -49,30 +45,14 @@ const LessonQuizContainer = ({
 
 	const handleSave = async (updatedQuizList: QuizQuestion[]) => {
 		try {
-			if (quizData.length === 0) {
-				// No quiz exists yet → Create
-				await createQuiz({
-					lessonId,
-					quizzes: updatedQuizList.map((q) => ({
-						question: q.question,
-						options: q.options,
-						correctAnswer: q.correctAnswer,
-					})),
-				});
-				toast.success("Quiz created successfully");
-			} else {
-				// Quiz exists → Update all via loop
-				for (let i = 0; i < updatedQuizList.length; i++) {
-					await updateQuiz({ ...updatedQuizList[i], lessonId, quizIndex: i });
-				}
-				toast.success("Quiz updated successfully");
+			for (let i = 0; i < updatedQuizList.length; i++) {
+				await updateQuiz({ ...updatedQuizList[i], lessonId, quizIndex: i });
 			}
-
+			toast.success("Quiz updated successfully");
 			await fetchQuiz();
-			setShowModal(false);
 		} catch (err) {
 			console.error(err);
-			toast.error("Failed to save quiz");
+			toast.error("Failed to update quiz");
 		}
 	};
 
