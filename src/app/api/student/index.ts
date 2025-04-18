@@ -1,7 +1,5 @@
 import { apiClient } from "@/utils/api";
-import { lessonSampleData } from "../admin/course/lessonSampleData";
 import { getPaths } from "../admin/path";
-import { PathProps } from "@/Types/Path.type";
 
 export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
