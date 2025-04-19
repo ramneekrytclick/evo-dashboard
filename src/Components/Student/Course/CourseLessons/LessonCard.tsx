@@ -15,7 +15,7 @@ const LessonCard = ({
 }) => {
 	return (
 		<>
-			<Card className='shadow-sm h-100 border-0 rounded-4 bg-primary-subtle'>
+			<Card className='shadow-sm h-100 border-0 rounded-4 bg-light'>
 				<CardBody className='p-4 d-flex flex-column justify-content-between'>
 					{/* Header */}
 					<div>

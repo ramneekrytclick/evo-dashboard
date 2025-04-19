@@ -12,9 +12,7 @@ const MyCoursesContainer = () => {
 			/>
 			<Container fluid>
 				<Row>
-					{/* <Col className="box-col-8"> */}
 					<CourseCards />
-					{/* </Col> */}
 				</Row>
 			</Container>
 		</>

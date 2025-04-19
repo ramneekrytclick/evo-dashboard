@@ -103,12 +103,10 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 						<CardHeader>
 							<h4 className='mb-0 text-dark'>Course Lessons</h4>
 						</CardHeader>
-						<CardBody>
-							<LessonsCardView
-								lessons={lessons}
-								courseId={id}
-							/>
-						</CardBody>
+						<LessonsCardView
+							lessons={lessons}
+							courseId={id}
+						/>
 					</Col>
 				</Row>
 			</>

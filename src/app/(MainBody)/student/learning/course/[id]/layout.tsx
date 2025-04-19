@@ -71,11 +71,15 @@ const Layout = ({
 					<Col
 						sm={12}
 						lg={isLessonRoute ? 10 : 12}>
-						<Card
-							className='shadow-sm'
-							style={{ minHeight: "70vh" }}>
-							<CardBody>{children}</CardBody>
-						</Card>
+						{isLessonRoute ? (
+							<Card
+								className='shadow-sm'
+								style={{ minHeight: "70vh" }}>
+								<CardBody>{children}</CardBody>
+							</Card>
+						) : (
+							<>{children}</>
+						)}
 					</Col>
 					{isLessonRoute && (
 						<Col

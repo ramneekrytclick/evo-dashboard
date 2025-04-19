@@ -26,14 +26,14 @@ const LessonSidebar = ({ courseId }: { courseId: string }) => {
 
 	return (
 		<CardBody
-			className='h-100 bg-light-subtle d-flex flex-column'
+			className='h-100 d-flex flex-column'
 			style={{
 				position: "sticky",
 				top: "70px",
 				height: "calc(100vh - 70px)",
 				overflowY: "auto",
 			}}>
-			<h6 className='fw-bold text-secondary mb-3 d-flex align-items-center gap-2'>
+			<h6 className='fw-bold w-100 text-secondary mb-3 d-flex align-items-center gap-2'>
 				<Link href={`/student/learning/course/${courseId}`}>
 					<ArrowLeftCircle
 						size={18}
@@ -43,7 +43,9 @@ const LessonSidebar = ({ courseId }: { courseId: string }) => {
 				Lessons
 			</h6>
 
-			<ListGroup flush>
+			<ListGroup
+				className='w-100'
+				flush>
 				{lessons.map((lesson) => {
 					const isActive = pathname?.startsWith(
 						`/student/learning/course/${courseId}/${lesson._id}`
@@ -54,7 +56,7 @@ const LessonSidebar = ({ courseId }: { courseId: string }) => {
 						<ListGroupItem
 							key={lesson._id}
 							action
-							className={`p-2 ${
+							className={`p-2 w-100  ${
 								isActive ? "fw-bold text-primary bg-light" : "text-dark"
 							}`}
 							style={{ padding: "0.75rem 1rem" }}>

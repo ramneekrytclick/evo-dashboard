@@ -101,13 +101,14 @@ const MyEnrolledCourses = () => {
 								style={{ objectFit: "cover" }}
 							/>
 							<CardBody className='p-4 d-flex flex-column'>
-								<h5 className='fw-bold text-dark mb-1 text-truncate'>
-									<Link
-										className='text-dark text-decoration-none'
-										href={`/student/learning/course/${course._id}`}>
+								<Link
+									className='text-dark text-decoration-none'
+									href={`/student/learning/course/${course._id}`}>
+									<h3 className='fw-bold text-dark mb-1 text-truncate'>
 										{course.title || "Untitled Course"}
-									</Link>
-								</h5>
+										{course.title}
+									</h3>
+								</Link>
 								<div className='mb-2'>
 									<Badge
 										color='info'
@@ -115,7 +116,7 @@ const MyEnrolledCourses = () => {
 										{subcategoryMap.get(course.subcategory) ||
 											"Unknown Subcategory"}
 									</Badge>
-									<Badge color='primary'>
+									<Badge color='warning'>
 										{categoryMap.get(course.category) || "Unknown Category"}
 									</Badge>
 								</div>
