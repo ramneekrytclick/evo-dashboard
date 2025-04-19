@@ -16,6 +16,7 @@ import {
 	ListGroupItem,
 	Input,
 	Button,
+	Progress,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import {
@@ -40,7 +41,7 @@ const ApplicantDetailsModal = ({
 	resume: string | null;
 	jobId: string;
 	currentStatus: "Accepted" | "Rejected" | "Pending";
-	onStatusUpdate?: () => void; // Optional parent callback
+	onStatusUpdate?: () => void;
 }) => {
 	const [student, setStudent] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
@@ -49,11 +50,10 @@ const ApplicantDetailsModal = ({
 	const [newStatus, setNewStatus] = useState(currentStatus);
 	const [updating, setUpdating] = useState(false);
 
-	const getDetails = async () => {
+	const fetchDetails = async () => {
 		try {
 			const response = await getStudentDetailsById(studentId);
-			setStudent(response.student);
-
+			setStudent(response);
 			const courseRes = await getAllCourses();
 			setCourses(courseRes.courses);
 		} catch (error) {
@@ -78,19 +78,25 @@ const ApplicantDetailsModal = ({
 		}
 	};
 
-	const getCourseTitle = (id: string) => {
-		const match = courses.find((course) => course.id === id);
-		return match?.title || "(Course Deleted)";
-	};
-
 	useEffect(() => {
 		if (studentId) {
 			setLoading(true);
 			setError("");
-			getDetails();
-			setNewStatus(currentStatus); // Sync when modal opens
+			fetchDetails();
+			setNewStatus(currentStatus);
 		}
 	}, [studentId, currentStatus]);
+
+	const renderScoreCard = (label: string, score: number, color = "info") => (
+		<ListGroupItem className='d-flex justify-content-between align-items-center'>
+			<span className='fw-semibold'>{label}</span>
+			<Badge
+				pill
+				color={color}>
+				{score}
+			</Badge>
+		</ListGroupItem>
+	);
 
 	return (
 		<Modal
@@ -160,23 +166,24 @@ const ApplicantDetailsModal = ({
 
 						<Card className='shadow-sm border-0'>
 							<CardBody>
-								<h6 className='text-muted mb-3'>Enrolled Courses</h6>
-								{student.enrolledCourses?.length > 0 ? (
-									<ListGroup flush>
-										{student.enrolledCourses.map((course: any, idx: number) => (
-											<ListGroupItem
-												key={idx}
-												className='d-flex justify-content-between align-items-center'>
-												<span className='fw-semibold'>
-													{getCourseTitle(course.course)}
-												</span>
-												<Badge color='info'>Enrolled</Badge>
-											</ListGroupItem>
-										))}
-									</ListGroup>
-								) : (
-									<p className='text-muted'>No courses enrolled.</p>
-								)}
+								<h6 className='text-muted mb-3'>Performance Scores</h6>
+								<ListGroup flush>
+									{renderScoreCard(
+										"EVO Score",
+										student.evoscore || 0,
+										"primary"
+									)}
+									{renderScoreCard(
+										"Assignment Score",
+										student.assignmentScore || 0,
+										"success"
+									)}
+									{renderScoreCard(
+										"Quiz Score",
+										student.quizScore || 0,
+										"warning"
+									)}
+								</ListGroup>
 							</CardBody>
 						</Card>
 					</>
