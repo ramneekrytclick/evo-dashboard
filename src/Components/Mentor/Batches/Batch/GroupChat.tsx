@@ -1,4 +1,5 @@
 "use client";
+
 import {
 	getMentorChats,
 	sendMessageMentor,
@@ -17,12 +18,28 @@ import {
 	Spinner,
 	Badge,
 } from "reactstrap";
-import { format } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 import { useAuth } from "@/app/AuthProvider";
 import io from "socket.io-client";
 import ChatMessageBubble from "@/CommonComponent/ChatBubble";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string);
+
+const getDateLabel = (timestamp: string) => {
+	const date = new Date(timestamp);
+	if (isToday(date)) return "Today";
+	if (isYesterday(date)) return "Yesterday";
+	return format(date, "dd MMM yyyy");
+};
+
+const groupMessagesByDate = (messages: any[]) => {
+	return messages.reduce((acc: any, msg) => {
+		const label = getDateLabel(msg.timestamp);
+		if (!acc[label]) acc[label] = [];
+		acc[label].push(msg);
+		return acc;
+	}, {});
+};
 
 const GroupChat = ({ batchId }: { batchId: string }) => {
 	const [loading, setLoading] = useState(false);
@@ -31,25 +48,23 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 	const [sending, setSending] = useState(false);
 	const [pinnedMessage, setPinnedMessage] = useState<any>(null);
 	const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
 	const { user } = useAuth();
 	const userId = user?.id;
+
 	const fetchChats = async () => {
 		setLoading(true);
 		try {
 			const response = await getMentorChats(batchId);
 			setMessages(response.chat || []);
 			setPinnedMessage(response.pinnedMessage || null);
-		} catch (error) {
+		} catch {
 			toast.error("Error fetching chats");
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	const handleMessageChange = (event: any) => {
-		setNewMessage(event.target.value);
-	};
+	const handleMessageChange = (e: any) => setNewMessage(e.target.value);
 
 	const handleSendMessage = async () => {
 		if (!newMessage.trim()) return;
@@ -70,7 +85,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 			});
 			setNewMessage("");
 			scrollToBottom();
-		} catch (error) {
+		} catch {
 			toast.error("Error sending message");
 		} finally {
 			setSending(false);
@@ -83,31 +98,25 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 
 	useEffect(() => {
 		fetchChats();
-
 		socket.emit("joinBatch", batchId);
 
-		socket.on("receiveMessage", (messageData) => {
-			setMessages((prev) => [...prev, messageData]);
+		socket.on("receiveMessage", (msg) => {
+			setMessages((prev) => [...prev, msg]);
 			scrollToBottom();
 		});
-
 		socket.on("pinnedMessageUpdated", (data) => {
 			setPinnedMessage(data);
 		});
-
 		return () => {
 			socket.off("receiveMessage");
 			socket.off("pinnedMessageUpdated");
 		};
 	}, []);
 
-	useEffect(() => {
-		scrollToBottom();
-	}, [messages]);
+	useEffect(() => scrollToBottom(), [messages]);
 
 	useEffect(() => {
 		if (!userId || !user?.name) return;
-
 		socket.emit("userOnline", {
 			userId,
 			name: user.name,
@@ -116,15 +125,15 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 		});
 	}, [userId, user?.name, batchId]);
 
-	const [onlineUsers, setOnlineUsers] = useState<any>([]);
+	const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
 
 	useEffect(() => {
-		socket.on("onlineUsers", (list) => {
-			setOnlineUsers(list);
-		});
+		const handleOnlineUsers = (list: any[]) => setOnlineUsers(list);
+
+		socket.on("onlineUsers", handleOnlineUsers);
 
 		return () => {
-			socket.off("onlineUsers");
+			socket.off("onlineUsers", handleOnlineUsers);
 		};
 	}, []);
 
@@ -133,13 +142,15 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 			const res = await pinMessageMentor(batchId, messageId);
 			setPinnedMessage(res.pinnedMessage);
 			toast.success("Message pinned");
-		} catch (error) {
+		} catch {
 			toast.error("Failed to pin message");
 		}
 	};
 
+	const groupedMessages = groupMessagesByDate(messages);
+
 	return (
-		<Card className='d-flex flex-column h-100 w-100'>
+		<Card className='d-flex flex-column h-100 w-100 bg-black shadow-sm border-0 rounded-4'>
 			<CardHeader className='bg-white border-bottom w-100'>
 				<h5 className='mb-0 text-primary'>Group Chat</h5>
 			</CardHeader>
@@ -151,7 +162,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 						<Badge
 							color='info'
 							pill
-							className='ms-2'>
+							className='ms-2 text-capitalize'>
 							{pinnedMessage.senderType}
 						</Badge>
 					</h6>
@@ -163,44 +174,70 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 				</div>
 			)}
 
-			<CardBody className='flex-grow-1 overflow-auto bg-light px-4 py-3 w-100'>
+			<CardBody className='flex-grow-1 overflow-auto bg-light-subtle px-4 py-3 w-100'>
 				{loading ? (
 					<div className='text-center mt-4'>
 						<Spinner color='primary' />
 					</div>
-				) : messages.length === 0 ? (
+				) : Object.keys(groupedMessages).length === 0 ? (
 					<p className='text-center text-muted'>No messages yet</p>
 				) : (
-					messages.map((msg, index) => (
-						<ChatMessageBubble
-							key={index}
-							msg={msg}
-							isMe={msg.sender?._id === userId}
-							isOnline={onlineUsers.some(
-								(u: any) => u.userId === msg.sender?._id
-							)}
-							onPin={msg.senderType === "mentor" ? handlePin : undefined}
-						/>
-					))
+					Object.entries(groupedMessages).map(([date, msgs]) => {
+						const dayMsgs = msgs as any[];
+						return (
+							<div
+								key={date}
+								className='mb-4'>
+								<div className='text-center small text-muted fw-semibold mb-3'>
+									<span
+										style={{
+											background: "#f1f5f9",
+											padding: "4px 12px",
+											borderRadius: "999px",
+											fontSize: "12px",
+										}}>
+										{date}
+									</span>
+								</div>
+								{dayMsgs.map((msg, index) => (
+									<ChatMessageBubble
+										key={index}
+										msg={msg}
+										isMe={msg.sender?._id === userId}
+										isOnline={onlineUsers.some(
+											(u: any) => u.userId === msg.sender?._id
+										)}
+										onPin={msg.senderType === "mentor" ? handlePin : undefined}
+									/>
+								))}
+							</div>
+						);
+					})
 				)}
 				<div ref={messagesEndRef} />
 			</CardBody>
 
-			<InputGroup className='p-3 border-top bg-white'>
-				<Input
-					type='text'
-					placeholder='Type a message...'
-					value={newMessage}
-					onChange={handleMessageChange}
-					onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-				/>
-				<Button
-					color='primary'
-					onClick={handleSendMessage}
-					disabled={sending || !newMessage.trim()}>
-					<Send size={18} />
-				</Button>
-			</InputGroup>
+			<div className='border-top bg-white p-3 w-100 rounded-bottom'>
+				<InputGroup className='rounded-pill shadow-sm overflow-hidden'>
+					<Input
+						type='text'
+						placeholder='Type a message...'
+						value={newMessage}
+						onChange={handleMessageChange}
+						onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+						className='border-0 px-4'
+						style={{ height: "44px" }}
+					/>
+					<Button
+						color='primary'
+						onClick={handleSendMessage}
+						disabled={sending || !newMessage.trim()}
+						className='px-4 d-flex align-items-center justify-content-center'
+						style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+						<Send size={18} />
+					</Button>
+				</InputGroup>
+			</div>
 		</Card>
 	);
 };

@@ -36,20 +36,6 @@ const AssignStudentsModal = ({
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	// Fetch students from API
-	const fetchStudents = async () => {
-		try {
-			setIsLoading(true);
-			const response = await getStudentsByCourseID(batchCourseId);
-			setAllStudents(response.students);
-		} catch (err) {
-			toast.error("Failed to fetch students");
-			console.error(err);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
 	useEffect(() => {
 		const fetchAndFilter = async () => {
 			try {
@@ -124,34 +110,33 @@ const AssignStudentsModal = ({
 	return (
 		<Modal
 			isOpen={isOpen}
-			toggle={toggle}
-			size="lg">
+			toggle={toggle}>
 			<ModalHeader toggle={toggle}>Assign Students</ModalHeader>
 			<ModalBody>
 				{isLoading ? (
-					<div className="text-center my-3">
+					<div className='text-center my-3'>
 						<Spinner /> Loading students...
 					</div>
 				) : filteredStudents.length === 0 ? (
-					<p className="text-muted">No eligible students for this course.</p>
+					<p className='text-muted'>No eligible students for this course.</p>
 				) : (
 					<>
-						<div className="d-flex justify-content-end mb-2">
+						<div className='d-flex justify-content-end mb-2'>
 							<Button
-								color="primary"
-								size="sm"
-								className="me-2"
+								color='primary'
+								size='sm'
+								className='me-2'
 								onClick={selectAll}>
 								Select All
 							</Button>
 							<Button
-								color="outline-primary"
-								size="sm"
+								color='outline-primary'
+								size='sm'
 								onClick={deselectAll}>
 								Deselect All
 							</Button>
 						</div>
-						<div className="student-list d-flex flex-column gap-2">
+						<div className='student-list d-flex flex-column align-items-center gap-2 w-full'>
 							{filteredStudents.map((student) => {
 								const isSelected = selectedIds.includes(student._id);
 								return (
@@ -170,11 +155,11 @@ const AssignStudentsModal = ({
 										</div>
 										<div>
 											{isSelected ? (
-												<span className="badge bg-white text-primary">
+												<span className='badge bg-white text-primary'>
 													Selected
 												</span>
 											) : (
-												<span className="badge bg-primary">
+												<span className='badge bg-primary'>
 													Click to Select
 												</span>
 											)}
@@ -188,13 +173,13 @@ const AssignStudentsModal = ({
 			</ModalBody>
 			<ModalFooter>
 				<Button
-					color="primary"
+					color='primary'
 					onClick={handleAssign}
 					disabled={isLoading}>
 					Assign
 				</Button>
 				<Button
-					color="outline-primary"
+					color='outline-primary'
 					onClick={toggle}>
 					Cancel
 				</Button>

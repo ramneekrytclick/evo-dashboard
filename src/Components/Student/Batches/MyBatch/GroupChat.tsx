@@ -13,7 +13,7 @@ import {
 	Spinner,
 	Badge,
 } from "reactstrap";
-import { format } from "date-fns";
+import { format, isToday, isYesterday } from "date-fns";
 import { useAuth } from "@/app/AuthProvider";
 import io from "socket.io-client";
 import ChatMessageBubble from "@/CommonComponent/ChatBubble";
@@ -30,7 +30,21 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 
 	const { user } = useAuth();
 	const userId = user?.id;
+	const getDateLabel = (dateString: string) => {
+		const date = new Date(dateString);
+		if (isToday(date)) return "Today";
+		if (isYesterday(date)) return "Yesterday";
+		return format(date, "dd MMM yyyy");
+	};
 
+	const groupMessagesByDate = (messages: any[]) => {
+		return messages.reduce((acc: any, msg) => {
+			const dateLabel = getDateLabel(msg.timestamp);
+			if (!acc[dateLabel]) acc[dateLabel] = [];
+			acc[dateLabel].push(msg);
+			return acc;
+		}, {});
+	};
 	const fetchChats = async () => {
 		setLoading(true);
 		try {
@@ -77,6 +91,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 	const scrollToBottom = () => {
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
+	const groupedMessages = groupMessagesByDate(messages);
 
 	useEffect(() => {
 		fetchChats();
@@ -126,67 +141,90 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 	}, []);
 
 	return (
-		<Card className="d-flex flex-column h-100 w-100">
-			<CardHeader className="bg-white border-bottom w-100">
-				<h5 className="mb-0 text-primary">Group Chat</h5>
+		<Card className='d-flex flex-column h-100 w-100 shadow-sm border-0 rounded-4'>
+			{/* Header */}
+			<CardHeader className='bg-white border-bottom w-100'>
+				<h5 className='mb-0 text-primary'>Group Chat</h5>
 			</CardHeader>
 
+			{/* Pinned Message */}
 			{pinnedMessage && (
-				<div className="bg-warning-subtle p-3 border-bottom w-100">
-					<h6 className="text-dark mb-1">
+				<div className='bg-warning-subtle p-3 border-bottom w-100'>
+					<h6 className='text-dark mb-1'>
 						📌 Pinned Message
 						<Badge
-							color="info"
+							color='info'
 							pill
-							className="ms-2">
+							className='ms-2 text-capitalize'>
 							{pinnedMessage.senderType}
 						</Badge>
 					</h6>
-					<p className="mb-1 fw-semibold">{pinnedMessage.message}</p>
-					<small className="text-muted">
+					<p className='mb-1 fw-semibold'>{pinnedMessage.message}</p>
+					<small className='text-muted'>
 						{format(new Date(pinnedMessage.timestamp), "PPpp")} —{" "}
 						{pinnedMessage.sender?.name}
 					</small>
 				</div>
 			)}
 
-			<CardBody className="flex-grow-1 overflow-auto bg-light px-4 py-3 w-100">
+			{/* Messages */}
+			<CardBody className='flex-grow-1 overflow-auto bg-light-subtle px-4 py-3 w-100'>
 				{loading ? (
-					<div className="text-center mt-4">
-						<Spinner color="primary" />
+					<div className='text-center mt-4'>
+						<Spinner color='primary' />
 					</div>
 				) : messages.length === 0 ? (
-					<p className="text-center text-muted">No messages yet</p>
+					<p className='text-center text-muted'>No messages yet</p>
 				) : (
-					messages.map((msg, index) => (
-						<ChatMessageBubble
-							key={index}
-							msg={msg}
-							isMe={msg.sender?._id === userId}
-							isOnline={onlineUsers.some(
-								(u: any) => u.userId === msg.sender?._id
-							)}
-						/>
-					))
+					Object.entries(groupedMessages).map(([date, msgs]) => {
+						const messagesArray = msgs as any[]; // or: as MessageType[] if you have a defined type
+
+						return (
+							<div
+								key={date}
+								className='mb-3'>
+								<div className='text-center text-muted small fw-semibold mb-2'>
+									{date}
+								</div>
+								{messagesArray.map((msg, index) => (
+									<ChatMessageBubble
+										key={index}
+										msg={msg}
+										isMe={msg.sender?._id === userId}
+										isOnline={onlineUsers.some(
+											(u: any) => u.userId === msg.sender?._id
+										)}
+									/>
+								))}
+							</div>
+						);
+					})
 				)}
 				<div ref={messagesEndRef} />
 			</CardBody>
 
-			<InputGroup className="p-3 border-top bg-white">
-				<Input
-					type="text"
-					placeholder="Type a message..."
-					value={newMessage}
-					onChange={handleMessageChange}
-					onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-				/>
-				<Button
-					color="primary"
-					onClick={handleSendMessage}
-					disabled={sending || !newMessage.trim()}>
-					<Send size={18} />
-				</Button>
-			</InputGroup>
+			{/* Message Input */}
+			<div className='border-top p-3 w-100'>
+				<InputGroup className='rounded-pill shadow-sm overflow-hidden'>
+					<Input
+						type='text'
+						placeholder='Type a message...'
+						value={newMessage}
+						onChange={handleMessageChange}
+						onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+						className='border-0 px-4'
+						style={{ height: "44px" }}
+					/>
+					<Button
+						color='primary'
+						onClick={handleSendMessage}
+						disabled={sending || !newMessage.trim()}
+						className='px-4 d-flex align-items-center justify-content-center'
+						style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+						<Send size={18} />
+					</Button>
+				</InputGroup>
+			</div>
 		</Card>
 	);
 };

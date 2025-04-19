@@ -10,12 +10,12 @@ import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { PathProps } from "../PathCards";
 
 export interface Path {
-	title: string;
+	name: string;
 	description: string;
 	timing: string;
 	price: number;
-	courses: { _id: string; title: string }[];
-	wannaBeInterest: { _id: string; title: string }[];
+	courses: { id: string; title: string; description: string }[];
+	wannaBeInterest: string[];
 }
 const PathDetails = ({ id }: { id: string }) => {
 	const [data, setData] = useState<Path>();
@@ -47,7 +47,7 @@ const PathDetails = ({ id }: { id: string }) => {
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={data?.title || "Path Details"}
+				mainTitle={data?.name || "Path Details"}
 				parent='Student'
 				title='Path Details'
 			/>

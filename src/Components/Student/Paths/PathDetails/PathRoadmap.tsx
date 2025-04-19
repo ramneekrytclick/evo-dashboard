@@ -22,28 +22,22 @@ const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 	return (
 		<Card className='mb-4'>
 			<CardBody>
-				<h3 className='mb-2 text-primary'>{path.title}</h3>
-				<p className='mb-2'>{path.description}</p>
-				<p className='mb-2'>
+				<p className='mb-2 h5'>{path.description}</p>
+				<p className='mb-2 h6'>
 					<strong>Duration:</strong> {path.timing}
 				</p>
-
-				<h5 className='mb-4 mt-4'>
-					{role !== "Admin" ? "🚀 Your Learning Journey" : "Path Journey"}
-				</h5>
-
 				<VerticalTimeline lineColor='#007bff'>
 					{path.courses.map((course, idx) => {
-						const isEnrolled = enrolledCourseIds.includes(course._id);
+						const isEnrolled = enrolledCourseIds.includes(course.id);
 						const buttonLabel = isEnrolled ? "Continue Learning" : "Enroll Now";
 						const buttonColor = isEnrolled ? "success" : "primary";
 						const courseLink = isEnrolled
-							? `/student/learning/course/${course._id}`
+							? `/student/learning/course/${course.id}`
 							: `/student/dashboard/`; //has to be changed
 
 						return (
 							<VerticalTimelineElement
-								key={course._id}
+								key={course.id}
 								date={`Step ${idx + 1}`}
 								icon={<BookOpen />}
 								iconStyle={{ background: "#007bff", color: "#fff" }}
@@ -52,7 +46,7 @@ const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 								<h4 className='vertical-timeline-element-title'>
 									{course.title}
 								</h4>
-								<p>Core skill-building course to advance your journey.</p>
+								<p>{course.description}</p>
 								{role !== "Admin" && (
 									<Link href={courseLink}>
 										<Button
@@ -75,7 +69,7 @@ const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 						<h4 className='vertical-timeline-element-title'>Become:</h4>
 						<ul className='mb-0'>
 							{path.wannaBeInterest.map((wanna) => (
-								<li key={wanna._id}>{wanna.title}</li>
+								<li key={wanna}>{wanna}</li>
 							))}
 						</ul>
 					</VerticalTimelineElement>

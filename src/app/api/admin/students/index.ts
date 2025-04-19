@@ -15,3 +15,6 @@ export const getLessonById = async (lessonId: string, courseId: string) => {
 	);
 	return lesson;
 };
+export const getStudentsByCourseID = async (id: string) => {
+	return (await apiClient.get(`/admin/students/by-course/${id}`)).data;
+};

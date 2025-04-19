@@ -11,6 +11,7 @@ import {
 	Modal,
 	ModalHeader,
 	ModalBody,
+	CardHeader,
 } from "reactstrap";
 import GroupChat from "./GroupChat";
 import BookSessionForm from "./BookSessionForm"; // Ensure correct path
@@ -35,9 +36,9 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={"Batch"}
+				mainTitle={`Batch: ${batch.name}`}
 				parent={"Batches"}
-				title={"Batch"}
+				title={`Batch: ${batch.name}`}
 			/>
 			<Card>
 				<div
@@ -47,12 +48,15 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 					<GroupChat batchId={id} />
 
 					{/* Right: Mentor Card */}
-					<Card className='shadow-sm bg-light text-dark rounded-0'>
+					<Card className='shadow-sm bg-secondary-subtle text-dark text-center rounded-start-0'>
 						<CardBody>
-							<CardTitle tag='h5'>{batch.mentor?.name}</CardTitle>
-							<CardText>
-								<strong>Email:</strong> {batch.mentor?.email}
-							</CardText>
+							<p className='mb-3 text-muted'>Mentor Details</p>
+							<CardTitle
+								tag='h5'
+								className='fw-semibold fs-4'>
+								{batch.mentor?.name}
+							</CardTitle>
+							<CardText>{batch.mentor?.email}</CardText>
 							<Button
 								color='primary'
 								block
