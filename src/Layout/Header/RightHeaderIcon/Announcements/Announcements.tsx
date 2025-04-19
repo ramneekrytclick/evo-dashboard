@@ -16,8 +16,6 @@ const Notifications = () => {
 	const fetchAnnouncements = async (role: string) => {
 		try {
 			const response = await getMyAnnouncements(role);
-			console.log(response.reverse());
-
 			setAnnouncements(response);
 		} catch (error) {
 			console.error("Failed to fetch announcements", error);

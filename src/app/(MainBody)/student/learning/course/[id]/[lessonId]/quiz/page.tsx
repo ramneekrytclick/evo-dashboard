@@ -1,4 +1,4 @@
-import LessonQuizContainer from "@/Components/Admin/Course/Lesson/Quiz";
+import LessonQuizContainer from "@/Components/Student/Course/Lesson/Quiz";
 
 const Page = ({ params }: { params: { lessonId: string; id: string } }) => {
 	return (

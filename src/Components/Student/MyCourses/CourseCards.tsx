@@ -104,7 +104,7 @@ const MyEnrolledCourses = () => {
 								<h5 className='fw-bold text-dark mb-1 text-truncate'>
 									<Link
 										className='text-dark text-decoration-none'
-										href={`/student/course/${course._id}`}>
+										href={`/student/learning/course/${course._id}`}>
 										{course.title || "Untitled Course"}
 									</Link>
 								</h5>
@@ -129,7 +129,7 @@ const MyEnrolledCourses = () => {
 									size='sm'
 									className='w-100 mb-2'
 									tag={Link}
-									href={`/student/course/${course._id}`}>
+									href={`/student/learning/course/${course._id}`}>
 									Continue Learning
 								</Button>
 								<div className='text-center w-100 '>

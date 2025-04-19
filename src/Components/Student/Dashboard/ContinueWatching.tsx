@@ -128,7 +128,7 @@ const ContinueWatching = ({
 
 									return (
 										<Link
-											href={`/student/course/${item.courseId}`}
+											href={`/student/learning/course/${item.courseId}`}
 											key={i}
 											className='text-decoration-none'>
 											<div

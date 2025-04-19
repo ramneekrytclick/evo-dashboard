@@ -2,21 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getLessonById, deleteLesson } from "@/app/api/admin/lessons/lesson";
 import { LessonType } from "@/Types/Lesson.type";
 import { toast } from "react-toastify";
-import {
-	Spinner,
-	Card,
-	CardBody,
-	Button,
-	Modal,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
-} from "reactstrap";
+import { Spinner, Button, UncontrolledTooltip } from "reactstrap";
 import Link from "next/link";
-import { FileText, Trash2 } from "react-feather";
+import { FileText, Info } from "react-feather";
+import { getLessonById } from "@/app/api/admin/students";
+import { getStudentLessonScores } from "@/app/api/student";
 
 const LessonContainer = ({
 	lessonId,
@@ -27,18 +19,17 @@ const LessonContainer = ({
 }) => {
 	const router = useRouter();
 	const [data, setData] = useState<LessonType | null>(null);
+	const [score, setScore] = useState<{
+		lessonId: string;
+		studentId: string;
+		assignmentScore: number;
+		quizScore: number;
+	}>();
 	const [loading, setLoading] = useState(true);
-	const [modalOpen, setModalOpen] = useState(false);
-
-	const toggleModal = () => setModalOpen(!modalOpen);
 
 	const fetchData = async () => {
 		try {
 			const response = await getLessonById(lessonId, courseId);
-			if (!response || Object.keys(response).length === 0) {
-				toast.error("Lesson not found");
-				return;
-			}
 			setData(response);
 		} catch (error) {
 			toast.error("Failed to fetch lesson");
@@ -47,19 +38,19 @@ const LessonContainer = ({
 		}
 	};
 
-	const handleDelete = async () => {
+	const fetchLessonScores = async () => {
 		try {
-			await deleteLesson(lessonId);
-			toast.success("Lesson deleted successfully");
-			router.push(`/admin/course/${courseId}`);
-		} catch (err) {
-			toast.error("Error deleting lesson");
+			const response = await getStudentLessonScores(lessonId);
+			setScore(response);
+		} catch (error) {
+			toast.error("Failed to fetch lesson scores");
 		}
 	};
 
 	useEffect(() => {
 		if (lessonId && courseId) {
 			fetchData();
+			fetchLessonScores();
 		} else {
 			toast.error("lessonId or courseId is undefined");
 			setLoading(false);
@@ -69,30 +60,22 @@ const LessonContainer = ({
 	if (loading) return <Spinner className='m-3' />;
 	if (!data) return <p className='text-muted'>No data available.</p>;
 
-	// Utility to embed YouTube video
 	const getYoutubeEmbedUrl = (url: string) => {
 		const match = url.match(
 			/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/
 		);
-		return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+		return match
+			? `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`
+			: null;
 	};
 
 	const videoEmbed = data.videoUrl ? getYoutubeEmbedUrl(data.videoUrl) : null;
 
 	return (
 		<>
-			<div className='d-flex justify-content-between align-items-center mb-3'>
+			{/* <div className='d-flex justify-content-between align-items-center mb-3'>
 				<h4 className='fw-bold mb-0'>{data.title}</h4>
-				<Button
-					color='light'
-					onClick={toggleModal}
-					className='p-1 rounded-circle'>
-					<Trash2
-						size={16}
-						className='text-danger'
-					/>
-				</Button>
-			</div>
+			</div> */}
 
 			{/* Video Section */}
 			{videoEmbed && (
@@ -113,8 +96,84 @@ const LessonContainer = ({
 				<p className='text-muted'>{data.content}</p>
 			</div>
 
-			{/* Resources Section */}
-			<div className='mb-4'>
+			{/* Scores */}
+			<div className='mb-3'>
+				<div className='d-flex align-items-center gap-2'>
+					<p className='mb-0'>
+						<strong>Quiz Score:</strong> {score?.quizScore ?? "Not Available"}
+					</p>
+					{score?.quizScore === 0 && (
+						<>
+							<Info
+								id='quizScoreTip'
+								size={16}
+								className='text-info'
+							/>
+							<UncontrolledTooltip target='quizScoreTip'>
+								Score is 0. This may be due to incorrect answers or not
+								attempting the quiz.
+							</UncontrolledTooltip>
+						</>
+					)}
+				</div>
+
+				<div className='d-flex align-items-center gap-2 mt-2'>
+					<p className='mb-0'>
+						<strong>Assignment Score:</strong>{" "}
+						{score?.assignmentScore ?? "Not Available"}
+					</p>
+					{score?.assignmentScore === 0 && (
+						<>
+							<Info
+								id='assignmentScoreTip'
+								size={16}
+								className='text-warning'
+							/>
+							<UncontrolledTooltip target='assignmentScoreTip'>
+								Score is 0. This could be due to unsubmitted assignment or it's
+								not graded yet.
+							</UncontrolledTooltip>
+						</>
+					)}
+				</div>
+			</div>
+
+			{/* Buttons */}
+			{/* Buttons */}
+			<div className='d-flex gap-3 mb-4'>
+				{(!score?.quizScore || score.quizScore === 0) && (
+					<Button
+						color='info'
+						onClick={() =>
+							router.push(
+								`/student/learning/course/${courseId}/${lessonId}/quiz`
+							)
+						}>
+						Give Quiz
+					</Button>
+				)}
+
+				{(!score?.assignmentScore || score.assignmentScore === 0) && (
+					<Button
+						color='warning'
+						onClick={() =>
+							router.push(
+								`/student/learning/course/${courseId}/${lessonId}/assignment`
+							)
+						}>
+						Submit Assignment
+					</Button>
+				)}
+			</div>
+
+			{/* Completion Note */}
+			<p className='text-muted'>
+				💡 <strong>Note:</strong> To complete this lesson, both quiz and
+				assignment must be submitted and evaluated.
+			</p>
+
+			{/* Resources */}
+			<div className='mb-4 mt-4'>
 				<h6 className='fw-semibold'>Resources</h6>
 				{data.resources && data.resources.length > 0 ? (
 					<div className='d-flex flex-wrap gap-2'>
@@ -135,53 +194,6 @@ const LessonContainer = ({
 					<p className='text-muted'>No resources available.</p>
 				)}
 			</div>
-
-			{/* Navigation Buttons */}
-			<div className='d-flex gap-3'>
-				<Button
-					color='info'
-					onClick={() =>
-						router.push(`/admin/course/${courseId}/${lessonId}/quiz`)
-					}>
-					View Quiz
-				</Button>
-				<Button
-					color='warning'
-					onClick={() =>
-						router.push(`/admin/course/${courseId}/${lessonId}/assignment`)
-					}>
-					View Assignment
-				</Button>
-			</div>
-
-			{/* Delete Confirmation Modal */}
-			<Modal
-				isOpen={modalOpen}
-				toggle={toggleModal}
-				centered>
-				<ModalHeader toggle={toggleModal}>Delete Lesson</ModalHeader>
-				<ModalBody>
-					<p>
-						Are you sure you want to delete <strong>{data.title}</strong>?
-					</p>
-					<p className='text-danger mb-0'>
-						This will permanently remove all associated videos, quizzes,
-						assignments, and student progress.
-					</p>
-				</ModalBody>
-				<ModalFooter>
-					<Button
-						color='outline-danger'
-						onClick={toggleModal}>
-						Cancel
-					</Button>
-					<Button
-						color='danger'
-						onClick={handleDelete}>
-						Yes, Delete
-					</Button>
-				</ModalFooter>
-			</Modal>
 		</>
 	);
 };

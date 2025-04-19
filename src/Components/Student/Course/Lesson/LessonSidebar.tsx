@@ -2,133 +2,92 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-	Card,
-	CardBody,
-	Accordion,
-	AccordionItem,
-	AccordionHeader,
-	AccordionBody,
-	ListGroup,
-	ListGroupItem,
-	Button,
-} from "reactstrap";
-import { FileText, List, Youtube, ArrowLeftCircle, Plus } from "react-feather";
+import { CardBody, ListGroup, ListGroupItem, Tooltip } from "reactstrap";
+import { ArrowLeftCircle } from "react-feather";
 import { useEffect, useState } from "react";
-import { getLessons } from "@/app/api/admin/lessons/lesson";
-import CreateLessonModal from "../CourseLessons/CreateLessonModal";
+import { getLessonsByCourseID } from "@/app/api/student";
 
-const LessonSidebar = ({
-	courseId,
-	lessonId,
-}: {
-	courseId: string;
-	lessonId: string;
-}) => {
+const LessonSidebar = ({ courseId }: { courseId: string }) => {
 	const pathname = usePathname();
 	const [lessons, setLessons] = useState<any[]>([]);
-	const [openLesson, setOpenLesson] = useState<string>(lessonId || "");
-	const [showModal, setShowModal] = useState(false);
+	const [tooltipOpenId, setTooltipOpenId] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchLessons = async () => {
-			const result = await getLessons(courseId);
-			setLessons(result);
+			const result = await getLessonsByCourseID(courseId);
+			setLessons(result.lessons);
 		};
 		fetchLessons();
 	}, [courseId]);
 
-	const toggle = (id: string) => {
-		setOpenLesson((prev) => (prev === id ? "" : id));
-	};
-
-	const handleSuccess = async () => {
-		setShowModal(false);
-		const updatedLessons = await getLessons(courseId);
-		setLessons(updatedLessons);
+	const toggleTooltip = (id: string) => {
+		setTooltipOpenId((prev) => (prev === id ? null : id));
 	};
 
 	return (
-		<CardBody className='h-100 bg-light-subtle d-flex flex-column'>
+		<CardBody
+			className='h-100 bg-light-subtle d-flex flex-column'
+			style={{
+				position: "sticky",
+				top: "70px",
+				height: "calc(100vh - 70px)",
+				overflowY: "auto",
+			}}>
 			<h6 className='fw-bold text-secondary mb-3 d-flex align-items-center gap-2'>
-				<Link href={`/admin/course/${courseId}`}>
+				<Link href={`/student/learning/course/${courseId}`}>
 					<ArrowLeftCircle
 						size={18}
-						className='text-warning'
+						className='text-primary'
 					/>
 				</Link>
 				Lessons
 			</h6>
-			<div style={{ maxHeight: "60vw", overflowY: "auto", width: "100%" }}>
-				<Accordion
-					open={openLesson}
-					toggle={toggle}
-					flush>
-					{lessons.map((lesson) => (
-						<AccordionItem key={lesson._id}>
-							<AccordionHeader targetId={lesson._id}>
+
+			<ListGroup flush>
+				{lessons.map((lesson) => {
+					const isActive = pathname?.startsWith(
+						`/student/learning/course/${courseId}/${lesson._id}`
+					);
+					const tooltipId = `lesson-tooltip-${lesson._id}`;
+
+					return (
+						<ListGroupItem
+							key={lesson._id}
+							action
+							className={`p-2 ${
+								isActive ? "fw-bold text-primary bg-light" : "text-dark"
+							}`}
+							style={{ padding: "0.75rem 1rem" }}>
+							<Link
+								href={`/student/learning/course/${courseId}/${lesson._id}`}
+								style={{
+									textDecoration: "none",
+									color: isActive ? "#0d6efd" : "#212529",
+								}}>
+								<span
+									id={tooltipId}
+									style={{
+										display: "inline-block",
+										width: "100%",
+										whiteSpace: "nowrap",
+										overflow: "hidden",
+										textOverflow: "ellipsis",
+									}}>
+									{lesson.title}
+								</span>
+							</Link>
+
+							<Tooltip
+								target={tooltipId}
+								isOpen={tooltipOpenId === tooltipId}
+								toggle={() => toggleTooltip(tooltipId)}
+								placement='right'>
 								{lesson.title}
-							</AccordionHeader>
-							<AccordionBody accordionId={lesson._id}>
-								<ListGroup flush>
-									<ListGroupItem
-										tag={Link}
-										href={`/admin/course/${courseId}/${lesson._id}`}
-										action
-										className={
-											pathname === `/admin/course/${courseId}/${lesson._id}`
-												? "fw-semibold bg-light text-primary"
-												: "text-dark"
-										}>
-										<Youtube size={14} /> Lesson Overview
-									</ListGroupItem>
-									<ListGroupItem
-										tag={Link}
-										href={`/admin/course/${courseId}/${lesson._id}/quiz`}
-										action
-										className={
-											pathname ===
-											`/admin/course/${courseId}/${lesson._id}/quiz`
-												? "fw-semibold bg-light text-primary"
-												: "text-dark"
-										}>
-										<List size={14} /> Quiz
-									</ListGroupItem>
-									<ListGroupItem
-										tag={Link}
-										href={`/admin/course/${courseId}/${lesson._id}/assignment`}
-										action
-										className={
-											pathname ===
-											`/admin/course/${courseId}/${lesson._id}/assignment`
-												? "fw-semibold bg-light text-primary"
-												: "text-dark"
-										}>
-										<FileText size={14} /> Assignment
-									</ListGroupItem>
-								</ListGroup>
-							</AccordionBody>
-						</AccordionItem>
-					))}
-				</Accordion>
-			</div>
-
-			<div className='mt-auto pt-3 border-top w-100'>
-				<Button
-					color='success'
-					className='w-100 d-flex align-items-center justify-content-center gap-2'
-					onClick={() => setShowModal(true)}>
-					<Plus size={16} />
-					Add Lesson
-				</Button>
-			</div>
-
-			<CreateLessonModal
-				isOpen={showModal}
-				toggle={() => setShowModal(false)}
-				courseId={courseId}
-				refresh={handleSuccess}
-			/>
+							</Tooltip>
+						</ListGroupItem>
+					);
+				})}
+			</ListGroup>
 		</CardBody>
 	);
 };

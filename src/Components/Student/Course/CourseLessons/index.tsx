@@ -3,26 +3,45 @@ import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { CoursesTitle } from "@/Constant";
 import { useEffect, useState } from "react";
 import { LessonType } from "@/Types/Lesson.type";
-import { getLessons } from "@/app/api/admin/lessons/lesson";
+
 import { toast } from "react-toastify";
 import { getAllCourses } from "@/app/api/cc";
-import { Button, Card, CardBody, CardHeader, Spinner } from "reactstrap";
+import {
+	Button,
+	Card,
+	CardBody,
+	CardHeader,
+	Col,
+	Row,
+	Spinner,
+} from "reactstrap";
 import LessonsCardView from "./LessonsCardView";
-import CreateLessonModal from "./CreateLessonModal";
-import { getEnrolledCourses } from "@/app/api/student";
+import {
+	getEnrolledCourses,
+	getLessonsByCourseID,
+	getMyCourseProgress,
+} from "@/app/api/student";
 
 const LessonsPageContainer = ({ id }: { id: string }) => {
 	const [lessons, setLessons] = useState<LessonType[]>([]);
 	const [course, setCourse] = useState<any>([]);
 	const [loading, setLoading] = useState(false);
-	const [showCreateModal, setShowCreateModal] = useState(false);
 	const [enrolledCourses, setEnrolledCourses] = useState<any>([]);
-
+	const [progress, setProgress] = useState();
+	const fetchProgress = async () => {
+		setLoading(true);
+		try {
+			const response = await getMyCourseProgress();
+			setProgress(response.progress);
+		} catch (error) {
+			toast.error("Error fetching progress");
+		}
+	};
 	const fetchLessons = async () => {
 		try {
 			setLoading(true);
-			const response = await getLessons(id);
-			setLessons(response);
+			const response = await getLessonsByCourseID(id);
+			setLessons(response.lessons);
 		} catch (error) {
 			toast.error("Error fetching lessons");
 		}
@@ -53,6 +72,7 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 		fetchLessons();
 		fetchCourse();
 		fetchEnrolledCourses();
+		fetchProgress();
 	}, []);
 
 	useEffect(() => {
@@ -78,37 +98,19 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 	if (course) {
 		return (
 			<>
-				<Breadcrumbs
-					mainTitle={course.title}
-					parent={CoursesTitle}
-					title={course.title}
-				/>
-				<Card
-					color='light-subtle'
-					className='p-2'>
-					<CardHeader className='bg-light-subtle d-flex justify-content-between align-items-center'>
-						<h4 className='mb-0 text-dark'>Course Lessons</h4>
-						<Button
-							color='primary'
-							onClick={() => setShowCreateModal(true)}>
-							<i className='fa fa-plus me-1' />
-							Create Lesson
-						</Button>
-					</CardHeader>
-					<CardBody>
-						<LessonsCardView
-							lessons={lessons}
-							refresh={fetchLessons}
-						/>
-					</CardBody>
-				</Card>
-
-				<CreateLessonModal
-					isOpen={showCreateModal}
-					toggle={() => setShowCreateModal(false)}
-					refresh={fetchLessons}
-					courseId={id}
-				/>
+				<Row className='h-100'>
+					<Col sm={12}>
+						<CardHeader>
+							<h4 className='mb-0 text-dark'>Course Lessons</h4>
+						</CardHeader>
+						<CardBody>
+							<LessonsCardView
+								lessons={lessons}
+								courseId={id}
+							/>
+						</CardBody>
+					</Col>
+				</Row>
 			</>
 		);
 	}

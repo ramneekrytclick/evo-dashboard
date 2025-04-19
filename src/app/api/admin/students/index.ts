@@ -1,36 +1,17 @@
 import { StudentProps } from "@/Types/Student.type";
 import { apiClient } from "@/utils/api";
+import { getLessonsByCourseID } from "../../student";
+import { LessonFormProps } from "@/Types/Lesson.type";
 
-export const createStudent = async (data: StudentProps) => {
-	try {
-		const response = await apiClient.post(`/admin/create-student`, data);
-		return response.data;
-	} catch (error) {
-		console.error(error);
-	}
-};
 export const getStudents = async () => {
 	const response = await apiClient.get("/admin/role/Student");
 	return response.data;
 };
-export const getStudentsByCourseID = async (id: string) => {
-	return (await apiClient.get(`/admin/students/by-course/${id}`)).data;
-};
 
-export const updateStudent = async (id: string, data: StudentProps) => {
-	try {
-		const response = await apiClient.put(`/admin/update-student/${id}`, data);
-		return response.data;
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-export const deleteStudent = async (id: string) => {
-	try {
-		const response = await apiClient.delete(`/admin/delete-student/${id}`);
-		return response;
-	} catch (error) {
-		console.log(error);
-	}
+export const getLessonById = async (lessonId: string, courseId: string) => {
+	const response = await getLessonsByCourseID(courseId);
+	const lesson = response.lessons.find(
+		(lesson: LessonFormProps) => lesson._id === lessonId
+	);
+	return lesson;
 };

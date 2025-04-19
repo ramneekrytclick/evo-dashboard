@@ -41,9 +41,19 @@ const LessonCard = ({
 					<div className='d-flex justify-content-between align-items-start'>
 						<div className='me-2'>
 							<Link href={`/admin/course/${lesson.course}/${lesson._id}`}>
-								<h5 className='fw-bold mb-1'>{lesson.title}</h5>
+								<Link href={`/admin/course/${lesson.course}/${lesson._id}`}>
+									<h5 className='fw-bold mb-1'>
+										{lesson.title.length > 20
+											? lesson.title.substring(0, 20) + "..."
+											: lesson.title}
+									</h5>
+								</Link>
 							</Link>
-							<p className='text-muted mb-3'>{lesson.content}</p>
+							<p className='text-muted mb-3 text-wrap'>
+								{lesson.content.length > 20
+									? lesson.content.substring(0, 40) + "..."
+									: lesson.content}
+							</p>
 						</div>
 						<Button
 							color='light'

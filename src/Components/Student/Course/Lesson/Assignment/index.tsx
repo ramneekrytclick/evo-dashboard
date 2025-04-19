@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAssignmentByLessonID } from "@/app/api/admin/lessons/quiz";
-import {
-	createAssignment,
-	updateAssignment,
-} from "@/app/api/admin/lessons/assignment";
-import { useRouter } from "next/navigation";
+import { getLessonById } from "@/app/api/admin/students";
+import { submitAssignment } from "@/app/api/student";
 import {
 	Alert,
 	Card,
@@ -16,17 +12,14 @@ import {
 	Row,
 	Spinner,
 	Button,
-	Modal,
-	ModalHeader,
-	ModalBody,
-	ModalFooter,
 	Form,
 	FormGroup,
 	Label,
 	Input,
 } from "reactstrap";
-import { FileText, Plus } from "react-feather";
+import { FileText } from "react-feather";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
@@ -47,25 +40,23 @@ const LessonAssignmentContainer = ({
 }) => {
 	const router = useRouter();
 	const [assignmentData, setAssignmentData] = useState<Assignment | null>(null);
+	const [lessonTitle, setLessonTitle] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [modalOpen, setModalOpen] = useState(false);
 	const [formData, setFormData] = useState({
-		title: "",
 		description: "",
-		attachment: null as File | null,
+		file: null as File | null,
 	});
 
 	const fetchAssignment = async () => {
 		try {
-			const response = await getAssignmentByLessonID(lessonId, courseId);
-			if (response.length > 0) {
-				setAssignmentData(response[0]);
-				setFormData({
-					title: response[0].title,
-					description: response[0].description,
-					attachment: null,
-				});
+			const response = await getLessonById(lessonId, courseId);
+			const assignment = response?.assignments;
+			if (assignment && assignment.length > 0) {
+				setAssignmentData(assignment[0]);
+			}
+			if (response?.title) {
+				setLessonTitle(response.title);
 			}
 		} catch (error) {
 			setError("Failed to fetch assignment");
@@ -80,31 +71,21 @@ const LessonAssignmentContainer = ({
 	}, []);
 
 	const handleSubmit = async () => {
-		const form = new FormData();
-		form.append("lessonId", lessonId);
-		form.append("title", formData.title);
-		form.append("description", formData.description);
-
-		if (formData.attachment) {
-			form.append(
-				assignmentData?._id ? "pdf" : "attachment",
-				formData.attachment
-			);
+		if (!formData.file || !formData.description) {
+			toast.error("Please fill all fields and upload your file.");
+			return;
 		}
 
 		try {
-			if (assignmentData?._id) {
-				form.append("assignmentId", assignmentData._id);
-				await updateAssignment(form);
-				toast.success("Assignment updated successfully");
-			} else {
-				await createAssignment(form);
-				toast.success("Assignment created successfully");
-			}
-			setModalOpen(false);
-			fetchAssignment();
-		} catch (err) {
-			toast.error("Failed to save assignment");
+			await submitAssignment({
+				lessonId,
+				description: formData.description,
+				file: formData.file,
+			});
+			toast.success("Assignment submitted successfully!");
+			setFormData({ description: "", file: null });
+		} catch (err: any) {
+			toast.error(err.response.data.message);
 		}
 	};
 
@@ -114,27 +95,21 @@ const LessonAssignmentContainer = ({
 	return (
 		<>
 			<div className='d-flex justify-content-between align-items-center mb-3'>
+				<h5 className='fw-bold mb-0'>
+					Assignment {lessonTitle && ` - ${lessonTitle}`}
+				</h5>
 				<Button
-					color='warning'
-					outline
+					color='secondary'
+					size='sm'
 					onClick={() =>
-						router.replace(`/admin/course/${courseId}/${lessonId}`)
-					}
-					className='d-flex align-items-center gap-1'>
-					<i className='fa fa-arrow-left' /> Back
-				</Button>
-				<h5 className='fw-bold mb-0'>Assignments</h5>
-				<Button
-					color={assignmentData ? "info" : "success"}
-					className='d-flex align-items-center gap-1'
-					onClick={() => setModalOpen(true)}>
-					<Plus size={17} />
-					{assignmentData ? "Edit Assignment" : "Add Assignment"}
+						router.push(`/student/learning/course/${courseId}/${lessonId}`)
+					}>
+					Back to Lesson
 				</Button>
 			</div>
 
 			{!assignmentData ? (
-				<p className='text-muted'>No assignments found for this lesson.</p>
+				<p className='text-muted'>No assignment found for this lesson.</p>
 			) : (
 				<Row className='gy-3'>
 					<Col sm={12}>
@@ -153,7 +128,7 @@ const LessonAssignmentContainer = ({
 										target='_blank'
 										rel='noopener noreferrer'
 										className='d-flex align-items-center gap-1'>
-										<FileText size={14} /> View Attachment
+										<FileText size={14} /> View Assignment File
 									</Button>
 								) : (
 									<p className='text-muted'>No attachment available</p>
@@ -161,66 +136,51 @@ const LessonAssignmentContainer = ({
 							</CardBody>
 						</Card>
 					</Col>
+
+					{/* Submission Form */}
+					<Col sm={12}>
+						<Card className='shadow-sm'>
+							<CardBody>
+								<h6 className='mb-3'>Submit Your Assignment</h6>
+								<Form>
+									<FormGroup>
+										<Label>Your Notes / Description</Label>
+										<Input
+											type='textarea'
+											value={formData.description}
+											onChange={(e) =>
+												setFormData({
+													...formData,
+													description: e.target.value,
+												})
+											}
+										/>
+									</FormGroup>
+									<FormGroup>
+										<Label>Upload PDF File</Label>
+										<Input
+											type='file'
+											accept='.pdf'
+											onChange={(e) =>
+												setFormData({
+													...formData,
+													file: e.target.files?.[0] || null,
+												})
+											}
+										/>
+									</FormGroup>
+									<Button
+										color='success'
+										className='mt-2'
+										onClick={handleSubmit}>
+										Submit Assignment
+									</Button>
+								</Form>
+							</CardBody>
+						</Card>
+					</Col>
 				</Row>
 			)}
-
-			<Modal
-				isOpen={modalOpen}
-				toggle={() => setModalOpen(false)}
-				centered>
-				<ModalHeader toggle={() => setModalOpen(false)}>
-					{assignmentData ? "Update" : "Create"} Assignment
-				</ModalHeader>
-				<ModalBody>
-					<Form>
-						<FormGroup>
-							<Label>Title</Label>
-							<Input
-								type='text'
-								value={formData.title}
-								onChange={(e) =>
-									setFormData({ ...formData, title: e.target.value })
-								}
-							/>
-						</FormGroup>
-						<FormGroup>
-							<Label>Description</Label>
-							<Input
-								type='textarea'
-								value={formData.description}
-								onChange={(e) =>
-									setFormData({ ...formData, description: e.target.value })
-								}
-							/>
-						</FormGroup>
-						<FormGroup>
-							<Label>Upload PDF</Label>
-							<Input
-								type='file'
-								accept='.pdf'
-								onChange={(e) =>
-									setFormData({
-										...formData,
-										attachment: e.target.files?.[0] || null,
-									})
-								}
-							/>
-						</FormGroup>
-					</Form>
-				</ModalBody>
-				<ModalFooter>
-					<Button
-						color='success'
-						onClick={handleSubmit}>
-						Save
-					</Button>
-					<Button
-						color='secondary'
-						onClick={() => setModalOpen(false)}>
-						Cancel
-					</Button>
-				</ModalFooter>
-			</Modal>
 		</>
 	);
 };

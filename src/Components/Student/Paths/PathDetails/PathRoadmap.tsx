@@ -38,7 +38,7 @@ const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 						const buttonLabel = isEnrolled ? "Continue Learning" : "Enroll Now";
 						const buttonColor = isEnrolled ? "success" : "primary";
 						const courseLink = isEnrolled
-							? `/student/course/${course._id}`
+							? `/student/learning/course/${course._id}`
 							: `/student/dashboard/`; //has to be changed
 
 						return (

@@ -1,5 +1,6 @@
 import { apiClient } from "@/utils/api";
 import { getPaths } from "../admin/path";
+import { getLessonById } from "../admin/students";
 
 export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
@@ -99,4 +100,7 @@ export const getMyApplications = async () => {
 };
 export const getMyCourseProgress = async () => {
 	return (await apiClient.get(`/students/my-progress`)).data;
+};
+export const getStudentLessonScores = async (lessonId: string) => {
+	return (await apiClient.get(`/students/scores/${lessonId}`)).data;
 };

@@ -43,9 +43,9 @@ const CartBodyContent = ({ promoDiscounts = {} as Record<string, number> }) => {
 		<>
 			<tr>
 				<td colSpan={4}></td>
-				<td className="total-amount">
-					<h3 className="m-0 text-end">
-						<span className="f-w-600">Total Price :</span>
+				<td className='total-amount'>
+					<h3 className='m-0 text-end'>
+						<span className='f-w-600'>Total Price :</span>
 					</h3>
 				</td>
 				<td colSpan={2}>
@@ -54,19 +54,19 @@ const CartBodyContent = ({ promoDiscounts = {} as Record<string, number> }) => {
 			</tr>
 			<tr>
 				<td
-					className="text-end"
+					className='text-end'
 					colSpan={6}>
 					<Link
-						href="/student/courses"
-						className="btn btn-secondary cart-btn-transform">
+						href='/student/learning/courses'
+						className='btn btn-secondary cart-btn-transform'>
 						Continue Browsing
 					</Link>
 				</td>
 				<td>
 					<Link
-						href="#"
+						href='#'
 						onClick={enrollInCourses}
-						className="btn btn-success cart-btn-transform">
+						className='btn btn-success cart-btn-transform'>
 						Check Out
 					</Link>
 				</td>

@@ -41,7 +41,7 @@ const LessonContainer = ({
 			}
 			setData(response);
 		} catch (error) {
-			toast.error("Failed to fetch lesson");
+			toast.error("Failed to fetch lessonss");
 		} finally {
 			setLoading(false);
 		}
