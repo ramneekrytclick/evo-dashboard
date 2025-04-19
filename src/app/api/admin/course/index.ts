@@ -29,3 +29,7 @@ export const deleteCourse = async (id: string) => {
 	const response = await apiClient.delete(`/admin/course/${id}`);
 	return response.data;
 };
+export const getAllReviews = async () => {
+	const response = await apiClient.get(`/admin/reviews`);
+	return response.data;
+};

@@ -11,8 +11,15 @@ import {
 	getAllSubcategories,
 	getAllWannaBeInterests,
 } from "@/app/api/cc";
+import { Review } from "./ReviewModal";
 
-const CourseCards = () => {
+const CourseCards = ({
+	reviews,
+	fetchReviews,
+}: {
+	reviews: Review[];
+	fetchReviews: () => void;
+}) => {
 	const [courses, setCourses] = useState<CourseProps[]>([]);
 	const [categories, setCategories] = useState<any[]>([]);
 	const [subcategories, setSubcategories] = useState<any[]>([]);
@@ -57,18 +64,22 @@ const CourseCards = () => {
 	return (
 		<>
 			<Row>
-				{/* {JSON.stringify(courses)} */}
-				{courses.map((course, index) => (
-					<CourseCard
-						key={index}
-						data={course}
-						fetchData={fetchCourses}
-						categories={categories}
-						subcategories={subcategories}
-						wannaBeInterests={wannaBeInterests}
-						onDelete={handleDelete}
-					/>
-				))}
+				{courses.map((course, index) => {
+					return (
+						<CourseCard
+							key={index}
+							data={course}
+							fetchData={() => {
+								fetchCourses();
+							}}
+							categories={categories}
+							subcategories={subcategories}
+							wannaBeInterests={wannaBeInterests}
+							reviews={reviews}
+							onDelete={handleDelete}
+						/>
+					);
+				})}
 			</Row>
 		</>
 	);

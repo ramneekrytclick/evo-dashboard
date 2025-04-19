@@ -14,7 +14,13 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { addReview } from "@/app/api/admin/review";
 
-const AddReviewModal = ({ courseId }: { courseId: string }) => {
+const AddReviewModal = ({
+	courseId,
+	onSuccess,
+}: {
+	courseId: string;
+	onSuccess: () => void;
+}) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => setModal(!modal);
 
@@ -32,11 +38,11 @@ const AddReviewModal = ({ courseId }: { courseId: string }) => {
 				rating,
 				comment,
 			});
+			onSuccess();
 		} catch (error) {
 			console.error(error);
 			toast.error("Error adding review");
 		}
-
 		// TODO: Connect to real backend API
 
 		toggle();
@@ -45,7 +51,7 @@ const AddReviewModal = ({ courseId }: { courseId: string }) => {
 	return (
 		<>
 			<Button
-				color="primary"
+				color='warning'
 				onClick={toggle}>
 				Add Review
 			</Button>
@@ -57,10 +63,10 @@ const AddReviewModal = ({ courseId }: { courseId: string }) => {
 				<Form onSubmit={handleSubmit}>
 					<ModalBody>
 						<FormGroup>
-							<Label for="rating">Rating (1-5)</Label>
+							<Label for='rating'>Rating (1-5)</Label>
 							<Input
-								type="number"
-								id="rating"
+								type='number'
+								id='rating'
 								min={1}
 								max={5}
 								value={rating}
@@ -69,10 +75,10 @@ const AddReviewModal = ({ courseId }: { courseId: string }) => {
 							/>
 						</FormGroup>
 						<FormGroup>
-							<Label for="comment">Comment</Label>
+							<Label for='comment'>Comment</Label>
 							<Input
-								type="textarea"
-								id="comment"
+								type='textarea'
+								id='comment'
 								value={comment}
 								onChange={(e) => setComment(e.target.value)}
 								required
@@ -81,12 +87,12 @@ const AddReviewModal = ({ courseId }: { courseId: string }) => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							type="submit"
-							color="success">
+							type='submit'
+							color='success'>
 							Submit
 						</Button>
 						<Button
-							color="secondary"
+							color='secondary'
 							onClick={toggle}>
 							Cancel
 						</Button>

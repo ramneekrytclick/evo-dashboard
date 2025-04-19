@@ -7,8 +7,11 @@ import { getSubcategories } from "@/app/api/admin/subcategories";
 import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { toast } from "react-toastify";
 import { createCourse } from "@/app/api/admin/course";
+import { useAuth } from "@/app/AuthProvider";
 
 const SimpleCreateCourseForm = () => {
+	const { user } = useAuth();
+	const name = user?.name || "id";
 	const [formData, setFormData] = useState<any>({
 		title: "",
 		description: "",
@@ -21,7 +24,7 @@ const SimpleCreateCourseForm = () => {
 		realPrice: "",
 		discountedPrice: "",
 		tags: "",
-		createdBy: "admin-id-placeholder", // Replace with actual logic
+		createdBy: name,
 		review: "No reviews yet",
 	});
 	const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -99,7 +102,7 @@ const SimpleCreateCourseForm = () => {
 				realPrice: "",
 				discountedPrice: "",
 				tags: "",
-				createdBy: "admin-id-placeholder",
+				createdBy: name,
 				review: "No reviews yet",
 			});
 			setPhotoFile(null);

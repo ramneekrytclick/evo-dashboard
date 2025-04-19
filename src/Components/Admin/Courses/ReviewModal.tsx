@@ -7,35 +7,50 @@ import {
 	ModalFooter,
 	Badge,
 } from "reactstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Star } from "react-feather";
 import AddReviewModal from "./AddReviewModal";
+import { getAllReviews } from "@/app/api/admin/course";
+import { toast } from "react-toastify";
 
-interface Review {
+export interface Review {
 	_id: string;
 	rating: number;
 	comment: string;
 	student?: string | null;
 	createdAt: string;
+	course: { _id: string; title: string };
+	user?: any;
 }
 
 interface ViewReviewsModalProps {
 	reviews: Review[];
 	courseId: string;
+	fetchReviews: () => void;
 }
 
 const ViewReviewsModal = ({
 	reviews = [],
 	courseId,
+	fetchReviews,
 }: ViewReviewsModalProps) => {
 	const [modal, setModal] = useState(false);
-	const toggle = () => setModal(!modal);
+	const toggle = () => {
+		setModal(!modal);
 
+		fetchReviews();
+	};
+	const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
+	useEffect(() => {
+		const filtered = reviews.filter(
+			(review) => review.course?._id === courseId
+		);
+		setFilteredReviews(filtered);
+	}, [reviews, courseId]);
 	return (
 		<>
 			<Button
-				color="success"
-				size="sm"
+				color='warning'
 				onClick={toggle}>
 				View Reviews
 			</Button>
@@ -43,39 +58,44 @@ const ViewReviewsModal = ({
 			<Modal
 				isOpen={modal}
 				toggle={toggle}
-				size="lg">
+				size='lg'>
 				<ModalHeader toggle={toggle}>Course Reviews</ModalHeader>
-				<ModalBody>
-					{reviews.length === 0 ? (
-						<p className="text-muted">No reviews yet.</p>
+				<ModalBody
+					style={{
+						maxHeight: "500px",
+						overflowY: "auto",
+					}}>
+					{filteredReviews.length === 0 ? (
+						<p className='text-muted'>No reviews yet.</p>
 					) : (
-						reviews.map((review) => (
+						filteredReviews.map((review) => (
 							<div
 								key={review._id}
-								className="border-bottom pb-3 mb-3">
-								<div className="d-flex align-items-center mb-1">
-									<Badge
-										color="warning"
-										className="me-2 text-dark">
+								className='border-bottom pb-3 mb-3'>
+								<h6 className='mb-3'>{review.comment}</h6>
+								<div className='d-flex align-items-center mb-1'>
+									{new Array(review?.rating || 5).fill("").map((_, index) => (
 										<Star
-											size={12}
-											className="me-1"
+											key={index}
+											size={20}
+											className='me-1 text-warning'
 										/>
-										{review.rating}
-									</Badge>
-									<small className="text-muted">
+									))}
+									<small className='text-muted'>
 										{new Date(review.createdAt).toLocaleDateString()}
 									</small>
 								</div>
-								<p className="mb-0">{review.comment}</p>
 							</div>
 						))
 					)}
 				</ModalBody>
 				<ModalFooter>
-					<AddReviewModal courseId={courseId} />
+					<AddReviewModal
+						courseId={courseId}
+						onSuccess={fetchReviews}
+					/>
 					<Button
-						color="secondary"
+						color='outline-warning'
 						onClick={toggle}>
 						Close
 					</Button>

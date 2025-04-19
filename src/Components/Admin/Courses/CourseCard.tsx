@@ -20,7 +20,7 @@ import { Trash } from "react-feather";
 import { CourseProps } from "@/Types/Course.type";
 import CourseModal from "./CourseModal";
 import { useRouter } from "next/navigation";
-import ViewReviewsModal from "./ReviewModal";
+import ViewReviewsModal, { Review } from "./ReviewModal";
 
 interface CourseCardProps {
 	data: CourseProps;
@@ -29,6 +29,7 @@ interface CourseCardProps {
 	subcategories: any[];
 	wannaBeInterests: any[];
 	onDelete: (id: string) => void; // Optional delete callback
+	reviews: Review[];
 }
 
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
@@ -40,6 +41,7 @@ const CourseCard = ({
 	subcategories,
 	wannaBeInterests,
 	onDelete,
+	reviews,
 }: CourseCardProps) => {
 	const router = useRouter();
 	const [deleteModal, setDeleteModal] = useState(false);
@@ -86,8 +88,8 @@ const CourseCard = ({
 			xl={4}
 			className='mb-4'>
 			<Card
-				className='border-0 shadow-md rounded-4 overflow-hidden'
-				style={{ height: "610px" }}>
+				className='border-0 shadow-md rounded-4 overflow-auto'
+				style={{ height: "650px" }}>
 				<div className='position-relative'>
 					<CardImg
 						top
@@ -112,8 +114,8 @@ const CourseCard = ({
 						className='fw-semibold text-dark mb-2'
 						href={`/admin/course/${data._id}`}>
 						<CardTitle
-							tag='h2'
-							className='mb-2 text-truncate'>
+							tag='h4'
+							className='mb-2 text-wrap'>
 							{data.title}
 						</CardTitle>
 					</Link>
@@ -171,23 +173,23 @@ const CourseCard = ({
 					<div className='d-flex gap-2 justify-content-between align-items-center flex-wrap'>
 						<Link
 							href={`/admin/course/${data._id}`}
-							className='btn btn-sm btn-outline-primary'>
+							className='btn btn-outline-primary'>
 							View Lessons
 						</Link>
 						<Button
 							color='primary'
-							size='sm'
 							onClick={goToBatches}>
 							View Batches
 						</Button>
 						<ViewReviewsModal
-							reviews={data.reviews}
+							reviews={reviews}
 							courseId={data._id || ""}
+							fetchReviews={fetchData}
 						/>
 						<Button
 							color='danger'
 							size='sm'
-							className='d-flex align-items-center'
+							className='d-flex align-items-center rounded-pill'
 							onClick={toggleDelete}>
 							<Trash size={16} />
 						</Button>
