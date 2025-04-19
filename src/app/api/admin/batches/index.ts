@@ -26,3 +26,6 @@ export const assignMentorToBatch = async (data: {
 }) => {
 	return (await apiClient.put(`/batches/assign-mentor`, data)).data;
 };
+export const deleteBatch = async (id: string) => {
+	return (await apiClient.delete(`/admin/batch/${id}`)).data;
+};

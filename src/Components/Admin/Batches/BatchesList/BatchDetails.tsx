@@ -7,9 +7,12 @@ import {
 	Badge,
 	Card,
 	CardBody,
+	Button,
 } from "reactstrap";
 import { BatchProps } from "@/Types/Course.type";
 import Link from "next/link";
+import { toast } from "react-toastify";
+import { deleteBatch } from "@/app/api/admin/batches";
 
 const BatchDetails = ({
 	batch,

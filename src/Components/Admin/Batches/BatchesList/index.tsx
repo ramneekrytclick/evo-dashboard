@@ -1,10 +1,19 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Card, CardBody, Button, Badge } from "reactstrap";
+import {
+	Card,
+	CardBody,
+	Button,
+	Badge,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+} from "reactstrap";
 import DataTable, { TableColumn } from "react-data-table-component";
 
-import { getBatches } from "@/app/api/admin/batches";
+import { deleteBatch, getBatches } from "@/app/api/admin/batches";
 import { BatchProps } from "@/Types/Course.type";
 import CreateBatchModal from "../CreateBatchModal";
 import FilterComponent from "@/CommonComponent/FilterComponent";
@@ -13,6 +22,8 @@ import AssignMentorModal from "./AssignMentor";
 import BatchDetails from "./BatchDetails";
 import Link from "next/link";
 import { FontSizeTitle } from "@/Constant";
+import { toast } from "react-toastify";
+import { Trash, Trash2 } from "react-feather";
 
 const BatchesList = () => {
 	const [batches, setBatches] = useState<BatchProps[]>([]);
@@ -27,7 +38,9 @@ const BatchesList = () => {
 	const [selectedBatch, setSelectedBatch] = useState<BatchProps | null>(null);
 	const [selectedBatchForDetails, setSelectedBatchForDetails] =
 		useState<BatchProps | null>(null);
-
+	const [deleteBatchModalOpen, setDeleteBatchModalOpen] = useState(false);
+	const [batchToDelete, setBatchToDelete] = useState<BatchProps | null>(null);
+	const [confirmBatchName, setConfirmBatchName] = useState("");
 	const fetchBatches = async () => {
 		try {
 			const response = await getBatches();
@@ -60,7 +73,6 @@ const BatchesList = () => {
 			})
 		);
 	}, [batches, filterText]);
-
 	const columns: TableColumn<BatchProps>[] = [
 		{
 			name: "Batch",
@@ -72,7 +84,7 @@ const BatchesList = () => {
 			center: true,
 			sortable: true,
 			selector: (row) =>
-				typeof row.course === "object" ? row.course.title : row.course || "-",
+				typeof row.course === "object" ? row.course?.title : row.course || "-",
 			cell: (row) =>
 				row.course ? (
 					<Link
@@ -161,6 +173,43 @@ const BatchesList = () => {
 			ignoreRowClick: true,
 			button: true,
 		},
+		{
+			name: "Delete",
+			center: true,
+			cell: (row: BatchProps) => {
+				const now = new Date();
+				const end = new Date(row.endDate || 0);
+				const isActive = end > now;
+
+				return (
+					<div className='d-flex flex-column align-items-center'>
+						<Button
+							color='danger'
+							size='sm'
+							id={`delete-btn-${row._id}`}
+							disabled={isActive}
+							onClick={(e) => {
+								e.stopPropagation();
+								setBatchToDelete(row);
+								setDeleteBatchModalOpen(true);
+								setConfirmBatchName("");
+							}}>
+							<Trash2 size={16} />
+						</Button>
+						{isActive && (
+							<Badge
+								color='light'
+								className='text-danger mt-1'
+								style={{ fontSize: "11px" }}>
+								Ongoing
+							</Badge>
+						)}
+					</div>
+				);
+			},
+			ignoreRowClick: true,
+			button: true,
+		},
 	];
 
 	return (
@@ -242,6 +291,55 @@ const BatchesList = () => {
 					toggle={() => setSelectedBatchForDetails(null)}
 				/>
 			)}
+
+			<Modal
+				isOpen={deleteBatchModalOpen}
+				toggle={() => setDeleteBatchModalOpen(false)}
+				centered>
+				<ModalHeader toggle={() => setDeleteBatchModalOpen(false)}>
+					Confirm Delete Batch
+				</ModalHeader>
+				<ModalBody>
+					<p>
+						To confirm deletion of batch <strong>{batchToDelete?.name}</strong>,
+						please type its name below:
+					</p>
+					<input
+						type='text'
+						className='form-control mt-2'
+						placeholder='Enter batch name'
+						value={confirmBatchName}
+						onChange={(e) => setConfirmBatchName(e.target.value)}
+					/>
+					<p className='text-danger mt-3 mb-0'>
+						This will delete the batch, its student links, and mentor
+						assignments.
+					</p>
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color='secondary'
+						onClick={() => setDeleteBatchModalOpen(false)}>
+						Cancel
+					</Button>
+					<Button
+						color='danger'
+						disabled={confirmBatchName !== batchToDelete?.name}
+						onClick={async () => {
+							try {
+								await deleteBatch(batchToDelete?._id || "");
+								toast.success("Batch deleted successfully");
+								setDeleteBatchModalOpen(false);
+								setBatchToDelete(null);
+								fetchBatches();
+							} catch (err) {
+								toast.error("Failed to delete batch");
+							}
+						}}>
+						Delete
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</>
 	);
 };
