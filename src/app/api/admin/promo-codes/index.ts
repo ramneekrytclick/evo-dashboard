@@ -18,3 +18,7 @@ export const updatePromoStatus = async (promoId: string, isActive: boolean) => {
 	const response = await apiClient.put("/promos/status", { promoId, isActive });
 	return response.data;
 };
+export const deletePromocode = async (promoId: string) => {
+	const response = await apiClient.delete(`/admin/promocode/${promoId}`);
+	return response.data;
+};
