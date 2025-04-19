@@ -98,7 +98,7 @@ const LessonAssignmentContainer = ({
 					Assignment {lessonTitle && ` - ${lessonTitle}`}
 				</h5>
 				<Button
-					color='secondary'
+					color='warning'
 					size='sm'
 					onClick={() =>
 						router.push(`/student/learning/course/${courseId}/${lessonId}`)

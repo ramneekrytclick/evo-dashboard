@@ -215,7 +215,7 @@ const EmployerListTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color='secondary'
+							color='outline-danger'
 							onClick={toggleModal}>
 							Cancel
 						</Button>

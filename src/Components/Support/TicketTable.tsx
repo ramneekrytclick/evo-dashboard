@@ -294,7 +294,7 @@ const TicketTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color='secondary'
+							color='outline-primary'
 							onClick={toggleModal}>
 							Cancel
 						</Button>
@@ -318,7 +318,7 @@ const TicketTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color='secondary'
+							color='outline-danger'
 							onClick={toggleDeleteModal}>
 							Cancel
 						</Button>

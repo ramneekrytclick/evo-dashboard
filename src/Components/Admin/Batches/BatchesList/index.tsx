@@ -320,7 +320,7 @@ const BatchesList = () => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color='secondary'
+						color='outline-danger'
 						onClick={() => setDeleteBatchModalOpen(false)}>
 						Cancel
 					</Button>

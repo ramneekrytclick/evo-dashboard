@@ -92,7 +92,7 @@ const AddReviewModal = ({
 							Submit
 						</Button>
 						<Button
-							color='secondary'
+							color='outline-success'
 							onClick={toggle}>
 							Cancel
 						</Button>

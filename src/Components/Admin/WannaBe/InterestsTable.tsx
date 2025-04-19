@@ -119,7 +119,7 @@ const InterestsTable = ({
 				<ModalBody>Do you want to delete this interest?</ModalBody>
 				<ModalFooter>
 					<Button
-						color='secondary'
+						color='outline-danger'
 						onClick={toggleModal}>
 						Cancel
 					</Button>

@@ -317,7 +317,7 @@ const UserProfile = ({ id }: { id: string }) => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color='secondary'
+						color='outline-primary'
 						onClick={toggleStatusModal}>
 						Cancel
 					</Button>
@@ -346,7 +346,7 @@ const UserProfile = ({ id }: { id: string }) => {
 				</ModalBody>
 				<ModalFooter>
 					<Button
-						color='secondary'
+						color='outline-success'
 						onClick={toggleApproveModal}>
 						Cancel
 					</Button>

@@ -275,7 +275,7 @@ const PendingListTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color='secondary'
+							color='outline-success'
 							onClick={toggleModal}>
 							Cancel
 						</Button>

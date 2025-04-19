@@ -218,7 +218,7 @@ const UpdateCourseModal = ({
 			</ModalBody>
 			<ModalFooter>
 				<Button
-					color='secondary'
+					color='outline-success'
 					onClick={toggle}>
 					Cancel
 				</Button>

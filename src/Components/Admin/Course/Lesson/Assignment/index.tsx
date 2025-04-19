@@ -214,7 +214,7 @@ const LessonAssignmentContainer = ({
 						Save
 					</Button>
 					<Button
-						color='secondary'
+						color='outline-success'
 						onClick={() => setModalOpen(false)}>
 						Cancel
 					</Button>

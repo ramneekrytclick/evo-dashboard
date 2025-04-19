@@ -188,7 +188,7 @@ const AnnouncementsListTable = () => {
 						</ModalBody>
 						<ModalFooter>
 							<Button
-								color='secondary'
+								color='outline-danger'
 								onClick={toggleDeleteModal}>
 								Cancel
 							</Button>

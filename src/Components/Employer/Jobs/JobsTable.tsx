@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getJobs } from "@/app/api/employer";
+import UpdateJobModal from "./UpdateJobModal";
+import { deleteJob } from "@/app/api/employer";
 import {
 	Container,
 	Card,
@@ -12,6 +14,10 @@ import {
 	Col,
 	Collapse,
 	Badge,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -27,7 +33,10 @@ const JobApplicationsTable = () => {
 	const [selectedResume, setSelectedResume] = useState<string | null>(null);
 	const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-
+	const [updateModalOpen, setUpdateModalOpen] = useState(false);
+	const [jobToEdit, setJobToEdit] = useState<any>(null);
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [jobToDelete, setJobToDelete] = useState<any>(null);
 	const fetchJobs = async () => {
 		try {
 			const response = await getJobs();
@@ -126,12 +135,15 @@ const JobApplicationsTable = () => {
 						<Card
 							key={job._id}
 							className='mb-3 shadow-sm border-0'>
-							<CardBody>
-								<Row>
-									<Col md={9}>
-										<h5 className='text-primary'>{job.title}</h5>
-										<Row>
-											<Col sm={6}>
+							<CardBody className='px-4 py-3'>
+								<Row className='mb-3'>
+									<Col>
+										<h4 className='text-primary fw-semibold mb-2'>
+											{job.title}
+										</h4>
+										<hr />
+										<Row className='text-dark fs-6'>
+											<Col md={6}>
 												<p>
 													<strong>Company:</strong> {job.companyName || "N/A"}
 												</p>
@@ -140,42 +152,49 @@ const JobApplicationsTable = () => {
 												</p>
 												<p>
 													<strong>Type:</strong>{" "}
-													<Badge color='info'>{job.jobType || "N/A"}</Badge>
+													<Badge
+														color='info'
+														className='text-uppercase'>
+														{job.jobType || "N/A"}
+													</Badge>
 												</p>
 												<p>
 													<strong>Experience:</strong> {job.experienceRequired}
 												</p>
-											</Col>
-											<Col sm={6}>
-												<p>
-													<strong>Skills:</strong>{" "}
-													{job.skillsRequired?.length > 0
-														? job.skillsRequired.map(
-																(skill: string, index: number) => (
-																	<Badge
-																		key={index}
-																		color='secondary'
-																		className='me-1'>
-																		{skill}
-																	</Badge>
-																)
-														  )
-														: "Not specified"}
-												</p>
-												<p>
-													<strong>Salary:</strong> {job.salary || "N/A"}
-												</p>
 												<p>
 													<strong>Openings:</strong> {job.openings}
+												</p>
+											</Col>
+											<Col md={6}>
+												<p>
+													<strong>Skills Required:</strong>
+												</p>
+												{job.skillsRequired?.length > 0 ? (
+													<div className='d-flex flex-wrap gap-1 mb-2'>
+														{job.skillsRequired.map(
+															(skill: string, idx: number) => (
+																<Badge
+																	key={idx}
+																	color='secondary'>
+																	{skill}
+																</Badge>
+															)
+														)}
+													</div>
+												) : (
+													<p className='text-muted'>Not specified</p>
+												)}
+												<p>
+													<strong>Salary:</strong> {job.salary || "N/A"}
 												</p>
 												<p>
 													<strong>Status:</strong>{" "}
 													<Badge
 														color={
-															job.status === "Approved"
-																? job.status === "Pending"
-																	? "warning"
-																	: "success"
+															job.status === "Pending"
+																? "warning"
+																: job.status === "Approved"
+																? "success"
 																: "danger"
 														}>
 														{job.status}
@@ -188,12 +207,12 @@ const JobApplicationsTable = () => {
 											</Col>
 										</Row>
 									</Col>
-									<Col
-										md={3}
-										className='d-flex align-items-center justify-content-end'>
+								</Row>
+
+								<Row className='mt-3'>
+									<Col className='d-flex flex-wrap justify-content-end gap-2'>
 										<Button
 											color='primary'
-											size='sm'
 											onClick={() => toggleApplications(job._id)}>
 											{openJobId === job._id ? (
 												<EyeOff size={16} />
@@ -202,12 +221,29 @@ const JobApplicationsTable = () => {
 											)}{" "}
 											{openJobId === job._id ? "Hide" : "View"} Applications
 										</Button>
+										<Button
+											color='warning'
+											onClick={() => {
+												setJobToEdit(job);
+												setUpdateModalOpen(true);
+											}}>
+											Update
+										</Button>
+										<Button
+											color='danger'
+											onClick={() => {
+												setJobToDelete(job);
+												setDeleteModalOpen(true);
+											}}>
+											Delete
+										</Button>
 									</Col>
 								</Row>
+
 								<Collapse
 									isOpen={openJobId === job._id}
-									className='mt-3'>
-									<h6>Applicants</h6>
+									className='mt-4'>
+									<h6 className='fw-bold'>Applicants</h6>
 									{job.applicants && job.applicants.length > 0 ? (
 										renderApplicantTable(job.applicants, job._id)
 									) : (
@@ -219,7 +255,45 @@ const JobApplicationsTable = () => {
 					))
 				)}
 			</div>
-
+			<Modal
+				isOpen={deleteModalOpen}
+				toggle={() => setDeleteModalOpen(false)}
+				centered>
+				<ModalHeader toggle={() => setDeleteModalOpen(false)}>
+					Confirm Delete
+				</ModalHeader>
+				<ModalBody>
+					Are you sure you want to delete the job{" "}
+					<strong>{jobToDelete?.title}</strong>?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color='outline-danger'
+						onClick={() => setDeleteModalOpen(false)}>
+						Cancel
+					</Button>
+					<Button
+						color='danger'
+						onClick={async () => {
+							try {
+								await deleteJob(jobToDelete._id);
+								toast.success("Job deleted successfully");
+								setDeleteModalOpen(false);
+								fetchJobs();
+							} catch (err) {
+								toast.error("Failed to delete job");
+							}
+						}}>
+						Delete
+					</Button>
+				</ModalFooter>
+			</Modal>
+			<UpdateJobModal
+				isOpen={updateModalOpen}
+				toggle={() => setUpdateModalOpen(false)}
+				job={jobToEdit}
+				refresh={fetchJobs}
+			/>
 			<ApplicantDetailsModal
 				isOpen={isModalOpen}
 				toggle={() => {

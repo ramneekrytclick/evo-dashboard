@@ -177,7 +177,7 @@ const MyBlogs = () => {
 						Delete
 					</Button>{" "}
 					<Button
-						color='secondary'
+						color='outline-danger'
 						onClick={() => setDeleteModalOpen(false)}>
 						Cancel
 					</Button>
@@ -218,7 +218,7 @@ const MyBlogs = () => {
 						Save Changes
 					</Button>{" "}
 					<Button
-						color='secondary'
+						color='outline-primary'
 						onClick={() => setUpdateModalOpen(false)}>
 						Cancel
 					</Button>

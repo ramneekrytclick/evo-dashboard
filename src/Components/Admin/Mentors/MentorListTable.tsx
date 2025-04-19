@@ -267,7 +267,7 @@ const MentorListTable = () => {
 					</ModalBody>
 					<ModalFooter>
 						<Button
-							color='secondary'
+							color='outline-primary'
 							onClick={toggleModal}>
 							Cancel
 						</Button>

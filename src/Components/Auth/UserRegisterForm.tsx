@@ -245,7 +245,7 @@ const MultiStepRegister = () => {
 						<div className='text-end pt-3'>
 							{step > 1 && step < 4 && (
 								<Button
-									color='secondary'
+									color='warning'
 									onClick={handleBack}
 									className='me-1'>
 									Back

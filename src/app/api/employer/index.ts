@@ -39,3 +39,24 @@ export const updateApplicationStatus = async (data: {
 }) => {
 	return (await apiClient.put(`/jobs/update-status`, data)).data;
 };
+
+export const updateJob = async (
+	id: string,
+	data: {
+		title: string;
+		description: string;
+		companyName: string;
+		location: string;
+		jobType: string;
+		experienceRequired: string;
+		salary: string;
+		applicationDeadline: string;
+		openings: string;
+		skillsRequired: string;
+	}
+) => {
+	return (await apiClient.put(`/jobs/job/update/${id}`, data)).data;
+};
+export const deleteJob = async (id: string) => {
+	return (await apiClient.delete(`/jobs/job/delete/${id}`)).data;
+};
