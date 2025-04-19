@@ -13,14 +13,22 @@ export const getMyCourses = async () => {
 export const updateCourse = async (
 	id: string,
 	data: {
-		name: string;
-		description: string;
-		categoryId: string;
-		subcategoryId: string;
-		wannaBeInterest: any[];
+		title?: string;
+		description?: string;
+		whatYouWillLearn?: string;
+		youtubeLink?: string;
+		timing?: string;
+		categoryId?: string;
+		subcategoryId?: string;
+		wannaBeInterestIds?: string[];
+		realPrice?: string;
+		discountedPrice?: string;
+		tags?: string;
 	}
 ) => {
-	return (await apiClient.put(`/course-creators/auth/${id}`, data)).data;
+	return (
+		await apiClient.put(`/course-creators/auth/course/update/${id}`, data)
+	).data;
 };
 export const deleteCourse = async (id: string) => {
 	return (await apiClient.delete(`/course-creators/auth/${id}`)).data;
