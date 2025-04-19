@@ -1,4 +1,4 @@
-"use client";
+import { useState } from "react";
 import Link from "next/link";
 import {
 	Card,
@@ -10,7 +10,13 @@ import {
 	Badge,
 	Button,
 	CardFooter,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	Input,
 } from "reactstrap";
+import { Trash } from "react-feather";
 import { CourseProps } from "@/Types/Course.type";
 import CourseModal from "./CourseModal";
 import { useRouter } from "next/navigation";
@@ -22,7 +28,9 @@ interface CourseCardProps {
 	categories: any[];
 	subcategories: any[];
 	wannaBeInterests: any[];
+	onDelete: (id: string) => void; // Optional delete callback
 }
+
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 const CourseCard = ({
@@ -31,19 +39,20 @@ const CourseCard = ({
 	categories,
 	subcategories,
 	wannaBeInterests,
+	onDelete,
 }: CourseCardProps) => {
 	const router = useRouter();
+	const [deleteModal, setDeleteModal] = useState(false);
+	const toggleDelete = () => setDeleteModal(!deleteModal);
+	const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
 	const discountPercent = data.realPrice
 		? Math.round(
 				((data.realPrice - data.discountedPrice) / data.realPrice) * 100
 		  )
 		: 0;
 
-	const goToBatches = () => {
-		router.push(`/admin/batches/${data._id}`);
-	};
+	const goToBatches = () => router.push(`/admin/batches/${data._id}`);
 
-	// Mapping IDs to names
 	const categoryName =
 		categories?.find(
 			(c: any) => c._id?.toString() === data.category?.toString()
@@ -66,6 +75,12 @@ const CourseCard = ({
 					(i: any) => i._id?.toString() === data.wannaBeInterest?.toString()
 				)?.title || data.wannaBeInterest,
 		  ];
+
+	const confirmDelete = () => {
+		if (onDelete) onDelete(data._id || "");
+		setDeleteModal(false);
+	};
+
 	return (
 		<Col
 			xl={4}
@@ -91,13 +106,14 @@ const CourseCard = ({
 						</Badge>
 					)}
 				</div>
+
 				<CardBody className='text-start p-4 d-flex flex-column'>
 					<Link
 						className='fw-semibold text-dark mb-2'
 						href={`/admin/course/${data._id}`}>
 						<CardTitle
 							tag='h2'
-							className='mb-2'>
+							className='mb-2 text-truncate'>
 							{data.title}
 						</CardTitle>
 					</Link>
@@ -152,7 +168,7 @@ const CourseCard = ({
 							)}
 						</div>
 					</div>
-					<div className='d-flex gap-2 w-100 justify-content-between align-items-center'>
+					<div className='d-flex gap-2 justify-content-between align-items-center flex-wrap'>
 						<Link
 							href={`/admin/course/${data._id}`}
 							className='btn btn-sm btn-outline-primary'>
@@ -168,9 +184,62 @@ const CourseCard = ({
 							reviews={data.reviews}
 							courseId={data._id || ""}
 						/>
+						<Button
+							color='danger'
+							size='sm'
+							className='d-flex align-items-center'
+							onClick={toggleDelete}>
+							<Trash size={16} />
+						</Button>
 					</div>
 				</CardFooter>
 			</Card>
+
+			{/* Delete Confirmation Modal */}
+			{/* Delete Confirmation Modal */}
+			<Modal
+				isOpen={deleteModal}
+				color='danger'
+				toggle={toggleDelete}
+				centered>
+				<ModalHeader
+					toggle={toggleDelete}
+					className='bg-danger text-light'>
+					<div className='text-white'>Confirm Delete</div>
+				</ModalHeader>
+				<ModalBody>
+					<p>
+						Are you sure you want to delete <strong>{data.title}</strong>?
+					</p>
+					<p className='text-danger'>
+						This will permanently delete all lessons, reviews, quizzes,
+						assignments, and batch links associated with this course.
+					</p>
+
+					<hr />
+					<p className='fw-semibold mb-2'>
+						Type <code>{data.title}</code> to confirm deletion:
+					</p>
+					<Input
+						placeholder='Type course title to confirm...'
+						value={deleteConfirmationText}
+						onChange={(e) => setDeleteConfirmationText(e.target.value)}
+					/>
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color='outline-danger'
+						onClick={toggleDelete}>
+						Cancel
+					</Button>
+					<Button
+						color='danger'
+						onClick={confirmDelete}
+						disabled={deleteConfirmationText !== data.title}>
+						Yes, Delete
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</Col>
 	);
 };

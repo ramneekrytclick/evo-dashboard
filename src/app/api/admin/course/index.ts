@@ -26,11 +26,6 @@ export const assignWannaBeInterestToCourse = async (
 };
 
 export const deleteCourse = async (id: string) => {
-	try {
-		const response = await apiClient.delete(`/admin/delete-course/${id}`);
-		return response.data;
-	} catch (error) {
-		console.error("Error deleting course:", error);
-		return null;
-	}
+	const response = await apiClient.delete(`/admin/course/${id}`);
+	return response.data;
 };

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Row } from "reactstrap";
 import ScrollBar from "react-perfect-scrollbar";
-import { getCourses } from "@/app/api/admin/course";
+import { deleteCourse, getCourses } from "@/app/api/admin/course";
 import { CourseProps } from "@/Types/Course.type";
 import CourseCard from "./CourseCard";
 import {
@@ -39,7 +39,16 @@ const CourseCards = () => {
 			toast.error("Error fetching categories data");
 		}
 	};
-
+	const handleDelete = async (id: string) => {
+		try {
+			const response = await deleteCourse(id);
+			toast.success("Course deleted successfully");
+			fetchCourses();
+		} catch (error) {
+			console.error(error);
+			toast.error("Error deleting course");
+		}
+	};
 	useEffect(() => {
 		fetchCourses();
 		fetchCategories();
@@ -57,6 +66,7 @@ const CourseCards = () => {
 						categories={categories}
 						subcategories={subcategories}
 						wannaBeInterests={wannaBeInterests}
+						onDelete={handleDelete}
 					/>
 				))}
 			</Row>
