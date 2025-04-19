@@ -1,4 +1,3 @@
-// UpdateCourseModal.tsx
 "use client";
 import {
 	Button,
@@ -34,6 +33,7 @@ const UpdateCourseModal = ({
 		realPrice: "",
 		discountedPrice: "",
 		tags: "",
+		createdBy: "",
 		photo: null,
 	});
 	const [subcategories, setSubcategories] = useState<any[]>([]);
@@ -51,19 +51,22 @@ const UpdateCourseModal = ({
 				wannaBeInterestIds: Array.isArray(course.wannaBeInterest)
 					? course.wannaBeInterest.map((id: string) => id.toString())
 					: [],
-				realPrice: course.realPrice?.toString() || "",
-				discountedPrice: course.discountedPrice?.toString() || "",
-				tags: Array.isArray(course.tags) ? course.tags.join(", ") : "",
+				realPrice: course.realPrice || "",
+				discountedPrice: course.discountedPrice || "",
+				tags: course.tags?.join(", ") || "",
+				createdBy: course.createdBy || "",
 				photo: null,
 			});
 		}
 	}, [course]);
 
+	// Fetch subcategories on category change
 	useEffect(() => {
-		if (formData.categoryId) {
-			getSubcategories(formData.categoryId)
-				.then(setSubcategories)
-				.catch(() => toast.error("Error loading subcategories"));
+		if (formData.categoryId !== "") {
+			async () => {
+				const response = await getSubcategories(formData.categoryId);
+				setSubcategories(response.subcategories);
+			};
 		}
 	}, [formData.categoryId]);
 
@@ -90,6 +93,7 @@ const UpdateCourseModal = ({
 				<FormGroup>
 					<Label>Title</Label>
 					<Input
+						type='text'
 						value={formData.title}
 						onChange={(e) => handleChange("title", e.target.value)}
 					/>
@@ -113,6 +117,7 @@ const UpdateCourseModal = ({
 				<FormGroup>
 					<Label>YouTube Link</Label>
 					<Input
+						type='url'
 						value={formData.youtubeLink}
 						onChange={(e) => handleChange("youtubeLink", e.target.value)}
 					/>
@@ -120,6 +125,7 @@ const UpdateCourseModal = ({
 				<FormGroup>
 					<Label>Timing</Label>
 					<Input
+						type='text'
 						value={formData.timing}
 						onChange={(e) => handleChange("timing", e.target.value)}
 					/>
@@ -131,7 +137,7 @@ const UpdateCourseModal = ({
 						value={formData.categoryId}
 						onChange={(e) => {
 							handleChange("categoryId", e.target.value);
-							handleChange("subcategoryId", "");
+							handleChange("subcategoryId", ""); // Reset subcategory
 						}}>
 						<option value=''>Select Category</option>
 						{categories.map((cat: any) => (
@@ -171,7 +177,7 @@ const UpdateCourseModal = ({
 										type='checkbox'
 										checked={formData.wannaBeInterestIds.includes(w._id)}
 										onChange={() => toggleInterest(w._id)}
-									/>{" "}
+									/>
 									{w.title}
 								</Label>
 							</FormGroup>
@@ -197,12 +203,13 @@ const UpdateCourseModal = ({
 				<FormGroup>
 					<Label>Tags (comma separated)</Label>
 					<Input
+						type='text'
 						value={formData.tags}
 						onChange={(e) => handleChange("tags", e.target.value)}
 					/>
 				</FormGroup>
 				<FormGroup>
-					<Label>Photo (optional)</Label>
+					<Label>Course Image (optional)</Label>
 					<Input
 						type='file'
 						onChange={(e) => handleChange("photo", e.target.files?.[0])}
@@ -211,14 +218,14 @@ const UpdateCourseModal = ({
 			</ModalBody>
 			<ModalFooter>
 				<Button
-					color='outline-success'
+					color='secondary'
 					onClick={toggle}>
 					Cancel
 				</Button>
 				<Button
 					color='success'
 					onClick={() => onSave(formData)}>
-					Save Changes
+					Update
 				</Button>
 			</ModalFooter>
 		</Modal>

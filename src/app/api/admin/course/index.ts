@@ -24,7 +24,38 @@ export const assignWannaBeInterestToCourse = async (
 	});
 	return response.data;
 };
-
+export const updateCourse = async (
+	courseId: string,
+	data: {
+		title: string;
+		description: string;
+		whatYouWillLearn: string;
+		youtubeLink: string;
+		timing: string;
+		categoryId: string;
+		subcategoryId: string;
+		wannaBeInterestIds: string;
+		realPrice: string;
+		discountedPrice: string;
+		tags: string;
+		createdBy: string;
+		photo: File;
+	}
+) => {
+	const formPayload = new FormData();
+	Object.entries(data).forEach(([key, value]) => {
+		if (Array.isArray(value)) {
+			formPayload.append(key, value.join(","));
+		} else {
+			formPayload.append(key, value || "");
+		}
+	});
+	const response = await apiClient.put(
+		`/courses/course/update/${courseId}`,
+		formPayload
+	);
+	return response.data;
+};
 export const deleteCourse = async (id: string) => {
 	const response = await apiClient.delete(`/admin/course/${id}`);
 	return response.data;

@@ -7,28 +7,29 @@ export const createCourseByCreator = async (formData: FormData) => {
 		})
 	).data;
 };
-export const getMyCourses = async () => {
-	return (await apiClient.get(`/course-creators/auth`)).data;
-};
-export const updateCourse = async (
-	id: string,
-	data: {
-		title?: string;
-		description?: string;
-		whatYouWillLearn?: string;
-		youtubeLink?: string;
-		timing?: string;
-		categoryId?: string;
-		subcategoryId?: string;
-		wannaBeInterestIds?: string[];
-		realPrice?: string;
-		discountedPrice?: string;
-		tags?: string;
+export const updateCourse = async (courseId: string, data: any) => {
+	const formData = new FormData();
+
+	for (const key in data) {
+		if (key === "photo" && data.photo) {
+			formData.append("photo", data.photo);
+		} else if (Array.isArray(data[key])) {
+			data[key].forEach((item: string) => formData.append(`${key}[]`, item));
+		} else {
+			formData.append(key, data[key]);
+		}
 	}
-) => {
-	return (
-		await apiClient.put(`/course-creators/auth/course/update/${id}`, data)
-	).data;
+
+	const response = await apiClient.put(
+		`/course-creators/auth/course/update/${courseId}`,
+		formData,
+		{
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		}
+	);
+	return response.data;
 };
 export const deleteCourse = async (id: string) => {
 	return (await apiClient.delete(`/course-creators/auth/${id}`)).data;
@@ -43,5 +44,5 @@ export const getAllWannaBeInterests = async () => {
 	return (await apiClient.get("/admin/allwanna")).data;
 };
 export const getAllCourses = async () => {
-	return (await apiClient.get("/admin/Allcourses")).data;
+	return { courses: (await apiClient.get("/courses")).data };
 };

@@ -57,7 +57,7 @@ const CoursesContainerCC = () => {
 		tags?: string;
 	}) => {
 		try {
-			await updateCourse(selectedCourse.id, updatedData);
+			await updateCourse(selectedCourse._id, updatedData);
 			setModalOpen(false);
 			fetchData();
 			toast.success("Course updated successfully");

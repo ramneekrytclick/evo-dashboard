@@ -21,7 +21,9 @@ import { CourseProps } from "@/Types/Course.type";
 import CourseModal from "./CourseModal";
 import { useRouter } from "next/navigation";
 import ViewReviewsModal, { Review } from "./ReviewModal";
-
+import UpdateCourseModal from "./UpdateCourseModal";
+import { updateCourse } from "@/app/api/admin/course";
+import { toast } from "react-toastify";
 interface CourseCardProps {
 	data: CourseProps;
 	fetchData: () => void;
@@ -45,6 +47,8 @@ const CourseCard = ({
 }: CourseCardProps) => {
 	const router = useRouter();
 	const [deleteModal, setDeleteModal] = useState(false);
+	const [updateModal, setUpdateModal] = useState(false);
+	const toggleUpdateModal = () => setUpdateModal(!updateModal);
 	const toggleDelete = () => setDeleteModal(!deleteModal);
 	const [deleteConfirmationText, setDeleteConfirmationText] = useState("");
 	const discountPercent = data.realPrice
@@ -193,6 +197,11 @@ const CourseCard = ({
 							onClick={toggleDelete}>
 							<Trash size={16} />
 						</Button>
+						<Button
+							color='warning'
+							onClick={toggleUpdateModal}>
+							Update
+						</Button>
 					</div>
 				</CardFooter>
 			</Card>
@@ -242,6 +251,25 @@ const CourseCard = ({
 					</Button>
 				</ModalFooter>
 			</Modal>
+			<UpdateCourseModal
+				isOpen={updateModal}
+				toggle={toggleUpdateModal}
+				course={data}
+				categories={categories}
+				subcategories={subcategories}
+				wannabe={wannaBeInterests}
+				onSave={async (formData: any) => {
+					try {
+						await updateCourse(data._id || "", formData);
+						toast.success("Course updated successfully!");
+						toggleUpdateModal();
+						fetchData();
+					} catch (err) {
+						console.error("Update failed:", err);
+						toast.error("Update failed");
+					}
+				}}
+			/>
 		</Col>
 	);
 };
