@@ -4,6 +4,7 @@ import {
 	getMyBlogs,
 	updateBlogById,
 } from "@/app/api/publisher/blogs/blog";
+import { getImageURL } from "@/CommonComponent/imageURL";
 import { BlogProps } from "@/Types/Blogs.type";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -27,8 +28,6 @@ import {
 	Label,
 	FormGroup,
 } from "reactstrap";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const statusColors: Record<string, string> = {
 	Pending: "warning",
@@ -111,10 +110,7 @@ const MyBlogs = () => {
 								<CardImg
 									top
 									width='100%'
-									src={`${backendURL}/uploads/${blog.image.replace(
-										/^\/+/g,
-										""
-									)}`}
+									src={getImageURL(blog.image)}
 									alt={blog.title}
 									style={{ objectFit: "cover", height: "180px" }}
 								/>

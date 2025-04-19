@@ -19,7 +19,7 @@ import {
 } from "reactstrap";
 import { FaTrash } from "react-icons/fa";
 import Image from "next/image";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const InterestsTable = ({
 	fetchData,
@@ -66,7 +66,7 @@ const InterestsTable = ({
 							{interest.image && (
 								<div className='position-relative'>
 									<Image
-										src={backendURL + "/" + interest.image}
+										src={getImageURL(interest.image)}
 										alt={interest.title}
 										width={400}
 										height={200}

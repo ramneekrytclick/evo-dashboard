@@ -9,8 +9,6 @@ import { Badge } from "reactstrap";
 import { getMyProfile } from "@/app/api";
 import { useEffect } from "react";
 
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
-
 const UserProfile = () => {
 	const { user, logout } = useAuth();
 	const router = useRouter();

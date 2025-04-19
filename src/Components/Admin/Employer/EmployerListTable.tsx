@@ -18,8 +18,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const EmployerListTable = () => {
 	const [loading, setLoading] = useState(true);
@@ -67,20 +66,13 @@ const EmployerListTable = () => {
 			selector: (row) => row.name || "",
 			sortable: true,
 			cell: (row) => {
-				const resolvedPhoto = row.photo ? row.photo.replace(/\\/g, "/") : "";
-				const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
-					? `${backendURL}/${resolvedPhoto}`
-					: `${backendURL}/uploads/${resolvedPhoto}`;
-				const photoURL = row.photo
-					? profilePhotoUrl
-					: "/assets/avatar-placeholder.png";
 				return (
 					<>
 						<Link
 							className='text-dark fw-bold d-flex align-items-center gap-2'
 							href={`/admin/users/${row._id}`}>
 							<Image
-								src={photoURL}
+								src={getImageURL(row.photo)}
 								alt={row.name}
 								width={50}
 								height={50}

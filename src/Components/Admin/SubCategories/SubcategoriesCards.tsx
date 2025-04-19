@@ -20,6 +20,7 @@ import {
 import CreateSubcategoryModal from "./CreateSubcategoryModal";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 export interface SubCategory {
 	_id: string;
@@ -28,7 +29,6 @@ export interface SubCategory {
 	category: string;
 	photo?: string;
 }
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 const SubcategoriesCards = ({ id }: { id: string }) => {
 	const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
@@ -96,14 +96,7 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 							key={item._id}>
 							<Card className='shadow-sm rounded-3 border-0'>
 								<Image
-									src={
-										item.photo
-											? `${backendURL}/uploads/${item.photo.replace(
-													/\\/g,
-													"/"
-											  )}`
-											: "/assets/images/user-card/5.jpg"
-									}
+									src={getImageURL(item.photo || "")}
 									width={400}
 									height={200}
 									alt={item.title}

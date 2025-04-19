@@ -18,7 +18,7 @@ import {
 	Label,
 	Input,
 } from "reactstrap";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 const CertificateTable = () => {
 	const [rows, setRows] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -43,8 +43,8 @@ const CertificateTable = () => {
 				(student.courses || []).forEach((course: any) => {
 					const existingCert = issuedCerts.find(
 						(cert: any) =>
-							cert.student._id === student.studentId &&
-							cert.course._id === course.courseId
+							cert.student?._id === student.studentId &&
+							cert.course?._id === course.courseId
 					);
 
 					flattened.push({
@@ -64,7 +64,7 @@ const CertificateTable = () => {
 
 			setRows(flattened);
 		} catch (error) {
-			console.error(error);
+			console.log(error);
 			toast.error("Error fetching student progress");
 		} finally {
 			setLoading(false);
@@ -134,14 +134,14 @@ const CertificateTable = () => {
 							size='sm'
 							onClick={() => {
 								setSelectedRow(row);
-								setPreviewUrl(`${backendURL}/uploads/${row.certificateUrl}`);
+								setPreviewUrl(getImageURL(row.certificateUrl));
 								setPreviewOpen(true);
 							}}>
 							View
 						</Button>
 					);
 				}
-				const eligible = row.progressPercent >= 90 && !row.isCourseComplete;
+				const eligible = row.progressPercent >= 0 && !row.isCourseComplete;
 				return eligible ? (
 					<Button
 						color='primary'
@@ -224,7 +224,7 @@ const CertificateTable = () => {
 						{isIssuing ? <Spinner size='sm' /> : "Give Certificate"}
 					</Button>
 					<Button
-						color='secondary'
+						color='primary-outline'
 						onClick={() => setModalOpen(false)}>
 						Cancel
 					</Button>

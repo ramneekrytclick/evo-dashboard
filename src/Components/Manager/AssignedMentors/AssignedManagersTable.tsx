@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { getMentorStats, getMyMentors } from "@/app/api/managers";
 import { Card, Input, Spinner, Alert } from "reactstrap";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 const defaultAvatar = "/assets/avatar-placeholder.png"; // Make sure this exists in /public
 const AssignedManagersTable = () => {
 	const [managers, setManagers] = useState([]);
@@ -32,13 +32,9 @@ const AssignedManagersTable = () => {
 			name: "Photo",
 			selector: (row: any) => row.photo,
 			cell: (row: any) => {
-				const imageUrl = row.photo
-					? `${backendURL}/uploads/${row.photo.replace(/^\/+/, "")}`
-					: defaultAvatar;
-
 				return (
 					<img
-						src={imageUrl}
+						src={getImageURL(row.photo)}
 						alt={row.name}
 						onError={(e) => {
 							(e.target as HTMLImageElement).src = defaultAvatar;

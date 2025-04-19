@@ -8,7 +8,7 @@ import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { Bell } from "react-feather";
 import Image from "next/image";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
+import { getImageURL } from "@/CommonComponent/imageURL";
 const Notifications = () => {
 	const [announcements, setAnnouncements] = useState<IAnnouncement[]>([]);
 	const { user } = useAuth();
@@ -61,7 +61,7 @@ const Notifications = () => {
 									<p className='text-muted'>{item.description}</p>
 									{item.image && (
 										<Image
-											src={backendURL + "/" + item.image}
+											src={getImageURL(item.image)}
 											width={50}
 											height={50}
 											style={{

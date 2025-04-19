@@ -27,8 +27,7 @@ import { getMentors } from "@/app/api/admin/mentors";
 import { assignMentorsToManager } from "@/app/api/admin/managers";
 import { toast } from "react-toastify";
 import Image from "next/image";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const UserProfile = ({ id }: { id: string }) => {
 	const [profile, setProfile] = useState<any>(null);
@@ -128,11 +127,6 @@ const UserProfile = ({ id }: { id: string }) => {
 	if (error) return <div>{error}</div>;
 	if (!profile) return <div>No profile found.</div>;
 
-	const resolvedPhoto = profile.photo ? profile.photo.replace(/\\/g, "/") : "";
-	const profilePhotoUrl = resolvedPhoto.startsWith("uploads")
-		? `${backendURL}/${resolvedPhoto}`
-		: `${backendURL}/uploads/${resolvedPhoto}`;
-
 	const isStudent = profile.role === "Student";
 	const isMentor = profile.role === "Mentor";
 	const isManager = profile.role === "Manager";
@@ -154,7 +148,9 @@ const UserProfile = ({ id }: { id: string }) => {
 						className='text-center'>
 						<Image
 							src={
-								profile.photo ? profilePhotoUrl : "/assets/images/user/1.jpg"
+								profile.photo
+									? getImageURL(profile.photo)
+									: "/assets/images/user/1.jpg"
 							}
 							width={300}
 							height={300}
@@ -284,7 +280,11 @@ const UserProfile = ({ id }: { id: string }) => {
 				</ModalHeader>
 				<ModalBody className='text-center'>
 					<Image
-						src={profile.photo ? profilePhotoUrl : "/assets/images/user/1.jpg"}
+						src={
+							profile.photo
+								? getImageURL(profile.photo)
+								: "/assets/images/user/1.jpg"
+						}
 						alt='Full Profile'
 						width={500}
 						height={500}

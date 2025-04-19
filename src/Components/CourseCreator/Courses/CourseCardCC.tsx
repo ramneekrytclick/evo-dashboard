@@ -1,8 +1,7 @@
 "use client";
 import { Button, Card, CardBody, Badge } from "reactstrap";
 import Image from "next/image";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const CourseCardCC = ({
 	course,
@@ -11,11 +10,6 @@ const CourseCardCC = ({
 	wannabe,
 	onEdit,
 }: any) => {
-	const resolvedPhoto = course.photo ? course.photo.replace(/\\/g, "/") : "";
-	const photoURL = resolvedPhoto.startsWith("uploads")
-		? `${backendURL}/${resolvedPhoto}`
-		: `${backendURL}/uploads/${resolvedPhoto}`;
-
 	const category = categories.find((c: any) => c._id === course.category);
 	const subcategory = subcategories.find(
 		(s: any) => s._id === course.subcategory
@@ -38,7 +32,7 @@ const CourseCardCC = ({
 			{course.photo && (
 				<div className='position-relative'>
 					<Image
-						src={photoURL}
+						src={getImageURL(course.photo)}
 						alt={course.title}
 						width={400}
 						height={180}

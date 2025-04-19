@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { Eye, EyeOff } from "react-feather";
 import ApplicantDetailsModal from "./ApplicantDetailsModal";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
+import { getImageURL } from "@/CommonComponent/imageURL";
 const JobApplicationsTable = () => {
 	const [jobs, setJobs] = useState<any[]>([]);
 	const [openJobId, setOpenJobId] = useState<string | null>(null);
@@ -81,7 +81,7 @@ const JobApplicationsTable = () => {
 				cell: (row: any) =>
 					row.resume ? (
 						<a
-							href={backendURL + row.resume}
+							href={getImageURL(row.resume)}
 							target='_blank'
 							rel='noopener noreferrer'>
 							Download

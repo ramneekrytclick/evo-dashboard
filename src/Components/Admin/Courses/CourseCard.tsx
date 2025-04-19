@@ -24,6 +24,7 @@ import ViewReviewsModal, { Review } from "./ReviewModal";
 import UpdateCourseModal from "./UpdateCourseModal";
 import { updateCourse } from "@/app/api/admin/course";
 import { toast } from "react-toastify";
+import { getImageURL } from "@/CommonComponent/imageURL";
 interface CourseCardProps {
 	data: CourseProps;
 	fetchData: () => void;
@@ -33,8 +34,6 @@ interface CourseCardProps {
 	onDelete: (id: string) => void; // Optional delete callback
 	reviews: Review[];
 }
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 const CourseCard = ({
 	data,
@@ -99,7 +98,7 @@ const CourseCard = ({
 						top
 						width='100%'
 						height='200px'
-						src={`${backendURL}/uploads/${data.photo}`}
+						src={getImageURL(data.photo)}
 						alt={data.title}
 						className='object-fit-cover'
 					/>

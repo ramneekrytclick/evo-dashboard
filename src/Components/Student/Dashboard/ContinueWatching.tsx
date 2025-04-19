@@ -6,8 +6,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { Progress, Spinner } from "reactstrap";
 import { getAllCourses } from "@/app/api/cc";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const ContinueWatching = ({
 	loading,
@@ -156,7 +155,7 @@ const ContinueWatching = ({
 										}}>
 										{course?.photo && (
 											<img
-												src={`${backendURL}/uploads/${course.photo}`}
+												src={getImageURL(course.photo)}
 												alt={course.title}
 												style={{
 													width: "100%",

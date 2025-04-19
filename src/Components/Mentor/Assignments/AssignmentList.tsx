@@ -14,8 +14,7 @@ import {
 	FormGroup,
 } from "reactstrap";
 import { toast } from "react-toastify";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
-
+import { getImageURL } from "@/CommonComponent/imageURL";
 const AssignmentList = () => {
 	const [assignments, setAssignments] = useState<any[]>([]);
 	const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
@@ -139,7 +138,7 @@ const AssignmentList = () => {
 								<strong>Email:</strong> {selectedSubmission.student?.email}
 							</p>
 							<iframe
-								src={`${backendURL}/uploads/${selectedSubmission.fileUrl}`}
+								src={getImageURL(selectedSubmission.fileUrl)}
 								className='w-100'
 								style={{
 									height: "400px",
@@ -152,7 +151,7 @@ const AssignmentList = () => {
 				<ModalFooter>
 					{selectedSubmission && (
 						<a
-							href={`${backendURL}/uploads/${selectedSubmission.fileUrl}`}
+							href={getImageURL(selectedSubmission.fileUrl)}
 							download
 							target='_blank'
 							rel='noopener noreferrer'

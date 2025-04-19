@@ -23,8 +23,7 @@ import Link from "next/link";
 import { respondToTicket } from "@/app/api/admin/support";
 import { useAuth } from "@/app/AuthProvider";
 import { toast } from "react-toastify";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const TicketTable = () => {
 	const auth = useAuth();
@@ -93,7 +92,7 @@ const TicketTable = () => {
 	const attachmentCell = (row: SupportTicketProps) =>
 		row.attachment ? (
 			<a
-				href={`${backendURL}/${row.attachment.replace(/\\/g, "/")}`}
+				href={getImageURL(row.attachment.replace(/\\/g, "/"))}
 				target='_blank'
 				rel='noopener noreferrer'
 				className='btn btn-sm btn-outline-info'>

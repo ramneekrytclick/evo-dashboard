@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getMyCertificates } from "@/app/api/student";
 import { toast } from "react-toastify";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 const StudentCertificatesContainer = () => {
 	const [certificates, setCertificates] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ const StudentCertificatesContainer = () => {
 										</p>
 									</div>
 									<a
-										href={`${backendURL}/uploads/${cert.fileUrl}`}
+										href={getImageURL(cert.course.fileUrl)}
 										target='_blank'
 										rel='noopener noreferrer'
 										className='btn btn-sm btn-outline-primary mt-3'>

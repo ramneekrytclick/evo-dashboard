@@ -23,6 +23,7 @@ import {
 	updateApplicationStatus,
 } from "@/app/api/employer";
 import { getAllCourses } from "@/app/api/cc";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const ApplicantDetailsModal = ({
 	isOpen,
@@ -82,8 +83,6 @@ const ApplicantDetailsModal = ({
 		return match?.title || "(Course Deleted)";
 	};
 
-	const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
-
 	useEffect(() => {
 		if (studentId) {
 			setLoading(true);
@@ -124,7 +123,7 @@ const ApplicantDetailsModal = ({
 											<strong>Resume:</strong>{" "}
 											{resume ? (
 												<a
-													href={`${backendURL}${resume}`}
+													href={getImageURL(resume)}
 													target='_blank'
 													rel='noopener noreferrer'>
 													Download

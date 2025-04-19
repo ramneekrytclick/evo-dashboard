@@ -16,8 +16,7 @@ import {
 	Row,
 } from "reactstrap";
 import { toast } from "react-toastify";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 export interface PathProps {
 	_id?: string;
@@ -64,11 +63,6 @@ const MyLearningPaths = () => {
 					</Col>
 				) : (
 					learningPaths.map((path) => {
-						const resolvedPhoto = path.photo?.replace(/\\/g, "/") || "";
-						const imageUrl = path.photo
-							? `${backendURL}/uploads/${resolvedPhoto}`
-							: `${ImagePath}/job-search/default-path.png`;
-
 						return (
 							<Col
 								xl={6}
@@ -85,7 +79,7 @@ const MyLearningPaths = () => {
 													height={60}
 													className='rounded me-3'
 													style={{ objectFit: "cover" }}
-													src={imageUrl}
+													src={getImageURL(path.photo || "")}
 													alt={path.title}
 												/>
 												<div className='flex-grow-1'>

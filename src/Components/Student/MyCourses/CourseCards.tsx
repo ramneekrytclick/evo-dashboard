@@ -1,6 +1,7 @@
 "use client";
 import { getAllCategories, getAllSubcategories } from "@/app/api/cc";
 import { getEnrolledCourses, getMyCourseProgress } from "@/app/api/student";
+import { getImageURL } from "@/CommonComponent/imageURL";
 import { CourseProps } from "@/Types/Course.type";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -16,8 +17,6 @@ import {
 	Progress,
 	Row,
 } from "reactstrap";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 const MyEnrolledCourses = () => {
 	const [enrolledCourses, setEnrolledCourses] = useState<
@@ -96,7 +95,7 @@ const MyEnrolledCourses = () => {
 								top
 								width='100%'
 								height='200px'
-								src={`${backendURL}/uploads/${course.photo}`}
+								src={getImageURL(course.photo)}
 								alt={course.title}
 								style={{ objectFit: "cover" }}
 							/>

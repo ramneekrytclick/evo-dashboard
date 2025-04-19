@@ -16,7 +16,7 @@ import {
 import CreateCategoryModal from "./CreateCategoryModal";
 import { toast } from "react-toastify";
 import Image from "next/image";
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
+import { getImageURL } from "@/CommonComponent/imageURL";
 const CategoriesCards = () => {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const fetchCategories = async () => {
@@ -76,14 +76,7 @@ const CategoriesCards = () => {
 							key={item._id}>
 							<Card className='shadow-sm rounded-3 border-0'>
 								<Image
-									src={
-										item.photo
-											? `${backendURL}/uploads/${item.photo.replace(
-													/\\/g,
-													"/"
-											  )}`
-											: "/assets/images/user-card/5.jpg"
-									}
+									src={getImageURL(item.photo || "")}
 									width={400}
 									height={200}
 									alt={item.title}

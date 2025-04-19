@@ -21,8 +21,7 @@ import { FileText } from "react-feather";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
-const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL;
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 interface Assignment {
 	_id?: string;
@@ -124,7 +123,7 @@ const LessonAssignmentContainer = ({
 										color='warning'
 										size='sm'
 										tag={Link}
-										href={`${backendURL}/uploads/${assignmentData.attachmentUrl}`}
+										href={getImageURL(assignmentData.attachmentUrl)}
 										target='_blank'
 										rel='noopener noreferrer'
 										className='d-flex align-items-center gap-1'>
