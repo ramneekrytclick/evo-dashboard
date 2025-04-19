@@ -1,5 +1,9 @@
 "use client";
-import { getAllTickets, getMyTickets } from "@/app/api/support/support";
+import {
+	getAllTickets,
+	getMyTickets,
+	deleteTicket,
+} from "@/app/api/support/support";
 import { SupportTicketProps } from "@/Types/Support.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
@@ -34,15 +38,30 @@ const TicketTable = () => {
 	const [responseText, setResponseText] = useState("");
 	const [status, setStatus] = useState("Open");
 
-	const toggleModal = () => setModalOpen(!modalOpen);
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [ticketToDelete, setTicketToDelete] =
+		useState<SupportTicketProps | null>(null);
 
+	const toggleDeleteModal = () => setDeleteModalOpen(!deleteModalOpen);
+	const toggleModal = () => setModalOpen(!modalOpen);
 	const openModal = (row: SupportTicketProps) => {
 		setSelectedRow(row);
 		setResponseText(row.adminResponse || "");
 		setStatus(row.status || "Open");
 		setModalOpen(true);
 	};
-
+	const handleDelete = async () => {
+		if (!ticketToDelete?._id) return;
+		try {
+			await deleteTicket(ticketToDelete._id);
+			toast.success("Ticket deleted successfully");
+			toggleDeleteModal();
+			fetchTickets();
+		} catch (err) {
+			console.error(err);
+			toast.error("Failed to delete ticket");
+		}
+	};
 	const fetchTickets = async () => {
 		try {
 			if (role === "Admin") {
@@ -150,6 +169,22 @@ const TicketTable = () => {
 		{
 			name: "Created At",
 			selector: (row) => new Date(row.createdAt).toLocaleString(),
+			center: true,
+		},
+		{
+			name: "Actions",
+			cell: (row) => (
+				<Button
+					color='danger'
+					size='sm'
+					onClick={() => {
+						setTicketToDelete(row);
+						toggleDeleteModal();
+					}}>
+					Delete
+				</Button>
+			),
+			ignoreRowClick: true,
 			center: true,
 		},
 	];
@@ -268,6 +303,30 @@ const TicketTable = () => {
 							color='primary'
 							onClick={handleAction}>
 							Submit Response
+						</Button>
+					</ModalFooter>
+				</Modal>
+			)}
+			{deleteModalOpen && ticketToDelete && (
+				<Modal
+					isOpen={deleteModalOpen}
+					toggle={toggleDeleteModal}
+					centered>
+					<ModalHeader toggle={toggleDeleteModal}>Confirm Delete</ModalHeader>
+					<ModalBody>
+						Are you sure you want to delete ticket{" "}
+						<strong>{ticketToDelete._id}</strong>?
+					</ModalBody>
+					<ModalFooter>
+						<Button
+							color='secondary'
+							onClick={toggleDeleteModal}>
+							Cancel
+						</Button>
+						<Button
+							color='danger'
+							onClick={handleDelete}>
+							Delete
 						</Button>
 					</ModalFooter>
 				</Modal>

@@ -9,10 +9,12 @@ import {
 	Button,
 	FormGroup,
 	Spinner,
+	Badge,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { assignStudentsToBatch } from "@/app/api/admin/batches";
 import { getStudentsByCourseID } from "@/app/api/admin/students";
+import { getBatches } from "@/app/api/admin/batches";
 
 interface AssignStudentsModalProps {
 	batchId: string;
@@ -31,35 +33,58 @@ const AssignStudentsModal = ({
 	batchCourseId,
 	currentStudents,
 }: AssignStudentsModalProps) => {
-	const [allStudents, setAllStudents] = useState<any[]>([]);
-	const [filteredStudents, setFilteredStudents] = useState<any[]>([]);
+	const [eligibleStudents, setEligibleStudents] = useState<any[]>([]);
+	const [assignedInOtherBatches, setAssignedInOtherBatches] = useState<
+		string[]
+	>([]);
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	useEffect(() => {
-		const fetchAndFilter = async () => {
+		const fetchAndPrepareStudents = async () => {
 			try {
 				setIsLoading(true);
-				const response = await getStudentsByCourseID(batchCourseId);
-				const students = response.students || [];
+				const [studentsResponse, batchesResponse] = await Promise.all([
+					getStudentsByCourseID(batchCourseId),
+					getBatches(),
+				]);
 
-				// Filter eligible students
-				const eligible = students.filter((student: any) =>
+				const students = studentsResponse.students || [];
+				const allBatches = batchesResponse.batches || [];
+
+				// Find students already assigned to other batches of the same course
+				const conflictingStudentIds = new Set<string>();
+
+				allBatches.forEach((batch: any) => {
+					if (
+						batch._id !== batchId &&
+						batch.course?.toString() === batchCourseId
+					) {
+						batch.students?.forEach((s: any) => {
+							conflictingStudentIds.add(s._id);
+						});
+					}
+				});
+
+				setAssignedInOtherBatches(Array.from(conflictingStudentIds));
+
+				// Eligible students are those enrolled in the course
+				const enrolledInCourse = students.filter((student: any) =>
 					student.enrolledCourses?.some(
 						(course: any) => course.course === batchCourseId
 					)
 				);
 
-				setAllStudents(students);
-				setFilteredStudents(eligible);
+				setEligibleStudents(enrolledInCourse);
 
-				// Preselect those already in batch
-				const preSelected = eligible
+				// Preselect students already assigned to this batch
+				const preSelected = enrolledInCourse
 					.filter((s: any) => currentStudents.some((cs) => cs._id === s._id))
 					.map((s: any) => s._id);
+
 				setSelectedIds(preSelected);
 			} catch (err) {
-				toast.error("Failed to fetch students");
+				toast.error("Failed to fetch student or batch data");
 				console.error(err);
 			} finally {
 				setIsLoading(false);
@@ -67,10 +92,12 @@ const AssignStudentsModal = ({
 		};
 
 		if (isOpen && batchId && batchCourseId) {
-			fetchAndFilter();
+			fetchAndPrepareStudents();
 		}
 	}, [isOpen, batchId, batchCourseId, currentStudents]);
+
 	const toggleStudentSelection = (studentId: string) => {
+		if (assignedInOtherBatches.includes(studentId)) return;
 		setSelectedIds((prev) =>
 			prev.includes(studentId)
 				? prev.filter((id) => id !== studentId)
@@ -79,8 +106,10 @@ const AssignStudentsModal = ({
 	};
 
 	const selectAll = () => {
-		const allIds = filteredStudents.map((s) => s._id);
-		setSelectedIds(allIds);
+		const allowed = eligibleStudents
+			.filter((s) => !assignedInOtherBatches.includes(s._id))
+			.map((s) => s._id);
+		setSelectedIds(allowed);
 	};
 
 	const deselectAll = () => {
@@ -92,7 +121,6 @@ const AssignStudentsModal = ({
 			toast.error("Please select at least one student");
 			return;
 		}
-
 		try {
 			await assignStudentsToBatch({
 				batchId,
@@ -117,7 +145,7 @@ const AssignStudentsModal = ({
 					<div className='text-center my-3'>
 						<Spinner /> Loading students...
 					</div>
-				) : filteredStudents.length === 0 ? (
+				) : eligibleStudents.length === 0 ? (
 					<p className='text-muted'>No eligible students for this course.</p>
 				) : (
 					<>
@@ -136,32 +164,44 @@ const AssignStudentsModal = ({
 								Deselect All
 							</Button>
 						</div>
-						<div className='student-list d-flex flex-column align-items-center gap-2 w-full'>
-							{filteredStudents.map((student) => {
+						<div className='d-flex flex-column gap-2'>
+							{eligibleStudents.map((student) => {
 								const isSelected = selectedIds.includes(student._id);
+								const isInAnotherBatch = assignedInOtherBatches.includes(
+									student._id
+								);
 								return (
 									<div
 										key={student._id}
 										onClick={() => toggleStudentSelection(student._id)}
-										className={`border rounded p-2 w-full d-flex justify-content-between align-items-center cursor-pointer ${
-											isSelected
+										className={`border rounded p-2 w-full d-flex justify-between align-items-center ${
+											isInAnotherBatch
+												? "bg-light text-muted"
+												: isSelected
 												? "bg-primary text-white"
-												: "bg-light text-dark"
+												: "bg-white text-dark"
 										}`}
-										style={{ transition: "all 0.2s ease", cursor: "pointer" }}>
+										style={{
+											cursor: isInAnotherBatch ? "not-allowed" : "pointer",
+										}}>
 										<div>
-											<strong>{student.name}</strong> <br />
+											<strong>{student.name}</strong>
+											<br />
 											<small>{student.email}</small>
 										</div>
 										<div>
-											{isSelected ? (
-												<span className='badge bg-white text-primary'>
+											{isInAnotherBatch ? (
+												<Badge color='danger'>
+													Already assigned to another batch in this course
+												</Badge>
+											) : isSelected ? (
+												<Badge
+													color='light'
+													className='text-primary'>
 													Selected
-												</span>
+												</Badge>
 											) : (
-												<span className='badge bg-primary'>
-													Click to Select
-												</span>
+												<Badge color='primary'>Click to Select</Badge>
 											)}
 										</div>
 									</div>

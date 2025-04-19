@@ -107,9 +107,11 @@ const BatchesList = () => {
 				const end = new Date(row.endDate || 0);
 				const isActive = end > now;
 				return (
-					<Badge color={isActive ? "warning" : "success"}>
-						{isActive ? "Ongoing" : "Completed"}
-					</Badge>
+					<>
+						<Badge color={isActive ? "warning" : "success"}>
+							{isActive ? "Ongoing" : "Completed"}
+						</Badge>
+					</>
 				);
 			},
 		},

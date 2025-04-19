@@ -22,35 +22,22 @@ export const createAnnouncement = async (formData: AnnouncementFormInput) => {
 };
 
 export const getAnnouncements = async () => {
-	try {
-		const response = await apiClient.get("/announcements");
-		return response.data;
-	} catch (error) {
-		console.error("Error fetching announcements:", error);
-		return null;
-	}
+	const response = await apiClient.get("/announcements");
+	return response.data;
 };
 
 export const updateAnnouncement = async (
 	formattedData: announcementAPIProps,
 	id: string
 ) => {
-	try {
-		const response = await apiClient.put(
-			`/admin/announcements/${id}`,
-			formattedData
-		);
-		return response;
-	} catch (error) {
-		return error;
-	}
+	const response = await apiClient.put(
+		`/admin/announcements/${id}`,
+		formattedData
+	);
+	return response;
 };
 
 export const deleteAnnouncement = async (id: string) => {
-	try {
-		const response = await apiClient.delete(`/admin/announcements/${id}`);
-		return response;
-	} catch (error) {
-		return error;
-	}
+	const response = await apiClient.delete(`/admin/announcement/${id}`);
+	return response;
 };

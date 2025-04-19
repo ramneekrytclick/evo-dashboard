@@ -16,3 +16,6 @@ export const getAllTickets = async () => {
 export const getMyTickets = async (userId: string) => {
 	return (await apiClient.get(`/tickets/${userId}`)).data;
 };
+export const deleteTicket = async (ticketId: string) => {
+	return (await apiClient.delete(`/admin/ticket/${ticketId}`)).data;
+};
