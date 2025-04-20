@@ -6,8 +6,10 @@ import {
 } from "@/app/api/publisher/blogs/blog";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import { BlogProps } from "@/Types/Blogs.type";
+import { marked } from "marked";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import SimpleMdeReact from "react-simplemde-editor";
 import { toast } from "react-toastify";
 import {
 	Card,
@@ -110,7 +112,7 @@ const MyBlogs = () => {
 								<CardImg
 									top
 									width='100%'
-									src={getImageURL(blog.image)}
+									src={getImageURL(blog.image, "blogs")}
 									alt={blog.title}
 									style={{ objectFit: "cover", height: "180px" }}
 								/>
@@ -187,7 +189,9 @@ const MyBlogs = () => {
 			{/* Update Modal */}
 			<Modal
 				isOpen={isUpdateModalOpen}
-				toggle={() => setUpdateModalOpen(!isUpdateModalOpen)}>
+				toggle={() => setUpdateModalOpen(!isUpdateModalOpen)}
+				size='lg'
+				centered>
 				<ModalHeader toggle={() => setUpdateModalOpen(!isUpdateModalOpen)}>
 					Update Blog
 				</ModalHeader>
@@ -200,23 +204,35 @@ const MyBlogs = () => {
 							onChange={(e) => setUpdateTitle(e.target.value)}
 						/>
 					</FormGroup>
+
 					<FormGroup>
 						<Label for='updateContent'>Content</Label>
-						<Input
-							type='textarea'
-							id='updateContent'
-							rows={5}
+						<SimpleMdeReact
 							value={updateContent}
-							onChange={(e) => setUpdateContent(e.target.value)}
+							onChange={setUpdateContent}
 						/>
 					</FormGroup>
 				</ModalBody>
 				<ModalFooter>
 					<Button
 						color='primary'
-						onClick={handleUpdate}>
+						onClick={async () => {
+							try {
+								if (!selectedBlog) return;
+								const htmlContent = await marked.parse(updateContent); // Convert to HTML
+								await updateBlogById(selectedBlog._id, {
+									title: updateTitle,
+									content: htmlContent, // ✅ Save as HTML
+								});
+								toast.success("Blog Updated Successfully!");
+								setUpdateModalOpen(false);
+								fetchBlogs();
+							} catch (error) {
+								toast.error("Error Updating Blog!");
+							}
+						}}>
 						Save Changes
-					</Button>{" "}
+					</Button>
 					<Button
 						color='outline-primary'
 						onClick={() => setUpdateModalOpen(false)}>

@@ -1,77 +1,97 @@
+"use client";
+
 import { approveBlog } from "@/app/api/admin/blogs/blog";
-import CommonModal from "@/CommonComponent/CommonModal";
 import Link from "next/link";
 import { Fragment, useState } from "react";
-import { ChevronsRight } from "react-feather";
 import { toast } from "react-toastify";
-import { Button, CardLink } from "reactstrap";
+import {
+	Button,
+	CardLink,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+} from "reactstrap";
 
 interface BlogModalProps {
 	fetchData: () => Promise<any>;
 	item: {
 		id: string;
 		title: string;
-		text: string;
+		text: string; // HTML content
 		status: string;
 	};
 }
 
 const BlogModal = ({ item, fetchData }: BlogModalProps) => {
 	const [modal, setModal] = useState(false);
-	const toggle = () => {
-		setModal(!modal);
-	};
+	const toggle = () => setModal((prev) => !prev);
+
 	const handleApprove = async () => {
 		try {
-			const response = await approveBlog(item.id, "Approved");
-			fetchData();
+			await approveBlog(item.id, "Approved");
+			await fetchData();
 			toggle();
-			toast.success("Approved blog successfully");
+			toast.success("Blog approved successfully");
 		} catch (error) {
 			console.error(error);
+			toast.error("Failed to approve blog");
 		}
 	};
+
 	const handleReject = async () => {
 		try {
-			const response = await approveBlog(item.id, "Rejected");
-			fetchData();
+			await approveBlog(item.id, "Rejected");
+			await fetchData();
 			toggle();
-			toast.success("Rejected blog successfully");
+			toast.success("Blog rejected successfully");
 		} catch (error) {
 			console.error(error);
+			toast.error("Failed to reject blog");
 		}
 	};
-	const data = {
-		isOpen: modal,
-		header: true,
-		toggler: toggle,
-		center: true,
-		title: item.title,
-		size: "xl",
-		bodyClass: "dark-modal",
-	};
+
 	return (
 		<>
 			<CardLink
-				color="info"
+				color='info'
 				onClick={toggle}>
-				<Link href={""}>{item.title}</Link>
+				<Link href='#'>{item.title}</Link>
 			</CardLink>
-			<CommonModal modalData={data}>
-				<Fragment>
-					<p className="modal-padding-space">{item.text}</p>
-					<div className="text-end">
-						<Button
-							color={item.status === "Approved" ? "danger" : "success"}
-							className="mx-2 cursor-pointer"
-							onClick={
-								item.status === "Approved" ? handleReject : handleApprove
-							}>
-							{item.status === "Approved" ? "Reject Blog" : "Approve Blog"}
-						</Button>
-					</div>
-				</Fragment>
-			</CommonModal>
+
+			<Modal
+				isOpen={modal}
+				toggle={toggle}
+				size='xl'
+				centered
+				className='blog-modal'>
+				<ModalHeader toggle={toggle}>
+					<span className='fs-2 fw-bold'>{item.title}</span>
+				</ModalHeader>
+				<ModalBody style={{ maxHeight: "78vh", overflowY: "auto" }}>
+					<div
+						style={{
+							lineHeight: "1.8",
+							fontSize: "1.1rem",
+							color: "#333",
+							wordBreak: "break-word",
+						}}
+						dangerouslySetInnerHTML={{ __html: item.text }}
+					/>
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color={item.status === "Approved" ? "danger" : "success"}
+						onClick={item.status === "Approved" ? handleReject : handleApprove}>
+						{item.status === "Approved" ? "Reject Blog" : "Approve Blog"}
+					</Button>
+					<Button
+						color='outline-primary'
+						onClick={toggle}>
+						Close
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</>
 	);
 };
