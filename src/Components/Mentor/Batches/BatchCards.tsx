@@ -47,10 +47,13 @@ const BatchCards = () => {
 								<CardTitle
 									tag='h5'
 									className='fw-bold text-dark mb-2'>
-									{batch.course?.title || "Untitled Course"}
+									{batch.name || "N/A"}
 								</CardTitle>
 							</Link>
-
+							<p className='fs-6'>
+								<strong>Course: </strong>
+								{batch.course?.title || "N/A"}
+							</p>
 							{/* Batch schedule info */}
 							<div className='mb-2'>
 								<Badge
@@ -68,13 +71,24 @@ const BatchCards = () => {
 
 							{/* Dates */}
 							<CardText className='text-muted small mb-1'>
-								<strong>Start:</strong>{" "}
-								{/* {new Date(batch.startDate).toLocaleDateString()} */}
-								{JSON.stringify(batch.startDate)}
-							</CardText>
-							<CardText className='text-muted small mb-2'>
-								<strong>End:</strong> {JSON.stringify(batch.endDate)}
-								{/* {new Date(batch.endDate).toLocaleDateString()} */}
+								<strong>Duration:</strong>{" "}
+								{new Date(batch.startDate || new Date()).toLocaleDateString(
+									"en-IN",
+									{
+										day: "numeric",
+										month: "short",
+										year: "numeric",
+									}
+								)}
+								-
+								{new Date(batch.endDate || new Date()).toLocaleDateString(
+									"en-IN",
+									{
+										day: "numeric",
+										month: "short",
+										year: "numeric",
+									}
+								)}
 							</CardText>
 
 							{/* Students Count */}

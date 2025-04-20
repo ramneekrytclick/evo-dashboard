@@ -22,6 +22,7 @@ import { format, isToday, isYesterday } from "date-fns";
 import { useAuth } from "@/app/AuthProvider";
 import io from "socket.io-client";
 import ChatMessageBubble from "@/CommonComponent/ChatBubble";
+import { BatchProps } from "@/Types/Course.type";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string);
 
@@ -41,7 +42,13 @@ const groupMessagesByDate = (messages: any[]) => {
 	}, {});
 };
 
-const GroupChat = ({ batchId }: { batchId: string }) => {
+const GroupChat = ({
+	batchId,
+	batch,
+}: {
+	batchId: string;
+	batch: BatchProps;
+}) => {
 	const [loading, setLoading] = useState(false);
 	const [messages, setMessages] = useState<any[]>([]);
 	const [newMessage, setNewMessage] = useState("");
@@ -150,9 +157,18 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 	const groupedMessages = groupMessagesByDate(messages);
 
 	return (
-		<Card className='d-flex flex-column h-100 w-100 bg-black shadow-sm border-0 rounded-4'>
+		<Card className='d-flex flex-column h-100 w-100 shadow-sm border-0 rounded-4'>
 			<CardHeader className='bg-white border-bottom w-100'>
-				<h5 className='mb-0 text-primary'>Group Chat</h5>
+				<h6 className='mb-0 text-center fw-semibold'>Group Chat</h6>
+				<div className='d-flex w-100 justify-content-between align-items-center'>
+					<h6 className='mb-0 text-muted fs-6'>
+						<strong>Course:</strong>
+						{batch.course?.title}
+					</h6>
+					<h6 className='mb-0 text-muted fs-6'>
+						{batch.students?.length || "0"} Students
+					</h6>
+				</div>
 			</CardHeader>
 
 			{pinnedMessage && (
@@ -217,7 +233,7 @@ const GroupChat = ({ batchId }: { batchId: string }) => {
 				<div ref={messagesEndRef} />
 			</CardBody>
 
-			<div className='border-top bg-white p-3 w-100 rounded-bottom'>
+			<div className='border-top p-3 w-100'>
 				<InputGroup className='rounded-pill shadow-sm overflow-hidden'>
 					<Input
 						type='text'

@@ -99,6 +99,14 @@ export interface BatchProps {
 		email: string;
 	};
 	chatMessages?: ChatMessage[];
+	scheduledSessions?: {
+		_id: string;
+		date: string;
+		link: string;
+		topic: string;
+		comment: string;
+		time?: string;
+	}[];
 	createdAt?: string;
 	updatedAt?: string;
 }

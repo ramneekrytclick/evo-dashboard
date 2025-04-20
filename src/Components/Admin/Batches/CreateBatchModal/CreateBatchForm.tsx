@@ -65,15 +65,15 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 
 	return (
 		<Form onSubmit={handleSubmit}>
-			<Row className="g-3">
+			<Row className='g-3'>
 				<Col md={12}>
 					<Label>Batch Name</Label>
 					<Input
-						type="text"
-						name="name"
+						type='text'
+						name='name'
 						value={formData.name}
 						onChange={handleChange}
-						placeholder="Enter batch name"
+						placeholder='Enter batch name'
 						required
 					/>
 				</Col>
@@ -81,22 +81,22 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 				<Col md={12}>
 					<Label>Description</Label>
 					<Input
-						type="textarea"
-						name="description"
+						type='textarea'
+						name='description'
 						value={formData.description}
 						onChange={handleChange}
-						placeholder="Enter batch description"
+						placeholder='Enter batch description'
 					/>
 				</Col>
 
 				<Col md={12}>
 					<Label>Time</Label>
 					<Input
-						type="text"
-						name="time"
+						type='time'
+						name='time'
 						value={formData.time}
 						onChange={handleChange}
-						placeholder="e.g. 10:00 AM - 12:00 PM"
+						placeholder='e.g. 10:00 AM - 12:00 PM'
 						required
 					/>
 				</Col>
@@ -104,26 +104,26 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 				<Col md={12}>
 					<Label>Batch Week Type</Label>
 					<Input
-						type="select"
-						name="batchWeekType"
+						type='select'
+						name='batchWeekType'
 						value={formData.batchWeekType}
 						onChange={handleChange}
 						required>
-						<option value="Full Week">Full Week</option>
-						<option value="Mon-Fri">Mon-Fri</option>
-						<option value="Weekend">Weekend</option>
+						<option value='Full Week'>Full Week</option>
+						<option value='Mon-Fri'>Mon-Fri</option>
+						<option value='Weekend'>Weekend</option>
 					</Input>
 				</Col>
 
 				<Col md={12}>
 					<Label>Course</Label>
 					<Input
-						type="select"
-						name="courseId"
+						type='select'
+						name='courseId'
 						value={formData.courseId}
 						onChange={handleChange}
 						required>
-						<option value="">Select Course</option>
+						<option value=''>Select Course</option>
 						{courses.map((course) => (
 							<option
 								key={course._id}
@@ -137,8 +137,8 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 				<Col md={6}>
 					<Label>Start Date</Label>
 					<Input
-						type="date"
-						name="startDate"
+						type='date'
+						name='startDate'
 						value={formData.startDate}
 						onChange={handleChange}
 						required
@@ -148,8 +148,8 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 				<Col md={6}>
 					<Label>End Date</Label>
 					<Input
-						type="date"
-						name="endDate"
+						type='date'
+						name='endDate'
 						value={formData.endDate}
 						onChange={handleChange}
 						required
@@ -158,10 +158,10 @@ const CreateBatchForm = ({ toggle, fetchData }: CreateBatchFormProps) => {
 
 				<Col
 					md={12}
-					className="text-end">
+					className='text-end'>
 					<Button
-						color="primary"
-						type="submit">
+						color='primary'
+						type='submit'>
 						Create Batch
 					</Button>
 				</Col>

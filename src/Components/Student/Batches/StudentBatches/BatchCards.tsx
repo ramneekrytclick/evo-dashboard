@@ -38,16 +38,21 @@ const BatchCards = () => {
 						xl={4}
 						md={6}
 						key={batch._id}>
-						<Card className='border-0 shadow rounded-4'>
+						<Card className='border-0 shadow rounded-4 h-100 '>
 							<CardBody className='d-flex flex-column'>
+								{/* Course title + Batch chat link */}
 								<Link href={`/student/batches/${batch._id}`}>
 									<CardTitle
 										tag='h5'
 										className='fw-bold text-dark mb-2'>
-										{batch.course?.title || "Untitled Course"}
+										{batch.name || "N/A"}
 									</CardTitle>
 								</Link>
-
+								<p className='fs-6'>
+									<strong>Course: </strong>
+									{batch.course?.title || "N/A"}
+								</p>
+								{/* Batch schedule info */}
 								<div className='mb-2'>
 									<Badge
 										color='info'
@@ -57,18 +62,38 @@ const BatchCards = () => {
 									<Badge color='warning'>{batch.time}</Badge>
 								</div>
 
-								<CardText className='text-muted small mb-3'>
+								{/* Description */}
+								<CardText className='text-muted small mb-2'>
 									{batch.description || "No description provided."}
 								</CardText>
 
-								<div className='mt-auto'>
-									<p className='small text-muted mb-1'>
-										<strong>Mentor:</strong> {batch.mentor?.name || "N/A"}
-									</p>
-									<p className='small text-muted'>
-										<strong>Email:</strong> {batch.mentor?.email || "N/A"}
-									</p>
-								</div>
+								{/* Dates */}
+								<CardText className='text-muted small mb-1'>
+									<strong>Duration:</strong>{" "}
+									{new Date(batch.startDate || new Date()).toLocaleDateString(
+										"en-IN",
+										{
+											day: "numeric",
+											month: "short",
+											year: "numeric",
+										}
+									)}
+									-
+									{new Date(batch.endDate || new Date()).toLocaleDateString(
+										"en-IN",
+										{
+											day: "numeric",
+											month: "short",
+											year: "numeric",
+										}
+									)}
+								</CardText>
+
+								{/* Students Count */}
+								<CardText className='text-muted small mt-auto'>
+									<strong>Students Enrolled:</strong>{" "}
+									{batch.students?.length || 0}
+								</CardText>
 							</CardBody>
 						</Card>
 					</Col>

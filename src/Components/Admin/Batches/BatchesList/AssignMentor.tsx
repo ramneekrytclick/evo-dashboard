@@ -16,6 +16,8 @@ import {
 import { toast } from "react-toastify";
 import { assignMentorToBatch } from "@/app/api/admin/batches";
 import { getMentors } from "@/app/api/admin/mentors";
+import { getImageURL } from "@/CommonComponent/imageURL";
+import Image from "next/image";
 
 const AssignMentorModal = ({
 	batchId,
@@ -91,10 +93,10 @@ const AssignMentorModal = ({
 				<FormGroup>
 					<Label>Select a Mentor</Label>
 					<Input
-						type="select"
+						type='select'
 						value={mentorId}
 						onChange={handleMentorChange}>
-						<option value="">-- Select Mentor --</option>
+						<option value=''>-- Select Mentor --</option>
 						{mentors.map((mentor) => (
 							<option
 								key={mentor._id}
@@ -106,16 +108,24 @@ const AssignMentorModal = ({
 				</FormGroup>
 
 				{selectedMentor && (
-					<div className="border rounded p-3 mt-3 bg-light-warning">
+					<div className='border rounded p-3 mt-3 bg-light-warning'>
 						<Row>
-							<Col md="4">
-								<img
-									src={`/${selectedMentor.photo}`}
+							<Col md='4'>
+								<Image
+									width={100}
+									height={100}
+									style={{
+										width: "100px",
+										height: "100px",
+										objectFit: "cover",
+										borderRadius: "100%",
+									}}
+									src={getImageURL(selectedMentor.photo)}
 									alt={selectedMentor.name}
-									className="img-fluid rounded"
+									className='img-fluid rounded'
 								/>
 							</Col>
-							<Col md="8">
+							<Col md='8'>
 								<p>
 									<strong>Name:</strong> {selectedMentor.name}
 								</p>
@@ -141,13 +151,13 @@ const AssignMentorModal = ({
 			</ModalBody>
 			<ModalFooter>
 				<Button
-					color="success"
+					color='success'
 					onClick={handleAssign}
 					disabled={!mentorId}>
 					Assign
 				</Button>
 				<Button
-					color="outline-success"
+					color='outline-success'
 					onClick={toggle}>
 					Cancel
 				</Button>
