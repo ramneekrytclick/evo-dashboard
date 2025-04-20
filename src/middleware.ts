@@ -28,7 +28,8 @@ export function middleware(request: NextRequest) {
 					(pathname.startsWith("/student") && role !== "Student") ||
 					(pathname.startsWith("/course-creator") &&
 						role !== "Course Creator") ||
-					(pathname.startsWith("/manager") && role !== "Manager")
+					(pathname.startsWith("/manager") && role !== "Manager") ||
+					(pathname.startsWith("/employer") && role !== "Employer")
 				) {
 					return NextResponse.redirect(new URL("/403", request.url));
 				}
@@ -46,7 +47,8 @@ export function middleware(request: NextRequest) {
 			pathname.startsWith("/mentor") ||
 			pathname.startsWith("/manager") ||
 			pathname.startsWith("/student") ||
-			pathname.startsWith("/course-creator")
+			pathname.startsWith("/course-creator") ||
+			pathname.startsWith("/employer")
 		) {
 			return NextResponse.redirect(new URL("/auth/login", request.url));
 		}

@@ -21,6 +21,7 @@ import {
 import CreateAnnouncementModal from "./CreateAnnouncement/CreateAnnouncementModal";
 import { IAnnouncement } from "@/Types/Announcement.type";
 import { Trash2 } from "react-feather";
+import { toast } from "react-toastify";
 
 const AnnouncementsListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -127,14 +128,16 @@ const AnnouncementsListTable = () => {
 			await deleteAnnouncement(announcementToDelete._id);
 			toggleDeleteModal();
 			fetchAnnouncements();
+			toast.success("Announcement deleted successfully");
 		} catch (error) {
 			console.error("Failed to delete announcement:", error);
+			toast.error("Failed to delete announcement");
 		}
 	};
 	const fetchAnnouncements = async () => {
 		try {
 			const data = await getAnnouncements();
-			setAnnouncementsData(data);
+			setAnnouncementsData(data.reverse());
 		} catch (error) {
 			console.error("Error fetching announcements:", error);
 		} finally {
@@ -173,6 +176,7 @@ const AnnouncementsListTable = () => {
 							data={filteredItems}
 							columns={announcementTableColumns}
 							striped
+							pagination
 						/>
 					)}
 				</div>

@@ -42,3 +42,7 @@ export const getMentorBatches = async () => {
 export const getBatchByID = async (id: string) => {
 	return (await apiClient.get(`/mentor-bookings/batch/${id}`)).data;
 };
+
+export const deleteBookedSession = async (id: string) => {
+	return (await apiClient.delete(`/mentor-bookings/session/${id}`)).data;
+};

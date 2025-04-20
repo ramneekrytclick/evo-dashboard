@@ -5,6 +5,7 @@ import {
 	getBookedSessions,
 	updateBookingStatus,
 	replyToSessionBooking,
+	deleteBookedSession,
 } from "@/app/api/mentor";
 import { useAuth } from "@/app/AuthProvider";
 import {
@@ -19,8 +20,14 @@ import {
 	Spinner,
 	FormGroup,
 	Label,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	Badge,
 } from "reactstrap";
 import { toast } from "react-toastify";
+import { Trash2 } from "react-feather";
 
 const ScheduledSessions = () => {
 	const [sessions, setSessions] = useState<any[]>([]);
@@ -30,11 +37,13 @@ const ScheduledSessions = () => {
 		{}
 	);
 	const [replies, setReplies] = useState<{ [key: string]: string }>({});
+	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+	const [sessionToDelete, setSessionToDelete] = useState<any>(null);
 
 	const fetchSessions = async () => {
 		try {
 			const response = await getBookedSessions(user?.id || "");
-			setSessions(response);
+			setSessions(response.reverse());
 		} catch (error) {
 			console.error(error);
 			toast.error("Failed to load sessions.");
@@ -81,6 +90,23 @@ const ScheduledSessions = () => {
 		}
 	};
 
+	const confirmDeleteSession = async () => {
+		if (!sessionToDelete) return;
+		try {
+			setLoading((prev) => ({ ...prev, [sessionToDelete._id]: true }));
+			await deleteBookedSession(sessionToDelete._id);
+			toast.success("Session deleted successfully");
+			setDeleteModalOpen(false);
+			setSessionToDelete(null);
+			await fetchSessions();
+		} catch (err) {
+			console.error(err);
+			toast.error("Failed to delete session");
+		} finally {
+			setLoading((prev) => ({ ...prev, [sessionToDelete._id]: false }));
+		}
+	};
+
 	useEffect(() => {
 		if (user?.id) fetchSessions();
 	}, [user]);
@@ -92,74 +118,87 @@ const ScheduledSessions = () => {
 	}
 
 	return (
-		<div className='container'>
+		<div
+			className='container'
+			style={{ height: "76vh", overflowY: "scroll" }}>
 			<Row>
 				{sessions.map((session) => (
 					<Col
-						md='4'
+						md='6'
+						lg='4'
 						className='mb-4'
 						key={session._id}>
-						<Card>
-							<CardBody>
-								<CardTitle tag='h5'>
-									{session.message?.trim() ? session.message : "-"}
-								</CardTitle>
-								<CardText>
-									<strong>Student: {session.student.name}</strong>
-									<br />
-									<strong>Email:</strong> {session.student.email} <br />
-									<strong>Date:</strong>{" "}
-									{new Date(session.date).toLocaleDateString()} <br />
-									<strong>Time:</strong> {session.timeSlot} <br />
-									<strong>Status:</strong>{" "}
-									<span className='text-primary'>{session.status}</span> <br />
-								</CardText>
+						<Card className='shadow-sm h-100'>
+							<CardBody className='d-flex flex-column justify-content-between align-content-center'>
+								<div className='w-100'>
+									<CardTitle
+										tag='h3'
+										className='mb-3 text-primary fw-bold'>
+										{session.message?.trim() || "No message"}
+									</CardTitle>
 
-								<FormGroup className='d-flex gap-2 align-items-center mb-3'>
-									<Label
-										for='statusSelect'
-										className='me-2 mb-0'>
-										Update Status:
-									</Label>
-									<Input
-										id='statusSelect'
-										type='select'
-										value={statusUpdates[session._id] || session.status}
-										onChange={(e) =>
-											handleStatusChange(session._id, e.target.value)
-										}
-										style={{ maxWidth: "150px" }}>
-										<option value='Pending'>Pending</option>
-										<option value='Confirmed'>Confirmed</option>
-										<option value='Cancelled'>Cancelled</option>
-									</Input>
-									<Button
-										color='primary'
-										size='sm'
-										disabled={
-											loading[session._id] ||
-											statusUpdates[session._id] === session.status
-										}
-										onClick={() => handleUpdateStatus(session._id)}>
-										{loading[session._id] ? <Spinner size='sm' /> : "Update"}
-									</Button>
+									<CardText className='mb-3 fs-5'>
+										<strong>Student:</strong> {session.student.name} <br />
+										<strong>Email:</strong> {session.student.email} <br />
+										<strong>Date:</strong>{" "}
+										{new Date(session.date).toLocaleDateString()} <br />
+										<strong>Time:</strong> {session.timeSlot} <br />
+										<strong>Status:</strong>{" "}
+										<Badge
+											color='info'
+											className='text-uppercase'>
+											{session.status}
+										</Badge>
+									</CardText>
+								</div>
+
+								<hr />
+
+								<FormGroup className='mb-3 w-100'>
+									<Label className='fw-semibold'>Update Status</Label>
+									<div className='d-flex gap-2 align-items-center'>
+										<Input
+											type='select'
+											value={statusUpdates[session._id] || session.status}
+											onChange={(e) =>
+												handleStatusChange(session._id, e.target.value)
+											}
+											style={{ maxWidth: "160px" }}>
+											<option value='Pending'>Pending</option>
+											<option value='Confirmed'>Confirmed</option>
+											<option value='Cancelled'>Cancelled</option>
+										</Input>
+										<Button
+											color='primary'
+											size='sm'
+											disabled={
+												loading[session._id] ||
+												statusUpdates[session._id] === session.status
+											}
+											onClick={() => handleUpdateStatus(session._id)}>
+											{loading[session._id] ? <Spinner size='sm' /> : "Update"}
+										</Button>
+									</div>
 								</FormGroup>
 
-								<FormGroup>
-									<Label for='replyMessage'>Reply to Student:</Label>
+								<FormGroup className='mb-2 w-100'>
+									<Label className='fw-semibold fs-6'>
+										Write Your Reply (Add Meeting Link)
+									</Label>
 									<Input
-										id='replyMessage'
 										type='textarea'
+										rows={2}
 										value={replies[session._id] || ""}
 										onChange={(e) =>
 											handleReplyChange(session._id, e.target.value)
 										}
-										placeholder='Type your reply here...'
+										placeholder='Type your message...'
 									/>
+								</FormGroup>
+
+								<div className='d-flex justify-content-between mt-2 w-100'>
 									<Button
 										color='success'
-										size='sm'
-										className='mt-2'
 										onClick={() => handleSendReply(session._id)}
 										disabled={loading[session._id]}>
 										{loading[session._id] ? (
@@ -168,12 +207,52 @@ const ScheduledSessions = () => {
 											"Send Reply"
 										)}
 									</Button>
-								</FormGroup>
+
+									<Button
+										color='danger'
+										onClick={() => {
+											setSessionToDelete(session);
+											setDeleteModalOpen(true);
+										}}>
+										<Trash2
+											size={14}
+											className='me-1'
+										/>
+										Delete
+									</Button>
+								</div>
 							</CardBody>
 						</Card>
 					</Col>
 				))}
 			</Row>
+
+			{/* Delete Confirmation Modal */}
+			<Modal
+				isOpen={deleteModalOpen}
+				toggle={() => setDeleteModalOpen(false)}
+				centered>
+				<ModalHeader toggle={() => setDeleteModalOpen(false)}>
+					Confirm Deletion
+				</ModalHeader>
+				<ModalBody>
+					Are you sure you want to delete the session with message:
+					<br />
+					<strong>"{sessionToDelete?.message || "-"}"</strong>?
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color='outline-danger'
+						onClick={() => setDeleteModalOpen(false)}>
+						Cancel
+					</Button>
+					<Button
+						color='danger'
+						onClick={confirmDeleteSession}>
+						Delete
+					</Button>
+				</ModalFooter>
+			</Modal>
 		</div>
 	);
 };
