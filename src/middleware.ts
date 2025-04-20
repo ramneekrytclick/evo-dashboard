@@ -23,13 +23,13 @@ export function middleware(request: NextRequest) {
 				}
 				if (
 					(pathname.startsWith("/admin") && role !== "Admin") ||
-					(pathname.startsWith("/creator") && role !== "Creator") ||
 					(pathname.startsWith("/mentor") && role !== "Mentor") ||
 					(pathname.startsWith("/student") && role !== "Student") ||
 					(pathname.startsWith("/course-creator") &&
 						role !== "Course Creator") ||
 					(pathname.startsWith("/manager") && role !== "Manager") ||
-					(pathname.startsWith("/employer") && role !== "Employer")
+					(pathname.startsWith("/employer") && role !== "Employer") ||
+					(pathname.startsWith("/publisher") && role !== "Publisher")
 				) {
 					return NextResponse.redirect(new URL("/403", request.url));
 				}
@@ -43,7 +43,7 @@ export function middleware(request: NextRequest) {
 	} else {
 		if (
 			pathname.startsWith("/admin") ||
-			pathname.startsWith("/creator") ||
+			pathname.startsWith("/publisher") ||
 			pathname.startsWith("/mentor") ||
 			pathname.startsWith("/manager") ||
 			pathname.startsWith("/student") ||
@@ -60,10 +60,11 @@ export const config = {
 	matcher: [
 		"/auth/login",
 		"/admin/:path*",
-		"/creator/:path*",
 		"/mentor/:path*",
 		"/student/:path*",
 		"/manager/:path*",
 		"/course-creator/:path*",
+		"/employer/:path*",
+		"/publisher/:path*",
 	],
 };
