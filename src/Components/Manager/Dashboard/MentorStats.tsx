@@ -6,7 +6,7 @@ const MentorStats = ({ data }: { data: any[] }) => {
 	if (!data || data.length === 0) return <p>No mentor stats available.</p>;
 
 	return (
-		<div className='mb-4 card card-body bg-primary-subtle'>
+		<div className='mb-4 card card-body '>
 			<h5 className='fw-semibold mb-3'>Assigned Mentors Stats</h5>
 			<div
 				style={{
@@ -24,7 +24,7 @@ const MentorStats = ({ data }: { data: any[] }) => {
 							scrollSnapAlign: "start",
 							flexShrink: 0,
 						}}>
-						<Card className='shadow-sm h-100 border-0'>
+						<Card className='shadow-sm h-100 border-0 bg-primary-subtle'>
 							<CardBody>
 								<h6 className='fw-bold mb-1'>{mentor.name}</h6>
 								<p className='text-muted small mb-3'>{mentor.email}</p>

@@ -1,26 +1,11 @@
 "use client";
 
 import { useAuth } from "@/app/AuthProvider";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { User, LogOut, Settings } from "react-feather";
+import { User, Settings } from "react-feather";
 import Image from "next/image";
-import { Badge } from "reactstrap";
-import { getMyProfile } from "@/app/api";
-import { useEffect } from "react";
-
 const UserProfile = () => {
 	const { user, logout } = useAuth();
-	const router = useRouter();
-	const role = user?.role || "Student";
-	const fetchProfile = async () => {
-		try {
-			const response = await getMyProfile(role);
-		} catch (error) {}
-	};
-	useEffect(() => {
-		fetchProfile();
-	}, []);
 	if (!user) return null;
 	return (
 		<li className='onhover-dropdown text-dark position-relative border rounded border-dark hover-shadow-sm'>
@@ -55,12 +40,23 @@ const UserProfile = () => {
 						/>
 					</li>
 					<li className=''>
-						<Link
-							href={`/${user.role.toLowerCase()}/profile`}
-							className='text-decoration-none d-flex align-items-center gap-2 text-dark'>
-							<User size={16} />
-							<span>View Profile</span>
-						</Link>
+						{user.role === "Course Creator" ? (
+							<>
+								<Link
+									href={`/course-creator/profile`}
+									className='text-decoration-none d-flex align-items-center gap-2 text-dark'>
+									<User size={16} />
+									<span>View Profile</span>
+								</Link>
+							</>
+						) : (
+							<Link
+								href={`/${user.role.toLowerCase()}/profile`}
+								className='text-decoration-none d-flex align-items-center gap-2 text-dark'>
+								<User size={16} />
+								<span>View Profile</span>
+							</Link>
+						)}
 					</li>
 					<li>
 						<Link
