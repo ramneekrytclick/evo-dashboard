@@ -62,9 +62,11 @@ const Layout = ({
 			</div>
 		);
 	else {
-		if (!course || !enrolledCourse) return notFound();
+		if (!course || !enrolledCourse) {
+			console.log("Not Found");
+			return notFound();
+		}
 	}
-	// Uncomment this line when you're done debugging:
 
 	return (
 		<Container fluid>

@@ -139,7 +139,6 @@ const LessonContainer = ({
 			</div>
 
 			{/* Buttons */}
-			{/* Buttons */}
 			<div className='d-flex gap-3 mb-4'>
 				{(!score?.quizScore || score.quizScore === 0) && (
 					<Button
