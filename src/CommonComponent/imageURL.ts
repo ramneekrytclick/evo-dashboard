@@ -8,7 +8,7 @@ export const getImageURL = (photo: string, type?: string) => {
 		? `${backendURL}${resolvedPhoto}`
 		: `${backendURL}/uploads/${resolvedPhoto}`;
 	const photoURL = photo ? profilePhotoUrl : "/assets/avatar-placeholder.png";
-	if (!photo.includes("/") && type) {
+	if (!photo?.includes("/") && type) {
 		return `${backendURL}/uploads/${type}/${resolvedPhoto}`;
 	}
 	if (photo == "") {

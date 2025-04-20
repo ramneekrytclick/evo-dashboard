@@ -26,7 +26,11 @@ const AssignedManagersTable = () => {
 	useEffect(() => {
 		fetchData();
 	}, []);
-
+	const customTableStyles = {
+		rows: { style: { fontSize: "1rem" } },
+		headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
+		cells: { style: { fontSize: "1rem" } },
+	};
 	const columns = [
 		{
 			name: "Photo",
@@ -106,8 +110,6 @@ const AssignedManagersTable = () => {
 
 	return (
 		<Card className='p-3'>
-			<h5 className='mb-3'>Assigned Mentors</h5>
-
 			<Input
 				type='text'
 				placeholder='Search by name or email...'
@@ -130,6 +132,7 @@ const AssignedManagersTable = () => {
 					responsive
 					highlightOnHover
 					noDataComponent='No mentors found'
+					customStyles={customTableStyles}
 				/>
 			)}
 		</Card>

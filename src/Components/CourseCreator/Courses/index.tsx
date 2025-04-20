@@ -74,7 +74,9 @@ const CoursesContainerCC = () => {
 				parent='Course Creator'
 				mainTitle='Courses'
 			/>
-			<div className='p-3'>
+			<div
+				className='p-3'
+				style={{ height: "80vh", overflowY: "auto" }}>
 				<Row className='g-3'>
 					{courses.map((course) => (
 						<Col

@@ -51,9 +51,7 @@ const CourseCardCC = ({
 
 			<CardBody className='p-3'>
 				<h5 className='fw-bold text-dark text-truncate'>{course.title}</h5>
-				<p className='small text-muted mb-2'>
-					{course.whatYouWillLearn || "-"}
-				</p>
+				<p className='small text-muted mb-2'>{course.description || "-"}</p>
 
 				<p className='mb-2'>
 					<Badge
@@ -75,7 +73,7 @@ const CourseCardCC = ({
 					))}
 				</div>
 
-				<div className='d-flex justify-content-between align-items-center mb-3'>
+				<div className='d-flex justify-content-start align-items-center mb-3'>
 					<span className='fw-semibold text-success fs-5'>
 						₹{course.discountedPrice}
 					</span>

@@ -6,9 +6,8 @@ const MentorStats = ({ data }: { data: any[] }) => {
 	if (!data || data.length === 0) return <p>No mentor stats available.</p>;
 
 	return (
-		<div className="mb-4">
-			<h5 className="fw-bold mb-3">Mentor Stats</h5>
-
+		<div className='mb-4 card card-body bg-primary-subtle'>
+			<h5 className='fw-semibold mb-3'>Assigned Mentors Stats</h5>
 			<div
 				style={{
 					display: "flex",
@@ -25,35 +24,35 @@ const MentorStats = ({ data }: { data: any[] }) => {
 							scrollSnapAlign: "start",
 							flexShrink: 0,
 						}}>
-						<Card className="shadow-sm h-100 border-0">
+						<Card className='shadow-sm h-100 border-0'>
 							<CardBody>
-								<h6 className="fw-bold mb-1">{mentor.name}</h6>
-								<p className="text-muted small mb-3">{mentor.email}</p>
+								<h6 className='fw-bold mb-1'>{mentor.name}</h6>
+								<p className='text-muted small mb-3'>{mentor.email}</p>
 
-								<div className="d-flex justify-content-between text-center">
+								<div className='d-flex justify-content-between text-center'>
 									<div>
 										<FaChalkboardTeacher
-											className="mb-1"
+											className='mb-1'
 											size={18}
 										/>
-										<h6 className="mb-0">{mentor.totalBatches}</h6>
-										<small className="text-muted">Batches</small>
+										<h6 className='mb-0'>{mentor.totalBatches}</h6>
+										<small className='text-muted'>Batches</small>
 									</div>
 									<div>
 										<FaUsers
-											className="mb-1"
+											className='mb-1'
 											size={18}
 										/>
-										<h6 className="mb-0">{mentor.totalStudents}</h6>
-										<small className="text-muted">Students</small>
+										<h6 className='mb-0'>{mentor.totalStudents}</h6>
+										<small className='text-muted'>Students</small>
 									</div>
 									<div>
 										<FaBookOpen
-											className="mb-1"
+											className='mb-1'
 											size={18}
 										/>
-										<h6 className="mb-0">{mentor.coursesAssigned}</h6>
-										<small className="text-muted">Courses</small>
+										<h6 className='mb-0'>{mentor.coursesAssigned}</h6>
+										<small className='text-muted'>Courses</small>
 									</div>
 								</div>
 							</CardBody>
