@@ -6,9 +6,11 @@ import { toast } from "react-toastify";
 const LessonsCardView = ({
 	lessons,
 	courseId,
+	completedLessons,
 }: {
 	lessons: LessonType[];
 	courseId: string;
+	completedLessons: string[];
 }) => {
 	return (
 		<>
@@ -23,6 +25,7 @@ const LessonsCardView = ({
 							<LessonCard
 								lesson={lesson}
 								courseId={courseId}
+								completed={completedLessons.includes(lesson._id)}
 							/>
 						</Col>
 					))}

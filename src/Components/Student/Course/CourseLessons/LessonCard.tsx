@@ -9,9 +9,11 @@ import { toast } from "react-toastify";
 const LessonCard = ({
 	lesson,
 	courseId,
+	completed = false,
 }: {
 	lesson: LessonType;
 	courseId: string;
+	completed: boolean;
 }) => {
 	return (
 		<>
@@ -51,13 +53,13 @@ const LessonCard = ({
 					</div>
 
 					<Button
-						outline
+						outline={completed}
 						color='primary'
 						size='sm'
 						className='w-100 d-flex align-items-center justify-content-center gap-2 mt-2'
 						tag={Link}
 						href={`/student/learning/course/${courseId}/${lesson._id}`}>
-						View Lesson
+						{completed ? "Completed" : "Watch Lesson"}
 					</Button>
 				</CardBody>
 			</Card>

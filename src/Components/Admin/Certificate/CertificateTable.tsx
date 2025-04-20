@@ -19,6 +19,7 @@ import {
 	Input,
 } from "reactstrap";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import { customTableStyles } from "../Batches/BatchesList";
 const CertificateTable = () => {
 	const [rows, setRows] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -141,7 +142,7 @@ const CertificateTable = () => {
 						</Button>
 					);
 				}
-				const eligible = row.progressPercent >= 0 && !row.isCourseComplete;
+				const eligible = row.progressPercent >= 70 && !row.isCourseComplete;
 				return eligible ? (
 					<Button
 						color='primary'
@@ -153,7 +154,7 @@ const CertificateTable = () => {
 						Issue
 					</Button>
 				) : (
-					<span className='text-muted'>Not eligible</span>
+					<span className='text-muted'>Not eligible till 70%</span>
 				);
 			},
 			center: true,
@@ -174,6 +175,7 @@ const CertificateTable = () => {
 					highlightOnHover
 					dense
 					noDataComponent='No student progress found.'
+					customStyles={customTableStyles}
 				/>
 			)}
 

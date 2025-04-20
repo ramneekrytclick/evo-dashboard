@@ -24,13 +24,21 @@ const Layout = ({
 		const fetchData = async () => {
 			try {
 				const allCourses = await getAllCourses();
+				console.log("allCourses:", allCourses);
+				console.log("params.id:", params.id);
+				console.log("pathname:", pathname);
+				console.log();
+
 				const allEnrolled = await getEnrolledCourses();
 				const matchedCourse = allCourses.courses.find(
-					(c: any) => c.id === params.id
+					(c: any) => c._id === params.id
 				);
+				console.log("matchedCourse:", matchedCourse);
 				const matchedEnrolled = allEnrolled.enrolledCourses.find(
 					(c: any) => c.course._id === params.id
 				);
+				console.log("matchedEnrolled:", matchedEnrolled);
+
 				if (matchedCourse && matchedEnrolled) {
 					setCourse(matchedCourse);
 					setEnrolledCourse(matchedEnrolled);
@@ -53,9 +61,10 @@ const Layout = ({
 				<Spinner />
 			</div>
 		);
-
+	else {
+		if (!course || !enrolledCourse) return notFound();
+	}
 	// Uncomment this line when you're done debugging:
-	if (!course || !enrolledCourse) return notFound();
 
 	return (
 		<Container fluid>

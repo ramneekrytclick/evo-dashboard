@@ -8,7 +8,7 @@ const CertificatePageContainer = () => {
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={"Give Certificate"}
+				mainTitle={"Issue Certificate"}
 				parent={AdminTitle}
 				title={"Students"}
 			/>

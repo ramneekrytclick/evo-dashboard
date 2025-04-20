@@ -13,7 +13,7 @@ import CreateLessonModal from "./CreateLessonModal";
 const LessonsPageContainer = ({ id }: { id: string }) => {
 	const [lessons, setLessons] = useState<LessonType[]>([]);
 	const [course, setCourse] = useState<any>([]);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [showCreateModal, setShowCreateModal] = useState(false);
 
 	const fetchLessons = async () => {
@@ -31,7 +31,7 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 		try {
 			setLoading(true);
 			const response = await getAllCourses();
-			setCourse(response.courses.find((c: any) => c.id === id));
+			setCourse(response.courses.find((c: any) => c._id === id));
 		} catch (error) {
 			toast.error("Error fetching course");
 		}
@@ -57,7 +57,7 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 		);
 	}
 
-	if (course) {
+	if (course && !loading) {
 		return (
 			<>
 				<Breadcrumbs

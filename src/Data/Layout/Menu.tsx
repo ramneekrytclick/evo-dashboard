@@ -89,7 +89,7 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/paths",
 			},
 			{
-				title: "Give Certificate",
+				title: "Issue Certificate",
 				icon: "file",
 				id: 12,
 				type: "link",

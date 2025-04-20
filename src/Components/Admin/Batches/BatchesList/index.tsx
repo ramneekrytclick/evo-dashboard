@@ -24,7 +24,11 @@ import Link from "next/link";
 import { FontSizeTitle } from "@/Constant";
 import { toast } from "react-toastify";
 import { Trash, Trash2 } from "react-feather";
-
+export const customTableStyles = {
+	rows: { style: { fontSize: "1rem" } },
+	headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
+	cells: { style: { fontSize: "1rem" } },
+};
 const BatchesList = () => {
 	const [batches, setBatches] = useState<BatchProps[]>([]);
 	const [filterText, setFilterText] = useState("");
@@ -53,11 +57,7 @@ const BatchesList = () => {
 	useEffect(() => {
 		fetchBatches();
 	}, []);
-	const customTableStyles = {
-		rows: { style: { fontSize: "1rem" } },
-		headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
-		cells: { style: { fontSize: "1rem" } },
-	};
+
 	const filteredItems = useMemo(() => {
 		return batches.filter((item) =>
 			Object.values(item).some((value) => {

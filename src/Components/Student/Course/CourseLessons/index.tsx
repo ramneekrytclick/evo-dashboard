@@ -1,101 +1,68 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import { Button, CardHeader, Col, Row, Spinner } from "reactstrap";
+import { toast } from "react-toastify";
+
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { CoursesTitle } from "@/Constant";
-import { useEffect, useState } from "react";
 import { LessonType } from "@/Types/Lesson.type";
-
-import { toast } from "react-toastify";
-import { getAllCourses } from "@/app/api/cc";
-import {
-	Button,
-	Card,
-	CardBody,
-	CardHeader,
-	Col,
-	Row,
-	Spinner,
-} from "reactstrap";
 import LessonsCardView from "./LessonsCardView";
 import {
-	getEnrolledCourses,
 	getLessonsByCourseID,
+	getEnrolledCourses,
 	getMyCourseProgress,
 } from "@/app/api/student";
+import { getAllCourses } from "@/app/api/cc";
 
 const LessonsPageContainer = ({ id }: { id: string }) => {
 	const [lessons, setLessons] = useState<LessonType[]>([]);
-	const [course, setCourse] = useState<any>([]);
-	const [loading, setLoading] = useState(false);
-	const [enrolledCourses, setEnrolledCourses] = useState<any>([]);
-	const [progress, setProgress] = useState();
-	const fetchProgress = async () => {
-		setLoading(true);
-		try {
-			const response = await getMyCourseProgress();
-			setProgress(response.progress);
-		} catch (error) {
-			toast.error("Error fetching progress");
-		}
-	};
-	const fetchLessons = async () => {
+	const [course, setCourse] = useState<any>(null);
+	const [loading, setLoading] = useState(true);
+	const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+	const [progress, setProgress] = useState<any>(null);
+
+	const fetchAllData = async () => {
 		try {
 			setLoading(true);
-			const response = await getLessonsByCourseID(id);
-			setLessons(response.lessons);
+
+			const [lessonRes, courseRes, enrolledRes, progressRes] =
+				await Promise.all([
+					getLessonsByCourseID(id),
+					getAllCourses(),
+					getEnrolledCourses(),
+					getMyCourseProgress(),
+				]);
+
+			setLessons(lessonRes.lessons);
+			setCourse(courseRes.courses.find((c: any) => c._id === id));
+			setEnrolledCourses(enrolledRes.enrolledCourses);
+			setProgress(progressRes.progress);
 		} catch (error) {
-			toast.error("Error fetching lessons");
+			toast.error("Error loading course data");
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
-	const fetchCourse = async () => {
-		try {
-			setLoading(true);
-			const response = await getAllCourses();
-			setCourse(response.courses.find((c: any) => c.id === id));
-		} catch (error) {
-			toast.error("Error fetching course");
-		}
-		setLoading(false);
-	};
-	const fetchEnrolledCourses = async () => {
-		try {
-			setLoading(true);
-			const response = await getEnrolledCourses();
-			setEnrolledCourses(response.enrolledCourses);
-		} catch (error) {
-			toast.error("Error fetching course");
-		}
-		setLoading(false);
-	};
 	useEffect(() => {
-		fetchLessons();
-		fetchCourse();
-		fetchEnrolledCourses();
-		fetchProgress();
-	}, []);
+		fetchAllData();
+	}, [id]);
 
-	useEffect(() => {
-		console.log(enrolledCourses);
-		console.log(course);
-	}, [enrolledCourses]);
 	if (loading) {
 		return (
 			<>
-				<Breadcrumbs
-					mainTitle={"Course View"}
-					parent={CoursesTitle}
-					title={"Course View"}
-				/>
-				<div className='d-flex justify-content-center align-items-center '>
-					Loading Content...
-					<Spinner />{" "}
+				<div className='d-flex justify-content-center align-items-center py-5'>
+					Loading Content... <Spinner className='ms-2' />
 				</div>
 			</>
 		);
 	}
 
-	if (course) {
+	// Check if user is enrolled in this course
+	const enrollment = enrolledCourses.find((c) => c.course._id === id);
+	const completedLessons = enrollment?.completedLessons || [];
+	if (enrollment) {
 		return (
 			<>
 				<Row className='h-100'>
@@ -103,7 +70,9 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 						<CardHeader>
 							<h4 className='mb-0 text-dark'>Course Lessons</h4>
 						</CardHeader>
+
 						<LessonsCardView
+							completedLessons={completedLessons}
 							lessons={lessons}
 							courseId={id}
 						/>

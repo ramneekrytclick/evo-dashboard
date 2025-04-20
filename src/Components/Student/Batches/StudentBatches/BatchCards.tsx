@@ -31,12 +31,13 @@ const BatchCards = () => {
 	}, []);
 
 	return (
-		<Row>
+		<Row className='gap-2 '>
 			{batches.length > 0 ? (
 				batches.map((batch) => (
 					<Col
-						xl={4}
+						xl={5}
 						md={6}
+						sm={12}
 						key={batch._id}>
 						<Card className='border-0 shadow rounded-4 h-100 '>
 							<CardBody className='d-flex flex-column'>
