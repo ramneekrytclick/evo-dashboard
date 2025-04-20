@@ -57,12 +57,16 @@ const JobPortalContainer = () => {
 						xxl={9}
 						xl={8}
 						className='box-col-8'>
-						<JobsCardView
-							searchQuery={searchQuery}
-							location={location}
-							selectedFilters={selectedFilters}
-							appliedJobs={appliedJobs}
-						/>
+						<Card
+							className='card-body bg-primary-subtle'
+							style={{ height: "80vh", overflowY: "auto" }}>
+							<JobsCardView
+								searchQuery={searchQuery}
+								location={location}
+								selectedFilters={selectedFilters}
+								appliedJobs={appliedJobs}
+							/>
+						</Card>
 					</Col>
 				</Row>
 			</Container>

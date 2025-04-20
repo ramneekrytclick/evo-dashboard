@@ -4,7 +4,7 @@ import { getEnrolledCourses, getPathById } from "@/app/api/student";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import PathRoadmap from "./PathRoadmap";
-import { Spinner } from "reactstrap";
+import { Card, Spinner } from "reactstrap";
 import { useAuth } from "@/app/AuthProvider";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { PathProps } from "../PathCards";
@@ -52,11 +52,13 @@ const PathDetails = ({ id }: { id: string }) => {
 				title='Path Details'
 			/>
 			{data ? (
-				<PathRoadmap
-					role={role || "Student"}
-					path={data}
-					enrolledCourses={enrolledCourses}
-				/>
+				<Card style={{ height: "75vh", overflow: "auto" }}>
+					<PathRoadmap
+						role={role || "Student"}
+						path={data}
+						enrolledCourses={enrolledCourses}
+					/>
+				</Card>
 			) : (
 				<Spinner />
 			)}
