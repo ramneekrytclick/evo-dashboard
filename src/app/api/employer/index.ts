@@ -47,11 +47,11 @@ export const updateJob = async (
 		description: string;
 		companyName: string;
 		location: string;
-		jobType: string;
+		jobType: "Full-Time" | "Part-Time" | "Internship" | "Contract";
 		experienceRequired: string;
 		salary: string;
 		applicationDeadline: string;
-		openings: string;
+		openings: number;
 		skillsRequired: string;
 	}
 ) => {

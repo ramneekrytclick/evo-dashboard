@@ -1,4 +1,5 @@
 "use client";
+
 import {
 	Button,
 	FormGroup,
@@ -8,6 +9,8 @@ import {
 	ModalBody,
 	ModalFooter,
 	ModalHeader,
+	Row,
+	Col,
 } from "reactstrap";
 import { useEffect, useState } from "react";
 import { updateJob } from "@/app/api/employer";
@@ -17,7 +20,7 @@ const UpdateJobModal = ({ isOpen, toggle, job, refresh }: any) => {
 	const [formData, setFormData] = useState({ ...job });
 
 	useEffect(() => {
-		setFormData({ ...job });
+		if (job) setFormData({ ...job });
 	}, [job]);
 
 	const handleChange = (key: string, value: any) => {
@@ -26,12 +29,18 @@ const UpdateJobModal = ({ isOpen, toggle, job, refresh }: any) => {
 
 	const handleSubmit = async () => {
 		try {
-			await updateJob(job._id, formData);
+			await updateJob(job._id, {
+				...formData,
+				skillsRequired: formData.skillsRequired?.includes(",")
+					? formData.skillsRequired?.split(",").map((s: string) => s.trim())
+					: formData.skillsRequired,
+				openings: Number(formData.openings),
+			});
 			toast.success("Job updated successfully");
 			toggle();
 			refresh();
 		} catch (error) {
-			console.error("Update error", error);
+			console.log("Update error", error);
 			toast.error("Failed to update job");
 		}
 	};
@@ -44,13 +53,26 @@ const UpdateJobModal = ({ isOpen, toggle, job, refresh }: any) => {
 			size='lg'>
 			<ModalHeader toggle={toggle}>Update Job</ModalHeader>
 			<ModalBody>
-				<FormGroup>
-					<Label>Title</Label>
-					<Input
-						value={formData.title}
-						onChange={(e) => handleChange("title", e.target.value)}
-					/>
-				</FormGroup>
+				<Row>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Title</Label>
+							<Input
+								value={formData.title}
+								onChange={(e) => handleChange("title", e.target.value)}
+							/>
+						</FormGroup>
+					</Col>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Company Name</Label>
+							<Input
+								value={formData.companyName}
+								onChange={(e) => handleChange("companyName", e.target.value)}
+							/>
+						</FormGroup>
+					</Col>
+				</Row>
 				<FormGroup>
 					<Label>Description</Label>
 					<Input
@@ -59,25 +81,92 @@ const UpdateJobModal = ({ isOpen, toggle, job, refresh }: any) => {
 						onChange={(e) => handleChange("description", e.target.value)}
 					/>
 				</FormGroup>
+				<Row>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Location</Label>
+							<Input
+								value={formData.location}
+								onChange={(e) => handleChange("location", e.target.value)}
+							/>
+						</FormGroup>
+					</Col>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Job Type</Label>
+							<Input
+								type='select'
+								value={formData.jobType}
+								onChange={(e) => handleChange("jobType", e.target.value)}>
+								<option value='Full-Time'>Full-Time</option>
+								<option value='Part-Time'>Part-Time</option>
+								<option value='Internship'>Internship</option>
+								<option value='Contract'>Contract</option>
+							</Input>
+						</FormGroup>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Experience Required</Label>
+							<Input
+								value={formData.experienceRequired}
+								onChange={(e) =>
+									handleChange("experienceRequired", e.target.value)
+								}
+							/>
+						</FormGroup>
+					</Col>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Salary</Label>
+							<Input
+								value={formData.salary}
+								onChange={(e) => handleChange("salary", e.target.value)}
+							/>
+						</FormGroup>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Application Deadline</Label>
+							<Input
+								type='date'
+								value={formData.applicationDeadline?.substring(0, 10)}
+								onChange={(e) =>
+									handleChange("applicationDeadline", e.target.value)
+								}
+							/>
+						</FormGroup>
+					</Col>
+					<Col md={6}>
+						<FormGroup>
+							<Label>Openings</Label>
+							<Input
+								type='number'
+								value={formData.openings}
+								onChange={(e) => handleChange("openings", e.target.value)}
+							/>
+						</FormGroup>
+					</Col>
+				</Row>
 				<FormGroup>
-					<Label>Location</Label>
+					<Label>Skills Required (comma separated)</Label>
 					<Input
-						value={formData.location}
-						onChange={(e) => handleChange("location", e.target.value)}
+						value={
+							Array.isArray(formData.skillsRequired)
+								? formData.skillsRequired.join(", ")
+								: formData.skillsRequired
+						}
+						onChange={(e) => handleChange("skillsRequired", e.target.value)}
 					/>
 				</FormGroup>
-				<FormGroup>
-					<Label>Salary</Label>
-					<Input
-						value={formData.salary}
-						onChange={(e) => handleChange("salary", e.target.value)}
-					/>
-				</FormGroup>
-				{/* Add more fields as needed */}
 			</ModalBody>
 			<ModalFooter>
 				<Button
-					color='outline-success'
+					color='outline-danger'
 					onClick={toggle}>
 					Cancel
 				</Button>
