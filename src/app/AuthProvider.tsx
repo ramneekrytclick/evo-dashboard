@@ -17,6 +17,7 @@ interface User {
 	email: string;
 	role: string;
 	token: string;
+	photo?: string;
 }
 
 interface AuthContextType {
@@ -109,6 +110,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 					name: data.name,
 					email: data.email,
 					role: data.role || "Admin",
+					photo: data.photo,
 					token,
 				})
 			);

@@ -4,6 +4,7 @@ import { useAuth } from "@/app/AuthProvider";
 import Link from "next/link";
 import { User, Settings } from "react-feather";
 import Image from "next/image";
+import { getImageURL } from "@/CommonComponent/imageURL";
 const UserProfile = () => {
 	const { user, logout } = useAuth();
 	if (!user) return null;
@@ -14,7 +15,7 @@ const UserProfile = () => {
 					{user.name?.split(" ")[0] || "User"}
 				</span>
 				<Image
-					src={`/assets/avatar-placeholder.png`}
+					src={getImageURL(user.photo || "")}
 					alt='Profile'
 					width={25}
 					height={25}
@@ -32,7 +33,7 @@ const UserProfile = () => {
 							</p>
 						</div>
 						<Image
-							src={`/assets/avatar-placeholder.png`}
+							src={getImageURL(user.photo || "")}
 							alt='Profile'
 							width={60}
 							height={60}
