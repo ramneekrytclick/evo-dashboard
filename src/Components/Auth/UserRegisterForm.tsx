@@ -27,9 +27,14 @@ import { useAuth } from "@/app/AuthProvider";
 import { useRouter } from "next/navigation";
 import { ImagePath } from "@/Constant";
 
-const MultiStepRegister = () => {
+const MultiStepRegister = ({
+	role,
+	route = "student",
+}: {
+	role: string;
+	route: string;
+}) => {
 	const [step, setStep] = useState(1);
-	const [role, setRole] = useState("admin");
 	const [formData, setFormData] = useState<any>({});
 	const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 	const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -237,7 +242,6 @@ const MultiStepRegister = () => {
 								formData={formData}
 								handleChange={handleChange}
 								role={role}
-								setRole={setRole}
 							/>
 						)}
 						{step === 2 && isMultiStep && (
@@ -328,7 +332,7 @@ const MultiStepRegister = () => {
 						</div>
 						<div className='text-center mt-3'>
 							<Link
-								href='/auth/login'
+								href={`/auth/login/${route}`}
 								className='text-primary'>
 								Already have an account? Login
 							</Link>

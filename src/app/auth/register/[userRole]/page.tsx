@@ -1,9 +1,9 @@
 "use client";
-import UserForm from "@/Components/Auth/UserForm";
+import UserRegisterForm from "@/Components/Auth/UserRegisterForm";
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "reactstrap";
 
-const UserLogin = ({ params }: { params: { userRole: string } }) => {
+const UserRegister = ({ params }: { params: { userRole: string } }) => {
 	const [role, setRole] = useState("admin");
 	useEffect(() => {
 		switch (params.userRole) {
@@ -12,22 +12,16 @@ const UserLogin = ({ params }: { params: { userRole: string } }) => {
 				break;
 			case "mentor":
 				setRole("mentors");
-				break;
 			case "publisher":
 				setRole("publishers/auth");
-				break;
 			case "cc":
 				setRole("course-creators/auth");
-				break;
 			case "manager":
 				setRole("managers/auth");
-				break;
 			case "student":
 				setRole("students");
-				break;
 			case "employer":
 				setRole("jobs");
-				break;
 			default:
 				setRole("students");
 				break;
@@ -42,7 +36,7 @@ const UserLogin = ({ params }: { params: { userRole: string } }) => {
 					xs={12}
 					className='p-0'>
 					<div className='login-card login-dark'>
-						<UserForm
+						<UserRegisterForm
 							role={role}
 							route={params.userRole}
 						/>
@@ -53,4 +47,4 @@ const UserLogin = ({ params }: { params: { userRole: string } }) => {
 	);
 };
 
-export default UserLogin;
+export default UserRegister;

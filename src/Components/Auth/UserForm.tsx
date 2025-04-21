@@ -2,14 +2,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { Button, Form, FormGroup, Input, Label } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
 import { useAuth } from "@/app/AuthProvider";
 
-const UserForm = ({ role }: { role: string }) => {
+const UserForm = ({
+	role,
+	route = "student",
+}: {
+	role: string;
+	route: string;
+}) => {
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("admin@evo.com");
 	const [password, setPassword] = useState("1234");
@@ -61,6 +67,36 @@ const UserForm = ({ role }: { role: string }) => {
 			setLoading(false);
 		}
 	};
+	//TO BE REMOVED
+	useEffect(() => {
+		switch (role) {
+			case "admin":
+				setEmail("admin@evo.com");
+				break;
+			case "students":
+				setEmail("singhrrammy@gmail.com");
+				break;
+			case "mentors":
+				setEmail("mentor@evo.com");
+				setPassword("123");
+				break;
+			case "jobs":
+				setEmail("emp2@evo.com");
+				break;
+			case "publishers/auth":
+				setEmail("publisher@evo.com");
+				break;
+			case "course-creators/auth":
+				setEmail("cc@evo.com");
+				break;
+			case "managers/auth":
+				setEmail("manager@evo.com");
+				break;
+			default:
+				setEmail("admin@evo.com");
+				break;
+		}
+	}, [role]);
 
 	return (
 		<div>
@@ -123,40 +159,22 @@ const UserForm = ({ role }: { role: string }) => {
 						</div>
 					</FormGroup>
 
-					<div className='form-group mb-0'>
-						<div className='checkbox p-0'>
-							<Input
-								id='checkbox1'
-								type='checkbox'
-							/>
-							<Label
-								className='text-muted'
-								htmlFor='checkbox1'>
-								Remember me
-							</Label>
-						</div>
-						<Link
-							className='link'
-							href='/auth/register'>
-							Register User
-						</Link>
-
-						<div className='text-end mt-3'>
-							<Button
-								type='submit'
-								color='primary'
-								disabled={loading}
-								block>
-								Sign In
-								{loading && (
-									<span
-										className='spinner-border spinner-border-sm me-2'
-										role='status'
-										aria-hidden='true'
-									/>
-								)}
-							</Button>
-						</div>
+					<div className='mt-4 text-center'>
+						<Button
+							type='submit'
+							color='primary'
+							disabled={loading}
+							block>
+							Sign In
+							{loading && (
+								<span
+									className='spinner-border spinner-border-sm me-2'
+									role='status'
+									aria-hidden='true'
+								/>
+							)}
+						</Button>
+						<Link href={`/auth/register/${route}`}>Register User</Link>
 					</div>
 				</Form>
 			</div>

@@ -9,35 +9,15 @@ interface BasicInfoProps {
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => void;
 	role: string;
-	setRole: (role: string) => void;
 }
 
 const BasicInfoForm: React.FC<BasicInfoProps> = ({
 	formData,
 	handleChange,
 	role,
-	setRole,
 }) => {
 	return (
 		<Row className='g-3'>
-			<Col sm={12}>
-				<Label>Select Role</Label>
-				<Input
-					type='select'
-					name='role'
-					value={role}
-					onChange={(e) => setRole(e.target.value)}
-					required>
-					<option value='admin'>Admin</option>
-					<option value='mentors'>Mentor</option>
-					<option value='publishers/auth'>Publisher</option>
-					<option value='managers/auth'>Manager</option>
-					<option value='course-creators/auth'>Course Creator</option>
-					<option value='students'>Student</option>
-					<option value='jobs'>Employer</option>
-				</Input>
-			</Col>
-
 			<Col sm={6}>
 				<Label>Full Name</Label>
 				<Input
