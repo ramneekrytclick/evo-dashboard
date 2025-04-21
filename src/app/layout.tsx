@@ -4,7 +4,7 @@ import "../../src/index.scss";
 import { Lexend, Roboto, Poppins, Outfit } from "next/font/google";
 import { detectLanguage } from "./i18n/server";
 import { I18nProvider } from "./i18n/i18n-context";
-import { ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ErrorBoundary from "@/CommonComponent/ErrorBoundry";
 
@@ -63,7 +63,19 @@ export default async function RootLayout({
 					<ErrorBoundary>
 						<NoSsr>
 							<MainProvider>{children}</MainProvider>
-							<ToastContainer />
+							<ToastContainer
+								position='top-center'
+								autoClose={5000}
+								hideProgressBar={false}
+								newestOnTop
+								closeOnClick
+								rtl={false}
+								pauseOnFocusLoss
+								draggable={false}
+								pauseOnHover={false}
+								theme='colored'
+								transition={Slide}
+							/>
 						</NoSsr>
 					</ErrorBoundary>
 				</body>

@@ -17,12 +17,21 @@ import {
 	InputGroup,
 	Spinner,
 	Badge,
+	Modal,
+	ListGroupItem,
+	ListGroup,
+	ModalBody,
+	ModalHeader,
+	Row,
+	Col,
 } from "reactstrap";
 import { format, isToday, isYesterday } from "date-fns";
 import { useAuth } from "@/app/AuthProvider";
 import io from "socket.io-client";
 import ChatMessageBubble from "@/CommonComponent/ChatBubble";
 import { BatchProps } from "@/Types/Course.type";
+import { getImageURL } from "@/CommonComponent/imageURL";
+import Image from "next/image";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string);
 
@@ -57,7 +66,10 @@ const GroupChat = ({
 	const messagesEndRef = useRef<HTMLDivElement | null>(null);
 	const { user } = useAuth();
 	const userId = user?.id;
-
+	const [modalOpen, setModalOpen] = useState(false);
+	const toggleModal = () => {
+		setModalOpen(!modalOpen);
+	};
 	const fetchChats = async () => {
 		setLoading(true);
 		try {
@@ -111,9 +123,6 @@ const GroupChat = ({
 			setMessages((prev) => [...prev, msg]);
 			scrollToBottom();
 		});
-		socket.on("pinnedMessageUpdated", (data) => {
-			setPinnedMessage(data);
-		});
 		return () => {
 			socket.off("receiveMessage");
 			socket.off("pinnedMessageUpdated");
@@ -165,7 +174,12 @@ const GroupChat = ({
 						<strong>Course:</strong>
 						{batch.course?.title}
 					</h6>
-					<h6 className='mb-0 text-muted fs-6'>
+					<h6
+						className='mb-0 text-muted fs-6'
+						style={{
+							cursor: "pointer",
+						}}
+						onClick={toggleModal}>
 						{batch.students?.length || "0"} Students
 					</h6>
 				</div>
@@ -254,6 +268,78 @@ const GroupChat = ({
 					</Button>
 				</InputGroup>
 			</div>
+			<Modal
+				isOpen={modalOpen}
+				toggle={() => setModalOpen(false)}
+				centered
+				size='lg'>
+				<ModalHeader toggle={() => setModalOpen(false)}>
+					Batch Students
+				</ModalHeader>
+				<ModalBody style={{ maxHeight: "70vh", overflowY: "auto" }}>
+					{batch.students?.length === 0 ? (
+						<p>No students found in this batch.</p>
+					) : (
+						<ListGroup>
+							{batch.students?.map((student, idx) => (
+								<ListGroupItem
+									key={student._id}
+									className='mb-3'>
+									<Row className='w-100'>
+										<Col md='2'>
+											<Image
+												width={100}
+												height={100}
+												src={getImageURL(student.photo)}
+												alt={student.name}
+												style={{
+													borderRadius: "10px",
+													objectFit: "cover",
+													height: "100px",
+													width: "100px",
+												}}
+											/>
+										</Col>
+										<Col md='10'>
+											<h5 className='mb-1'>{student.name}</h5>
+											<p className='mb-1'>
+												<strong>Email:</strong> {student.email}
+											</p>
+											<p className='mb-1'>
+												<strong>Contact:</strong> {student.contactNumber}
+											</p>
+											<p className='mb-1'>
+												<strong>Date of Birth:</strong>{" "}
+												{new Date(student.dob).toLocaleDateString()}
+											</p>
+											<p className='mb-1'>
+												<strong>Education:</strong> {student.education}
+											</p>
+											<p className='mb-1'>
+												<strong>Experience:</strong>{" "}
+												{student.experience?.join(", ") || "N/A"}
+											</p>
+											<p className='mb-1'>
+												<strong>Languages:</strong>{" "}
+												{student.preferredLanguages?.join(", ") || "N/A"}
+											</p>
+											<p className='mb-1'>
+												<strong>Status:</strong>{" "}
+												<Badge color='info'>{student.status}</Badge>{" "}
+												<strong>Approved:</strong>{" "}
+												<Badge
+													color={student.isApproved ? "success" : "danger"}>
+													{student.isApproved ? "Yes" : "No"}
+												</Badge>
+											</p>
+										</Col>
+									</Row>
+								</ListGroupItem>
+							))}
+						</ListGroup>
+					)}
+				</ModalBody>
+			</Modal>
 		</Card>
 	);
 };

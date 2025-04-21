@@ -133,7 +133,7 @@ const MentorBatchContainer = ({ id }: { id: string }) => {
 					<Col
 						sm={12}
 						lg={2}
-						className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center'>
+						className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center pt-5'>
 						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 p-3'>
 							<p className='text-dark-subtle fw-light d-flex align-items-center justify-content-center gap-2'>
 								<Info size={15} />

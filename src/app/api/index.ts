@@ -33,3 +33,29 @@ export const getMyAnnouncements = async (role: string) => {
 	}
 	return data.filter((item: any) => item.roles.includes(role));
 };
+export const updateProfile = async (role: string, data: any) => {
+	let roleRoute = "";
+	if (role === "Student") {
+		roleRoute = "students";
+	}
+	if (role === "Mentor") {
+		roleRoute = "mentors";
+	}
+	if (role === "Admin") {
+		roleRoute = "admin";
+	}
+	if (role === "Manager") {
+		roleRoute = "managers/auth";
+	}
+	if (role === "Course Creator") {
+		roleRoute = "course-creators/auth";
+	}
+	if (role === "Publisher") {
+		roleRoute = "publishers/auth";
+	}
+	if (role === "Employer") {
+		roleRoute = "/jobs";
+	}
+	const response = (await apiClient.put(`/${roleRoute}/profile`, data)).data;
+	return response;
+};

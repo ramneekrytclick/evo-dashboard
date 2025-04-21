@@ -63,7 +63,7 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 					<Col
 						sm={12}
 						lg={2}
-						className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center'
+						className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center pt-5'
 						style={{
 							height: "100%",
 							overflowY: "auto",
@@ -102,44 +102,61 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 							</p>
 						</Card>
 
-						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 card-body'>
+						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 p-3'>
 							<h6 className='text-dark fw-bold mb-3'>Today's Class</h6>
-							{batch.scheduledSessions &&
-							batch.scheduledSessions?.length > 0 ? (
-								<>
-									{batch.scheduledSessions
-										.filter(
-											(s) =>
-												new Date(s.date).toDateString() ===
-												new Date().toDateString()
-										)
-										.map((session, idx) => (
-											<div
-												key={idx}
-												className='text-dark fs-4'>
-												<p className='mb-1 text-dark'>
-													<strong>Topic:</strong>{" "}
-													{session.topic || "Not specified"}
-												</p>
-												<p className='mb-1'>
-													<strong>Time:</strong>{" "}
-													{session.time || "Not specified"}
-												</p>
-												<Button
-													color='info'
-													className='my-1'
-													onClick={() => window.open(session.link, "_blank")}>
-													Join
-												</Button>
-												<p className='text-dark fw-bold'>
-													Note from Mentor:{" "}
-													<span className='text-muted fw-light'>
-														{session.comment}
-													</span>
-												</p>
-											</div>
-										))}
-								</>
+							{
+								<p className='text-muted text-center mt-3'>
+									{" "}
+									Not scheduled yet.
+								</p>
+							}
+							{batch.scheduledSessions ? (
+								batch.scheduledSessions?.length > 0 ? (
+									<>
+										{batch.scheduledSessions
+											.filter(
+												(s) =>
+													new Date(s.date).toDateString() ===
+													new Date().toDateString()
+											)
+											.map((session, idx) => (
+												<div
+													key={idx}
+													className='text-dark fs-4'>
+													<p className='mb-1 text-dark'>
+														<strong>Topic:</strong>{" "}
+														{session.topic || "Not specified"}
+													</p>
+													<p className='mb-1'>
+														<strong>Time:</strong>{" "}
+														{session.time || "Not specified"}
+													</p>
+													<p className='mb-1'>
+														<strong>Date:</strong>{" "}
+														{new Date(session.date).toDateString() ||
+															"Not specified"}
+													</p>
+													<Button
+														color='info'
+														className='my-1'
+														onClick={() => window.open(session.link, "_blank")}>
+														Join
+													</Button>
+													<p className='text-dark fw-bold'>
+														Note from Mentor:{" "}
+														<span className='text-muted fw-light'>
+															{session.comment}
+														</span>
+													</p>
+												</div>
+											))}
+									</>
+								) : (
+									<p className='text-muted text-center mt-3'>
+										{" "}
+										Not scheduled yet.
+									</p>
+								)
 							) : (
 								<p className='text-muted text-center mt-3'>
 									{" "}
@@ -148,7 +165,7 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 							)}
 						</Card>
 
-						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 m-1'>
+						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 '>
 							<CardBody>
 								<p className='mb-3 text-muted'>Mentor Details</p>
 								<CardTitle

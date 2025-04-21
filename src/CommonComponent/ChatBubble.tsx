@@ -9,7 +9,7 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 			}`}>
 			<div
 				className={`px-4 py-3 shadow-sm position-relative ${
-					isMe ? "bg-dark text-white" : "bg-white border text-dark"
+					isMe ? "bg-primary-subtle text-dark" : "bg-white border text-dark"
 				}`}
 				style={{
 					maxWidth: "80%",
@@ -22,7 +22,7 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 				<div className='d-flex align-items-center flex-wrap gap-2 mb-2'>
 					<span
 						className={`fw-semibold fs-6 ${
-							isMe ? "text-info" : "text-primary"
+							isMe ? "text-primary" : "text-primary"
 						}`}>
 						{msg.sender?.name}
 					</span>
@@ -53,7 +53,7 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 							size='sm'
 							color='link'
 							onClick={() => onPin(msg._id)}
-							className='text-warning text-decoration-none p-0 ms-auto'>
+							className='text-danger text-decoration-none p-0 ms-auto'>
 							📌 Pin
 						</Button>
 					)}
@@ -67,10 +67,7 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 				</div>
 
 				{/* Timestamp */}
-				<small
-					className={`d-block mt-2 text-end ${
-						isMe ? "text-white-50" : "text-muted"
-					}`}>
+				<small className={`d-block mt-2 text-end ${"text-muted"}`}>
 					{format(new Date(msg.timestamp), "hh:mm a")}
 				</small>
 			</div>
