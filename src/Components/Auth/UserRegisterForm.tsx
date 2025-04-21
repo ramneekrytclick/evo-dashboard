@@ -82,6 +82,7 @@ const MultiStepRegister = () => {
 			Object.entries(formData).forEach(([key, value]) => {
 				if (
 					key !== "confirmPassword" &&
+					key !== "photo" &&
 					(typeof value === "string" || value instanceof Blob)
 				) {
 					form.append(key, value);
@@ -156,7 +157,7 @@ const MultiStepRegister = () => {
 				);
 			}
 			await register(form, role);
-			toast.success("OTP sent to your email");
+			toast.success("Registration Success!  Wait for Admin Approval");
 		} catch (error: any) {
 			toast.error(error?.response?.data?.message || "Registration Failed");
 		}

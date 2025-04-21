@@ -432,14 +432,19 @@ export const EmployerForm = ({ formData, handleChange }: any) => (
 	<Row className='g-3'>
 		<Col sm={6}>
 			<FormGroup>
-				<Label>Type</Label>
+				<Label for='type'>Type</Label>
 				<Input
+					type='select'
 					name='type'
-					placeholder='Company / Individual'
+					id='type'
 					value={formData.type || ""}
 					onChange={handleChange}
-					required
-				/>
+					required>
+					<option value=''>Select Type</option>
+					<option value='Company'>Company</option>
+					<option value='Brand'>Brand</option>
+					<option value='Individual'>Individual</option>
+				</Input>
 			</FormGroup>
 		</Col>
 		<Col sm={6}>
