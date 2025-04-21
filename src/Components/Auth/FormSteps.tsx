@@ -19,31 +19,31 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 	setRole,
 }) => {
 	return (
-		<Row className="g-3">
+		<Row className='g-3'>
 			<Col sm={12}>
 				<Label>Select Role</Label>
 				<Input
-					type="select"
-					name="role"
+					type='select'
+					name='role'
 					value={role}
 					onChange={(e) => setRole(e.target.value)}
 					required>
-					<option value="admin">Admin</option>
-					<option value="mentors">Mentor</option>
-					<option value="publishers/auth">Publisher</option>
-					<option value="managers/auth">Manager</option>
-					<option value="course-creators/auth">Course Creator</option>
-					<option value="students">Student</option>
-					<option value="jobs">Employer</option>
+					<option value='admin'>Admin</option>
+					<option value='mentors'>Mentor</option>
+					<option value='publishers/auth'>Publisher</option>
+					<option value='managers/auth'>Manager</option>
+					<option value='course-creators/auth'>Course Creator</option>
+					<option value='students'>Student</option>
+					<option value='jobs'>Employer</option>
 				</Input>
 			</Col>
 
 			<Col sm={6}>
 				<Label>Full Name</Label>
 				<Input
-					type="text"
-					name="name"
-					placeholder="Enter your name"
+					type='text'
+					name='name'
+					placeholder='Enter your name'
 					value={formData.name || ""}
 					onChange={handleChange}
 					required
@@ -53,9 +53,9 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 			<Col sm={6}>
 				<Label>Email Address</Label>
 				<Input
-					type="email"
-					name="email"
-					placeholder="you@example.com"
+					type='email'
+					name='email'
+					placeholder='you@example.com'
 					value={formData.email || ""}
 					onChange={handleChange}
 					required
@@ -65,9 +65,9 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 			<Col sm={6}>
 				<Label>Password</Label>
 				<Input
-					type="password"
-					name="password"
-					placeholder="Enter your password"
+					type='password'
+					name='password'
+					placeholder='Enter your password'
 					value={formData.password || ""}
 					onChange={handleChange}
 					required
@@ -77,9 +77,9 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 			<Col sm={6}>
 				<Label>Confirm Password</Label>
 				<Input
-					type="password"
-					name="confirmPassword"
-					placeholder="Re-enter your password"
+					type='password'
+					name='confirmPassword'
+					placeholder='Re-enter your password'
 					value={formData.confirmPassword || ""}
 					onChange={handleChange}
 					required
@@ -150,13 +150,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 	};
 
 	return (
-		<Row className="g-3">
+		<Row className='g-3'>
 			<Col sm={6}>
 				<FormGroup>
 					<Label>DOB</Label>
 					<Input
-						type="date"
-						name="dob"
+						type='date'
+						name='dob'
 						value={formData.dob || ""}
 						onChange={handleChange}
 						disabled={disableFields}
@@ -168,8 +168,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 				<FormGroup>
 					<Label>Contact Number</Label>
 					<Input
-						name="contactNumber"
-						placeholder="Enter your phone number"
+						name='contactNumber'
+						placeholder='Enter your phone number'
 						value={formData.contactNumber || ""}
 						onChange={handleChange}
 						disabled={disableFields}
@@ -181,7 +181,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 				<FormGroup>
 					<Label>Guardian Name</Label>
 					<Input
-						name="guardianName"
+						name='guardianName'
 						placeholder="Enter guardian's name"
 						value={formData.guardianName || ""}
 						onChange={handleChange}
@@ -194,8 +194,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 				<FormGroup>
 					<Label>Address</Label>
 					<Input
-						name="address"
-						placeholder="Full address"
+						name='address'
+						placeholder='Full address'
 						value={formData.address || ""}
 						onChange={handleChange}
 						disabled={disableFields}
@@ -207,8 +207,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 				<FormGroup>
 					<Label>Education</Label>
 					<Input
-						name="education"
-						placeholder="E.g. B.Tech CSE"
+						name='education'
+						placeholder='E.g. B.Tech CSE'
 						value={formData.education || ""}
 						onChange={handleChange}
 						disabled={disableFields}
@@ -220,8 +220,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 				<FormGroup>
 					<Label>Preferred Languages</Label>
 					<Input
-						name="preferredLanguages"
-						placeholder="E.g. JavaScript, Python"
+						name='preferredLanguages'
+						placeholder='E.g. JavaScript, Python'
 						value={formData.preferredLanguages || ""}
 						onChange={handleChange}
 						disabled={disableFields}
@@ -232,13 +232,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 				<FormGroup>
 					<Label>Wanna Be Interest</Label>
 					<Input
-						type="select"
-						name="wannaBeInterest"
+						type='select'
+						name='wannaBeInterest'
 						value={formData.wannaBeInterest || ""}
 						onChange={handleChange}
 						disabled={disableFields}
 						required>
-						<option value="">Select one</option>
+						<option value=''>Select one</option>
 						{wannaBeInterests.map((item: any) => (
 							<option
 								key={item._id}
@@ -253,8 +253,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 				<FormGroup>
 					<Label>Experience</Label>
 					<Input
-						name="experience"
-						placeholder="Internship, Freelancing"
+						name='experience'
+						placeholder='Internship, Freelancing'
 						value={formData.experience || ""}
 						onChange={handleChange}
 						disabled={disableFields}
@@ -266,15 +266,15 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 			{otpSent && (
 				<Col
 					sm={12}
-					className="d-flex justify-content-between align-items-center">
+					className='d-flex justify-content-between align-items-center'>
 					<Button
-						color="secondary"
+						color='secondary'
 						onClick={handleEditToggle}>
 						{isEditable ? "Lock Form" : "Edit Form"}
 					</Button>
 					{!isEditable && (
 						<Button
-							color="success"
+							color='success'
 							onClick={handleVerifyOtp}>
 							Verify OTP
 						</Button>
@@ -288,8 +288,8 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 					<FormGroup>
 						<Label>Enter OTP sent to your email</Label>
 						<Input
-							type="text"
-							placeholder="Enter 6-digit OTP"
+							type='text'
+							placeholder='Enter 6-digit OTP'
 							value={otp}
 							onChange={(e) => setOtp(e.target.value)}
 						/>
@@ -301,14 +301,14 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 			{!otpSent && (
 				<Col
 					sm={12}
-					className="text-end">
+					className='text-end'>
 					<Button
-						color="primary"
+						color='primary'
 						onClick={handleOtpSend}
 						disabled={sendingOtp}>
 						{sendingOtp ? (
 							<>
-								<Spinner size="sm" /> Sending OTP...
+								<Spinner size='sm' /> Sending OTP...
 							</>
 						) : (
 							"Send OTP"
@@ -321,13 +321,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 };
 // FormSteps/MentorForm.tsx
 export const MentorForm = ({ formData, handleChange, role }: any) => (
-	<Row className="g-3">
+	<Row className='g-3'>
 		<Col sm={6}>
 			<FormGroup>
 				<Label>Username</Label>
 				<Input
-					name="username"
-					placeholder="Unique username"
+					name='username'
+					placeholder='Unique username'
 					value={formData.username || ""}
 					onChange={handleChange}
 					required
@@ -338,8 +338,8 @@ export const MentorForm = ({ formData, handleChange, role }: any) => (
 			<FormGroup>
 				<Label>DOB</Label>
 				<Input
-					type="date"
-					name="dob"
+					type='date'
+					name='dob'
 					value={formData.dob || ""}
 					onChange={handleChange}
 					required
@@ -350,8 +350,8 @@ export const MentorForm = ({ formData, handleChange, role }: any) => (
 			<FormGroup>
 				<Label>Contact Number</Label>
 				<Input
-					name="contactNumber"
-					placeholder="Phone number"
+					name='contactNumber'
+					placeholder='Phone number'
 					value={formData.contactNumber || ""}
 					onChange={handleChange}
 					required
@@ -362,8 +362,8 @@ export const MentorForm = ({ formData, handleChange, role }: any) => (
 			<FormGroup>
 				<Label>Education</Label>
 				<Input
-					name="education"
-					placeholder="E.g. M.Sc in AI"
+					name='education'
+					placeholder='E.g. M.Sc in AI'
 					value={formData.education || ""}
 					onChange={handleChange}
 					required
@@ -372,22 +372,26 @@ export const MentorForm = ({ formData, handleChange, role }: any) => (
 		</Col>
 		<Col sm={6}>
 			<FormGroup>
-				<Label>Working Mode</Label>
+				<Label for='workingMode'>Working Mode</Label>
 				<Input
-					name="workingMode"
-					placeholder="Online / Offline / Hybrid"
+					type='select'
+					name='workingMode'
+					id='workingMode'
 					value={formData.workingMode || ""}
 					onChange={handleChange}
-					required
-				/>
+					required>
+					<option value=''>Select Working Mode</option>
+					<option value='In-Office'>In-Office</option>
+					<option value='WFH'>WFH</option>
+				</Input>
 			</FormGroup>
 		</Col>
 		<Col sm={6}>
 			<FormGroup>
 				<Label>Address</Label>
 				<Input
-					name="address"
-					placeholder="Full address"
+					name='address'
+					placeholder='Full address'
 					value={formData.address || ""}
 					onChange={handleChange}
 					required
@@ -399,8 +403,8 @@ export const MentorForm = ({ formData, handleChange, role }: any) => (
 				<FormGroup>
 					<Label>Expertise</Label>
 					<Input
-						name="expertise"
-						placeholder="E.g. MERN Stack, Data Science"
+						name='expertise'
+						placeholder='E.g. MERN Stack, Data Science'
 						value={formData.expertise || ""}
 						onChange={handleChange}
 						required
@@ -413,7 +417,7 @@ export const MentorForm = ({ formData, handleChange, role }: any) => (
 				<Label>Bio/About</Label>
 				<Input
 					name={role === "mentors" ? "bio" : "about"}
-					placeholder="Write a short description"
+					placeholder='Write a short description'
 					value={formData[role === "mentors" ? "bio" : "about"] || ""}
 					onChange={handleChange}
 					required
@@ -425,13 +429,13 @@ export const MentorForm = ({ formData, handleChange, role }: any) => (
 
 // FormSteps/EmployerForm.tsx
 export const EmployerForm = ({ formData, handleChange }: any) => (
-	<Row className="g-3">
+	<Row className='g-3'>
 		<Col sm={6}>
 			<FormGroup>
 				<Label>Type</Label>
 				<Input
-					name="type"
-					placeholder="Company / Individual"
+					name='type'
+					placeholder='Company / Individual'
 					value={formData.type || ""}
 					onChange={handleChange}
 					required
@@ -442,8 +446,8 @@ export const EmployerForm = ({ formData, handleChange }: any) => (
 			<FormGroup>
 				<Label>Contact Number</Label>
 				<Input
-					name="contactNumber"
-					placeholder="Phone number"
+					name='contactNumber'
+					placeholder='Phone number'
 					value={formData.contactNumber || ""}
 					onChange={handleChange}
 					required
@@ -454,8 +458,8 @@ export const EmployerForm = ({ formData, handleChange }: any) => (
 			<FormGroup>
 				<Label>Industry</Label>
 				<Input
-					name="industry"
-					placeholder="E.g. IT, Marketing, Design"
+					name='industry'
+					placeholder='E.g. IT, Marketing, Design'
 					value={formData.industry || ""}
 					onChange={handleChange}
 					required
@@ -466,8 +470,8 @@ export const EmployerForm = ({ formData, handleChange }: any) => (
 			<FormGroup>
 				<Label>Address</Label>
 				<Input
-					name="address"
-					placeholder="Company address"
+					name='address'
+					placeholder='Company address'
 					value={formData.address || ""}
 					onChange={handleChange}
 					required
@@ -478,8 +482,8 @@ export const EmployerForm = ({ formData, handleChange }: any) => (
 			<FormGroup>
 				<Label>Company Size</Label>
 				<Input
-					name="companySize"
-					placeholder="E.g. 10-50 employees"
+					name='companySize'
+					placeholder='E.g. 10-50 employees'
 					value={formData.companySize || ""}
 					onChange={handleChange}
 				/>

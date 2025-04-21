@@ -133,6 +133,34 @@ const MultiStepRegister = () => {
 			);
 		}
 	};
+	const handleSubmit = async () => {
+		try {
+			const form = new FormData();
+			Object.entries(formData).forEach(([key, value]) => {
+				if (
+					key !== "confirmPassword" &&
+					key !== "photo" &&
+					(typeof value === "string" || value instanceof Blob)
+				) {
+					form.append(key, value);
+				}
+			});
+			if (photoFile) {
+				form.append("photo", photoFile);
+			} else {
+				const defaultImage = await fetch("/assets/images/forms/user.png");
+				const blob = await defaultImage.blob();
+				form.append(
+					"photo",
+					new File([blob], "default-photo.png", { type: blob.type })
+				);
+			}
+			await register(form, role);
+			toast.success("OTP sent to your email");
+		} catch (error: any) {
+			toast.error(error?.response?.data?.message || "Registration Failed");
+		}
+	};
 
 	const getRoleForm = () => {
 		if (role === "students") {
@@ -264,7 +292,7 @@ const MultiStepRegister = () => {
 											step === 3 &&
 											role !== "students"
 										) {
-											handleSubmitAdmin();
+											handleSubmit();
 										} else {
 											handleNext();
 										}
