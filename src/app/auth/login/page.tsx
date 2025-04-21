@@ -1,22 +1,12 @@
-import UserForm from "@/Components/Auth/UserForm";
-import { Col, Container, Row } from "reactstrap";
+"use client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-const UserLogin = () => {
-	return (
-		<Container
-			fluid
-			className="p-0">
-			<Row className="m-0">
-				<Col
-					xs={12}
-					className="p-0">
-					<div className="login-card login-dark">
-						<UserForm />
-					</div>
-				</Col>
-			</Row>
-		</Container>
-	);
-};
+export default function Home() {
+	const router = useRouter();
+	useEffect(() => {
+		router.push("/auth/login/student");
+	}, [router]);
 
-export default UserLogin;
+	return <></>;
+}

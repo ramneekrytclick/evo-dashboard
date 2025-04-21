@@ -9,12 +9,11 @@ import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
 import { useAuth } from "@/app/AuthProvider";
 
-const UserForm = () => {
+const UserForm = ({ role }: { role: string }) => {
 	const [show, setShow] = useState(false);
 	const [email, setEmail] = useState("admin@evo.com");
 	const [password, setPassword] = useState("1234");
 	const [loading, setLoading] = useState(false);
-	const [role, setRole] = useState("admin");
 	const { login } = useAuth();
 	const router = useRouter();
 
@@ -122,23 +121,6 @@ const UserForm = () => {
 								<span className='show' />
 							</div>
 						</div>
-					</FormGroup>
-
-					<FormGroup>
-						<Label className='col-form-label fs-5'>Select Role</Label>
-						<Input
-							type='select'
-							value={role}
-							onChange={(e) => setRole(e.target.value)}
-							required>
-							<option value='admin'>Admin</option>
-							<option value='mentors'>Mentor</option>
-							<option value='publishers/auth'>Publisher</option>
-							<option value='managers/auth'>Manager</option>
-							<option value='course-creators/auth'>Course Creator</option>
-							<option value='students'>Student</option>
-							<option value='jobs'>Employer</option>
-						</Input>
 					</FormGroup>
 
 					<div className='form-group mb-0'>
