@@ -65,41 +65,34 @@ const MyLearningPaths = () => {
 					learningPaths.map((path) => {
 						return (
 							<Col
-								xl={6}
-								md={12}
+								xl={3}
+								sm={12}
 								key={path._id}>
 								<Link
 									href={`/student/paths/${path._id}`}
 									className='text-decoration-none text-dark'>
-									<Card className='shadow-sm path-card h-100 hover-shadow'>
-										<CardBody>
-											<div className='d-flex align-items-center mb-3'>
-												<Image
-													width={60}
-													height={60}
-													className='rounded me-3'
-													style={{ objectFit: "cover" }}
-													src={getImageURL(path.photo || "")}
-													alt={path.title}
-												/>
-												<div className='flex-grow-1'>
-													<CardTitle
-														tag='h5'
-														className='mb-1'>
-														{path.title}
-													</CardTitle>
-												</div>
-											</div>
+									<Card className='shadow-sm h-100 hover-shadow'>
+										<CardBody className='d-flex flex-column justify-content-between h-100 align-items-center'>
+											<Image
+												width={200}
+												height={200}
+												className='rounded w-100'
+												style={{ objectFit: "cover" }}
+												src={getImageURL(path.photo || "")}
+												alt={path.title}
+											/>
+											<CardTitle
+												tag='h3'
+												className='fw-bold'>
+												{path.title}
+											</CardTitle>
 
-											<p
-												className='text-muted mb-0'
+											<span
+												className='text-muted mb-0 fs-6'
 												style={{ minHeight: 50 }}>
 												{path.description}
-											</p>
+											</span>
 										</CardBody>
-										<CardFooter className='text-end'>
-											<small className='text-primary'>View Full Path ➜</small>
-										</CardFooter>
 									</Card>
 								</Link>
 							</Col>
