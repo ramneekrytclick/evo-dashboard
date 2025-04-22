@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Spinner } from "reactstrap";
+import { Button, Card, CardBody, CardTitle, Spinner } from "reactstrap";
 import { toast } from "react-toastify";
 import { getMyUpcomingSessions } from "@/app/api/student";
-import { Info } from "react-feather";
-import { format } from "date-fns";
 import Link from "next/link";
 
 const UpcomingSessions = ({
@@ -47,7 +45,9 @@ const UpcomingSessions = ({
 	}, []);
 
 	return (
-		<div className='position-relative card p-4 shadow-sm border-0 bg-white rounded-4'>
+		<div
+			className='position-relative card p-4 shadow-sm border-0 bg-white rounded-4'
+			style={{ height: "350px" }}>
 			{loading ? (
 				<div
 					className='d-flex justify-content-center align-items-center'
@@ -64,7 +64,6 @@ const UpcomingSessions = ({
 			) : (
 				<>
 					<h4 className='fw-bold mb-4 d-flex align-items-center gap-2'>
-						<Info size={18} />
 						Upcoming Batch Classes
 					</h4>
 
@@ -94,38 +93,45 @@ const UpcomingSessions = ({
 							scrollSnapType: "x mandatory",
 						}}>
 						{sessions.map((session, i) => (
-							<div
-								key={i}
-								className='card bg-light shadow-sm rounded-3 overflow-hidden text-dark'
-								style={{
-									width: "260px",
-									minHeight: "220px",
-									scrollSnapAlign: "start",
-									border: "1px solid #eee",
-								}}>
-								<div className='card-body d-flex flex-column justify-content-between'>
-									<Link href={`/student/batches/${session.batchId}`}>
-										<h6 className='fw-bold text-truncate mb-2'>
-											{session.batchName || "BatchName"}
-										</h6>
-									</Link>
-									<p className='text-muted mb-1'>
-										{format(new Date(session.date), "dd MMM yyyy")} at{" "}
-										<strong>{session.time}</strong>
-									</p>
-									<p className='text-dark mb-1'>
-										<strong>Topic:</strong> {session.topic || "Not specified"}
-									</p>
-									<p className='text-muted mb-2'>{session.comment}</p>
-									<a
-										href={session.link}
-										target='_blank'
-										rel='noopener noreferrer'
-										className='btn btn-sm btn-primary mt-auto'>
-										Class Link
-									</a>
-								</div>
-							</div>
+							<>
+								<Card
+									className='bg-light text-dark text-center'
+									style={{
+										height: "240px",
+									}}>
+									<CardBody>
+										<Link href={`/student/batches/${session.batchId}`}>
+											<CardTitle tag='h6'>{session.batchName}</CardTitle>
+										</Link>
+										<div className='text-dark fs-4'>
+											<p className='mb-1 text-dark'>
+												<strong>Topic:</strong>{" "}
+												{session.topic || "Not specified"}
+											</p>
+											<p className='mb-1'>
+												<strong>Time:</strong> {session.time || "Not specified"}
+											</p>
+											<p className='mb-1'>
+												<strong>Date:</strong>{" "}
+												{new Date(session.date).toDateString() ||
+													"Not specified"}
+											</p>
+											<Button
+												color='info'
+												className='my-1'
+												onClick={() => window.open(session.link, "_blank")}>
+												Join
+											</Button>
+											<p className='text-dark fw-bold'>
+												Note from Mentor:{" "}
+												<span className='text-muted fw-light'>
+													{session.comment}
+												</span>
+											</p>
+										</div>
+									</CardBody>
+								</Card>
+							</>
 						))}
 					</div>
 				</>

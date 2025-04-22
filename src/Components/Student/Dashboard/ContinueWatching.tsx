@@ -4,9 +4,18 @@ import { getLessonsByCourseID, getMyCourseProgress } from "@/app/api/student";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { Progress, Spinner } from "reactstrap";
+import {
+	Card,
+	CardBody,
+	CardImg,
+	CardText,
+	CardTitle,
+	Progress,
+	Spinner,
+} from "reactstrap";
 import { getAllCourses } from "@/app/api/cc";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import Image from "next/image";
 
 const ContinueWatching = ({
 	loading,
@@ -88,7 +97,9 @@ const ContinueWatching = ({
 	);
 
 	return (
-		<div className='col-12 mb-4 position-relative bg-white card p-4 shadow-sm border-0 rounded-4'>
+		<div
+			className='col-12  position-relative bg-white card p-3 shadow-sm border-0 rounded-4'
+			style={{ height: "350px" }}>
 			{loading ? (
 				<div
 					className='d-flex justify-content-center align-items-center'
@@ -100,14 +111,14 @@ const ContinueWatching = ({
 					<h5 className='mb-2 fw-semibold'>👋 Welcome to EVO!</h5>
 					<p className='text-muted'>You haven’t enrolled in any courses yet.</p>
 					<Link
-						href='/courses'
+						href={`${process.env.NEXT_PUBLIC_MAIN_URL}/courses`}
 						className='btn btn-primary mt-2'>
 						Explore Courses
 					</Link>
 				</div>
 			) : (
 				<>
-					<h4 className='fw-bold mb-4'>📚 Continue Your Learning</h4>
+					<h4 className='fw-bold mb-4'>Continue Your Learning</h4>
 
 					{visibleCourses.length > 5 && (
 						<>
@@ -139,50 +150,42 @@ const ContinueWatching = ({
 							const course = allCourses.find(
 								(c) => c._id === item.courseId || c.id === item.courseId
 							);
-
 							return (
 								<Link
 									href={`/student/learning/course/${item.courseId}`}
 									key={i}
 									className='text-decoration-none'>
-									<div
-										className='card shadow-sm text-dark rounded-3 overflow-hidden'
+									<Card
+										color='light'
+										className='shadow-sm text-dark overflow-hidden'
 										style={{
-											width: "260px",
-											minHeight: "280px",
-											scrollSnapAlign: "start",
-											border: "1px solid #eee",
+											height: "250px",
 										}}>
-										{course?.photo && (
-											<img
-												src={getImageURL(course.photo)}
-												alt={course.title}
-												style={{
-													width: "100%",
-													height: "120px",
-													objectFit: "cover",
-												}}
-											/>
-										)}
-										<div className='card-body d-flex flex-column justify-content-between'>
-											<h6 className='fw-bold text-truncate mb-1'>
+										<Image
+											src={getImageURL(course?.photo)}
+											alt={course?.title || "Course Image"}
+											width={200}
+											height={200}
+											className='img-fluid'
+										/>
+										<CardBody>
+											<CardTitle className='fs-5 fw-bold'>
 												{course?.title || "Course Title"}
-											</h6>
-											<small className='text-muted text-truncate'>
-												Lesson: {nextLesson?.title || "Untitled Lesson"}
-											</small>
-											<small className='text-muted mb-2 text-truncate'>
-												{course?.description || "No description"}
-											</small>
+											</CardTitle>
+											<CardText className='text-muted mb-2'>
+												<strong>Lesson: </strong>{" "}
+												{nextLesson?.title || "Untitled Lesson"}
+											</CardText>
 											<Progress
-												value={item.progressPercent || 0}
-												style={{ height: "6px" }}
+												value={parseInt(item.progressPercent || 0)}
+												color='success'
+												animated
 											/>
-											<small className='text-muted mt-1'>
+											<CardText className='text-muted mt-1'>
 												{item.progressPercent || 0}% Completed
-											</small>
-										</div>
-									</div>
+											</CardText>
+										</CardBody>
+									</Card>
 								</Link>
 							);
 						})}
