@@ -1,5 +1,6 @@
 "use client";
 import { getMyBatches } from "@/app/api/student";
+import { getCourseName } from "@/CommonComponent/imageURL";
 import { BatchProps } from "@/Types/Course.type";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -31,16 +32,16 @@ const BatchCards = () => {
 	}, []);
 
 	return (
-		<Row className='gap-2 '>
+		<Row>
 			{batches.length > 0 ? (
 				batches.map((batch) => (
 					<Col
-						xl={5}
+						xl={4}
 						md={6}
 						sm={12}
 						key={batch._id}>
 						<Card className='border-0 shadow rounded-4 h-100 '>
-							<CardBody className='d-flex flex-column'>
+							<CardBody className='d-flex flex-column justify-content-between align-items-center'>
 								{/* Course title + Batch chat link */}
 								<Link href={`/student/batches/${batch._id}`}>
 									<CardTitle
@@ -51,7 +52,7 @@ const BatchCards = () => {
 								</Link>
 								<p className='fs-6'>
 									<strong>Course: </strong>
-									{batch.course?.title || "N/A"}
+									{getCourseName(batch.course || "")}
 								</p>
 								{/* Batch schedule info */}
 								<div className='mb-2'>

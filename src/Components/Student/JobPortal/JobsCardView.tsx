@@ -15,6 +15,10 @@ const JobsCardView = ({
 	location,
 	selectedFilters,
 	appliedJobs,
+	jobType,
+	experience,
+	salaryRange,
+	deadline,
 }: any) => {
 	const [jobs, setJobs] = useState<any[]>([]);
 	const [loading, setLoading] = useState(false);
@@ -79,7 +83,27 @@ const JobsCardView = ({
 					.map((s: string) => s.toLowerCase())
 					.includes(filter.toLowerCase())
 			);
-		return matchTitle && matchLocation && matchFilters;
+		const matchJobType = jobType ? job.jobType === jobType : true;
+		const matchExperience = experience
+			? job.experienceRequired?.toLowerCase().includes(experience.toLowerCase())
+			: true;
+		const matchSalary =
+			salaryRange && !isNaN(Number(salaryRange))
+				? parseFloat(job.salary) >= parseFloat(salaryRange)
+				: true;
+		const matchDeadline = deadline
+			? new Date(job.applicationDeadline) <= new Date(deadline)
+			: true;
+
+		return (
+			matchTitle &&
+			matchLocation &&
+			matchFilters &&
+			matchJobType &&
+			matchExperience &&
+			matchSalary &&
+			matchDeadline
+		);
 	});
 
 	if (loading) {
@@ -130,7 +154,6 @@ const JobsCardView = ({
 									) : (
 										<Button
 											color='primary'
-											size='sm'
 											onClick={() => openModal(job)}>
 											Apply
 										</Button>

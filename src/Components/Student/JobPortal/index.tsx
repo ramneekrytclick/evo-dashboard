@@ -13,7 +13,10 @@ const JobPortalContainer = () => {
 	const [location, setLocation] = useState("");
 	const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 	const [appliedJobs, setAppliedJobs] = useState<string[]>([]);
-
+	const [jobType, setJobType] = useState("");
+	const [experience, setExperience] = useState("");
+	const [salaryRange, setSalaryRange] = useState("");
+	const [deadline, setDeadline] = useState("");
 	const fetchMyApplications = async () => {
 		try {
 			const response = await getMyApplications();
@@ -50,6 +53,14 @@ const JobPortalContainer = () => {
 								setLocation={setLocation}
 								selectedFilters={selectedFilters}
 								setSelectedFilters={setSelectedFilters}
+								jobType={jobType}
+								setJobType={setJobType}
+								experience={experience}
+								setExperience={setExperience}
+								salaryRange={salaryRange}
+								setSalaryRange={setSalaryRange}
+								deadline={deadline}
+								setDeadline={setDeadline}
 							/>
 						</div>
 					</Col>
@@ -58,13 +69,17 @@ const JobPortalContainer = () => {
 						xl={8}
 						className='box-col-8'>
 						<Card
-							className='card-body bg-primary-subtle'
-							style={{ height: "80vh", overflowY: "auto" }}>
+							className='card-body bg-light'
+							style={{ maxHeight: "80vh", overflowY: "auto" }}>
 							<JobsCardView
 								searchQuery={searchQuery}
 								location={location}
 								selectedFilters={selectedFilters}
 								appliedJobs={appliedJobs}
+								jobType={jobType}
+								experience={experience}
+								salaryRange={salaryRange}
+								deadline={deadline}
 							/>
 						</Card>
 					</Col>

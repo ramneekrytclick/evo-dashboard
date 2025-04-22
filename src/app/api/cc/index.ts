@@ -1,3 +1,5 @@
+import { setCourses } from "@/Redux/Reducers/Courses/CoursesSlice";
+import Store from "@/Redux/Store";
 import { Course } from "@/Types/Course.type";
 import { apiClient } from "@/utils/api";
 export const createCourseByCreator = async (formData: FormData) => {
@@ -44,5 +46,14 @@ export const getAllWannaBeInterests = async () => {
 	return (await apiClient.get("/admin/allwanna")).data;
 };
 export const getAllCourses = async () => {
-	return { courses: (await apiClient.get("/courses")).data };
+	const state = Store.getState();
+	const cachedCourses = state.courses;
+
+	if (cachedCourses.loaded && cachedCourses.courses.length > 0) {
+		return { courses: cachedCourses.courses };
+	}
+
+	const response = await apiClient.get("/courses");
+	Store.dispatch(setCourses(response.data));
+	return { courses: response.data };
 };

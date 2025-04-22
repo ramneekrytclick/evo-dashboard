@@ -1,3 +1,5 @@
+import { getAllCourses } from "@/app/api/cc";
+
 const backendURL = process.env.NEXT_PUBLIC_SOCKET_URL || "";
 
 export const getImageURL = (photo: string, type?: string) => {
@@ -15,4 +17,9 @@ export const getImageURL = (photo: string, type?: string) => {
 		return "/assets/avatar-placeholder.png";
 	}
 	return photoURL;
+};
+export const getCourseName = async (id: string) => {
+	const response = await getAllCourses();
+	const course = response.courses.find((course: any) => course._id === id);
+	return course?.title || "N/A";
 };

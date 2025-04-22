@@ -88,10 +88,7 @@ export interface BatchProps {
 	batchWeekType?: string; // e.g., "Mon-Fri", "Weekend"
 	startDate?: string;
 	endDate?: string;
-	course?: {
-		_id: string;
-		title: string;
-	};
+	course?: any;
 	students?: any[]; // array of studentIds
 	mentor?: {
 		_id: string;

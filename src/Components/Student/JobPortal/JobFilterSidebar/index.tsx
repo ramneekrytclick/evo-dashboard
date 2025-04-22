@@ -1,11 +1,12 @@
 "use client";
 
-import { Button, Card, CardBody, Collapse } from "reactstrap";
-import SearchAndMap from "./SearchAndMap";
-import FilterCheckBox from "./FilterCheckBox";
-import { FilterHeading, FindJobs } from "@/Constant";
-import HeaderWithIcon from "./HeaderWithIcon";
 import { useState } from "react";
+import { Button, Card, CardBody, Collapse } from "reactstrap";
+import HeaderWithIcon from "./HeaderWithIcon";
+import SearchAndMap from "./SearchAndMap";
+import { FilterHeading, FindJobs } from "@/Constant";
+import FilterCheckBox from "./FilterCheckBox";
+import AdditionalFilters from "./AdditionalFilters";
 
 const JobFilterSidebar = ({
 	searchQuery,
@@ -14,6 +15,14 @@ const JobFilterSidebar = ({
 	setLocation,
 	selectedFilters,
 	setSelectedFilters,
+	jobType,
+	setJobType,
+	experience,
+	setExperience,
+	salaryRange,
+	setSalaryRange,
+	deadline,
+	setDeadline,
 }: any) => {
 	const [isOpen, setIsOpen] = useState(true);
 
@@ -25,20 +34,26 @@ const JobFilterSidebar = ({
 				setIsOpen={setIsOpen}
 			/>
 			<Collapse isOpen={isOpen}>
-				<CardBody className="filter-cards-view animate-chk">
+				<CardBody className='filter-cards-view animate-chk'>
 					<SearchAndMap
 						searchQuery={searchQuery}
 						location={location}
 						setSearchQuery={setSearchQuery}
 						setLocation={setLocation}
 					/>
-					<FilterCheckBox
-						selectedFilters={selectedFilters}
-						setSelectedFilters={setSelectedFilters}
+					<AdditionalFilters
+						jobType={jobType}
+						setJobType={setJobType}
+						experience={experience}
+						setExperience={setExperience}
+						salaryRange={salaryRange}
+						setSalaryRange={setSalaryRange}
+						deadline={deadline}
+						setDeadline={setDeadline}
 					/>
 					<Button
-						className="text-center w-100 mt-3"
-						color="primary">
+						className='text-center w-100 mt-3'
+						color='primary'>
 						{FindJobs}
 					</Button>
 				</CardBody>
