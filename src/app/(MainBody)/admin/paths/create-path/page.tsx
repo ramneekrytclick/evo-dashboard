@@ -1,9 +1,12 @@
 import CreatePathPageContainer from "@/Components/Admin/Path/CreatePath";
-
-const CreatePathPage = () => {
-    return (
-        <CreatePathPageContainer/>
-    );
+export function generateMetadata() {
+	return {
+		title: "Create New Path",
+		description: "Create New Course Path Roadmaps",
+	};
 }
+const CreatePathPage = () => {
+	return <CreatePathPageContainer />;
+};
 
 export default CreatePathPage;

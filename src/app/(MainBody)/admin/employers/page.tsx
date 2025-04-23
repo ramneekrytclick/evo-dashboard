@@ -1,9 +1,13 @@
 import EmployerPageContainer from "@/Components/Admin/Employer";
-
-const EmployerPage = () => {
-    return (
-        <EmployerPageContainer/>
-    );
+// /admin/employers/page.tsx
+export function generateMetadata() {
+	return {
+		title: "Manage Employers",
+		description: "View and manage employer accounts and job postings.",
+	};
 }
+const EmployerPage = () => {
+	return <EmployerPageContainer />;
+};
 
 export default EmployerPage;

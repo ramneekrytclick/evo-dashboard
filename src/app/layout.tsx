@@ -21,6 +21,14 @@ const roboto = Outfit({
 	subsets: ["latin"],
 	display: "swap",
 });
+export const generateMetadata = () => ({
+	title: {
+		default: "EVO Portal",
+		template: "%s | EVO Learning Platform",
+	},
+	description:
+		"EVO is a modern learning and job platform for students, mentors, employers, and creators.",
+});
 
 export default async function RootLayout({
 	children,

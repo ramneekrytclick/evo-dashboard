@@ -1,5 +1,10 @@
 import SubcategoriesContainer from "@/Components/Admin/SubCategories";
-
+export function generateMetadata() {
+	return {
+		title: "Subcategories",
+		description: "Manage categories and subcategories for EVO content.",
+	};
+}
 const SubcategoryPage = async ({
 	params,
 }: {

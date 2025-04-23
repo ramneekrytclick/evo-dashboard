@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from "@/Redux/Hooks";
 import { setToggleSidebar } from "@/Redux/Reducers/Layout/LayoutSlice";
 import { setLayout } from "@/Redux/Reducers/ThemeCustomizerSlice";
 // import "react-toastify/dist/ReactToastify.css";
-
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 	const { layout } = useAppSelector((state) => state.themeCustomizer);
 	const dispatch = useAppDispatch();
@@ -45,11 +44,11 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 		<>
 			<div
 				className={`page-wrapper ${layout}`}
-				id="pageWrapper">
+				id='pageWrapper'>
 				<Header />
 				<div className={`page-body-wrapper`}>
 					<SideBar />
-					<div className="page-body ">{children}</div>
+					<div className='page-body '>{children}</div>
 					{/* <Footer /> */}
 				</div>
 			</div>

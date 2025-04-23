@@ -16,9 +16,12 @@ const Layout = async ({
 	params: { id: string; lessonId: string };
 }) => {
 	const response = await getAllCourses();
-	const course = response.courses.find((c: any) => c.id === params.id);
+	const course = response.courses.find((c: any) => c._id === params.id);
 
-	if (!course) return notFound();
+	if (!course) {
+		console.log("Course");
+		return notFound();
+	}
 
 	return (
 		<Container fluid>

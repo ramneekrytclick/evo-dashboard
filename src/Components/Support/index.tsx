@@ -3,7 +3,12 @@ import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { SupportTicket, SupportTicketList } from "@/Constant";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 import TicketTable from "./TicketTable";
-
+export function generateMetadata() {
+	return {
+		title: "Support Tickets",
+		description: "View/Respond to user support requests and issues.",
+	};
+}
 const SupportPageContainer = () => {
 	return (
 		<>
