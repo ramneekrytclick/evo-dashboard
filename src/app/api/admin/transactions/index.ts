@@ -1,18 +1,14 @@
 import { apiClient } from "@/utils/api";
 
 export const getTransactionsCSV = async () => {
-	try {
-		const response = await apiClient.get("/admin/export");
-		return response.data;
-	} catch (error: any) {
-		throw new Error(error);
-	}
+	const response = await apiClient.get("/admin/transactions/export");
+	return response.data;
 };
 export const getTransactions = async () => {
-	try {
-		const response = await apiClient.get("/admin/transactions");
-		return response.data;
-	} catch (error: any) {
-		throw new Error(error);
-	}
+	const response = await apiClient.get("/admin/admin/transactions");
+	return response.data;
+};
+export const confirmTransaction = async (id: string) => {
+	const response = await apiClient.put(`/admin/transactions/${id}/mark-paid`);
+	return response.data;
 };

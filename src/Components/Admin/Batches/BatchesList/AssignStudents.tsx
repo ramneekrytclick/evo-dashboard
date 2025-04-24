@@ -7,14 +7,16 @@ import {
 	ModalBody,
 	ModalFooter,
 	Button,
-	FormGroup,
 	Spinner,
 	Badge,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { assignStudentsToBatch } from "@/app/api/admin/batches";
-import { getStudentsByCourseID } from "@/app/api/admin/students";
-import { getBatches } from "@/app/api/admin/batches";
+import {
+	getStudentsByCourseID,
+	getStudentBatches,
+} from "@/app/api/admin/students";
+import { StudentProps } from "@/Types/Student.type";
 
 interface AssignStudentsModalProps {
 	batchId: string;
@@ -39,45 +41,48 @@ const AssignStudentsModal = ({
 	>([]);
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-
+	const [studentsBatches, setStudentsBatches] = useState<any[]>([]);
 	useEffect(() => {
 		const fetchAndPrepareStudents = async () => {
 			try {
 				setIsLoading(true);
-				const [studentsResponse, batchesResponse] = await Promise.all([
-					getStudentsByCourseID(batchCourseId),
-					getBatches(),
-				]);
 
+				const studentsResponse = await getStudentsByCourseID(batchCourseId);
 				const students = studentsResponse.students || [];
-				const allBatches = batchesResponse.batches || [];
 
-				// Find students already assigned to other batches of the same course
-				const conflictingStudentIds = new Set<string>();
-
-				allBatches.forEach((batch: any) => {
-					if (
-						batch._id !== batchId &&
-						batch.course?.toString() === batchCourseId
-					) {
-						batch.students?.forEach((s: any) => {
-							conflictingStudentIds.add(s._id);
-						});
-					}
-				});
-
-				setAssignedInOtherBatches(Array.from(conflictingStudentIds));
-
-				// Eligible students are those enrolled in the course
 				const enrolledInCourse = students.filter((student: any) =>
 					student.enrolledCourses?.some(
 						(course: any) => course.course === batchCourseId
 					)
 				);
 
-				setEligibleStudents(enrolledInCourse);
+				const conflictingIds: string[] = [];
 
-				// Preselect students already assigned to this batch
+				await Promise.all(
+					enrolledInCourse.map(async (student: StudentProps) => {
+						try {
+							const { batches } = await getStudentBatches(student._id);
+
+							const isAssignedElsewhere = batches.some(
+								(batch: any) =>
+									batch.courseId === batchCourseId && batch.batchId !== batchId
+							);
+
+							if (isAssignedElsewhere) {
+								conflictingIds.push(student._id);
+							}
+						} catch (err) {
+							console.error(
+								`Error fetching batches for student ${student._id}`,
+								err
+							);
+						}
+					})
+				);
+
+				setEligibleStudents(enrolledInCourse);
+				setAssignedInOtherBatches(conflictingIds);
+
 				const preSelected = enrolledInCourse
 					.filter((s: any) => currentStudents.some((cs) => cs._id === s._id))
 					.map((s: any) => s._id);
@@ -95,7 +100,12 @@ const AssignStudentsModal = ({
 			fetchAndPrepareStudents();
 		}
 	}, [isOpen, batchId, batchCourseId, currentStudents]);
-
+	useEffect(() => {
+		const fetchStudentsBatches = async () => {
+			try {
+			} catch (error) {}
+		};
+	}, []);
 	const toggleStudentSelection = (studentId: string) => {
 		if (assignedInOtherBatches.includes(studentId)) return;
 		setSelectedIds((prev) =>
@@ -191,9 +201,7 @@ const AssignStudentsModal = ({
 										</div>
 										<div>
 											{isInAnotherBatch ? (
-												<Badge color='danger'>
-													Already assigned to another batch in this course
-												</Badge>
+												<Badge color='danger'>Already assigned a batch</Badge>
 											) : isSelected ? (
 												<Badge
 													color='light'

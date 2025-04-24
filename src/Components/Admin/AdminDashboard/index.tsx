@@ -317,7 +317,6 @@ const AdminDashboardContainer = () => {
 											</CardTitle>
 											<Link href={link}>
 												<Button
-													size='sm'
 													color='primary'
 													outline>
 													View All
