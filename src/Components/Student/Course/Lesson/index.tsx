@@ -8,7 +8,10 @@ import { Spinner, Button, UncontrolledTooltip } from "reactstrap";
 import Link from "next/link";
 import { FileText, Info } from "react-feather";
 import { getLessonById } from "@/app/api/admin/students";
-import { getStudentLessonScores } from "@/app/api/student";
+import {
+	getStudentLessonScores,
+	getStudentLessonSubmissions,
+} from "@/app/api/student";
 
 const LessonContainer = ({
 	lessonId,
@@ -26,6 +29,7 @@ const LessonContainer = ({
 		quizScore: number;
 	}>();
 	const [loading, setLoading] = useState(true);
+	const [submissions, setSubmissions] = useState<any>();
 
 	const fetchData = async () => {
 		try {
@@ -47,10 +51,20 @@ const LessonContainer = ({
 		}
 	};
 
+	const fetchLessonSubmissions = async () => {
+		try {
+			const response = await getStudentLessonSubmissions(lessonId);
+			setSubmissions(response);
+		} catch (error) {
+			toast.error("Failed to fetch lesson submissions");
+		}
+	};
+
 	useEffect(() => {
 		if (lessonId && courseId) {
 			fetchData();
 			fetchLessonScores();
+			fetchLessonSubmissions();
 		} else {
 			toast.error("lessonId or courseId is undefined");
 			setLoading(false);
@@ -137,10 +151,49 @@ const LessonContainer = ({
 					)}
 				</div>
 			</div>
+			{/* Submission Status */}
+			<div className='mb-3'>
+				<h6 className='fw-semibold mb-2'>Submission Status</h6>
 
+				{/* Quiz */}
+				{data.quizzes?.length > 0 ? (
+					<div className='d-flex align-items-center gap-2'>
+						<p className='mb-0'>
+							<strong>Quiz:</strong>{" "}
+							{submissions?.quizSubmission ? (
+								<span className='text-success'>Submitted</span>
+							) : (
+								<span className='text-danger'>Not Submitted</span>
+							)}
+						</p>
+					</div>
+				) : (
+					<p className='text-muted mb-1'>
+						<strong>Quiz:</strong> No quiz in this lesson.
+					</p>
+				)}
+
+				{/* Assignment */}
+				{data.assignments?.length > 0 ? (
+					<div className='d-flex align-items-center gap-2 mt-2'>
+						<p className='mb-0'>
+							<strong>Assignment:</strong>{" "}
+							{submissions?.assignmentSubmission ? (
+								<span className='text-success'>Submitted</span>
+							) : (
+								<span className='text-danger'>Not Submitted</span>
+							)}
+						</p>
+					</div>
+				) : (
+					<p className='text-muted'>
+						<strong>Assignment:</strong> No assignment in this lesson.
+					</p>
+				)}
+			</div>
 			{/* Buttons */}
 			<div className='d-flex gap-3 mb-4'>
-				{(!score?.quizScore || score.quizScore === 0) && (
+				{data.quizzes?.length > 0 && !submissions?.quizSubmission && (
 					<Button
 						color='info'
 						onClick={() =>
@@ -152,7 +205,7 @@ const LessonContainer = ({
 					</Button>
 				)}
 
-				{(!score?.assignmentScore || score.assignmentScore === 0) && (
+				{data.assignments?.length > 0 && !submissions?.assignmentSubmission && (
 					<Button
 						color='warning'
 						onClick={() =>

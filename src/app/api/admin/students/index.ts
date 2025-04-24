@@ -13,6 +13,8 @@ export const getLessonById = async (lessonId: string, courseId: string) => {
 	const lesson = response.lessons.find(
 		(lesson: LessonFormProps) => lesson._id === lessonId
 	);
+	console.log(JSON.stringify(lesson));
+
 	return lesson;
 };
 export const getStudentsByCourseID = async (id: string) => {

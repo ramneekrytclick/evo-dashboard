@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import {
 	Card,
-	CardBody,
 	Col,
 	Container,
 	Row,
@@ -24,10 +23,14 @@ import {
 	updateUserStatus,
 } from "@/app/api/admin/team";
 import { getMentors } from "@/app/api/admin/mentors";
-import { assignMentorsToManager } from "@/app/api/admin/managers";
+import {
+	assignMentorsToManager,
+	updateAssignedMentors,
+} from "@/app/api/admin/managers";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import { Trash2 } from "react-feather";
 
 const UserProfile = ({ id }: { id: string }) => {
 	const [profile, setProfile] = useState<any>(null);
@@ -64,7 +67,7 @@ const UserProfile = ({ id }: { id: string }) => {
 
 	const handleAssignMentors = async () => {
 		try {
-			await assignMentorsToManager({
+			await updateAssignedMentors({
 				managerId: profile._id,
 				mentorIds: selectedMentorIds,
 			});
@@ -214,7 +217,51 @@ const UserProfile = ({ id }: { id: string }) => {
 							{isManager && (
 								<Col md={6}>
 									<strong>Assigned Mentors:</strong>
-									{JSON.stringify(profile.assignedMentors)}
+									{profile.assignedMentors?.length > 0 ? (
+										profile.assignedMentors?.map((mentorId: string) => (
+											<div
+												key={mentorId}
+												className='d-flex'>
+												<div>
+													{
+														mentors.find((mentor) => mentor._id === mentorId)
+															?.name
+													}
+												</div>
+												<div
+													className='bg-danger text-white rounded-circle d-flex justify-content-center align-items-center'
+													style={{
+														width: "20px",
+														height: "20px",
+														marginTop: "5px",
+														marginLeft: "5px",
+													}}
+													onClick={async () => {
+														try {
+															const updatedMentorIds =
+																profile.assignedMentors.filter(
+																	(id: string) => id !== mentorId
+																);
+															await updateAssignedMentors({
+																managerId: profile._id,
+																mentorIds: updatedMentorIds,
+															});
+															toast.success("Mentor removed successfully");
+															fetchData(); // Refresh profile data
+														} catch (error) {
+															console.error("Failed to remove mentor:", error);
+															toast.error("Failed to remove mentor");
+														}
+													}}>
+													<Trash2 size={10} />
+												</div>
+											</div>
+										))
+									) : (
+										<>
+											<div>No assigned mentors</div>
+										</>
+									)}
 								</Col>
 							)}
 						</Row>
@@ -380,10 +427,6 @@ const UserProfile = ({ id }: { id: string }) => {
 										<Label check>
 											<Input
 												type='checkbox'
-												defaultChecked={profile.assignedMentors?.includes(
-													mentor._id
-												)}
-												disabled={profile.assignedMentors?.includes(mentor._id)}
 												onChange={() => handleMentorSelection(mentor._id)}
 											/>
 											{mentor.name} -

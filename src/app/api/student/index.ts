@@ -104,6 +104,9 @@ export const getMyCourseProgress = async () => {
 export const getStudentLessonScores = async (lessonId: string) => {
 	return (await apiClient.get(`/students/scores/${lessonId}`)).data;
 };
+export const getStudentLessonSubmissions = async (lessonId: string) => {
+	return (await apiClient.get(`/students/lesson/${lessonId}/submissions`)).data;
+};
 export const getMyUpcomingSessions = async () => {
 	return (await apiClient.get(`/chat/student/upcoming-sessions`)).data;
 };

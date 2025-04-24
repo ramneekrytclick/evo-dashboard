@@ -12,10 +12,13 @@ export const assignMentorsToManager = async (data: {
 	managerId: string;
 	mentorIds: string[];
 }) => {
-	try {
-		const response = await apiClient.put(`/admin/assign-mentors`, data);
-		return response.data;
-	} catch (error: any) {
-		throw new Error(error);
-	}
+	const response = await apiClient.put(`/admin/assign-mentors`, data);
+	return response.data;
+};
+export const updateAssignedMentors = async (data: {
+	managerId: string;
+	mentorIds: string[];
+}) => {
+	const response = await apiClient.put(`/admin/manager/update-mentors`, data);
+	return response.data;
 };
