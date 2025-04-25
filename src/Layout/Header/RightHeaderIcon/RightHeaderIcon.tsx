@@ -2,6 +2,7 @@ import { Col } from "reactstrap";
 import ResponsiveSearchInput from "./ResponsiveSearchInput/ResponsiveSearchInput";
 import Announcements from "./Announcements/Announcements";
 import UserProfile from "./UserProfile/UserProfile";
+import ZoomInOut from "./ZoomInOut/ZoomInOut";
 
 const RightHeaderIcon = () => {
 	return (
@@ -12,7 +13,7 @@ const RightHeaderIcon = () => {
 			<ul className='nav-menus'>
 				<ResponsiveSearchInput />
 				{/* <Language /> */}
-				{/* <ZoomInOut /> */}
+				<ZoomInOut />
 				{/* <HeaderBookmark /> */}
 				{/* <DarkMode /> */}
 				{/* <HeaderMessage /> */}
