@@ -102,13 +102,23 @@ const MyEnrolledCourses = () => {
 									alt={course.title}
 									style={{ objectFit: "cover" }}
 								/>
-								<CardBody className='p-4 d-flex flex-column align-items-center justify-content-between'>
+								<CardBody
+									className='p-4 d-flex flex-column align-items-center justify-content-between'
+									style={{
+										textWrap: "pretty",
+									}}>
 									<Link
 										className='text-dark text-decoration-none'
 										href={`/student/learning/course/${course._id}`}>
-										<h3 className='fw-bold text-dark mb-1 text-truncate'>
+										<h3
+											className='fw-bold text-dark mb-1 text-center'
+											style={{
+												whiteSpace: "nowrap",
+												overflow: "hidden",
+												textOverflow: "ellipsis",
+												width: "100%",
+											}}>
 											{course.title || "Untitled Course"}
-											{course.title}
 										</h3>
 									</Link>
 									<div className='mb-4'>

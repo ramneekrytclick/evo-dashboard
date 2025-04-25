@@ -13,7 +13,9 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
 	const { user } = useAuth();
 	const role = user?.role;
 	return (
-		<Container fluid>
+		<Container
+			fluid
+			className='pt-3 pb-3'>
 			<div className='page-title'>
 				<Row>
 					<Col

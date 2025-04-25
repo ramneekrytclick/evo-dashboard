@@ -30,8 +30,10 @@ const UpcomingSessions = ({
 		setLoading(true);
 		try {
 			const res = await getMyUpcomingSessions();
-			console.log(res.upcomingSessions);
-			setSessions(res.upcomingSessions || []);
+			const futureSessions = res.upcomingSessions.filter(
+				(session: any) => new Date(session.date) >= new Date()
+			);
+			setSessions(futureSessions || []);
 		} catch (error) {
 			toast.error("Error fetching upcoming sessions.");
 			console.error(error);
@@ -48,6 +50,9 @@ const UpcomingSessions = ({
 		<div
 			className='position-relative card p-4 shadow-sm border-0 bg-white rounded-4'
 			style={{ height: "350px" }}>
+			<h4 className='fw-bold mb-4 d-flex align-items-center gap-2'>
+				Upcoming Batch Classes
+			</h4>
 			{loading ? (
 				<div
 					className='d-flex justify-content-center align-items-center'
@@ -55,18 +60,19 @@ const UpcomingSessions = ({
 					<Spinner color='primary' />
 				</div>
 			) : sessions.length === 0 ? (
-				<div className='text-center py-4'>
-					<h5 className='mb-2 fw-semibold'>No Upcoming Sessions</h5>
+				<div className='text-center py-5'>
+					<h5 className='mb-2 fw-semibold'>No Upcoming Classes</h5>
 					<p className='text-muted'>
-						You don’t have any mentor sessions scheduled yet.
+						You don’t have any batch classes scheduled yet.
 					</p>
+					<Link
+						href={`/student/batches`}
+						className='btn btn-primary mt-2'>
+						Go to Batches
+					</Link>
 				</div>
 			) : (
 				<>
-					<h4 className='fw-bold mb-4 d-flex align-items-center gap-2'>
-						Upcoming Batch Classes
-					</h4>
-
 					{sessions.length > 4 && (
 						<>
 							<button
@@ -86,8 +92,9 @@ const UpcomingSessions = ({
 
 					<div
 						ref={scrollRef}
-						className='d-flex overflow-auto gap-3 pb-2'
+						className='d-flex gap-3'
 						style={{
+							height: "240px",
 							width: "100%",
 							overflow: "scroll",
 							scrollSnapType: "x mandatory",
@@ -97,7 +104,7 @@ const UpcomingSessions = ({
 								<Card
 									className='bg-light text-dark text-center'
 									style={{
-										height: "240px",
+										height: "210px",
 									}}>
 									<CardBody>
 										<Link href={`/student/batches/${session.batchId}`}>
@@ -116,9 +123,10 @@ const UpcomingSessions = ({
 												{new Date(session.date).toDateString() ||
 													"Not specified"}
 											</p>
+											{JSON.stringify(new Date(session.date) > new Date())}
 											<Button
-												color='info'
-												className='my-1'
+												color='primary'
+												className='my-1 px-3 py-1'
 												onClick={() => window.open(session.link, "_blank")}>
 												Join
 											</Button>

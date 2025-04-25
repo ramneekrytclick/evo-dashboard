@@ -15,6 +15,11 @@ const LessonsCardView = ({
 	return (
 		<>
 			<CardBody style={{ height: "650px", overflowY: "auto" }}>
+				{lessons.length === 0 ? (
+					<div className='d-flex justify-content-center align-items-center pt-5'>
+						<h6>No lessons found...</h6>
+					</div>
+				) : null}
 				<Row className='g-3'>
 					{lessons.map((lesson) => (
 						<Col

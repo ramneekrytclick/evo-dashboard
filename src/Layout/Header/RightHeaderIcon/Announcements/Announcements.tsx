@@ -34,8 +34,8 @@ const Notifications = () => {
 
 	return (
 		<li className='onhover-dropdown position-relative'>
-			<div className='notification-box'>
-				<Bell size={18} />
+			<div className='notification-box d-flex align-items-center gap-2'>
+				<Bell size={140} />
 				{announcements.length > 0 && (
 					<Badge
 						pill

@@ -26,6 +26,7 @@ const ContinueWatching = ({
 }) => {
 	const scrollRef1 = useRef<HTMLDivElement>(null);
 	const [progressData, setProgressData] = useState<any[]>([]);
+	const [loadingLessons, setLoadingLessons] = useState(true);
 	const [lessonsMap, setLessonsMap] = useState<{ [courseId: string]: any[] }>(
 		{}
 	);
@@ -43,6 +44,7 @@ const ContinueWatching = ({
 
 	const fetchProgress = async () => {
 		setLoading(true);
+		setLoadingLessons(true);
 		try {
 			const response = await getMyCourseProgress();
 			setProgressData(response.progress.reverse() || []);
@@ -50,6 +52,7 @@ const ContinueWatching = ({
 			toast.error("Could not fetch progress data");
 			console.log(error);
 		} finally {
+			setLoadingLessons(false);
 			setLoading(false);
 		}
 	};
@@ -85,28 +88,17 @@ const ContinueWatching = ({
 			if (!lessonsMap[course.courseId]) fetchCourseLessons(course.courseId);
 		});
 	}, [progressData]);
-
-	const getNextLesson = (courseId: string, completedLessons: any) => {
-		const lessons = lessonsMap[courseId] || [];
-		const completed = Array.isArray(completedLessons) ? completedLessons : [];
-		return lessons.find((l: any) => !completed.includes(l._id));
-	};
-
-	const visibleCourses = progressData.filter((item) =>
-		getNextLesson(item.courseId, item.completedLessons)
-	);
-
 	return (
 		<div
 			className='col-12  position-relative bg-white card p-3 shadow-sm border-0 rounded-4'
 			style={{ height: "350px" }}>
-			{loading ? (
+			{loading && loadingLessons ? (
 				<div
 					className='d-flex justify-content-center align-items-center'
 					style={{ height: "150px" }}>
 					<Spinner color='primary' />
 				</div>
-			) : visibleCourses.length === 0 ? (
+			) : progressData.length === 0 ? (
 				<div className='text-center py-4'>
 					<h5 className='mb-2 fw-semibold'>👋 Welcome to EVO!</h5>
 					<p className='text-muted'>You haven’t enrolled in any courses yet.</p>
@@ -120,18 +112,31 @@ const ContinueWatching = ({
 				<>
 					<h4 className='fw-bold mb-4'>Continue Your Learning</h4>
 
-					{visibleCourses.length > 5 && (
+					{progressData.length > 2 && (
 						<>
 							<button
-								className='btn btn-outline-primary position-absolute top-50 start-0 translate-middle-y z-2'
+								className='btn btn-outline-primary position-absolute top-50 mt-4 mx-1 start-0 translate-middle-y z-2'
 								onClick={() => scroll(scrollRef1, "left")}
-								style={{ borderRadius: "50%" }}>
+								style={{
+									borderRadius: "100%",
+									padding: "0.3rem 0.5rem",
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+								}}>
 								←
 							</button>
 							<button
-								className='btn btn-outline-primary position-absolute top-50 end-0 translate-middle-y z-2'
+								className='btn btn-outline-primary position-absolute top-50 mt-4 mx-1 end-0 translate-middle-y z-2 
+								'
 								onClick={() => scroll(scrollRef1, "right")}
-								style={{ borderRadius: "50%" }}>
+								style={{
+									borderRadius: "100%",
+									padding: "0.3rem 0.5rem",
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+								}}>
 								→
 							</button>
 						</>
@@ -139,14 +144,14 @@ const ContinueWatching = ({
 
 					<div
 						ref={scrollRef1}
-						className='d-flex overflow-auto gap-3 pb-2'
-						style={{ scrollSnapType: "x mandatory" }}>
-						{visibleCourses.map((item, i) => {
-							const nextLesson = getNextLesson(
-								item.courseId,
-								item.completedLessons
-							);
-							if (!nextLesson) return null;
+						className='d-flex  gap-3'
+						style={{
+							scrollSnapType: "x mandatory",
+							height: "250px",
+							overflowX: "scroll",
+							overflowY: "hidden",
+						}}>
+						{progressData.map((item, i) => {
 							const course = allCourses.find(
 								(c) => c._id === item.courseId || c.id === item.courseId
 							);
@@ -159,23 +164,39 @@ const ContinueWatching = ({
 										color='light'
 										className='shadow-sm text-dark overflow-hidden'
 										style={{
-											height: "250px",
+											height: "240px",
+											width: "200px",
 										}}>
-										<Image
-											src={getImageURL(course?.photo)}
-											alt={course?.title || "Course Image"}
-											width={200}
-											height={200}
-											className='img-fluid'
-										/>
+										<div
+											className='overflow-hidden'
+											style={{
+												height: "150px",
+												width: "200px",
+												overflow: "hidden",
+											}}>
+											<Image
+												src={getImageURL(course?.photo)}
+												alt={course?.title || "Course Image"}
+												style={{
+													objectFit: "cover",
+													objectPosition: "center",
+													height: "100%",
+													width: "100%",
+												}}
+												width={200}
+												height={200}
+											/>
+										</div>
 										<CardBody>
-											<CardTitle className='fs-5 fw-bold'>
+											<CardTitle
+												className='fs-5 fw-bold'
+												style={{
+													whiteSpace: "nowrap",
+													overflow: "hidden",
+													textOverflow: "ellipsis",
+												}}>
 												{course?.title || "Course Title"}
 											</CardTitle>
-											<CardText className='text-muted mb-2'>
-												<strong>Lesson: </strong>{" "}
-												{nextLesson?.title || "Untitled Lesson"}
-											</CardText>
 											<Progress
 												value={parseInt(item.progressPercent || 0)}
 												color='success'

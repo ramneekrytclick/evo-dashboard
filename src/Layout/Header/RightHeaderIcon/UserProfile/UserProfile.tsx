@@ -2,28 +2,38 @@
 
 import { useAuth } from "@/app/AuthProvider";
 import Link from "next/link";
-import { User, Settings } from "react-feather";
+import { User } from "react-feather";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import { FaEnvelope } from "react-icons/fa";
 const UserProfile = () => {
 	const { user, logout } = useAuth();
 	if (!user) return null;
 	return (
-		<li className='onhover-dropdown text-dark position-relative border rounded border-dark hover-shadow-sm'>
+		<li className='onhover-dropdown text-dark position-relative rounded hover-shadow-sm'>
 			<div className='notification-box d-flex align-items-center gap-2'>
-				<span className='fw-semibold text-primary'>
-					{user.name?.split(" ")[0] || "User"}
-				</span>
 				<Image
 					src={getImageURL(user.photo || "")}
 					alt='Profile'
-					width={25}
-					height={25}
+					width={35}
+					height={35}
 					className='rounded'
 				/>
+				<div className=' ms-2'>
+					<div
+						className='fw-semibold text-primary'
+						style={{ fontSize: "1.3rem" }}>
+						{user.name?.split(" ")[0] || "User"}
+					</div>
+					<div
+						className='fw-light text-muted'
+						style={{ fontSize: "0.8rem" }}>
+						{user.email}
+					</div>
+				</div>
 			</div>
 
-			<div className='onhover-show-div shadow-lg'>
+			<div className='onhover-show-div shadow-lg mt-3'>
 				<ul className='list-unstyled mb-0'>
 					<li className='d-flex align-items-center justify-content-between'>
 						<div className='d-flex flex-column align-items-start'>
@@ -63,7 +73,7 @@ const UserProfile = () => {
 						<Link
 							href={`/${user.role.toLowerCase()}/support/tickets`}
 							className='text-decoration-none d-flex align-items-center gap-2 text-dark'>
-							<Settings size={16} />
+							<FaEnvelope size={16} />
 							<span>Support</span>
 						</Link>
 					</li>
