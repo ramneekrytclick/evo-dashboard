@@ -25,17 +25,17 @@ const CreateSubcategoryModal = ({
 		<>
 			<Button
 				color='primary'
-				className='me-2 px-2'
+				className='me-2'
 				onClick={toggle}>
-				<i className='fa fa-plus me-2 py-1' /> Create New Subcategory
+				<i className='fa fa-plus me-2 py-1' /> Add Subcategory
 			</Button>
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
 				<div className='modal-toggle-wrapper'>
 					{id ? (
-						<h3 className='mb-3'>{`Create New Subcategory under Category ${id}`}</h3>
+						<h3 className='mb-3'>{`Add Subcategory under Category ${id}`}</h3>
 					) : (
-						<h3 className='mb-3'>{createSubcategoryTitle}</h3>
+						<h3 className='mb-3'>{"Add Subcategory"}</h3>
 					)}
 					{/* <p>{"Fill in your information below to continue."}</p> */}
 					<CreateSubcategoryForm

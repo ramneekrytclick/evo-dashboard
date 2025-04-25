@@ -28,7 +28,6 @@ import { createWannaBeInterest } from "@/app/api/admin/wannabe";
 import { useRouter } from "next/navigation";
 import DataTable from "react-data-table-component";
 
-// Define interfaces
 interface Analytics {
 	totalUsers: number;
 	managers: number;
@@ -145,27 +144,47 @@ const AdminDashboardContainer = () => {
 	};
 	const cardData = data
 		? [
-				{ amount: data.totalUsers, title: "Total Users", link: "/admin/team" },
-				{ amount: data.managers, title: "Managers", link: "/admin/team" },
+				{
+					amount: data.totalUsers,
+					title: "All Users",
+					link: "/admin/team",
+					icon: "user",
+					color: "primary",
+				},
+				{
+					amount: data.managers,
+					title: "Managers",
+					link: "/admin/team",
+					icon: "user",
+					color: "dark",
+				},
 				{
 					amount: data.mentors,
 					title: "Mentors",
 					link: "/admin/mentors",
+					icon: "user",
+					color: "info",
 				},
 				{
 					amount: data.students,
 					title: "Students",
 					link: "/admin/students",
+					icon: "user",
+					color: "warning",
 				},
 				{
 					amount: data.courseCreators,
-					title: "Course Creators",
+					title: "Creators",
 					link: "/admin/team",
+					icon: "user",
+					color: "success",
 				},
 				{
 					amount: data.employers,
 					title: "Employers",
 					link: "/admin/employers",
+					icon: "user",
+					color: "danger",
 				},
 		  ]
 		: [];
@@ -193,27 +212,27 @@ const AdminDashboardContainer = () => {
 							<Col className='mb-2 fw-bold'>Action Bar</Col>
 							<div className='d-flex justify-content-between row place-items-center'>
 								<Col
-									className='my-2 w-full place-items-center text-center'
+									className='my-2 place-items-center text-center'
 									xs={12}
-									md={3}>
+									md={2}>
 									<CreateCategoryModal fetchData={fetchData} />
 								</Col>
 								<Col
-									className='my-2 w-full place-items-center text-center'
+									className='my-2 place-items-center text-center'
 									xs={12}
-									md={3}>
+									md={2}>
 									<CreateSubcategoryModal fetchData={fetchData} />
 								</Col>
 
 								<Col
-									className='my-2 w-full place-items-center text-center'
+									className='my-2 place-items-center text-center'
 									xs={12}
-									md={3}>
+									md={2}>
 									<Button
 										color='primary'
 										className='me-2 px-2 w-full'
 										onClick={toggleWannaBeModal}>
-										<i className='fa fa-plus me-2 py-1' />
+										<i className='fa fa-plus me-2 px-2 ' />
 										Add Wanna Be Interests
 									</Button>
 									<CreateInterestFormModal
@@ -223,17 +242,45 @@ const AdminDashboardContainer = () => {
 									/>
 								</Col>
 								<Col
-									className='my-2 w-full place-items-center text-center'
+									className='my-2 place-items-center text-center'
 									xs={12}
-									md={3}>
+									md={2}>
 									<Button
-										className='w-full'
+										className='w-100 h-100  px-2 p-3'
 										color='primary'
 										onClick={() => {
 											navigation.push(`/admin/create-course`);
 										}}>
 										<i className='fa fa-plus me-2 py-1' />
 										Add Course
+									</Button>
+								</Col>
+								<Col
+									className='my-2 place-items-center text-center'
+									xs={12}
+									md={2}>
+									<Button
+										className='w-100 h-100  px-2 p-3'
+										color='primary'
+										onClick={() => {
+											navigation.push(`/admin/paths/create-path`);
+										}}>
+										<i className='fa fa-plus me-2 py-1' />
+										Add Path
+									</Button>
+								</Col>
+								<Col
+									className='my-2 place-items-center text-center'
+									xs={12}
+									md={2}>
+									<Button
+										className='w-100 h-100  px-2 p-3'
+										color='primary'
+										onClick={() => {
+											navigation.push(`/admin/announcements`);
+										}}>
+										<i className='fa fa-plus me-2 py-1' />
+										Announcement
 									</Button>
 								</Col>
 							</div>
@@ -247,15 +294,29 @@ const AdminDashboardContainer = () => {
 									lg={2}
 									key={index}>
 									<Link href={item.link}>
-										<Card className='text-center shadow-sm border-0 p-3'>
-											<h2
-												className='text-dark mb-1'
-												style={{ fontSize: "3rem" }}>
-												{item.amount || "-"}
-											</h2>
-											<p className='text-muted mb-0 fs-6'>
-												{item.title || "-"}
-											</p>
+										<Card
+											className={`text-center shadow-sm border-0 bg-${item.color}-subtle rounded-3 p-2`}>
+											<Row>
+												<Col>
+													<h2
+														className={`text-dark ${item.color} mb-1`}
+														style={{ fontSize: "3rem" }}>
+														{item.amount || "-"}
+													</h2>
+													<p
+														className='text-muted mb-0'
+														style={{
+															fontSize: "1rem",
+														}}>
+														{item.title || "-"}
+													</p>
+												</Col>
+												<Col className='py-3'>
+													<i
+														className={`fa fa-${item.icon} fs-1 text-${item.color}`}
+													/>
+												</Col>
+											</Row>
 										</Card>
 									</Link>
 								</Col>
@@ -318,6 +379,7 @@ const AdminDashboardContainer = () => {
 											<Link href={link}>
 												<Button
 													color='primary'
+													className='px-3'
 													outline>
 													View All
 												</Button>
