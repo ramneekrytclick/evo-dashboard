@@ -13,24 +13,35 @@ import {
 	CardTitle,
 	Col,
 	Row,
+	Spinner,
 } from "reactstrap";
 
 const BatchCards = () => {
 	const [batches, setBatches] = useState<BatchProps[]>([]);
+	const [loading, setLoading] = useState(false);
 
 	const fetchCourses = async () => {
+		setLoading(true);
 		try {
 			const response = await getMyBatches();
 			setBatches(response.batches);
 		} catch (error) {
 			toast.error("Error fetching batches");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		fetchCourses();
 	}, []);
-
+	if (loading) {
+		return (
+			<div className='h-100 w-100 d-flex justify-content-center align-items-center fs-3'>
+				<Spinner size={100} />{" "}
+			</div>
+		);
+	}
 	return (
 		<Row>
 			{batches.length > 0 ? (

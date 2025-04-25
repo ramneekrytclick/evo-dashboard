@@ -60,7 +60,7 @@ const EvoScore = ({
 				height: "350px",
 				overflow: "scroll",
 			}}>
-			<h6 className='fw-bold'>EVO Score</h6>
+			<h4 className='fw-bold text-muted'>EVO Score</h4>
 			<ReactApexChart
 				options={chartOptions}
 				series={[evoScore * 10]} // scale to percentage for chart

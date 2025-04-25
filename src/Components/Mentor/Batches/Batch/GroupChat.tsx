@@ -323,15 +323,6 @@ const GroupChat = ({
 												<strong>Languages:</strong>{" "}
 												{student.preferredLanguages?.join(", ") || "N/A"}
 											</p>
-											<p className='mb-1'>
-												<strong>Status:</strong>{" "}
-												<Badge color='info'>{student.status}</Badge>{" "}
-												<strong>Approved:</strong>{" "}
-												<Badge
-													color={student.isApproved ? "success" : "danger"}>
-													{student.isApproved ? "Yes" : "No"}
-												</Badge>
-											</p>
 										</Col>
 									</Row>
 								</ListGroupItem>

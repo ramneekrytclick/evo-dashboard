@@ -35,6 +35,7 @@ const BatchCards = () => {
 		<Row
 			className='g-4'
 			style={{ height: "76vh", overflowY: "scroll" }}>
+			{batches.length === 0 && <h5>No Batches Found</h5>}
 			{batches.map((batch) => (
 				<Col
 					xl={4}

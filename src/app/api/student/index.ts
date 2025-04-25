@@ -1,6 +1,7 @@
 import { apiClient } from "@/utils/api";
 import { getPaths } from "../admin/path";
 import { getLessonById } from "../admin/students";
+import { BatchProps } from "@/Types/Course.type";
 
 export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
@@ -78,6 +79,19 @@ export const getLessonsByCourseID = async (courseId: string) => {
 
 export const getMyBatches = async () => {
 	return (await apiClient.get(`/students/batches`)).data;
+};
+export const getMyMentors = async () => {
+	const { batches }: { batches: BatchProps[] } = await getMyBatches();
+
+	const mentors = await Promise.all(
+		batches.map(async (b) => {
+			const { mentors } = await getBatchByID(b._id || "");
+			return mentors; // Only mentors extracted
+		})
+	);
+
+	// flatten if needed
+	return mentors.flat();
 };
 export const getBatchByID = async (id: string) => {
 	return (await apiClient.get(`/students/batches/${id}`)).data;

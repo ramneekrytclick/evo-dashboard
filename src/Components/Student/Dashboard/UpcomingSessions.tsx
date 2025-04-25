@@ -5,6 +5,7 @@ import { Button, Card, CardBody, CardTitle, Spinner } from "reactstrap";
 import { toast } from "react-toastify";
 import { getMyUpcomingSessions } from "@/app/api/student";
 import Link from "next/link";
+import { ArrowLeftCircle, ArrowRightCircle } from "react-feather";
 
 const UpcomingSessions = ({
 	loading,
@@ -30,10 +31,18 @@ const UpcomingSessions = ({
 		setLoading(true);
 		try {
 			const res = await getMyUpcomingSessions();
-			const futureSessions = res.upcomingSessions.filter(
-				(session: any) => new Date(session.date) >= new Date()
-			);
-			setSessions(futureSessions || []);
+			const today = new Date();
+			today.setHours(0, 0, 0, 0);
+			const yesterday = new Date(today);
+			yesterday.setDate(today.getDate() - 1);
+
+			const filteredSessions = res.upcomingSessions.filter((session: any) => {
+				const sessionDate = new Date(session.date);
+				sessionDate.setHours(0, 0, 0, 0);
+				return sessionDate >= yesterday;
+			});
+
+			setSessions(filteredSessions || []);
 		} catch (error) {
 			toast.error("Error fetching upcoming sessions.");
 			console.error(error);
@@ -48,9 +57,9 @@ const UpcomingSessions = ({
 
 	return (
 		<div
-			className='position-relative card p-4 shadow-sm border-0 bg-white rounded-4'
+			className='position-relative card p-4 shadow-sm border-0 bg-light-subtle rounded-4'
 			style={{ height: "350px" }}>
-			<h4 className='fw-bold mb-4 d-flex align-items-center gap-2'>
+			<h4 className='fw-bold mb-4 d-flex align-items-center gap-2 text-muted'>
 				Upcoming Batch Classes
 			</h4>
 			{loading ? (
@@ -73,19 +82,35 @@ const UpcomingSessions = ({
 				</div>
 			) : (
 				<>
-					{sessions.length > 4 && (
+					{sessions.length > 2 && (
 						<>
 							<button
-								className='btn btn-outline-primary position-absolute top-50 start-0 translate-middle-y z-2'
+								className='btn btn-outline-primary position-absolute top-50 mt-4 mx-1 start-0 translate-middle-y z-2 
+								'
 								onClick={() => scroll(scrollRef, "left")}
-								style={{ borderRadius: "50%" }}>
-								←
+								style={{
+									borderRadius: "100%",
+									padding: "0",
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									backgroundColor: "rgb(13, 110, 253, 0.13)",
+								}}>
+								<ArrowLeftCircle size={24} />
 							</button>
 							<button
-								className='btn btn-outline-primary position-absolute top-50 end-0 translate-middle-y z-2'
+								className='btn btn-outline-primary position-absolute top-50 mt-4 mx-1 end-0 translate-middle-y z-2 
+								'
 								onClick={() => scroll(scrollRef, "right")}
-								style={{ borderRadius: "50%" }}>
-								→
+								style={{
+									borderRadius: "100%",
+									padding: "0",
+									display: "flex",
+									justifyContent: "center",
+									alignItems: "center",
+									backgroundColor: "rgb(13, 110, 253, 0.13)",
+								}}>
+								<ArrowRightCircle size={24} />
 							</button>
 						</>
 					)}
@@ -102,28 +127,32 @@ const UpcomingSessions = ({
 						{sessions.map((session, i) => (
 							<>
 								<Card
-									className='bg-light text-dark text-center'
+									className='bg-white text-dark text-center flex-shrink-0 shadow-sm border'
 									style={{
-										height: "210px",
+										height: "230px",
+										width: "200px",
+										overflow: "hidden",
+										scrollSnapAlign: "start",
 									}}>
 									<CardBody>
 										<Link href={`/student/batches/${session.batchId}`}>
-											<CardTitle tag='h6'>{session.batchName}</CardTitle>
+											<CardTitle tag='h6'>
+												{session.topic || "Not specified"}
+											</CardTitle>
 										</Link>
 										<div className='text-dark fs-4'>
 											<p className='mb-1 text-dark'>
-												<strong>Topic:</strong>{" "}
-												{session.topic || "Not specified"}
+												<strong>Batch:</strong> {session.batchName}
 											</p>
 											<p className='mb-1'>
 												<strong>Time:</strong> {session.time || "Not specified"}
 											</p>
 											<p className='mb-1'>
 												<strong>Date:</strong>{" "}
-												{new Date(session.date).toDateString() ||
-													"Not specified"}
+												{new Date(session.date)
+													.toLocaleString()
+													.split(",")[0] || "Not specified"}
 											</p>
-											{JSON.stringify(new Date(session.date) > new Date())}
 											<Button
 												color='primary'
 												className='my-1 px-3 py-1'

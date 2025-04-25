@@ -19,7 +19,7 @@ import TasksSlice from "./Reducers/TasksSlice";
 import ThemeCustomizerSlice from "./Reducers/ThemeCustomizerSlice";
 import TodoSlice from "./Reducers/TodoSlice";
 import courseReducer from "./Reducers/Courses/CoursesSlice";
-
+import batchReducer from "./Reducers/Courses/BatchSlice";
 const rootReducer = combineReducers({
 	auth: AuthSlice,
 	layout: LayoutSlice,
@@ -37,6 +37,7 @@ const rootReducer = combineReducers({
 	searchResult: SearchResultSlice,
 	themeCustomizer: ThemeCustomizerSlice,
 	courses: courseReducer,
+	batches: batchReducer,
 });
 
 const persistConfig = {

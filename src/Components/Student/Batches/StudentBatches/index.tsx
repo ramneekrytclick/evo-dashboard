@@ -10,7 +10,9 @@ const StudentBatchesContainer = () => {
 				parent={"Student"}
 				title={"Batches"}
 			/>
-			<Container fluid>
+			<Container
+				fluid
+				className='h-100'>
 				<BatchCards />
 			</Container>
 		</>

@@ -16,6 +16,7 @@ import {
 import { getAllCourses } from "@/app/api/cc";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import Image from "next/image";
+import { ArrowLeftCircle, ArrowRightCircle } from "react-feather";
 
 const ContinueWatching = ({
 	loading,
@@ -110,21 +111,23 @@ const ContinueWatching = ({
 				</div>
 			) : (
 				<>
-					<h4 className='fw-bold mb-4'>Continue Your Learning</h4>
+					<h4 className='fw-bold mb-4 text-muted'>Continue Your Learning</h4>
 
 					{progressData.length > 2 && (
 						<>
 							<button
-								className='btn btn-outline-primary position-absolute top-50 mt-4 mx-1 start-0 translate-middle-y z-2'
+								className='btn btn-outline-primary position-absolute top-50 mt-4 mx-1 start-0 translate-middle-y z-2 
+								'
 								onClick={() => scroll(scrollRef1, "left")}
 								style={{
 									borderRadius: "100%",
-									padding: "0.3rem 0.5rem",
+									padding: "0",
 									display: "flex",
 									justifyContent: "center",
 									alignItems: "center",
+									backgroundColor: "rgb(13, 110, 253, 0.13)",
 								}}>
-								←
+								<ArrowLeftCircle size={24} />
 							</button>
 							<button
 								className='btn btn-outline-primary position-absolute top-50 mt-4 mx-1 end-0 translate-middle-y z-2 
@@ -132,12 +135,13 @@ const ContinueWatching = ({
 								onClick={() => scroll(scrollRef1, "right")}
 								style={{
 									borderRadius: "100%",
-									padding: "0.3rem 0.5rem",
+									padding: "0",
 									display: "flex",
 									justifyContent: "center",
 									alignItems: "center",
+									backgroundColor: "rgb(13, 110, 253, 0.13)",
 								}}>
-								→
+								<ArrowRightCircle size={24} />
 							</button>
 						</>
 					)}
@@ -161,30 +165,33 @@ const ContinueWatching = ({
 									key={i}
 									className='text-decoration-none'>
 									<Card
-										color='light'
-										className='shadow-sm text-dark overflow-hidden'
+										color='white'
+										className='shadow-sm border text-dark overflow-hidden flex-shrink-0'
 										style={{
-											height: "240px",
 											width: "200px",
+											padding: "0.35rem",
+											scrollSnapAlign: "start",
+											borderRadius: "12px",
 										}}>
 										<div
-											className='overflow-hidden'
 											style={{
-												height: "150px",
-												width: "200px",
+												height: "120px",
+												width: "100%",
 												overflow: "hidden",
+												borderRadius: "12px",
 											}}>
 											<Image
 												src={getImageURL(course?.photo)}
 												alt={course?.title || "Course Image"}
 												style={{
 													objectFit: "cover",
-													objectPosition: "center",
-													height: "100%",
 													width: "100%",
+													height: "100%",
+													borderTopLeftRadius: "12px",
+													borderTopRightRadius: "12px",
 												}}
 												width={200}
-												height={200}
+												height={120}
 											/>
 										</div>
 										<CardBody>
