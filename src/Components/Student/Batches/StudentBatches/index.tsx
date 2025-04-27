@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
+import { Container } from "reactstrap";
 import BatchCards from "./BatchCards";
 
 const StudentBatchesContainer = () => {

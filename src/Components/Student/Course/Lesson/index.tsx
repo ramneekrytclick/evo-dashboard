@@ -112,110 +112,107 @@ const LessonContainer = ({
 
 			{/* Scores */}
 			<div className='mb-3'>
-				<div className='d-flex align-items-center gap-2'>
+				{/* Quiz Section */}
+				<div className='d-flex align-items-center gap-2 mb-2'>
 					<p className='mb-0'>
-						<strong>Quiz Score:</strong> {score?.quizScore ?? "Not Available"}
+						<strong>Quiz:</strong>{" "}
+						{data.quizzes?.length > 0 ? (
+							submissions?.quizSubmission ? (
+								<>
+									{score?.quizScore !== undefined ? (
+										<>
+											{score.quizScore}
+											{score.quizScore === 0 && (
+												<>
+													<Info
+														id='quizScoreTip'
+														size={16}
+														className='text-info ms-1'
+													/>
+													<UncontrolledTooltip target='quizScoreTip'>
+														Score is 0. This may be due to incorrect answers or
+														not attempting the quiz.
+													</UncontrolledTooltip>
+												</>
+											)}
+										</>
+									) : (
+										<span className='text-muted'>Pending Grading</span>
+									)}
+								</>
+							) : (
+								<Button
+									color='info'
+									size='sm'
+									onClick={() =>
+										router.push(
+											`/student/learning/course/${courseId}/${lessonId}/quiz`
+										)
+									}>
+									Give Quiz
+								</Button>
+							)
+						) : (
+							<span className='text-muted'>No quiz in this lesson.</span>
+						)}
 					</p>
-					{score?.quizScore === 0 && (
-						<>
-							<Info
-								id='quizScoreTip'
-								size={16}
-								className='text-info'
-							/>
-							<UncontrolledTooltip target='quizScoreTip'>
-								Score is 0. This may be due to incorrect answers or not
-								attempting the quiz.
-							</UncontrolledTooltip>
-						</>
-					)}
 				</div>
 
-				<div className='d-flex align-items-center gap-2 mt-2'>
+				{/* Assignment Section */}
+				<div className='d-flex align-items-center gap-2 mb-2'>
 					<p className='mb-0'>
-						<strong>Assignment Score:</strong>{" "}
-						{score?.assignmentScore ?? "Not Available"}
+						<strong>Assignment:</strong>{" "}
+						{data.assignments?.length > 0 ? (
+							submissions?.assignmentSubmission ? (
+								<>
+									{score?.assignmentScore !== undefined ? (
+										<>
+											{score.assignmentScore}
+											{score.assignmentScore === 0 && (
+												<>
+													<Info
+														id='assignmentScoreTip'
+														size={16}
+														className='text-warning ms-1'
+													/>
+													<UncontrolledTooltip target='assignmentScoreTip'>
+														Score is 0. This could be due to incomplete or
+														incorrect assignment submission.
+													</UncontrolledTooltip>
+												</>
+											)}
+										</>
+									) : (
+										<>
+											<span className='text-warning'>Pending</span>
+											<Info
+												id='assignmentPendingTip'
+												size={16}
+												className='text-warning ms-1'
+											/>
+											<UncontrolledTooltip target='assignmentPendingTip'>
+												Assignment submitted. Awaiting grading.
+											</UncontrolledTooltip>
+										</>
+									)}
+								</>
+							) : (
+								<Button
+									color='warning'
+									size='sm'
+									onClick={() =>
+										router.push(
+											`/student/learning/course/${courseId}/${lessonId}/assignment`
+										)
+									}>
+									Submit Assignment
+								</Button>
+							)
+						) : (
+							<span className='text-muted'>No assignment in this lesson.</span>
+						)}
 					</p>
-					{score?.assignmentScore === 0 && (
-						<>
-							<Info
-								id='assignmentScoreTip'
-								size={16}
-								className='text-warning'
-							/>
-							<UncontrolledTooltip target='assignmentScoreTip'>
-								Score is 0. This could be due to unsubmitted assignment or it's
-								not graded yet.
-							</UncontrolledTooltip>
-						</>
-					)}
 				</div>
-			</div>
-			{/* Submission Status */}
-			<div className='mb-3'>
-				<h6 className='fw-semibold mb-2'>Submission Status</h6>
-
-				{/* Quiz */}
-				{data.quizzes?.length > 0 ? (
-					<div className='d-flex align-items-center gap-2'>
-						<p className='mb-0'>
-							<strong>Quiz:</strong>{" "}
-							{submissions?.quizSubmission ? (
-								<span className='text-success'>Submitted</span>
-							) : (
-								<span className='text-danger'>Not Submitted</span>
-							)}
-						</p>
-					</div>
-				) : (
-					<p className='text-muted mb-1'>
-						<strong>Quiz:</strong> No quiz in this lesson.
-					</p>
-				)}
-
-				{/* Assignment */}
-				{data.assignments?.length > 0 ? (
-					<div className='d-flex align-items-center gap-2 mt-2'>
-						<p className='mb-0'>
-							<strong>Assignment:</strong>{" "}
-							{submissions?.assignmentSubmission ? (
-								<span className='text-success'>Submitted</span>
-							) : (
-								<span className='text-danger'>Not Submitted</span>
-							)}
-						</p>
-					</div>
-				) : (
-					<p className='text-muted'>
-						<strong>Assignment:</strong> No assignment in this lesson.
-					</p>
-				)}
-			</div>
-			{/* Buttons */}
-			<div className='d-flex gap-3 mb-4'>
-				{data.quizzes?.length > 0 && !submissions?.quizSubmission && (
-					<Button
-						color='info'
-						onClick={() =>
-							router.push(
-								`/student/learning/course/${courseId}/${lessonId}/quiz`
-							)
-						}>
-						Give Quiz
-					</Button>
-				)}
-
-				{data.assignments?.length > 0 && !submissions?.assignmentSubmission && (
-					<Button
-						color='warning'
-						onClick={() =>
-							router.push(
-								`/student/learning/course/${courseId}/${lessonId}/assignment`
-							)
-						}>
-						Submit Assignment
-					</Button>
-				)}
 			</div>
 
 			{/* Completion Note */}

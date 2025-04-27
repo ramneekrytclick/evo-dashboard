@@ -1,10 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getStudentProfile } from "@/app/api/student";
-import { toast } from "react-toastify";
-import ReactApexChart from "react-apexcharts";
-import { ApexOptions } from "apexcharts";
+import { useState } from "react";
 import ContinueWatching from "./ContinueWatching";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { Col, Row } from "reactstrap";

@@ -4,6 +4,7 @@ import { ApexOptions } from "apexcharts";
 import { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { toast } from "react-toastify";
+import { Container, Spinner } from "reactstrap";
 
 const EvoScore = ({
 	loading,
@@ -53,6 +54,15 @@ const EvoScore = ({
 		labels: ["EVO Score"],
 		colors: [evoColor],
 	};
+	if (loading) {
+		return (
+			<>
+				<Container className='d-flex gap-2 fs-3 justify-content-center align-items-center text-primary'>
+					<Spinner />
+				</Container>
+			</>
+		);
+	}
 	return (
 		<div
 			className='card shadow-sm p-3'

@@ -18,6 +18,9 @@ import {
 	FormGroup,
 	Input,
 	Label,
+	Badge,
+	Container,
+	Spinner,
 } from "reactstrap";
 import Link from "next/link";
 import { respondToTicket } from "@/app/api/admin/support";
@@ -36,7 +39,7 @@ const TicketTable = () => {
 	const [modalOpen, setModalOpen] = useState(false);
 	const [responseText, setResponseText] = useState("");
 	const [status, setStatus] = useState("Open");
-
+	const [loading, setLoading] = useState(true);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [ticketToDelete, setTicketToDelete] =
 		useState<SupportTicketProps | null>(null);
@@ -62,6 +65,7 @@ const TicketTable = () => {
 		}
 	};
 	const fetchTickets = async () => {
+		setLoading(true);
 		try {
 			if (role === "Admin") {
 				const response = await getAllTickets();
@@ -73,6 +77,8 @@ const TicketTable = () => {
 		} catch (error) {
 			toast.error("Error fetching tickets!");
 			console.error(error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -221,17 +227,16 @@ const TicketTable = () => {
 		{
 			name: "Status",
 			cell: (row) => (
-				<span
-					style={{
-						color:
-							row.status === "Open"
-								? "green"
-								: row.status === "Resolved"
-								? "orange"
-								: "gray",
-					}}>
+				<Badge
+					color={
+						row.status === "Open"
+							? "warning"
+							: row.status === "Resolved"
+							? "success"
+							: "danger"
+					}>
 					{row.status}
-				</span>
+				</Badge>
 			),
 			center: true,
 		},
@@ -245,7 +250,15 @@ const TicketTable = () => {
 	useEffect(() => {
 		fetchTickets();
 	}, []);
-
+	if (loading) {
+		return (
+			<>
+				<Container className='d-flex gap-2 text-primary justify-content-center align-items-center'>
+					<Spinner size={30} />
+				</Container>
+			</>
+		);
+	}
 	return (
 		<div className='table-responsive custom-scrollbar'>
 			{role !== "Admin" && <CreateTicketModal fetchData={fetchTickets} />}

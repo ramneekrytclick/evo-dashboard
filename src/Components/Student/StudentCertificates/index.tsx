@@ -5,6 +5,7 @@ import { getMyCertificates } from "@/app/api/student";
 import { toast } from "react-toastify";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
+import { Container, Spinner } from "reactstrap";
 interface CerticateProps {
 	_id: string;
 	course: {
@@ -36,7 +37,6 @@ const StudentCertificatesContainer = () => {
 	useEffect(() => {
 		fetchCertificates();
 	}, []);
-
 	return (
 		<>
 			<Breadcrumbs
@@ -46,7 +46,9 @@ const StudentCertificatesContainer = () => {
 			/>
 			<div className='px-3 py-4'>
 				{loading ? (
-					<p className='text-muted'>Loading certificates...</p>
+					<Container className='d-flex gap-2 text-primary justify-content-center align-items-center'>
+						<Spinner size={30} />
+					</Container>
 				) : certificates.length === 0 ? (
 					<p className='text-muted'>No certificates found.</p>
 				) : (

@@ -18,9 +18,11 @@ import {
 	Container,
 	Progress,
 	Row,
+	Spinner,
 } from "reactstrap";
 
 const MyEnrolledCourses = () => {
+	const [loading, setLoading] = useState(true);
 	const [enrolledCourses, setEnrolledCourses] = useState<
 		{
 			course: CourseProps;
@@ -32,38 +34,53 @@ const MyEnrolledCourses = () => {
 	const [progress, setProgress] = useState<any[]>([]);
 
 	const fetchCourses = async () => {
+		setLoading(true);
 		try {
 			const response = await getEnrolledCourses();
 			setEnrolledCourses(response.enrolledCourses);
 		} catch (error) {
 			toast.error("Error fetching courses");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const fetchCategories = async () => {
+		setLoading(true);
+
 		try {
 			const response = await getAllCategories();
 			setCategories(response.categories);
 		} catch (error) {
 			toast.error("Error fetching categories");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const fetchSubcategories = async () => {
+		setLoading(true);
+
 		try {
 			const response = await getAllSubcategories();
 			setSubcategories(response.subcategories);
 		} catch (error) {
 			toast.error("Error fetching subcategories");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const getProgress = async () => {
+		setLoading(true);
+
 		try {
 			const response = await getMyCourseProgress();
 			setProgress(response.progress);
 		} catch (error) {
 			toast.error("Error fetching progress");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -78,6 +95,15 @@ const MyEnrolledCourses = () => {
 	const subcategoryMap = new Map(subcategories.map((s) => [s._id, s.title]));
 	const progressMap = new Map(progress.map((p) => [p.courseId, p]));
 
+	if (loading) {
+		return (
+			<>
+				<Container className='d-flex gap-2 text-primary justify-content-center align-items-center'>
+					<Spinner />
+				</Container>
+			</>
+		);
+	}
 	return (
 		<Container style={{ height: "80vh", overflow: "auto" }}>
 			<Row>

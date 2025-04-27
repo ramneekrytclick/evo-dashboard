@@ -1,22 +1,29 @@
 "use client";
+
 import { getMyAnnouncements } from "@/app/api";
 import { useAuth } from "@/app/AuthProvider";
 import { IAnnouncement } from "@/Types/Announcement.type";
-import { useEffect, useState } from "react";
-import { Badge } from "reactstrap";
+import { useEffect, useRef, useState } from "react";
+import { Badge, Col, Row } from "reactstrap";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-import { Bell } from "react-feather";
+import { Bell, ChevronDown } from "react-feather";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import clsx from "clsx";
+
 const Notifications = () => {
 	const [announcements, setAnnouncements] = useState<IAnnouncement[]>([]);
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const dropdownRef = useRef<HTMLLIElement>(null);
 	const { user } = useAuth();
+
+	const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
 	const fetchAnnouncements = async (role: string) => {
 		try {
 			const response = await getMyAnnouncements(role);
-			setAnnouncements(response);
+			setAnnouncements(response.reverse());
 		} catch (error) {
 			console.error("Failed to fetch announcements", error);
 		}
@@ -28,14 +35,33 @@ const Notifications = () => {
 		}
 	}, [user]);
 
-	if (user?.role === "Admin") {
-		return null;
-	}
+	// Close dropdown on outside click
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				dropdownRef.current &&
+				!dropdownRef.current.contains(event.target as Node)
+			) {
+				setDropdownOpen(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
+	if (user?.role === "Admin") return null;
 
 	return (
-		<li className='onhover-dropdown position-relative'>
-			<div className='notification-box d-flex align-items-center gap-2'>
-				<Bell size={140} />
+		<li
+			ref={dropdownRef}
+			className='position-relative text-dark rounded-circle'
+			style={{ cursor: "pointer" }}>
+			<div
+				className='notification-box d-flex align-items-center gap-2'
+				onClick={toggleDropdown}>
+				<Bell size={22} />
 				{announcements.length > 0 && (
 					<Badge
 						pill
@@ -44,40 +70,65 @@ const Notifications = () => {
 					</Badge>
 				)}
 			</div>
-			<div className='onhover-show-div notification-dropdown px-1'>
-				<h6 className=' mb-2 dropdown-title'>Announcements</h6>
+
+			<div
+				className={clsx("dropdown-menu-box", { show: dropdownOpen })}
+				style={{
+					position: "absolute",
+					top: "100%",
+					right: 0,
+					minWidth: "300px",
+					zIndex: 9999,
+					backgroundColor: "#fff",
+					borderRadius: "10px",
+					boxShadow: "0 0.5rem 1rem rgba(0,0,0,0.15)",
+					padding: "1rem",
+					transition: "all 0.3s ease",
+					transform: dropdownOpen ? "translateY(10px)" : "translateY(0px)",
+					opacity: dropdownOpen ? 1 : 0,
+					pointerEvents: dropdownOpen ? "auto" : "none",
+				}}>
+				<h6 className='mb-3 fw-bold border-bottom pb-3'>Announcements</h6>
 				{announcements.length === 0 ? (
 					<p className='text-muted'>No announcements yet.</p>
 				) : (
-					<div className='d-flex flex-column gap-3'>
+					<div
+						className='d-flex flex-column gap-3 col '
+						style={{ maxHeight: "300px", overflow: "auto" }}>
 						{announcements.map((item, index) => (
-							<div
+							<Row
 								key={index}
 								className='border-bottom pb-2'>
-								<Link
-									href={item.link || "#"}
-									className='d-block text-dark text-decoration-none'>
-									<span className='mb-1 fw-semibold'>{item.title}</span>
-									<p className='text-muted'>{item.description}</p>
+								<Col className='col-8'>
+									<Link
+										href={item.link || "#"}
+										className='d-block text-dark text-decoration-none'>
+										<span className='mb-1 fw-semibold'>{item.title}</span>
+										<p className='text-muted mb-1'>{item.description}</p>
+									</Link>
+								</Col>
+								<Col className='col-1'>
 									{item.image && (
 										<Image
 											src={getImageURL(item.image)}
 											width={50}
 											height={50}
 											style={{
-												borderRadius: "90%",
+												borderRadius: "50%",
 												objectFit: "cover",
 											}}
 											alt='announcement'
 										/>
 									)}
-								</Link>
-								<small className='text-muted d-block mt-1'>
+								</Col>
+								<small
+									className='text-muted d-block mt-1'
+									style={{ fontSize: "12px" }}>
 									{formatDistanceToNow(new Date(item.createdAt), {
 										addSuffix: true,
 									})}
 								</small>
-							</div>
+							</Row>
 						))}
 					</div>
 				)}

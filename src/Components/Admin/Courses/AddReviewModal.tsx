@@ -26,11 +26,11 @@ const AddReviewModal = ({
 
 	const [rating, setRating] = useState(5);
 	const [comment, setComment] = useState("");
-
+	const [name, setName] = useState("Prashant");
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const response = await addReview(courseId, rating, comment);
+			const response = await addReview(courseId, rating, comment, name);
 			console.log(response);
 			toast.success("Review added successfully");
 			console.log("New Review Submitted", {
@@ -81,6 +81,16 @@ const AddReviewModal = ({
 								id='comment'
 								value={comment}
 								onChange={(e) => setComment(e.target.value)}
+								required
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label for='name'>Name</Label>
+							<Input
+								type='textarea'
+								id='name'
+								value={name}
+								onChange={(e) => setName(e.target.value)}
 								required
 							/>
 						</FormGroup>

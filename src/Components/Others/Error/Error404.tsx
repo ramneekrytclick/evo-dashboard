@@ -12,26 +12,34 @@ const Error404Container = () => {
 
 	return (
 		<div
-			className="page-wrapper compact-wrapper"
-			id="pageWrapper">
-			<div className="error-wrapper">
+			className='page-wrapper compact-wrapper'
+			id='pageWrapper'>
+			<div className='error-wrapper'>
 				<Container>
-					<div className="svg-wrraper">
+					<div className='svg-wrraper'>
 						<Error4 />
 					</div>
 					<Col
 						md={8}
-						className="offset-md-2">
+						className='offset-md-2'>
 						<h3>{"Internal Server Error"}</h3>
-						<p className="sub-content">
+						<p className='sub-content'>
 							{
 								"The page you are attempting to reach is currently not available. This may be because the page does not exist or has been moved."
 							}
 						</p>
 						<Button
-							tag="a"
-							color="primary"
-							onClick={() => router.push(`/${role?.toLowerCase()}/dashboard`)}>
+							tag='a'
+							color='primary'
+							onClick={() =>
+								router.push(
+									`/${
+										role?.toLowerCase() !== "Course Creator"
+											? role.toLowerCase()
+											: "course-creator"
+									}/dashboard`
+								)
+							}>
 							{BackToHomePage}
 						</Button>
 					</Col>

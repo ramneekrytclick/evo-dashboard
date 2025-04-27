@@ -29,7 +29,7 @@ const JobFilterSidebar = ({
 	return (
 		<Card>
 			<HeaderWithIcon
-				heading={FilterHeading}
+				heading={"Job Filters"}
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
 			/>
