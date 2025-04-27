@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from "react";
 import {
 	Button,
+	ButtonGroup,
 	Card,
 	CardBody,
 	CardFooter,
@@ -20,6 +21,8 @@ import {
 import { FaTrash } from "react-icons/fa";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import { Edit2, Trash, Trash2 } from "react-feather";
+import UpdateInterestModal from "./UpdateModal";
 
 const InterestsTable = ({
 	fetchData,
@@ -36,7 +39,8 @@ const InterestsTable = ({
 	const [selectedInterest, setSelectedInterest] = useState<{ _id: string }>({
 		_id: "",
 	});
-
+	const [updateModalOpen, setUpdateModalOpen] = useState(false);
+	const [interestToUpdate, setInterestToUpdate] = useState<any>(null);
 	const toggleModal = () => setModalOpen(!modalOpen);
 
 	const openModal = (interest: any) => {
@@ -76,15 +80,6 @@ const InterestsTable = ({
 											objectFit: "cover",
 										}}
 									/>
-									<div
-										className='position-absolute bottom-0 start-0 w-100 px-3 py-2'
-										style={{
-											background: "rgba(0, 0, 0, 0.5)",
-											color: "#fff",
-											fontWeight: 600,
-										}}>
-										{interest.title}
-									</div>
 								</div>
 							)}
 							<CardBody>
@@ -97,20 +92,39 @@ const InterestsTable = ({
 									Created: {new Date(interest.createdAt).toLocaleString()}
 								</p>
 							</CardBody>
-							<CardFooter className='bg-transparent border-top-0 text-end'>
-								<Button
-									color='danger'
-									size='sm'
-									title='Delete Interest'
-									onClick={() => openModal(interest)}>
-									<FaTrash />
-								</Button>
+							<CardFooter className='bg-transparent border-top-0 text-end d-flex justify-content-end gap-2'>
+								<ButtonGroup>
+									<Button
+										color='success'
+										size='sm'
+										className='p-2'
+										onClick={() => {
+											setInterestToUpdate(interest);
+											setUpdateModalOpen(true);
+										}}>
+										<Edit2 size={16} />
+									</Button>
+									<Button
+										color='danger'
+										size='sm'
+										className='p-2'
+										onClick={() => openModal(interest)}>
+										<Trash size={16} />
+									</Button>
+								</ButtonGroup>
 							</CardFooter>
 						</Card>
 					</Col>
 				))}
 			</Row>
-
+			{updateModalOpen && interestToUpdate && (
+				<UpdateInterestModal
+					isOpen={updateModalOpen}
+					toggle={() => setUpdateModalOpen(false)}
+					interest={interestToUpdate}
+					fetchData={fetchData}
+				/>
+			)}
 			<Modal
 				isOpen={modalOpen}
 				toggle={toggleModal}

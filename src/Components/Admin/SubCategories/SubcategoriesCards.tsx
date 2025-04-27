@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from "react";
 import {
 	Button,
+	ButtonGroup,
 	Card,
 	CardBody,
 	CardFooter,
@@ -21,6 +22,8 @@ import CreateSubcategoryModal from "./CreateSubcategoryModal";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import UpdateSubcategoryModal from "./UpdateSubcategory";
+import { Edit2, Trash } from "react-feather";
 
 export interface SubCategory {
 	_id: string;
@@ -34,6 +37,8 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 	const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [subcategoryToDelete, setSubcategoryToDelete] =
+		useState<SubCategory | null>(null);
+	const [subcategoryToUpdate, setSubcategoryToUpdate] =
 		useState<SubCategory | null>(null);
 
 	const toggleDeleteModal = () => setDeleteModal(!deleteModal);
@@ -51,7 +56,7 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 		setSubcategoryToDelete(subcategory);
 		setDeleteModal(true);
 	};
-
+	const [updateModalOpen, setUpdateModalOpen] = useState(false);
 	const handleConfirmedDelete = async () => {
 		if (!subcategoryToDelete) return;
 		try {
@@ -116,19 +121,40 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 									)}
 								</CardBody>
 								<CardFooter className='d-flex justify-content-end gap-2'>
-									<Button
-										color='danger'
-										size='sm'
-										onClick={() => confirmDelete(item)}>
-										Delete
-									</Button>
+									<ButtonGroup>
+										<Button
+											color='success'
+											size='sm'
+											className='p-2'
+											onClick={() => {
+												setSubcategoryToUpdate(item);
+												setUpdateModalOpen(true);
+											}}>
+											<Edit2 size={16} />
+										</Button>
+										<Button
+											color='danger'
+											size='sm'
+											className='p-2'
+											onClick={() => confirmDelete(item)}>
+											<Trash size={16} />
+										</Button>
+									</ButtonGroup>
 								</CardFooter>
 							</Card>
 						</Col>
 					))
 				)}
 			</Row>
-
+			{updateModalOpen && subcategoryToUpdate && (
+				<UpdateSubcategoryModal
+					isOpen={updateModalOpen}
+					toggle={() => setUpdateModalOpen(false)}
+					subcategory={subcategoryToUpdate}
+					fetchData={fetchSubcategories}
+					categoryId={id}
+				/>
+			)}
 			{/* Delete Confirmation Modal */}
 			<Modal
 				isOpen={deleteModal}

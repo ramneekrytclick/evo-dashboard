@@ -17,3 +17,12 @@ export const createCategory = async (data: FormData) => {
 export const deleteCategory = async (id: string) => {
 	return (await apiClient.delete(`/categories/category/${id}`)).data;
 };
+export const updateCategory = async (id: string, data: FormData) => {
+	return (
+		await apiClient.put(`/categories/update/${id}`, data, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		})
+	).data;
+};

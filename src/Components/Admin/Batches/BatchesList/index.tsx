@@ -10,6 +10,7 @@ import {
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
+	ButtonGroup,
 } from "reactstrap";
 import DataTable, { TableColumn } from "react-data-table-component";
 
@@ -23,7 +24,8 @@ import BatchDetails from "./BatchDetails";
 import Link from "next/link";
 import { FontSizeTitle } from "@/Constant";
 import { toast } from "react-toastify";
-import { Trash, Trash2 } from "react-feather";
+import { Edit, Edit2, Trash, Trash2 } from "react-feather";
+import UpdateBatchModal from "./UpdateBatch";
 export const customTableStyles = {
 	rows: { style: { fontSize: "1rem" } },
 	headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
@@ -43,6 +45,7 @@ const BatchesList = () => {
 	const [selectedBatchForDetails, setSelectedBatchForDetails] =
 		useState<BatchProps | null>(null);
 	const [deleteBatchModalOpen, setDeleteBatchModalOpen] = useState(false);
+	const [updateBatchModalOpen, setUpdateBatchModalOpen] = useState(false);
 	const [batchToDelete, setBatchToDelete] = useState<BatchProps | null>(null);
 	const [confirmBatchName, setConfirmBatchName] = useState("");
 	const fetchBatches = async () => {
@@ -185,19 +188,33 @@ const BatchesList = () => {
 
 				return (
 					<div className='d-flex flex-column align-items-center'>
-						<Button
-							color='danger'
-							size='sm'
-							id={`delete-btn-${row._id}`}
-							disabled={isActive}
-							onClick={(e) => {
-								e.stopPropagation();
-								setBatchToDelete(row);
-								setDeleteBatchModalOpen(true);
-								setConfirmBatchName("");
-							}}>
-							<Trash2 size={16} />
-						</Button>
+						<ButtonGroup>
+							<Button
+								color='success'
+								size='sm'
+								className='p-2'
+								onClick={(e) => {
+									e.stopPropagation();
+									setBatchToDelete(row); // reuse batchToDelete
+									setUpdateBatchModalOpen(true); // open update modal
+								}}>
+								<Edit2 size={16} />
+							</Button>
+							<Button
+								color='danger'
+								size='sm'
+								className='p-2'
+								id={`delete-btn-${row._id}`}
+								disabled={isActive}
+								onClick={(e) => {
+									e.stopPropagation();
+									setBatchToDelete(row);
+									setDeleteBatchModalOpen(true);
+									setConfirmBatchName("");
+								}}>
+								<Trash size={16} />
+							</Button>
+						</ButtonGroup>
 						{isActive && (
 							<Badge
 								color='light'
@@ -293,7 +310,14 @@ const BatchesList = () => {
 					toggle={() => setSelectedBatchForDetails(null)}
 				/>
 			)}
-
+			{updateBatchModalOpen && batchToDelete && (
+				<UpdateBatchModal
+					batch={batchToDelete}
+					isOpen={updateBatchModalOpen}
+					toggle={() => setUpdateBatchModalOpen(false)}
+					fetchData={fetchBatches}
+				/>
+			)}
 			<Modal
 				isOpen={deleteBatchModalOpen}
 				toggle={() => setDeleteBatchModalOpen(false)}

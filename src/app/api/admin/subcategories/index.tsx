@@ -15,3 +15,12 @@ export const createSubcategory = async (data: FormData) => {
 export const deleteSubcategory = async (id: string) => {
 	return (await apiClient.delete(`/subcategories/subcategory/${id}`)).data;
 };
+export const updateSubcategory = async (id: string, data: FormData) => {
+	return (
+		await apiClient.put(`/subcategories/update/${id}`, data, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		})
+	).data;
+};

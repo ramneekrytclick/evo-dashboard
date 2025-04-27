@@ -1,7 +1,13 @@
 "use client";
 import { getCategories, deleteCategory } from "@/app/api/admin/categories";
 import { Category } from "@/Types/Category.type";
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+	ButtonGroup,
+} from "reactstrap";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
@@ -17,6 +23,8 @@ import CreateCategoryModal from "./CreateCategoryModal";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import { Edit2, Trash } from "react-feather";
+import UpdateCategoryModal from "./UpdateModal";
 const CategoriesCards = () => {
 	const [categories, setCategories] = useState<Category[]>([]);
 	const fetchCategories = async () => {
@@ -31,7 +39,10 @@ const CategoriesCards = () => {
 	const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
 		null
 	);
-
+	const [updateModalOpen, setUpdateModalOpen] = useState(false);
+	const [categoryToUpdate, setCategoryToUpdate] = useState<Category | null>(
+		null
+	);
 	const toggleDeleteModal = () => setDeleteModal(!deleteModal);
 	const confirmDelete = (category: Category) => {
 		setCategoryToDelete(category);
@@ -74,22 +85,32 @@ const CategoriesCards = () => {
 							md={4}
 							sm={6}
 							key={item._id}>
-							<Card className='shadow-sm rounded-3 border-0'>
-								<Image
-									src={getImageURL(item.photo || "")}
-									width={400}
-									height={200}
-									alt={item.title}
-									className='img-fluid rounded-top'
-									style={{
-										width: "100%",
-										height: "160px",
-										objectFit: "cover",
-									}}
-								/>
+							<Card
+								className='shadow-sm rounded-3 border-0'
+								style={{ height: "100%" }}>
+								<Link
+									className='fs-5'
+									href={`subcategories/${item._id}`}>
+									<Image
+										src={getImageURL(item.photo || "")}
+										width={400}
+										height={200}
+										alt={item.title}
+										className='img-fluid rounded-top'
+										style={{
+											width: "100%",
+											height: "160px",
+											objectFit: "cover",
+										}}
+									/>
+								</Link>
 
 								<CardHeader className='fw-bold text-primary'>
-									<Link href={`subcategories/${item._id}`}>{item.title}</Link>
+									<Link
+										className='fs-5'
+										href={`subcategories/${item._id}`}>
+										{item.title}
+									</Link>
 								</CardHeader>
 								<CardBody>
 									{item.description && (
@@ -98,25 +119,52 @@ const CategoriesCards = () => {
 										</p>
 									)}
 								</CardBody>
-								<CardFooter className='d-flex justify-content-end gap-2'>
-									{/* <Button
-										color="warning"
-										size="sm"
-										disabled>
-										Update
-									</Button> */}
-									<Button
-										color='danger'
-										size='sm'
-										onClick={() => confirmDelete(item)}>
-										Delete
-									</Button>
+								<CardFooter className='d-flex justify-content-between gap-2'>
+									<Link
+										className='fs-5'
+										href={`subcategories/${item._id}`}>
+										<Button
+											className='fs-6'
+											color='primary'>
+											View Subcategories
+										</Button>
+									</Link>
+									<ButtonGroup>
+										<Button
+											color='success'
+											size='sm'
+											className='p-2'
+											onClick={(e) => {
+												e.stopPropagation();
+												setCategoryToUpdate(item);
+												setUpdateModalOpen(true);
+											}}>
+											<Edit2 size={16} />
+										</Button>
+										<Button
+											color='danger'
+											size='sm'
+											className='p-2'
+											onClick={(e) => {
+												confirmDelete(item);
+											}}>
+											<Trash size={16} />
+										</Button>
+									</ButtonGroup>
 								</CardFooter>
 							</Card>
 						</Col>
 					))
 				)}
 			</Row>
+			{updateModalOpen && categoryToUpdate && (
+				<UpdateCategoryModal
+					isOpen={updateModalOpen}
+					toggle={() => setUpdateModalOpen(false)}
+					category={categoryToUpdate}
+					fetchData={fetchCategories}
+				/>
+			)}
 			<Modal
 				isOpen={deleteModal}
 				toggle={toggleDeleteModal}>
