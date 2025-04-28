@@ -15,6 +15,7 @@ import {
 	Label,
 	Input,
 	FormGroup,
+	UncontrolledTooltip,
 } from "reactstrap";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import {
@@ -145,7 +146,7 @@ const UserProfile = ({ id }: { id: string }) => {
 				title='Profile'
 			/>
 			<Card className='p-4'>
-				<Row className='align-items-center'>
+				<Row className=''>
 					<Col
 						md={3}
 						className='text-center'>
@@ -162,7 +163,7 @@ const UserProfile = ({ id }: { id: string }) => {
 							onClick={togglePhotoModal}
 						/>
 					</Col>
-					<Col md={9}>
+					<Col md={8}>
 						<h4 className='fw-bold text-uppercase'>{profile.name}</h4>
 						<p className='text-muted'>{profile.role}</p>
 						<Row className='mb-2'>
@@ -184,6 +185,12 @@ const UserProfile = ({ id }: { id: string }) => {
 							{profile.address && (
 								<Col md={6}>
 									<strong>Address:</strong> {profile.address}
+								</Col>
+							)}
+							{profile.createdAt && (
+								<Col md={6}>
+									<strong>Joined:</strong>{" "}
+									{new Date(profile.createdAt).toDateString()}
 								</Col>
 							)}
 						</Row>
@@ -265,25 +272,9 @@ const UserProfile = ({ id }: { id: string }) => {
 								</Col>
 							)}
 						</Row>
-						<div className='mt-3'>
-							<Badge
-								color={profile.isApproved ? "success" : "danger"}
-								className='me-2'>
-								{profile.isApproved ? "Approved" : "Approval Pending"}
-							</Badge>
-							<Badge
-								color={
-									profile.status === "Active"
-										? "primary"
-										: profile.status === "Banned"
-										? "danger"
-										: "secondary"
-								}>
-								{profile.status}
-							</Badge>
-						</div>
+
 						<div className='mt-3 d-flex gap-2 flex-wrap'>
-							{!profile.isApproved && (
+							{!profile.isApproved && profile.role !== "Student" && (
 								<Button
 									color='success'
 									onClick={toggleApproveModal}>
@@ -311,6 +302,52 @@ const UserProfile = ({ id }: { id: string }) => {
 									Assign Mentors
 								</Button>
 							)}
+						</div>
+					</Col>
+					<Col md={1}>
+						<div className='d-flex gap-2'>
+							{/* Approval Dot */}
+							{profile.role !== "Student" && (
+								<>
+									<div
+										id={`approved-dot-${profile._id}`}
+										style={{
+											width: "30px",
+											height: "30px",
+											borderRadius: "50%",
+											backgroundColor: profile.isApproved
+												? "#28a745"
+												: "#dc3545", // green or red
+											cursor: "pointer",
+										}}></div>
+									<UncontrolledTooltip
+										placement='top'
+										target={`approved-dot-${profile._id}`}>
+										{profile.isApproved ? "Approved" : "Not Approved"}
+									</UncontrolledTooltip>
+								</>
+							)}
+
+							{/* Status Dot */}
+							<div
+								id={`status-dot-${profile._id}`}
+								style={{
+									width: "30px",
+									height: "30px",
+									borderRadius: "50%",
+									backgroundColor:
+										profile.status === "Active"
+											? "#007bff" // blue
+											: profile.status === "Banned"
+											? "#dc3545" // red
+											: "#6c757d", // grey
+									cursor: "pointer",
+								}}></div>
+							<UncontrolledTooltip
+								placement='top'
+								target={`status-dot-${profile._id}`}>
+								{profile.status}
+							</UncontrolledTooltip>
 						</div>
 					</Col>
 				</Row>

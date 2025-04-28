@@ -63,12 +63,8 @@ const UpdateBatchModal = ({ batch, isOpen, toggle, fetchData }: any) => {
 
 		try {
 			setSubmitting(true);
-			const submitData = new FormData();
-			Object.entries(formData).forEach(([key, value]) => {
-				submitData.append(key, value);
-			});
 
-			await updateBatch(batch._id, submitData);
+			await updateBatch(batch._id, formData);
 			toast.success("Batch updated successfully");
 			toggle(); // Close modal
 			fetchData(); // Refetch batches

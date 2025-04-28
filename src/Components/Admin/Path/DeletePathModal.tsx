@@ -1,30 +1,20 @@
 import { deletePathConfirmTitle, ImagePath } from "@/Constant";
-import React, { useState } from "react";
+import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-
-import CommonModal from "@/CommonComponent/CommonModal";
-import Image from "next/image";
 import { deletePath } from "@/app/api/admin/path";
 import { toast } from "react-toastify";
-import { Trash, Trash2 } from "react-feather";
 
 const DeletePathModal = ({
 	id,
 	fetchData,
+	modal,
+	toggle,
 }: {
 	id: string;
 	fetchData: () => Promise<void>;
+	modal: boolean;
+	toggle: () => void;
 }) => {
-	const [modal, setModal] = useState(false);
-	const toggle = () => {
-		setModal(!modal);
-	};
-	const ModalData = {
-		isOpen: modal,
-		toggler: toggle,
-		center: true,
-		bodyClass: "dark-sign-up social-profile text-start",
-	};
 	const handleDelete = async () => {
 		try {
 			const response = await deletePath(id);
@@ -38,13 +28,6 @@ const DeletePathModal = ({
 	};
 	return (
 		<>
-			<Button
-				color='danger'
-				className=' p-2 d-flex  align-items-center justify-content-center'
-				style={{ width: "35px", height: "35px" }}
-				onClick={toggle}>
-				<Trash size={18} />
-			</Button>
 			<Modal
 				isOpen={modal}
 				toggle={toggle}>

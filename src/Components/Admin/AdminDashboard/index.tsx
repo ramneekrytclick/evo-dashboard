@@ -307,7 +307,7 @@ const AdminDashboardContainer = () => {
 									key={index}>
 									<Link href={item.link}>
 										<Card
-											className={`text-center shadow-sm bg-${item.color}-subtle border border-3 border-${item.color} rounded-4 p-3`}
+											className={`text-center shadow-sm bg-${item.color}- border border-3 border-${item.color} rounded-4 p-3`}
 											style={{ backgroundBlendMode: "multiply" }}>
 											<Row>
 												<Col>

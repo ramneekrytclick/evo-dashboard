@@ -64,3 +64,18 @@ export const getAllReviews = async () => {
 	const response = await apiClient.get(`/admin/reviews`);
 	return response.data;
 };
+export const updateReview = async (
+	id: string,
+	comment: any,
+	rating: number
+) => {
+	const response = await apiClient.put(`/admin/admin/${id}`, {
+		comment,
+		rating,
+	});
+	return response.data;
+};
+export const deleteReview = async (id: string) => {
+	const response = await apiClient.delete(`/reviews/${id}`);
+	return response.data;
+};

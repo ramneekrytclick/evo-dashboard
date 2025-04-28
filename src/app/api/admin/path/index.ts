@@ -5,7 +5,10 @@ export const getPaths = async () => {
 	const respnonse = await apiClient.get(`/paths`);
 	return respnonse.data;
 };
-
+export const getPathById = async (id: string) => {
+	const respnonse = await apiClient.get(`/paths/${id}`);
+	return respnonse.data;
+};
 export const createPath = async (data: PathProps & { photo?: File }) => {
 	try {
 		const formData = new FormData();
@@ -36,8 +39,8 @@ export const createPath = async (data: PathProps & { photo?: File }) => {
 	}
 };
 
-export const updatePath = async (id: string, data: PathProps) => {
-	const response = await apiClient.put(`/path/update/${id}`, data);
+export const updatePath = async (id: string, data: FormData) => {
+	const response = await apiClient.put(`/paths/update/${id}`, data);
 	return response.data;
 };
 

@@ -6,14 +6,22 @@ import { PathProps } from "@/Types/Path.type";
 import { useEffect, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { toast } from "react-toastify";
-import { Card, CardBody } from "reactstrap";
+import { Button, ButtonGroup, Card, CardBody } from "reactstrap";
 
 import DeletePathModal from "./DeletePathModal";
 import Link from "next/link";
 import { customTableStyles } from "../Batches/BatchesList";
+import { Edit2, Trash } from "react-feather";
+import UpdatePathModal from "./UpdatePathModal";
 const PathCards = () => {
 	const [paths, setPaths] = useState<PathProps[]>([]);
 	const [filterText, setFilterText] = useState("");
+	const [deleteModal, setDeleteModal] = useState(false);
+	const toggleDeleteModal = () => {
+		setDeleteModal(!deleteModal);
+	};
+	const [updateModal, setUpdateModal] = useState(false);
+	const [selectedBlogForDelete, setSelectedBlogForDelete] = useState("");
 	const fetchPaths = async () => {
 		try {
 			const response = await getPaths();
@@ -74,10 +82,30 @@ const PathCards = () => {
 						values={row}
 						fetchData={fetchPaths}
 					/> */}
-					<DeletePathModal
-						id={row._id!}
-						fetchData={fetchPaths}
-					/>
+					<ButtonGroup>
+						<Button
+							color='success'
+							size='sm'
+							className=' p-2 d-flex  align-items-center justify-content-center'
+							style={{ width: "35px", height: "35px" }}
+							onClick={(e) => {
+								e.stopPropagation();
+								setSelectedBlogForDelete(row._id || "");
+								setUpdateModal(true);
+							}}>
+							<Edit2 size={16} />
+						</Button>
+						<Button
+							color='danger'
+							className=' p-2 d-flex  align-items-center justify-content-center'
+							style={{ width: "35px", height: "35px" }}
+							onClick={() => {
+								setDeleteModal(true);
+								setSelectedBlogForDelete(row._id || "");
+							}}>
+							<Trash size={18} />
+						</Button>
+					</ButtonGroup>
 				</ul>
 			),
 		},
@@ -115,6 +143,22 @@ const PathCards = () => {
 					</div>
 				</CardBody>
 			</Card>
+			{selectedBlogForDelete && deleteModal && (
+				<DeletePathModal
+					id={selectedBlogForDelete}
+					fetchData={fetchPaths}
+					modal={deleteModal}
+					toggle={toggleDeleteModal}
+				/>
+			)}
+			{updateModal && (
+				<UpdatePathModal
+					id={selectedBlogForDelete}
+					fetchData={fetchPaths}
+					modal={updateModal}
+					toggle={() => setUpdateModal(!updateModal)}
+				/>
+			)}
 		</>
 	);
 };

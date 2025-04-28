@@ -29,6 +29,20 @@ export const assignMentorToBatch = async (data: {
 export const deleteBatch = async (id: string) => {
 	return (await apiClient.delete(`/admin/batch/${id}`)).data;
 };
-export const updateBatch = async (id: string, data: FormData) => {
+export const updateBatch = async (
+	id: string,
+	data: {
+		name: string;
+		description: string;
+		time: string;
+		batchWeekType: string;
+		startDate: string;
+		endDate: string;
+		courseId: string;
+	}
+) => {
 	return (await apiClient.put(`/batches/update/${id}`, data)).data;
+};
+export const getBatchBySlug = async (slug: string) => {
+	return (await apiClient.get(`/batches/slug/${slug}`)).data;
 };
