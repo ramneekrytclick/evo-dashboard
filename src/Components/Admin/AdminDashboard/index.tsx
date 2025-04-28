@@ -214,26 +214,32 @@ const AdminDashboardContainer = () => {
 								<Col
 									className='my-2 place-items-center text-center'
 									xs={12}
-									md={2}>
+									sm={6}
+									md={4}
+									xl={2}>
 									<CreateCategoryModal fetchData={fetchData} />
 								</Col>
 								<Col
 									className='my-2 place-items-center text-center'
 									xs={12}
-									md={2}>
+									sm={6}
+									md={4}
+									xl={2}>
 									<CreateSubcategoryModal fetchData={fetchData} />
 								</Col>
 
 								<Col
 									className='my-2 place-items-center text-center'
 									xs={12}
-									md={2}>
+									sm={6}
+									md={4}
+									xl={2}>
 									<Button
 										color='primary'
-										className='me-2 px-2 w-full'
+										className='w-100 h-100  px-2 p-3'
 										onClick={toggleWannaBeModal}>
 										<i className='fa fa-plus me-2 px-2 ' />
-										Add Wanna Be Interests
+										Add Interests
 									</Button>
 									<CreateInterestFormModal
 										modalOpen={wannaBeModal}
@@ -244,7 +250,9 @@ const AdminDashboardContainer = () => {
 								<Col
 									className='my-2 place-items-center text-center'
 									xs={12}
-									md={2}>
+									sm={6}
+									md={4}
+									xl={2}>
 									<Button
 										className='w-100 h-100  px-2 p-3'
 										color='primary'
@@ -258,7 +266,9 @@ const AdminDashboardContainer = () => {
 								<Col
 									className='my-2 place-items-center text-center'
 									xs={12}
-									md={2}>
+									sm={6}
+									md={4}
+									xl={2}>
 									<Button
 										className='w-100 h-100  px-2 p-3'
 										color='primary'
@@ -272,7 +282,9 @@ const AdminDashboardContainer = () => {
 								<Col
 									className='my-2 place-items-center text-center'
 									xs={12}
-									md={2}>
+									sm={6}
+									md={4}
+									xl={2}>
 									<Button
 										className='w-100 h-100  px-2 p-3'
 										color='primary'
@@ -295,7 +307,8 @@ const AdminDashboardContainer = () => {
 									key={index}>
 									<Link href={item.link}>
 										<Card
-											className={`text-center shadow-sm border-0 bg-${item.color}-subtle rounded-3 p-2`}>
+											className={`text-center shadow-sm bg-${item.color}-subtle border border-3 border-${item.color} rounded-4 p-3`}
+											style={{ backgroundBlendMode: "multiply" }}>
 											<Row>
 												<Col>
 													<h2

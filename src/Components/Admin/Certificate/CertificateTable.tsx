@@ -133,6 +133,7 @@ const CertificateTable = () => {
 						<Button
 							color='success'
 							size='sm'
+							className='fs-6'
 							onClick={() => {
 								setSelectedRow(row);
 								setPreviewUrl(getImageURL(row.certificateUrl));

@@ -15,6 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { approveJob, getAllJobs } from "@/app/api/admin/jobs";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { customTableStyles } from "../Batches/BatchesList";
 
 interface Employer {
 	_id: string;
@@ -152,7 +153,6 @@ export default function JobTable(): JSX.Element {
 		<>
 			<Card>
 				<CardBody>
-					<h4 className='mb-4 fw-bold'>All Job Listings</h4>
 					<DataTable
 						columns={columns}
 						data={jobs}
@@ -161,6 +161,7 @@ export default function JobTable(): JSX.Element {
 						responsive
 						striped
 						highlightOnHover
+						customStyles={customTableStyles}
 					/>
 
 					{/* Job Details Modal */}

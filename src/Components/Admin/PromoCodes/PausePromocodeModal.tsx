@@ -37,7 +37,8 @@ const PausePromoModal = ({ id, isActive, fetchData }: PausePromoModalProps) => {
 			<Button
 				color={isActive ? "warning" : "success"}
 				onClick={toggle}
-				size="sm">
+				className=' p-2 d-flex  align-items-center justify-content-center'
+				style={{ height: "35px" }}>
 				<i className={`me-1 ${isActive ? "icon-pause" : "icon-play"}`} />
 				{isActive ? "Pause" : "Activate"}
 			</Button>
@@ -49,18 +50,18 @@ const PausePromoModal = ({ id, isActive, fetchData }: PausePromoModalProps) => {
 					center: true,
 					bodyClass: "dark-sign-up",
 				}}>
-				<div className="text-center py-3 px-2">
-					<h5 className="fw-bold mb-3">
+				<div className='text-center py-3 px-2'>
+					<h5 className='fw-bold mb-3'>
 						{isActive ? "Pause this Promo Code?" : "Activate this Promo Code?"}
 					</h5>
-					<p className="text-muted mb-4">
+					<p className='text-muted mb-4'>
 						Are you sure you want to {isActive ? "pause" : "activate"} this
 						promo?
 					</p>
-					<div className="d-flex justify-content-center gap-3">
+					<div className='d-flex justify-content-center gap-3'>
 						<Button
 							outline
-							color="secondary"
+							color='secondary'
 							onClick={toggle}
 							disabled={loading}>
 							Cancel

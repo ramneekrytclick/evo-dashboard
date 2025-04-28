@@ -16,6 +16,7 @@ import { PromoCodeProps } from "@/Types/Course.type";
 import CreatePromocodeModal from "./CreatePromocodeModal";
 import PausePromoModal from "./PausePromocodeModal";
 import { toast } from "react-toastify";
+import { Trash } from "react-feather";
 
 const PromocodesCards = () => {
 	const [promocodes, setPromocodes] = useState<PromoCodeProps[]>([]);
@@ -128,11 +129,13 @@ const PromocodesCards = () => {
 										<Button
 											color='danger'
 											size='sm'
+											className=' p-2 d-flex  align-items-center justify-content-center'
+											style={{ width: "35px", height: "35px" }}
 											onClick={() => {
 												setSelectedPromoId(promoCode._id || null);
 												setDeleteModalOpen(true);
 											}}>
-											Delete
+											<Trash />
 										</Button>
 									</>
 								)}

@@ -10,7 +10,7 @@ import { Card, CardBody } from "reactstrap";
 
 import DeletePathModal from "./DeletePathModal";
 import Link from "next/link";
-
+import { customTableStyles } from "../Batches/BatchesList";
 const PathCards = () => {
 	const [paths, setPaths] = useState<PathProps[]>([]);
 	const [filterText, setFilterText] = useState("");
@@ -89,20 +89,28 @@ const PathCards = () => {
 		<>
 			<Card>
 				<CardBody>
-					<FilterComponent
-						onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
-							setFilterText(e.target.value)
-						}
-						filterText={filterText}
-					/>
+					<div className='d-flex justify-content-between align-items-center'>
+						<FilterComponent
+							onFilter={(e: React.ChangeEvent<HTMLInputElement>) =>
+								setFilterText(e.target.value)
+							}
+							filterText={filterText}
+						/>
+						<Link
+							className='btn btn-primary'
+							href={"/admin/paths/create-path"}>
+							<i className='fa fa-plus me-2 py-1' /> {"Add Path"}
+						</Link>
+					</div>
 					<div className='table-responsive custom-scrollbar user-datatable mt-3'>
 						<DataTable
 							data={filteredItems}
 							columns={pathTableColumns}
 							striped={true}
 							fixedHeader
-							fixedHeaderScrollHeight='40vh'
+							pagination
 							className='display'
+							customStyles={customTableStyles}
 						/>
 					</div>
 				</CardBody>

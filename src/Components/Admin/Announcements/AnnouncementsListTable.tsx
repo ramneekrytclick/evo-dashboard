@@ -20,8 +20,9 @@ import {
 } from "@/app/api/admin/announcements";
 import CreateAnnouncementModal from "./CreateAnnouncement/CreateAnnouncementModal";
 import { IAnnouncement } from "@/Types/Announcement.type";
-import { Trash2 } from "react-feather";
+import { Trash, Trash2 } from "react-feather";
 import { toast } from "react-toastify";
+import { customTableStyles } from "../Batches/BatchesList";
 
 const AnnouncementsListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -51,7 +52,6 @@ const AnnouncementsListTable = () => {
 			cell: (row) => (
 				<div
 					id={`desc-tooltip-${row._id}`}
-					className='fs-4'
 					style={{
 						maxWidth: "250px",
 						whiteSpace: "nowrap",
@@ -112,12 +112,13 @@ const AnnouncementsListTable = () => {
 			cell: (row) => (
 				<Button
 					color='danger'
-					size='sm'
+					className=' p-2 d-flex  align-items-center justify-content-center'
+					style={{ width: "35px", height: "35px" }}
 					onClick={() => {
 						setAnnouncementToDelete(row);
 						toggleDeleteModal();
 					}}>
-					<Trash2 size={18} />
+					<Trash size={18} />
 				</Button>
 			),
 		},
@@ -177,6 +178,7 @@ const AnnouncementsListTable = () => {
 							columns={announcementTableColumns}
 							striped
 							pagination
+							customStyles={customTableStyles}
 						/>
 					)}
 				</div>

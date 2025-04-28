@@ -24,10 +24,10 @@ const CreateCategoryModal = ({
 		<>
 			<Button
 				color='primary'
-				className='me-2'
+				className='w-100 h-100  px-2 p-3'
 				onClick={toggle}>
 				{/* <i className="fa fa-plus me-2" /> */}
-				<i className='fa fa-plus me-2 py-1' /> Add Category
+				<i className='fa fa-plus me-2 px-2 ' /> Add Category
 			</Button>
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>

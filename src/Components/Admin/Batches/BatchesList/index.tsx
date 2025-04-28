@@ -192,7 +192,8 @@ const BatchesList = () => {
 							<Button
 								color='success'
 								size='sm'
-								className='p-2'
+								className=' p-2 d-flex  align-items-center justify-content-center'
+								style={{ width: "35px", height: "35px" }}
 								onClick={(e) => {
 									e.stopPropagation();
 									setBatchToDelete(row); // reuse batchToDelete
@@ -203,7 +204,8 @@ const BatchesList = () => {
 							<Button
 								color='danger'
 								size='sm'
-								className='p-2'
+								className=' p-2 d-flex  align-items-center justify-content-center'
+								style={{ width: "35px", height: "35px" }}
 								id={`delete-btn-${row._id}`}
 								disabled={isActive}
 								onClick={(e) => {

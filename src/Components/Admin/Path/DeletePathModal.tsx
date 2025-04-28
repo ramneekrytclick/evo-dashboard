@@ -1,11 +1,12 @@
 import { deletePathConfirmTitle, ImagePath } from "@/Constant";
 import React, { useState } from "react";
-import { Button } from "reactstrap";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 import CommonModal from "@/CommonComponent/CommonModal";
 import Image from "next/image";
 import { deletePath } from "@/app/api/admin/path";
 import { toast } from "react-toastify";
+import { Trash, Trash2 } from "react-feather";
 
 const DeletePathModal = ({
 	id,
@@ -39,36 +40,43 @@ const DeletePathModal = ({
 		<>
 			<Button
 				color='danger'
-				className='me-2 px-2'
+				className=' p-2 d-flex  align-items-center justify-content-center'
+				style={{ width: "35px", height: "35px" }}
 				onClick={toggle}>
-				<i className='icon-trash' />
+				<Trash size={18} />
 			</Button>
-			<CommonModal modalData={ModalData}>
+			<Modal
+				isOpen={modal}
+				toggle={toggle}>
 				<div className='modal-toggle-wrapper text-center'>
-					<h3 className='mb-3'>{deletePathConfirmTitle}</h3>
-					<Image
-						width={100}
-						height={100}
-						src={`${ImagePath}/gif/danger.gif`}
-						alt='error'
-					/>
-					<div className='block text-center'>
-						<Button
-							outline
-							className='me-2'
-							color='danger'
-							onClick={toggle}>
-							Close
-						</Button>
-						<Button
-							color='danger'
-							className='ms-2'
-							onClick={handleDelete}>
-							Confirm
-						</Button>
-					</div>
+					<ModalHeader>
+						<h3 className=''>{deletePathConfirmTitle}</h3>
+					</ModalHeader>
+					<ModalBody>
+						<p>
+							Are you sure you want to delete this path?
+							<br />
+						</p>
+					</ModalBody>
+					<ModalFooter>
+						<div className='block text-center'>
+							<Button
+								outline
+								className='me-2'
+								color='danger'
+								onClick={toggle}>
+								Close
+							</Button>
+							<Button
+								color='danger'
+								className='ms-2'
+								onClick={handleDelete}>
+								Confirm
+							</Button>
+						</div>
+					</ModalFooter>
 				</div>
-			</CommonModal>
+			</Modal>
 		</>
 	);
 };

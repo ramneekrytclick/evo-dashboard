@@ -20,6 +20,7 @@ import {
 } from "reactstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { customTableStyles } from "../Batches/BatchesList";
 
 interface Transaction {
 	_id: string;
@@ -165,6 +166,7 @@ const TransactionsData = ({
 									striped
 									highlightOnHover
 									onRowClicked={handleRowClick}
+									customStyles={customTableStyles}
 								/>
 							)}
 						</CardBody>

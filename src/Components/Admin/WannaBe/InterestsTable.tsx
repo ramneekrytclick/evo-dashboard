@@ -1,8 +1,5 @@
 "use client";
-import {
-	deleteWannaBeInterest,
-	getWannaBeInterests,
-} from "@/app/api/admin/wannabe";
+import { deleteWannaBeInterest } from "@/app/api/admin/wannabe";
 import { useEffect, useState } from "react";
 import {
 	Button,
@@ -10,7 +7,6 @@ import {
 	Card,
 	CardBody,
 	CardFooter,
-	CardHeader,
 	Col,
 	Modal,
 	ModalBody,
@@ -18,10 +14,9 @@ import {
 	ModalHeader,
 	Row,
 } from "reactstrap";
-import { FaTrash } from "react-icons/fa";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
-import { Edit2, Trash, Trash2 } from "react-feather";
+import { Edit2, Trash } from "react-feather";
 import UpdateInterestModal from "./UpdateModal";
 
 const InterestsTable = ({
@@ -83,21 +78,20 @@ const InterestsTable = ({
 								</div>
 							)}
 							<CardBody>
+								<h6 className='text-dark fw-medium'>{interest.title}</h6>
 								{interest.description && (
 									<p className='text-secondary small mb-2'>
 										{interest.description}
 									</p>
 								)}
-								<p className='text-muted small mb-0'>
-									Created: {new Date(interest.createdAt).toLocaleString()}
-								</p>
 							</CardBody>
 							<CardFooter className='bg-transparent border-top-0 text-end d-flex justify-content-end gap-2'>
 								<ButtonGroup>
 									<Button
 										color='success'
 										size='sm'
-										className='p-2'
+										className=' p-2 d-flex  align-items-center justify-content-center'
+										style={{ width: "35px", height: "35px" }}
 										onClick={() => {
 											setInterestToUpdate(interest);
 											setUpdateModalOpen(true);
@@ -107,7 +101,8 @@ const InterestsTable = ({
 									<Button
 										color='danger'
 										size='sm'
-										className='p-2'
+										className=' p-2 d-flex  align-items-center justify-content-center'
+										style={{ width: "35px", height: "35px" }}
 										onClick={() => openModal(interest)}>
 										<Trash size={16} />
 									</Button>

@@ -23,16 +23,16 @@ const CreateBatchModal = ({
 	return (
 		<>
 			<Button
-				color="success"
-				className="btn btn-primary"
+				color='success'
+				className='btn btn-primary'
 				onClick={toggle}>
 				{/* <i className="fa fa-plus me-2" /> */}
-				<i className="fa fa-plus me-2 py-1" /> Create New Batch
+				<i className='fa fa-plus me-2 py-1' /> Add Batch
 			</Button>
 			{/* <i className="icon-pencil-alt" onClick={toggle}/> */}
 			<CommonModal modalData={ModalData}>
-				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createBatchTitle}</h3>
+				<div className='modal-toggle-wrapper'>
+					<h3 className='mb-3'>{createBatchTitle}</h3>
 					{/* <p>{"Fill in your information below to continue."}</p> */}
 					<CreateBatchForm
 						fetchData={fetchData}

@@ -13,17 +13,7 @@ const PathPageContainer = () => {
 				title={PathsTitle}
 			/>
 			<Container fluid>
-				<Row>
-					<Col className="box-col-8">
-						<Card>
-							<CardBody>
-								<PathsHeader />
-								<PathCards />
-							</CardBody>
-							<Row></Row>
-						</Card>
-					</Col>
-				</Row>
+				<PathCards />
 			</Container>
 		</>
 	);

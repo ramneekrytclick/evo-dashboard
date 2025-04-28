@@ -46,20 +46,23 @@ const WannaBeContainer: React.FC = () => {
 			<Container fluid>
 				<Row>
 					<Col sm={12}>
-						<CardBody>
-							<div className="list-product-header">
-								<Button
-									color="primary"
-									onClick={toggleModal}>
-									<i className="fa fa-plus me-2" />
-									Create WannaBeInterest
-								</Button>
-							</div>
-							<InterestsTable
-								fetchData={fetchData}
-								interests={interests}
-							/>
-						</CardBody>
+						<Card>
+							<CardBody>
+								<div className='list-product-header'>
+									<Button
+										color='primary'
+										className='py-2 px-4'
+										onClick={toggleModal}>
+										<i className='fa fa-plus me-2' />
+										Add WannaBeInterest
+									</Button>
+								</div>
+								<InterestsTable
+									fetchData={fetchData}
+									interests={interests}
+								/>
+							</CardBody>
+						</Card>
 					</Col>
 				</Row>
 			</Container>
