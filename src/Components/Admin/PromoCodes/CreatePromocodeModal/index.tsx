@@ -24,15 +24,15 @@ const CreatePromocodeModal = ({ fetchData }: CreatePromocodeModalProps) => {
 	return (
 		<>
 			<Button
-				color="primary"
-				className="me-2 px-2"
+				color='primary'
+				className='w-100'
 				onClick={toggle}>
-				<i className="fa fa-plus me-2 py-1" />
-				Create New Promocode
+				<i className='fa fa-plus me-2 py-1' />
+				Add Promocode
 			</Button>
 			<CommonModal modalData={ModalData}>
-				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createPromoCodeTitle}</h3>
+				<div className='modal-toggle-wrapper'>
+					<h3 className='mb-3'>{createPromoCodeTitle}</h3>
 					<CreatePromocodeForm
 						fetchData={fetchData}
 						toggle={toggle}

@@ -27,6 +27,7 @@ import { respondToTicket } from "@/app/api/admin/support";
 import { useAuth } from "@/app/AuthProvider";
 import { toast } from "react-toastify";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import { Trash } from "react-feather";
 
 const TicketTable = () => {
 	const auth = useAuth();
@@ -182,11 +183,13 @@ const TicketTable = () => {
 				<Button
 					color='danger'
 					size='sm'
+					className=' p-2 d-flex  align-items-center justify-content-center'
+					style={{ width: "35px", height: "35px" }}
 					onClick={() => {
 						setTicketToDelete(row);
 						toggleDeleteModal();
 					}}>
-					Delete
+					<Trash size={16} />
 				</Button>
 			),
 			ignoreRowClick: true,

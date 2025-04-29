@@ -33,7 +33,6 @@ interface CourseCardProps {
 	subcategories: any[];
 	wannaBeInterests: any[];
 	onDelete: (id: string) => void; // Optional delete callback
-	reviews: Review[];
 }
 
 const CourseCard = ({
@@ -43,7 +42,6 @@ const CourseCard = ({
 	subcategories,
 	wannaBeInterests,
 	onDelete,
-	reviews,
 }: CourseCardProps) => {
 	const router = useRouter();
 	const [deleteModal, setDeleteModal] = useState(false);
@@ -93,7 +91,7 @@ const CourseCard = ({
 			className='mb-4'>
 			<Card
 				className='border-0 shadow-md rounded-4 overflow-auto'
-				style={{ height: "650px" }}>
+				style={{ minHeight: "650px" }}>
 				<div className='position-relative'>
 					<CardImg
 						top
@@ -112,59 +110,74 @@ const CourseCard = ({
 						</Badge>
 					)}
 				</div>
+				<Link href={`/admin/course/${data._id}`}>
+					<CardBody className='text-center p-3 d-flex flex-column align-items-center'>
+						<Link
+							className='fw-semibold text-dark mb-2'
+							href={`/admin/course/${data._id}`}>
+							<CardTitle
+								tag='h4'
+								className='mb-2 text-wrap'>
+								{data.title}
+							</CardTitle>
+						</Link>
 
-				<CardBody className='text-start p-4 d-flex flex-column'>
-					<Link
-						className='fw-semibold text-dark mb-2'
-						href={`/admin/course/${data._id}`}>
-						<CardTitle
-							tag='h4'
-							className='mb-2 text-wrap'>
-							{data.title}
-						</CardTitle>
-					</Link>
+						<div className='mb-2'>
+							<Badge
+								color='light'
+								pill
+								className='me-2 text-primary'>
+								{categoryName}
+							</Badge>
+							<Badge
+								color='light'
+								pill
+								className='me-2 text-success'>
+								{subcategoryName}
+							</Badge>
+						</div>
 
-					<div className='mb-2'>
-						<Badge
-							color='primary'
-							className='me-2'>
-							{categoryName}
-						</Badge>
-						<Badge color='success'>{subcategoryName}</Badge>
-					</div>
+						<div className='d-flex justify-content-between align-items-center mb-3'>
+							<div className='text-muted small'>
+								<strong>Interests:</strong>{" "}
+								{mappedWannaBe.map((w, i) => (
+									<Badge
+										key={i}
+										color='light'
+										className='me-1 text-danger border'>
+										{w}
+									</Badge>
+								))}
+							</div>
+							<CourseModal
+								values={data}
+								fetchData={fetchData}
+								iconOnly
+							/>
+						</div>
 
-					<div className='d-flex justify-content-between align-items-center mb-3'>
-						<div className='text-muted small'>
-							<strong>Interests:</strong>{" "}
-							{mappedWannaBe.map((w, i) => (
+						<CardText className='text-muted small mb-3 flex-grow-1'>
+							{data.description || "-"}
+						</CardText>
+						<div className='d-flex flex-wrap align-items-center justify-content-around gap-2 mb-3'>
+							{data.tags.map((tag, index) => (
 								<Badge
-									key={i}
-									color='light'
-									className='me-1 text-dark border'>
-									{w}
+									key={index}
+									color='primary'
+									pill>
+									{tag}
 								</Badge>
 							))}
 						</div>
-						<CourseModal
-							values={data}
-							fetchData={fetchData}
-							iconOnly
-						/>
-					</div>
-
-					<CardText className='text-muted small mb-3 flex-grow-1'>
-						{data.description || "-"}
-					</CardText>
-
-					<Link href={`/admin/course/${data._id}`}>
-						<div className='d-flex align-items-center mb-3'>
-							<span className='small text-dark'>
-								Created by <strong>{data.createdBy?.trim()}</strong>
-							</span>
-						</div>
-					</Link>
-				</CardBody>
-
+						<Link href={`/admin/course/${data._id}`}>
+							<div className='d-flex align-items-center mb-3'>
+								<span className='small text-dark'>
+									Created by <strong>{data.createdBy?.trim()}</strong>
+								</span>
+							</div>
+						</Link>
+					</CardBody>
+				</Link>
 				<CardFooter>
 					<div className='d-flex justify-content-between align-items-center mb-3'>
 						<div className='fs-5 fw-semibold text-dark'>
@@ -174,22 +187,18 @@ const CourseCard = ({
 							)}
 						</div>
 					</div>
-					<div className='d-flex gap-2 justify-content-between align-items-center flex-wrap'>
+					<div className='d-flex gap-3 justify-content-center align-items-center flex-wrap'>
 						<Link
 							href={`/admin/course/${data._id}`}
 							className='btn btn-outline-primary'>
-							View Lessons
+							Lessons
 						</Link>
 						<Button
 							color='primary'
 							onClick={goToBatches}>
-							View Batches
+							Batches
 						</Button>
-						<ViewReviewsModal
-							reviews={reviews}
-							courseId={data._id || ""}
-							fetchReviews={fetchData}
-						/>
+						<ViewReviewsModal courseId={data._id || ""} />
 						<ButtonGroup>
 							<Button
 								color='success'
@@ -212,8 +221,6 @@ const CourseCard = ({
 				</CardFooter>
 			</Card>
 
-			{/* Delete Confirmation Modal */}
-			{/* Delete Confirmation Modal */}
 			<Modal
 				isOpen={deleteModal}
 				color='danger'

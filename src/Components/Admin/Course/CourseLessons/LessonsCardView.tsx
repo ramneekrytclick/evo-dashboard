@@ -29,7 +29,9 @@ const LessonsCardView = ({
 
 	return (
 		<>
-			<CardBody style={{ height: "650px", overflowY: "auto" }}>
+			<CardBody
+				className='bg-light'
+				style={{ height: "650px", overflowY: "auto" }}>
 				<Row className='g-3'>
 					{lessons.map((lesson) => (
 						<Col

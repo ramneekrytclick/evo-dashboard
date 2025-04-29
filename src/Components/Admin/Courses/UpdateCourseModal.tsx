@@ -106,7 +106,7 @@ const UpdateCourseModal = ({
 						onChange={(e) => handleChange("description", e.target.value)}
 					/>
 				</FormGroup>
-				<FormGroup>
+				{/* <FormGroup>
 					<Label>What You Will Learn</Label>
 					<Input
 						type='textarea'
@@ -129,7 +129,7 @@ const UpdateCourseModal = ({
 						value={formData.timing}
 						onChange={(e) => handleChange("timing", e.target.value)}
 					/>
-				</FormGroup>
+				</FormGroup> */}
 				<FormGroup>
 					<Label>Category</Label>
 					<Input

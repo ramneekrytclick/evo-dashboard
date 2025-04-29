@@ -8,12 +8,19 @@ import {
 	ModalFooter,
 	Badge,
 	Input,
+	Spinner,
+	ButtonGroup,
 } from "reactstrap";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { updateReview, deleteReview } from "@/app/api/admin/course"; // Assuming you have APIs
+import {
+	updateReview,
+	deleteReview,
+	getAllReviews,
+} from "@/app/api/admin/course"; // Assuming you have APIs
 import AddReviewModal from "./AddReviewModal";
 import { getReviewsByCourseSlug } from "@/app/api/admin/review";
+import { Edit2, Trash } from "react-feather";
 
 export interface Review {
 	_id: string;
@@ -27,32 +34,36 @@ export interface Review {
 }
 
 interface ViewReviewsModalProps {
-	reviews: Review[];
 	courseId: string;
-	fetchReviews: () => void;
 }
 
-const ViewReviewsModal = ({
-	reviews = [],
-	courseId,
-	fetchReviews,
-}: ViewReviewsModalProps) => {
+const ViewReviewsModal = ({ courseId }: ViewReviewsModalProps) => {
 	const [modal, setModal] = useState(false);
 	const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
 	const [editReview, setEditReview] = useState<Review | null>(null);
 	const [deleteId, setDeleteId] = useState<string | null>(null);
+	const [loading, setLoading] = useState(false);
+	const [allReviews, setAllReviews] = useState<Review[]>([]);
 
 	const toggle = () => {
 		setModal(!modal);
-		fetchReviews();
 	};
-
+	const fetchReviews = async () => {
+		try {
+			setLoading(true);
+			const response = await getAllReviews();
+			setAllReviews(response.reviews);
+		} catch (error) {
+			toast.error("Error fetching reviews");
+		}
+		setLoading(false);
+	};
 	useEffect(() => {
-		const filtered = reviews.filter(
+		const filtered = allReviews.filter(
 			(review) => review.course?._id === courseId
 		);
 		setFilteredReviews(filtered);
-	}, [reviews, courseId]);
+	}, [allReviews, courseId]);
 
 	const handleDelete = async () => {
 		if (!deleteId) return;
@@ -80,12 +91,16 @@ const ViewReviewsModal = ({
 		}
 	};
 
+	useEffect(() => {
+		fetchReviews();
+	}, []);
+
 	return (
 		<>
 			<Button
 				color='warning'
 				onClick={toggle}>
-				View Reviews
+				Reviews
 			</Button>
 			<Modal
 				isOpen={modal}
@@ -93,47 +108,59 @@ const ViewReviewsModal = ({
 				size='lg'>
 				<ModalHeader toggle={toggle}>Course Reviews</ModalHeader>
 				<ModalBody style={{ maxHeight: "500px", overflowY: "auto" }}>
-					{filteredReviews.length === 0 ? (
-						<p className='text-muted'>No reviews yet.</p>
+					{loading ? (
+						<div className='d-flex align-items-center justify-content-center'>
+							Loading...
+							<Spinner />
+						</div>
 					) : (
-						filteredReviews.map((review) => (
-							<div
-								key={review._id}
-								className='border-bottom pb-3 mb-3'>
-								<div className='d-flex justify-content-between'>
-									<span className='text-muted fs-6'>
-										{review.name || "Unknown"}
-									</span>
-									<div>
-										<Button
-											size='sm'
-											color='info'
-											className='me-2'
-											onClick={() => setEditReview(review)}>
-											Edit
-										</Button>
-										<Button
-											size='sm'
-											color='danger'
-											onClick={() => setDeleteId(review._id)}>
-											Delete
-										</Button>
+						<>
+							{filteredReviews.length === 0 ? (
+								<p className='text-muted'>No reviews yet.</p>
+							) : (
+								filteredReviews.map((review) => (
+									<div
+										key={review._id}
+										className='border-bottom pb-3 mb-3'>
+										<div className='d-flex justify-content-between'>
+											<span className='text-muted fs-6'>
+												{review.name || "Unknown"}
+											</span>
+											<ButtonGroup>
+												<Button
+													color='success'
+													size='sm'
+													className=' p-2 d-flex  align-items-center justify-content-center'
+													style={{ width: "35px", height: "35px" }}
+													onClick={() => setDeleteId(review._id)}>
+													<Edit2 size={16} />
+												</Button>
+												<Button
+													color='danger'
+													size='sm'
+													className=' p-2 d-flex  align-items-center justify-content-center'
+													style={{ width: "35px", height: "35px" }}
+													onClick={() => setDeleteId(review._id)}>
+													<Trash size={16} />
+												</Button>
+											</ButtonGroup>
+										</div>
+										<h6 className='mb-2 fw-medium'>{review.comment}</h6>
+										<div className='d-flex align-items-center'>
+											{new Array(review.rating).fill("").map((_, idx) => (
+												<div
+													key={idx}
+													className='fa fa-star me-1 text-warning'
+												/>
+											))}
+											<small className='text-muted ms-2'>
+												{new Date(review.createdAt).toLocaleDateString()}
+											</small>
+										</div>
 									</div>
-								</div>
-								<h6 className='mb-2 fw-medium'>{review.comment}</h6>
-								<div className='d-flex align-items-center'>
-									{new Array(review.rating).fill("").map((_, idx) => (
-										<div
-											key={idx}
-											className='fa fa-star me-1 text-warning'
-										/>
-									))}
-									<small className='text-muted ms-2'>
-										{new Date(review.createdAt).toLocaleDateString()}
-									</small>
-								</div>
-							</div>
-						))
+								))
+							)}
+						</>
 					)}
 				</ModalBody>
 				<ModalFooter>

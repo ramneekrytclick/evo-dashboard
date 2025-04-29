@@ -35,98 +35,99 @@ const LessonCard = ({
 
 	return (
 		<>
-			<Card className='shadow-sm h-100 border-0 rounded-4'>
-				<CardBody className='p-4 d-flex flex-column justify-content-between'>
-					{/* Header */}
-					<div className='d-flex justify-content-between align-items-start'>
-						<div className='me-2'>
-							<Link href={`/admin/course/${lesson.course}/${lesson._id}`}>
+			<Link href={`/admin/course/${lesson.course}/${lesson._id}`}>
+				<Card
+					className=' h-100 border-0 rounded-4'
+					style={{ cursor: "pointer" }}>
+					<CardBody className='p-4 d-flex flex-column justify-content-between'>
+						{/* Header */}
+						<div className='d-flex justify-content-between align-items-start w-100'>
+							<div className='me-2'>
 								<Link href={`/admin/course/${lesson.course}/${lesson._id}`}>
-									<h5 className='fw-bold mb-1'>
-										{lesson.title.length > 20
-											? lesson.title.substring(0, 20) + "..."
-											: lesson.title}
-									</h5>
+									<Link href={`/admin/course/${lesson.course}/${lesson._id}`}>
+										<h5 className='fw-bold mb-1'>
+											{lesson.title.length > 20
+												? lesson.title.substring(0, 20) + "..."
+												: lesson.title}
+										</h5>
+									</Link>
 								</Link>
-							</Link>
-							<p className='text-muted mb-3 text-wrap'>
-								{lesson.content.length > 20
-									? lesson.content.substring(0, 40) + "..."
-									: lesson.content}
-							</p>
-						</div>
-						<Button
-							color='light'
-							size='sm'
-							onClick={toggleModal}
-							className='p-1 rounded-circle'>
-							<Trash
-								className='text-danger'
-								size={18}
-							/>
-						</Button>
-					</div>
-
-					{/* Watch Video */}
-					{lesson.videoUrl && (
-						<Button
-							outline
-							color='primary'
-							size='sm'
-							className='w-100 d-flex align-items-center justify-content-center gap-2 mb-3'
-							tag={Link}
-							href={lesson.videoUrl}
-							target='_blank'>
-							<Youtube size={16} />
-							Watch Video
-						</Button>
-					)}
-
-					{/* Quiz & Assignment Buttons */}
-					<div className='d-flex justify-content-between align-items-center gap-2 mb-3 w-full'>
-						<Button
-							color='info'
-							size='sm'
-							className='w-100'
-							tag={Link}
-							href={`/admin/course/${lesson.course}/${lesson._id}/quiz`}>
-							Quiz
-						</Button>
-						<Button
-							color='warning'
-							size='sm'
-							className='w-100'
-							tag={Link}
-							href={`/admin/course/${lesson.course}/${lesson._id}/assignment`}>
-							Assignment
-						</Button>
-					</div>
-
-					{/* Resources */}
-					<div>
-						<strong className='d-block mb-1'>Resources:</strong>
-						{lesson.resources?.length > 0 ? (
-							<div className='d-flex flex-wrap gap-2'>
-								{lesson.resources.map((url, index) => (
-									<Button
-										key={index}
-										color='outline-secondary'
-										size='sm'
-										tag={Link}
-										href={url}
-										target='_blank'
-										className='d-flex align-items-center gap-1'>
-										<FileText size={14} /> Resource {index + 1}
-									</Button>
-								))}
+								<p className='text-muted mb-3 text-wrap'>
+									{lesson.content.length > 20
+										? lesson.content.substring(0, 40) + "..."
+										: lesson.content}
+								</p>
 							</div>
-						) : (
-							<p className='text-muted small mb-0'>No resources available.</p>
-						)}
-					</div>
-				</CardBody>
-			</Card>
+							<Button
+								color='danger'
+								size='sm'
+								className=' p-2 d-flex  align-items-center justify-content-center'
+								style={{ width: "35px", height: "35px" }}
+								onClick={toggleModal}>
+								<Trash size={16} />
+							</Button>
+						</div>
 
+						{/* Watch Video */}
+						{lesson.videoUrl && (
+							<Button
+								outline
+								color='primary'
+								size='sm'
+								className='w-100 d-flex align-items-center justify-content-center gap-2 mb-3'
+								tag={Link}
+								href={lesson.videoUrl}
+								target='_blank'>
+								<Youtube size={16} />
+								Watch Video
+							</Button>
+						)}
+
+						{/* Quiz & Assignment Buttons */}
+						<div className='d-flex justify-content-between align-items-center gap-2 mb-3 w-full'>
+							<Button
+								color='info'
+								size='sm'
+								className='w-100'
+								tag={Link}
+								href={`/admin/course/${lesson.course}/${lesson._id}/quiz`}>
+								Quiz
+							</Button>
+							<Button
+								color='warning'
+								size='sm'
+								className='w-100'
+								tag={Link}
+								href={`/admin/course/${lesson.course}/${lesson._id}/assignment`}>
+								Assignment
+							</Button>
+						</div>
+
+						{/* Resources */}
+						<div>
+							<strong className='d-block mb-1'>Resources:</strong>
+							{lesson.resources?.length > 0 ? (
+								<div className='d-flex flex-wrap gap-2'>
+									{lesson.resources.map((url, index) => (
+										<Button
+											key={index}
+											color='outline-secondary'
+											size='sm'
+											tag={Link}
+											href={url}
+											target='_blank'
+											className='d-flex align-items-center gap-1'>
+											<FileText size={14} /> Resource {index + 1}
+										</Button>
+									))}
+								</div>
+							) : (
+								<p className='text-muted small mb-0'>No resources available.</p>
+							)}
+						</div>
+					</CardBody>
+				</Card>
+			</Link>
 			{/* Delete Confirmation Modal */}
 			<Modal
 				isOpen={modalOpen}

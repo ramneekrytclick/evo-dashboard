@@ -66,10 +66,10 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 					title={course.title}
 				/>
 				<Card
-					color='light-subtle'
-					className='p-2'>
-					<CardHeader className='bg-light-subtle d-flex justify-content-between align-items-center'>
-						<h4 className='mb-0 text-dark'>Course Lessons</h4>
+					color='light'
+					className='p-2 shadow-lg'>
+					<CardHeader className='bg-light d-flex justify-content-between align-items-center'>
+						<h4 className='mb-0 text-dark'>Lessons</h4>
 						<Button
 							color='primary'
 							onClick={() => setShowCreateModal(true)}>

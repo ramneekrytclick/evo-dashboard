@@ -13,13 +13,7 @@ import {
 } from "@/app/api/cc";
 import { Review } from "./ReviewModal";
 
-const CourseCards = ({
-	reviews,
-	fetchReviews,
-}: {
-	reviews: Review[];
-	fetchReviews: () => void;
-}) => {
+const CourseCards = () => {
 	const [courses, setCourses] = useState<CourseProps[]>([]);
 	const [categories, setCategories] = useState<any[]>([]);
 	const [subcategories, setSubcategories] = useState<any[]>([]);
@@ -75,7 +69,6 @@ const CourseCards = ({
 							categories={categories}
 							subcategories={subcategories}
 							wannaBeInterests={wannaBeInterests}
-							reviews={reviews}
 							onDelete={handleDelete}
 						/>
 					);

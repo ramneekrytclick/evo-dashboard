@@ -2,6 +2,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
+	UncontrolledDropdown,
+	DropdownToggle,
+	DropdownMenu,
+	DropdownItem,
+} from "reactstrap";
+import { MoreVertical } from "react-feather";
+import {
 	Card,
 	Col,
 	Container,
@@ -148,7 +155,8 @@ const UserProfile = ({ id }: { id: string }) => {
 			<Card className='p-4'>
 				<Row className=''>
 					<Col
-						md={3}
+						md={5}
+						xl={3}
 						className='text-center'>
 						<Image
 							src={
@@ -163,10 +171,13 @@ const UserProfile = ({ id }: { id: string }) => {
 							onClick={togglePhotoModal}
 						/>
 					</Col>
-					<Col md={8}>
-						<h4 className='fw-bold text-uppercase'>{profile.name}</h4>
+
+					<Col
+						md={5}
+						xl={7}>
+						<h4 className='fw-bold text-uppercase mt-3'>{profile.name}</h4>
 						<p className='text-muted'>{profile.role}</p>
-						<Row className='mb-2'>
+						<Row className='mb-2 fw-light fs-6'>
 							{profile.email && (
 								<Col md={6}>
 									<strong>Email:</strong> {profile.email}
@@ -349,6 +360,37 @@ const UserProfile = ({ id }: { id: string }) => {
 								{profile.status}
 							</UncontrolledTooltip>
 						</div>
+						<UncontrolledDropdown>
+							<DropdownToggle
+								tag='button'
+								className='btn btn-light btn-icon'
+								style={{ boxShadow: "none", border: "none" }}>
+								<MoreVertical size={20} />
+							</DropdownToggle>
+							<DropdownMenu end>
+								{!profile.isApproved && profile.role !== "Student" && (
+									<DropdownItem onClick={toggleApproveModal}>
+										Approve
+									</DropdownItem>
+								)}
+								<DropdownItem
+									onClick={() =>
+										openStatusChangeModal(
+											profile.status === "Active" ? "Inactive" : "Active"
+										)
+									}>
+									{profile.status === "Active" ? "Deactivate" : "Activate"}
+								</DropdownItem>
+								<DropdownItem onClick={() => openStatusChangeModal("Banned")}>
+									Ban
+								</DropdownItem>
+								{isManager && (
+									<DropdownItem onClick={openAssignModal}>
+										👥 Assign Mentors
+									</DropdownItem>
+								)}
+							</DropdownMenu>
+						</UncontrolledDropdown>
 					</Col>
 				</Row>
 			</Card>
