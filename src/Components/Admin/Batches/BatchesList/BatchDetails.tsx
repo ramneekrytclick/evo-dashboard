@@ -152,6 +152,13 @@ const BatchDetails = ({
 							</Col>
 						</Row>
 					</CardBody>
+					<Link href={`/admin/batches/slug/${batch.slug}`}>
+						<Button
+							color='primary'
+							className='rounded-pill'>
+							View Batch
+						</Button>
+					</Link>
 				</Card>
 			</ModalBody>
 		</Modal>

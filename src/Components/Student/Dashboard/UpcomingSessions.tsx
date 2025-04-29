@@ -65,7 +65,7 @@ const UpcomingSessions = ({
 			{loading ? (
 				<div
 					className='d-flex justify-content-center align-items-center'
-					style={{ height: "150px" }}>
+					style={{ height: "170px" }}>
 					<Spinner color='primary' />
 				</div>
 			) : sessions.length === 0 ? (
@@ -129,7 +129,7 @@ const UpcomingSessions = ({
 								<Card
 									className='bg-white text-dark text-center flex-shrink-0 shadow-sm border'
 									style={{
-										height: "230px",
+										minHeight: "260px",
 										width: "200px",
 										overflow: "hidden",
 										scrollSnapAlign: "start",

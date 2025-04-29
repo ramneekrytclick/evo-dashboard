@@ -94,8 +94,10 @@ export interface BatchProps {
 		_id: string;
 		name: string;
 		email: string;
+		photo: string;
 	};
 	chatMessages?: ChatMessage[];
+	slug: string;
 	scheduledSessions?: {
 		_id: string;
 		date: string;
