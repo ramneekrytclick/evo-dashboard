@@ -143,16 +143,18 @@ const ReviewsContainer = () => {
 			cell: (row) => (
 				<ButtonGroup>
 					<Button
+						color='success'
 						size='sm'
-						color='primary'
-						className='p-2'
+						className=' p-2 d-flex  align-items-center justify-content-center'
+						style={{ width: "35px", height: "35px" }}
 						onClick={() => openEditModal(row)}>
 						<Edit2 size={14} />
 					</Button>
 					<Button
 						size='sm'
 						color='danger'
-						className='p-2'
+						className=' p-2 d-flex  align-items-center justify-content-center'
+						style={{ width: "35px", height: "35px" }}
 						onClick={() => openDeleteModal(row)}>
 						<Trash size={14} />
 					</Button>

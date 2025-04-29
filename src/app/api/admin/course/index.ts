@@ -70,12 +70,12 @@ export const updateReview = async (
 	rating: number
 ) => {
 	const response = await apiClient.put(`/admin/admin/${id}`, {
-		comment,
 		rating,
+		comment,
 	});
 	return response.data;
 };
 export const deleteReview = async (id: string) => {
-	const response = await apiClient.delete(`/reviews/${id}`);
+	const response = await apiClient.delete(`/admin/admin/${id}`);
 	return response.data;
 };

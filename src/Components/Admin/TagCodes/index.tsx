@@ -12,6 +12,7 @@ import {
 	Form,
 	Row,
 	Col,
+	ButtonGroup,
 } from "reactstrap";
 import DataTable from "react-data-table-component";
 import { toast } from "react-toastify";
@@ -22,6 +23,7 @@ import {
 	updateTagCode,
 	deleteTagCode,
 } from "@/app/api/admin/tag-codes";
+import { Code, Edit2, Trash } from "react-feather";
 
 const TagCodesContainer = () => {
 	const [data, setData] = useState<any[]>([]);
@@ -86,36 +88,52 @@ const TagCodesContainer = () => {
 			name: "Created",
 			selector: (row: any) => new Date(row.createdAt).toLocaleDateString(),
 			sortable: true,
+			center: true,
+		},
+		{
+			name: "Code",
+			center: true,
+			selector: (row: any) => row.code,
+			sortable: true,
 		},
 		{
 			name: "Actions",
+			right: true,
 			cell: (row: any) => (
 				<div className='d-flex gap-2'>
-					<Button
-						size='sm'
-						color='primary'
-						onClick={() => {
-							setViewedCode(row.code);
-							setViewCodeModal(true);
-						}}>
-						View Code
-					</Button>
-					<Button
-						size='sm'
-						color='warning'
-						onClick={() => {
-							setSelected(row);
-							setForm({ title: row.title, code: row.code });
-							setModal(true);
-						}}>
-						Edit
-					</Button>
-					<Button
-						size='sm'
-						color='danger'
-						onClick={() => handleDelete(row._id)}>
-						Delete
-					</Button>
+					<ButtonGroup>
+						<Button
+							size='sm'
+							className=' p-2 d-flex  align-items-center justify-content-center'
+							style={{ width: "35px", height: "35px" }}
+							color='primary'
+							onClick={() => {
+								setViewedCode(row.code);
+								setViewCodeModal(true);
+							}}>
+							<Code size={16} />
+						</Button>
+						<Button
+							size='sm'
+							className=' p-2 d-flex  align-items-center justify-content-center'
+							style={{ width: "35px", height: "35px" }}
+							color='warning'
+							onClick={() => {
+								setSelected(row);
+								setForm({ title: row.title, code: row.code });
+								setModal(true);
+							}}>
+							<Edit2 size={16} />
+						</Button>
+						<Button
+							size='sm'
+							className=' p-2 d-flex  align-items-center justify-content-center'
+							style={{ width: "35px", height: "35px" }}
+							color='danger'
+							onClick={() => handleDelete(row._id)}>
+							<Trash size={16} />
+						</Button>
+					</ButtonGroup>
 				</div>
 			),
 		},

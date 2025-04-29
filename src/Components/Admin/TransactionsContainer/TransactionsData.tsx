@@ -96,26 +96,24 @@ const TransactionsData = ({
 
 	const columns = [
 		{
-			name: "#",
-			cell: (_row: any, index: number) => index + 1,
-			width: "60px",
-		},
-		{
 			name: "User",
 			selector: (row: any) => row.user?.name || "Guest User",
 			sortable: true,
 		},
 		{
-			name: "Course / Path",
+			name: "Course",
+			center: true,
 			selector: (row: any) => row.course?.title || row.path?.name || "N/A",
 		},
 		{
 			name: "Amount (₹)",
+			center: true,
 			selector: (row: any) => `₹${row.amount}`,
 			sortable: true,
 		},
 		{
 			name: "Status",
+			center: true,
 			cell: (row: any) => (
 				<Badge
 					color={
@@ -131,6 +129,7 @@ const TransactionsData = ({
 		},
 		{
 			name: "Actions",
+			right: true,
 			cell: (row: any) => (
 				<Button
 					color='primary'
@@ -150,8 +149,6 @@ const TransactionsData = ({
 				<Col sm={12}>
 					<Card>
 						<CardBody>
-							<h5 className='mb-4 fw-bold'>Transaction History</h5>
-
 							{loading ? (
 								<div className='text-center'>
 									<Spinner color='primary' />

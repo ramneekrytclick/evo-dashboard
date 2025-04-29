@@ -310,6 +310,12 @@ export const MenuList: MenuItem[] | undefined = [
 				title: "Job Portal",
 			},
 			{
+				path: "/student/transactions",
+				icon: "charts",
+				title: "Transactions",
+				type: "link",
+			},
+			{
 				path: "/student/support/tickets",
 				icon: "support-tickets",
 				title: "Support",

@@ -15,8 +15,9 @@ import {
 	ModalBody,
 	ModalFooter,
 	Input,
+	ButtonGroup,
 } from "reactstrap";
-import { Trash } from "react-feather";
+import { Edit2, Trash } from "react-feather";
 import { CourseProps } from "@/Types/Course.type";
 import CourseModal from "./CourseModal";
 import { useRouter } from "next/navigation";
@@ -189,18 +190,24 @@ const CourseCard = ({
 							courseId={data._id || ""}
 							fetchReviews={fetchData}
 						/>
-						<Button
-							color='danger'
-							size='sm'
-							className='d-flex align-items-center rounded-pill'
-							onClick={toggleDelete}>
-							<Trash size={16} />
-						</Button>
-						<Button
-							color='warning'
-							onClick={toggleUpdateModal}>
-							Update
-						</Button>
+						<ButtonGroup>
+							<Button
+								color='success'
+								size='sm'
+								className=' p-2 d-flex  align-items-center justify-content-center'
+								style={{ width: "35px", height: "35px" }}
+								onClick={toggleUpdateModal}>
+								<Edit2 size={16} />
+							</Button>
+							<Button
+								color='danger'
+								size='sm'
+								className=' p-2 d-flex  align-items-center justify-content-center'
+								style={{ width: "35px", height: "35px" }}
+								onClick={toggleDelete}>
+								<Trash size={16} />
+							</Button>
+						</ButtonGroup>
 					</div>
 				</CardFooter>
 			</Card>
