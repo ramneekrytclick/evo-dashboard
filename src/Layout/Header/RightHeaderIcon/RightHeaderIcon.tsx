@@ -3,6 +3,7 @@ import ResponsiveSearchInput from "./ResponsiveSearchInput/ResponsiveSearchInput
 import Announcements from "./Announcements/Announcements";
 import UserProfile from "./UserProfile/UserProfile";
 import ZoomInOut from "./ZoomInOut/ZoomInOut";
+import DarkMode from "./DarkMode/DarkMode";
 
 const RightHeaderIcon = () => {
 	return (
@@ -11,11 +12,11 @@ const RightHeaderIcon = () => {
 			xl={8}
 			className='nav-right col-auto box-col-6 pull-right right-header p-0 ms-auto'>
 			<ul className='nav-menus'>
-				<ResponsiveSearchInput />
+				{/* <ResponsiveSearchInput /> */}
 				{/* <Language /> */}
 				<ZoomInOut />
 				{/* <HeaderBookmark /> */}
-				{/* <DarkMode /> */}
+				<DarkMode />
 				{/* <HeaderMessage /> */}
 				{/* <HeaderCart /> */}
 				{/* <HeaderCartCourse /> */}

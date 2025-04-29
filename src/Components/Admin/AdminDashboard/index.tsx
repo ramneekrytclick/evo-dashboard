@@ -21,13 +21,14 @@ import { getAllTickets } from "@/app/api/support/support";
 import { getAllJobs } from "@/app/api/admin/jobs";
 import { getBlogs } from "@/app/api/admin/blogs/blog";
 import Link from "next/link";
-import CreateCategoryModal from "../Categories/CreateCategoryModal";
-import CreateSubcategoryModal from "../SubCategories/CreateSubcategoryModal";
-import CreateInterestFormModal from "../WannaBe/CreateInterestFormModal";
-import { createWannaBeInterest } from "@/app/api/admin/wannabe";
 import { useRouter } from "next/navigation";
 import DataTable from "react-data-table-component";
 import MyCardWithIcon from "@/CommonComponent/MyCards/MyCardWithIcon";
+import QuickActions from "./QuickActions";
+import { getTransactions } from "@/app/api/admin/transactions";
+import Transactions from "./Transactions";
+import { getAllCategories, getAllCourses } from "@/app/api/cc";
+import { getCourses } from "@/app/api/admin/course";
 
 interface Analytics {
 	totalUsers: number;
@@ -49,37 +50,41 @@ const AdminDashboardContainer = () => {
 	const [tickets, setTickets] = useState<ListItem[]>([]);
 	const [jobs, setJobs] = useState<ListItem[]>([]);
 	const [blogs, setBlogs] = useState<ListItem[]>([]);
-	const [wannaBeModal, setWannaBeModal] = useState(false);
+	const [transactionData, setTransactionData] = useState<any>();
+	const [coursesData, setCoursesData] = useState<any>();
+	const [categories, setCategories] = useState<any>();
 	const navigation = useRouter();
-	const toggleWannaBeModal = () => {
-		setWannaBeModal(!wannaBeModal);
-	};
-	const handleWannaBeSubmit = async (formData: FormData): Promise<void> => {
-		try {
-			await createWannaBeInterest(formData);
-			fetchData();
-			toast.success("Created Successfully!");
-		} catch (error: any) {
-			console.error("Submission error:", error.message);
-			toast.error("Failed to create Wanna Be Interest! Try Again!");
-		}
-	};
+
 	const fetchData = async () => {
 		setLoading(true);
 		try {
-			const [analytics, userData, ticketData, jobData, blogData] =
-				await Promise.all([
-					getPlatformAnalytics(),
-					getPendingApprovals(),
-					getAllTickets(),
-					getAllJobs(),
-					getBlogs(),
-				]);
+			const [
+				analytics,
+				userData,
+				ticketData,
+				jobData,
+				blogData,
+				transactions,
+				courses,
+				category,
+			] = await Promise.all([
+				getPlatformAnalytics(),
+				getPendingApprovals(),
+				getAllTickets(),
+				getAllJobs(),
+				getBlogs(),
+				getTransactions(),
+				getAllCourses(),
+				getAllCategories(),
+			]);
 			setData(analytics);
 			setUserApprovals(userData);
 			setTickets(ticketData);
 			setJobs(jobData.jobs);
 			setBlogs(blogData.blogs);
+			setTransactionData(transactions.transactions.reverse());
+			setCoursesData(courses.courses);
+			setCategories(category.categories);
 		} catch (error) {
 			console.error(error);
 			toast.error("Failed to load dashboard data. Please try again.");
@@ -94,17 +99,27 @@ const AdminDashboardContainer = () => {
 
 	const renderTable = (
 		data: ListItem[],
-		fields: string[],
+		fields: any[],
 		onRowClicked: (item: ListItem) => void
 	) => {
-		const columns = fields.map((field) => ({
-			name: field,
-			selector: (row: any) =>
-				field.includes(".")
-					? field.split(".").reduce((o, k) => o?.[k], row)
-					: row[field],
-			wrap: true,
-		}));
+		const columns = fields.map((field: any) => {
+			let label = field;
+			let path = field;
+
+			if (typeof field === "object") {
+				label = field.label;
+				path = field.path;
+			}
+
+			return {
+				name: label,
+				selector: (row: any) =>
+					path.includes(".")
+						? path.split(".").reduce((o: any, k: any) => o?.[k], row)
+						: row[path],
+				center: true,
+			};
+		});
 
 		return (
 			<DataTable
@@ -116,21 +131,13 @@ const AdminDashboardContainer = () => {
 				onRowClicked={onRowClicked}
 				customStyles={{
 					headCells: {
-						style: {
-							fontSize: "20px",
-							fontWeight: "bold",
-						},
+						style: { fontSize: "20px", fontWeight: "bold" },
 					},
 					rows: {
-						style: {
-							fontSize: "15px",
-							fontWeight: "normal",
-						},
+						style: { fontSize: "15px", fontWeight: "normal" },
 					},
 					headRow: {
-						style: {
-							backgroundColor: "#f8f9fa",
-						},
+						style: { backgroundColor: "#f8f9fa" },
 					},
 					pagination: {
 						style: {
@@ -143,6 +150,50 @@ const AdminDashboardContainer = () => {
 			/>
 		);
 	};
+	const tables = [
+		{
+			title: "New User Approvals",
+			data: userApprovals || [],
+			fields: [
+				{ label: "Name", path: "name" },
+				{ label: "Email", path: "email" },
+				{ label: "Role", path: "role" },
+			],
+			link: `/admin/pending`,
+			onClick: (item: ListItem) => navigation.push(`/admin/pending`),
+		},
+		{
+			title: "Support Tickets",
+			data: tickets || [],
+			fields: [
+				{ label: "Subject", path: "subject" },
+				{ label: "Status", path: "status" },
+			],
+			link: `/admin/support/tickets`,
+			onClick: (item: ListItem) => navigation.push(`/admin/support/tickets`),
+		},
+		{
+			title: "Job Approvals",
+			data: jobs || [],
+			fields: [
+				{ label: "Title", path: "title" },
+				{ label: "Company Name", path: "companyName" },
+				{ label: "Status", path: "status" },
+			],
+			link: `/admin/job-approval`,
+			onClick: (item: ListItem) => navigation.push(`/admin/job-approval`),
+		},
+		{
+			title: "Blog Approvals",
+			data: blogs || [],
+			fields: [
+				{ label: "Title", path: "title" },
+				{ label: "Status", path: "status" },
+			],
+			link: `/admin/blog-approval`,
+			onClick: (item: ListItem) => navigation.push(`/admin/blog-approval`),
+		},
+	];
 	const cardData = data
 		? [
 				{
@@ -213,186 +264,52 @@ const AdminDashboardContainer = () => {
 					</div>
 				) : (
 					<>
-						{/* Action Bar */}
-						<Row className='mb-4 bg-white p-4 card shadow-sm'>
-							<Col className='mb-2 fw-bold'>Action Bar</Col>
-							<div className='d-flex justify-content-between row place-items-center'>
-								<Col
-									className='my-2 place-items-center text-center'
-									xs={12}
-									sm={6}
-									md={4}
-									xl={2}>
-									<CreateCategoryModal fetchData={fetchData} />
-								</Col>
-								<Col
-									className='my-2 place-items-center text-center'
-									xs={12}
-									sm={6}
-									md={4}
-									xl={2}>
-									<CreateSubcategoryModal fetchData={fetchData} />
-								</Col>
+						<Row className='mb-4'>
+							{/* Left: Action Bar */}
+							<Col
+								xs={12}
+								lg={5}
+								className='mb-4 mb-lg-0'>
+								<QuickActions fetchData={fetchData} />
+							</Col>
 
-								<Col
-									className='my-2 place-items-center text-center'
-									xs={12}
-									sm={6}
-									md={4}
-									xl={2}>
-									<Button
-										color='primary'
-										className='w-100 h-100  px-2 p-3'
-										onClick={toggleWannaBeModal}>
-										<i className='fa fa-plus me-2 px-2 ' />
-										Add Interests
-									</Button>
-									<CreateInterestFormModal
-										modalOpen={wannaBeModal}
-										toggleModal={toggleWannaBeModal}
-										handleSubmit={handleWannaBeSubmit}
-									/>
-								</Col>
-								<Col
-									className='my-2 place-items-center text-center'
-									xs={12}
-									sm={6}
-									md={4}
-									xl={2}>
-									<Button
-										className='w-100 h-100  px-2 p-3'
-										color='primary'
-										onClick={() => {
-											navigation.push(`/admin/create-course`);
-										}}>
-										<i className='fa fa-plus me-2 py-1' />
-										Add Course
-									</Button>
-								</Col>
-								<Col
-									className='my-2 place-items-center text-center'
-									xs={12}
-									sm={6}
-									md={4}
-									xl={2}>
-									<Button
-										className='w-100 h-100  px-2 p-3'
-										color='primary'
-										onClick={() => {
-											navigation.push(`/admin/paths/create-path`);
-										}}>
-										<i className='fa fa-plus me-2 py-1' />
-										Add Path
-									</Button>
-								</Col>
-								<Col
-									className='my-2 place-items-center text-center'
-									xs={12}
-									sm={6}
-									md={4}
-									xl={2}>
-									<Button
-										className='w-100 h-100  px-2 p-3'
-										color='primary'
-										onClick={() => {
-											navigation.push(`/admin/announcements`);
-										}}>
-										<i className='fa fa-plus me-2 py-1' />
-										Announcement
-									</Button>
-								</Col>
-							</div>
+							{/* Right: Stats */}
+							<Col
+								xs={12}
+								lg={7}>
+								<Row className='general-widget g-3'>
+									{cardData.map((item, index) => (
+										<Col
+											xs={6}
+											md={4}
+											key={index}>
+											<Link href={item.link}>
+												<MyCardWithIcon
+													icon={item.icon}
+													title={item.title}
+													amount={item.amount}
+													color={item.color}
+													link={item.link}
+													divClass={item.divClass}
+												/>
+											</Link>
+										</Col>
+									))}
+								</Row>
+							</Col>
 						</Row>
-						{/* Stats */}
-						<Row className='mb-1 general-widget'>
-							{cardData.map((item, index) => (
-								<Col
-									xs={6}
-									md={4}
-									lg={2}
-									key={index}>
-									<Link href={item.link}>
-										<MyCardWithIcon
-											icon={item.icon}
-											title={item.title}
-											amount={item.amount}
-											color={item.color}
-											link={item.link}
-											divClass={item.divClass}
-										/>
-										{/* <Card
-											className={`text-center shadow-sm bg-${item.color}- border border-3 border-${item.color} rounded-4 p-3`}
-											style={{ backgroundBlendMode: "multiply" }}>
-											<Row>
-												<Col>
-													<h2
-														className={`text-dark ${item.color} mb-1`}
-														style={{ fontSize: "3rem" }}>
-														{item.amount || "-"}
-													</h2>
-													<p
-														className='text-muted mb-0'
-														style={{
-															fontSize: "1rem",
-														}}>
-														{item.title || "-"}
-													</p>
-												</Col>
-												<Col className='py-3'>
-													<i
-														className={`fa fa-${item.icon} fs-1 text-${item.color}`}
-													/>
-												</Col>
-											</Row>
-										</Card> */}
-									</Link>
-								</Col>
-							))}
-						</Row>
-
 						{/* Data Cards */}
-						<Row>
-							{[
-								{
-									title: "User Approvals",
-									data: userApprovals,
-									fields: ["name", "email", "role"],
-									link: `/admin/pending`,
-									onClick: (item: ListItem) => {
-										navigation.push(`/admin/pending`);
-									},
-								},
-								{
-									title: "Support Tickets",
-									data: tickets,
-									fields: ["subject", "status"],
-									link: `/admin/support/tickets`,
-									onClick: (item: ListItem) => {
-										navigation.push(`/admin/support/tickets`);
-									},
-								},
-								{
-									title: "Job Approvals",
-									data: jobs,
-									fields: ["title", "companyName", "status"],
-									link: `/admin/job-approval`,
-									onClick: (item: ListItem) => {
-										navigation.push(`/admin/job-approval`);
-									},
-								},
-								{
-									title: "Blog Approvals",
-									data: blogs,
-									fields: ["title", "status"],
-									link: `/admin/blog-approval`,
-									onClick: (item: ListItem) => {
-										navigation.push(`/admin/blog-approval`);
-									},
-								},
-							].map(({ title, data, fields, link, onClick }, index) => (
+						<Row className='h-100 general-widget'>
+							<Transactions
+								transactionsData={transactionData}
+								coursesData={coursesData}
+								category={categories}
+							/>
+							{tables.map(({ title, data, fields, link, onClick }, index) => (
 								<Col
 									md={6}
-									xl={3}
+									xl={6}
+									className='h-100'
 									key={index}>
 									<Card
 										className='shadow-sm border-0'

@@ -25,7 +25,7 @@ const CreateSubcategoryModal = ({
 		<>
 			<Button
 				color='primary'
-				className='w-100 h-100  px-2 p-3'
+				className='w-100'
 				onClick={toggle}>
 				<i className='fa fa-plus me-2 py-1' /> Add Subcategory
 			</Button>
