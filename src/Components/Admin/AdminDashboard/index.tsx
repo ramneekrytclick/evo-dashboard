@@ -27,6 +27,7 @@ import CreateInterestFormModal from "../WannaBe/CreateInterestFormModal";
 import { createWannaBeInterest } from "@/app/api/admin/wannabe";
 import { useRouter } from "next/navigation";
 import DataTable from "react-data-table-component";
+import MyCardWithIcon from "@/CommonComponent/MyCards/MyCardWithIcon";
 
 interface Analytics {
 	totalUsers: number;
@@ -148,43 +149,48 @@ const AdminDashboardContainer = () => {
 					amount: data.totalUsers,
 					title: "All Users",
 					link: "/admin/team",
-					icon: "user",
+					icon: "customers",
 					color: "primary",
 				},
 				{
 					amount: data.managers,
 					title: "Managers",
 					link: "/admin/team",
-					icon: "user",
-					color: "dark",
+					icon: "user-visitor",
+					color: "danger",
+					divClass: "up-sales",
 				},
 				{
 					amount: data.mentors,
 					title: "Mentors",
 					link: "/admin/mentors",
-					icon: "user",
+					icon: "bag",
 					color: "info",
+					divClass: "total-product",
 				},
 				{
 					amount: data.students,
 					title: "Students",
 					link: "/admin/students",
-					icon: "user",
-					color: "warning",
+					icon: "Customer",
+					color: "success",
+					divClass: "total-customer",
 				},
 				{
 					amount: data.courseCreators,
 					title: "Creators",
 					link: "/admin/team",
-					icon: "user",
-					color: "success",
+					icon: "pencil",
+					color: "info",
+					divClass: "total-product",
 				},
 				{
 					amount: data.employers,
 					title: "Employers",
 					link: "/admin/employers",
-					icon: "user",
+					icon: "work",
 					color: "danger",
+					divClass: "up-sales",
 				},
 		  ]
 		: [];
@@ -199,7 +205,7 @@ const AdminDashboardContainer = () => {
 
 			<Container
 				fluid
-				className='admin-dashboard'>
+				className='ecommerce-dashboard'>
 				{loading ? (
 					<div className='text-center py-5'>
 						<Spinner color='primary' />
@@ -298,7 +304,7 @@ const AdminDashboardContainer = () => {
 							</div>
 						</Row>
 						{/* Stats */}
-						<Row className='mb-1'>
+						<Row className='mb-1 general-widget'>
 							{cardData.map((item, index) => (
 								<Col
 									xs={6}
@@ -306,7 +312,15 @@ const AdminDashboardContainer = () => {
 									lg={2}
 									key={index}>
 									<Link href={item.link}>
-										<Card
+										<MyCardWithIcon
+											icon={item.icon}
+											title={item.title}
+											amount={item.amount}
+											color={item.color}
+											link={item.link}
+											divClass={item.divClass}
+										/>
+										{/* <Card
 											className={`text-center shadow-sm bg-${item.color}- border border-3 border-${item.color} rounded-4 p-3`}
 											style={{ backgroundBlendMode: "multiply" }}>
 											<Row>
@@ -330,7 +344,7 @@ const AdminDashboardContainer = () => {
 													/>
 												</Col>
 											</Row>
-										</Card>
+										</Card> */}
 									</Link>
 								</Col>
 							))}
