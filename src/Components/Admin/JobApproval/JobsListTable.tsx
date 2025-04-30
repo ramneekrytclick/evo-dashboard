@@ -174,63 +174,78 @@ export default function JobTable(): JSX.Element {
 							className='fw-bold'>
 							Job Details
 						</ModalHeader>
-						<ModalBody className='py-3 px-4'>
-							{selectedJob && (
-								<div className='row'>
-									<div className='col-md-6'>
-										<p>
-											<strong>Title:</strong> {selectedJob.title}
-										</p>
-										<p>
-											<strong>Company:</strong>{" "}
-											{selectedJob.companyName ||
-												selectedJob.employer?.companyName}
-										</p>
-										<p>
-											<strong>Type:</strong> {selectedJob.jobType}
-										</p>
-										<p>
-											<strong>Experience:</strong>{" "}
-											{selectedJob.experienceRequired || "-"}
-										</p>
-										<p>
-											<strong>Salary:</strong> {selectedJob.salary || "-"}
-										</p>
-										<p>
-											<strong>Openings:</strong> {selectedJob.openings}
-										</p>
-										<p>
-											<strong>Status:</strong> {statusBadge(selectedJob.status)}
-										</p>
+						<ModalBody className='px-4 pt-3 pb-4'>
+							<h4 className='fw-bold'>
+								{selectedJob?.title} @{" "}
+								{selectedJob?.companyName || selectedJob?.employer?.companyName}
+							</h4>
+							<p className='text-muted mb-2'>
+								{selectedJob?.location || "-"} | {selectedJob?.jobType}
+							</p>
+
+							<hr />
+
+							{/* Job Description */}
+							<h6 className='fw-bold mb-2'>Job Description</h6>
+							<p>{selectedJob?.description || "No description provided."}</p>
+
+							{/* Skills */}
+							{(selectedJob?.skillsRequired ?? []).length > 0 && (
+								<>
+									<h6 className='fw-bold mt-4 mb-2'>Skills Required</h6>
+									<div className='d-flex flex-wrap gap-2'>
+										{selectedJob?.skillsRequired?.map((skill, i) => (
+											<Badge
+												key={i}
+												color='primary'
+												className='px-3 py-2 rounded-pill fw-medium'
+												style={{
+													backgroundColor: "#3b82f6",
+													fontSize: "0.85rem",
+												}}>
+												{skill}
+											</Badge>
+										))}
 									</div>
-									<div className='col-md-6'>
-										<p>
-											<strong>Description:</strong> {selectedJob.description}
-										</p>
-										<p>
-											<strong>Location:</strong> {selectedJob.location || "-"}
-										</p>
-										<p>
-											<strong>Deadline:</strong>{" "}
-											{selectedJob.applicationDeadline
-												? new Date(
-														selectedJob.applicationDeadline
-												  ).toLocaleDateString()
-												: "-"}
-										</p>
-										<p>
-											<strong>Skills:</strong>{" "}
-											{selectedJob.skillsRequired?.length
-												? selectedJob.skillsRequired.join(", ")
-												: "N/A"}
-										</p>
-										<p>
-											<strong>Posted On:</strong>{" "}
-											{new Date(selectedJob.createdAt).toLocaleDateString()}
-										</p>
-									</div>
-								</div>
+								</>
 							)}
+
+							{/* Other Details */}
+							<h6 className='fw-bold mt-4 mb-2'>Other Details</h6>
+							<div className='row'>
+								<div className='col-md-6'>
+									<p className='mb-1'>
+										<strong>Experience Required:</strong>{" "}
+										{selectedJob?.experienceRequired || "-"}
+									</p>
+									<p className='mb-1'>
+										<strong>Salary:</strong> {selectedJob?.salary || "-"}
+									</p>
+									<p className='mb-1'>
+										<strong>Application Deadline:</strong>{" "}
+										{selectedJob?.applicationDeadline
+											? new Date(
+													selectedJob.applicationDeadline
+											  ).toLocaleDateString()
+											: "-"}
+									</p>
+									<p className='mb-1'>
+										<strong>Openings:</strong> {selectedJob?.openings || "-"}
+									</p>
+								</div>
+								<div className='col-md-6'>
+									<p className='mb-1'>
+										<strong>Status:</strong>{" "}
+										{statusBadge(selectedJob?.status || "-")}
+									</p>
+									<p className='mb-1'>
+										<strong>Posted On:</strong>{" "}
+										{new Date(
+											selectedJob?.createdAt || ""
+										).toLocaleDateString()}
+									</p>
+								</div>
+							</div>
 						</ModalBody>
 					</Modal>
 
@@ -259,7 +274,7 @@ export default function JobTable(): JSX.Element {
 								Yes, Approve
 							</Button>
 							<Button
-								color='outline-secondary'
+								color='outline-success'
 								onClick={toggleConfirmModal}>
 								Cancel
 							</Button>

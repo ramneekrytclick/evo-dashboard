@@ -61,7 +61,7 @@ const InterestsTable = ({
 						xl={3}
 						md={4}
 						sm={6}>
-						<Card className='shadow-sm border-0 rounded-3 overflow-hidden h-100'>
+						<Card className='shadow-sm border-0 rounded-3 overflow-hidden h-100 text-center'>
 							{interest.image && (
 								<div className='position-relative'>
 									<Image
@@ -85,7 +85,7 @@ const InterestsTable = ({
 									</p>
 								)}
 							</CardBody>
-							<CardFooter className='bg-transparent border-top-0 text-end d-flex justify-content-end gap-2'>
+							<CardFooter className='bg-transparent border-top-0 text-end d-flex justify-content-center gap-2'>
 								<ButtonGroup>
 									<Button
 										color='success'

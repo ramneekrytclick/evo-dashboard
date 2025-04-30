@@ -15,14 +15,14 @@ const CreateAnnouncementModal = ({ fetchData }: { fetchData: () => void }) => {
 	return (
 		<>
 			<Button
-				color="primary"
+				color='primary'
 				onClick={() => setModal(true)}>
-				<i className="fa fa-plus me-2" />
-				{createAnnouncementTitle}
+				<i className='fa fa-plus me-2' />
+				{"Add Announcement"}
 			</Button>
 			<CommonModal modalData={{ isOpen: modal, toggler: toggle }}>
-				<div className="modal-toggle-wrapper">
-					<h3 className="mb-3">{createAnnouncementTitle}</h3>
+				<div className='modal-toggle-wrapper'>
+					<h3 className='mb-3'>{"Add Announcement"}</h3>
 					<CreateAnnouncementForm toggle={() => setModal(false)} />
 				</div>
 			</CommonModal>

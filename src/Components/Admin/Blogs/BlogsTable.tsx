@@ -61,9 +61,10 @@ const BlogsTable = () => {
 			name: "Title",
 			selector: (row) => row.title,
 			sortable: true,
+			wrap: true,
 			cell: (row) => (
 				<span
-					className='p-0 text-primary'
+					className='p-0 text-primary fw-medium'
 					style={{ cursor: "pointer" }}
 					onClick={() => setSelectedBlog(row)}>
 					{row.title}
@@ -71,12 +72,14 @@ const BlogsTable = () => {
 			),
 		},
 		{
-			name: "Creator",
+			name: "Publisher",
 			selector: (row) => row.creator?.name || "-",
 			sortable: true,
 			center: true,
 			cell: (row) => (
-				<Link href={`/admin/users/${row.creator?._id}`}>
+				<Link
+					href={`/admin/users/${row.creator?._id}`}
+					className='text-dark fw-medium'>
 					{row.creator?.name || "Unknown"}
 				</Link>
 			),
@@ -102,7 +105,7 @@ const BlogsTable = () => {
 			),
 		},
 		{
-			name: "Created At",
+			name: "Published At",
 			center: true,
 			selector: (row) => new Date(row.createdAt).toDateString(),
 			sortable: true,

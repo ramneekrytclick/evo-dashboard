@@ -73,9 +73,14 @@ const PromocodesCards = () => {
 								{promoCode.discountPercentage}% OFF
 							</div>
 							<CardBody>
-								<p className='mb-1'>
-									<strong>Promo Code:</strong> {promoCode.code}
-								</p>
+								<h3 className='mb-1'>
+									<strong
+										className={`text-${
+											promoCode.isActive ? "success" : "danger"
+										}`}>
+										{promoCode.code}
+									</strong>
+								</h3>
 
 								{isCourseSpecific(promoCode) ? (
 									<>

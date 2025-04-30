@@ -1,3 +1,4 @@
+"use client";
 import {
 	AnnouncementFormInput,
 	createAnnouncement,
@@ -5,6 +6,16 @@ import {
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Col, Form, Input, Label, Row } from "reactstrap";
+import Select from "react-select";
+
+const roleOptions = [
+	{ value: "Student", label: "Student" },
+	{ value: "Mentor", label: "Mentor" },
+	{ value: "Manager", label: "Manager" },
+	{ value: "Employer", label: "Employer" },
+	{ value: "Course Creator", label: "Course Creator" },
+	{ value: "Publisher", label: "Publisher" },
+];
 
 const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 	const [formData, setFormData] = useState<AnnouncementFormInput>({
@@ -13,15 +24,6 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 		roles: [],
 		image: null,
 	});
-
-	const handleCheckboxChange = (role: string) => {
-		setFormData((prev) => {
-			const roles = prev.roles.includes(role)
-				? prev.roles.filter((r) => r !== role)
-				: [...prev.roles, role];
-			return { ...prev, roles };
-		});
-	};
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
@@ -38,11 +40,11 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 
 	return (
 		<Form onSubmit={handleSubmit}>
-			<Row className="g-3">
+			<Row className='g-3'>
 				<Col md={12}>
 					<Label>Title</Label>
 					<Input
-						type="text"
+						type='text'
 						value={formData.title}
 						onChange={(e) =>
 							setFormData({ ...formData, title: e.target.value })
@@ -50,10 +52,11 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 						required
 					/>
 				</Col>
+
 				<Col md={12}>
 					<Label>Description</Label>
 					<Input
-						type="textarea"
+						type='textarea'
 						value={formData.description}
 						onChange={(e) =>
 							setFormData({ ...formData, description: e.target.value })
@@ -61,45 +64,42 @@ const CreateAnnouncementForm = ({ toggle }: { toggle: () => void }) => {
 						required
 					/>
 				</Col>
+
 				<Col md={12}>
 					<Label>Roles</Label>
-					{[
-						"Student",
-						"Mentor",
-						"Manager",
-						"Employer",
-						"Course Creator",
-						"Publisher",
-					].map((role) => (
-						<div key={role}>
-							<Input
-								type="checkbox"
-								id={role}
-								checked={formData.roles.includes(role)}
-								onChange={() => handleCheckboxChange(role)}
-							/>
-							<Label
-								check
-								htmlFor={role}>
-								{role}
-							</Label>
-						</div>
-					))}
+					<Select
+						isMulti
+						name='roles'
+						options={roleOptions}
+						value={roleOptions.filter((r) => formData.roles.includes(r.value))}
+						onChange={(selected) =>
+							setFormData({
+								...formData,
+								roles: selected.map((s) => s.value),
+							})
+						}
+						className='basic-multi-select'
+						classNamePrefix='select'
+					/>
 				</Col>
+
 				<Col md={12}>
 					<Label>Image (optional)</Label>
 					<Input
-						type="file"
-						accept="image/*"
+						type='file'
+						accept='image/*'
 						onChange={(e) =>
 							setFormData({ ...formData, image: e.target.files?.[0] || null })
 						}
 					/>
 				</Col>
-				<Col md={12}>
+
+				<Col
+					md={12}
+					className='text-end'>
 					<Button
-						color="primary"
-						type="submit">
+						color='primary'
+						type='submit'>
 						Create
 					</Button>
 				</Col>
