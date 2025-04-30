@@ -6,6 +6,7 @@ import { MentorProps } from "./Mentor.type";
 export interface WannaBeInterest {
 	_id: string;
 	name: string;
+	photo?: string;
 }
 
 export interface SubcategoryNew {

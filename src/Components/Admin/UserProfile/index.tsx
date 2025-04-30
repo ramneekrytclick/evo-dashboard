@@ -1,13 +1,26 @@
 // Final Refactored UserProfile with Left Image Layout
 "use client";
 import React, { useEffect, useState } from "react";
+import Select from "react-select";
 import {
 	UncontrolledDropdown,
 	DropdownToggle,
 	DropdownMenu,
 	DropdownItem,
+	CardBody,
 } from "reactstrap";
-import { MoreVertical } from "react-feather";
+import {
+	AtSign,
+	Briefcase,
+	Calendar,
+	Mail,
+	MapPin,
+	MoreVertical,
+	Phone,
+	Smile,
+	User,
+	Users,
+} from "react-feather";
 import {
 	Card,
 	Col,
@@ -19,9 +32,6 @@ import {
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
-	Label,
-	Input,
-	FormGroup,
 	UncontrolledTooltip,
 } from "reactstrap";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
@@ -39,6 +49,13 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import { Trash2 } from "react-feather";
+import { BatchProps, WannaBeInterest } from "@/Types/Course.type";
+import Link from "next/link";
+import { getBatches } from "@/app/api/admin/batches";
+import { getWannaBeInterests } from "@/app/api/admin/wannabe";
+import StudentCards from "./StudentCards";
+import EmployerCards from "./EmployerCards";
+import PublisherCards from "./PublisherCards";
 
 const UserProfile = ({ id }: { id: string }) => {
 	const [profile, setProfile] = useState<any>(null);
@@ -53,19 +70,13 @@ const UserProfile = ({ id }: { id: string }) => {
 		"Active" | "Inactive" | "Banned"
 	>("Active");
 	const [approveModalOpen, setApproveModalOpen] = useState(false);
+	const [assignedBatches, setAssignedBatches] = useState<BatchProps[]>([]);
+	const [interests, setInterests] = useState([]);
 
 	const toggleModal = () => setModalOpen(!modalOpen);
 	const togglePhotoModal = () => setPhotoModalOpen(!photoModalOpen);
 	const toggleStatusModal = () => setStatusModalOpen(!statusModalOpen);
 	const toggleApproveModal = () => setApproveModalOpen(!approveModalOpen);
-
-	const handleMentorSelection = (mentorId: string) => {
-		setSelectedMentorIds((prev) =>
-			prev.includes(mentorId)
-				? prev.filter((id) => id !== mentorId)
-				: [...prev, mentorId]
-		);
-	};
 
 	const openAssignModal = () => setModalOpen(true);
 	const openStatusChangeModal = (action: "Active" | "Inactive" | "Banned") => {
@@ -102,7 +113,7 @@ const UserProfile = ({ id }: { id: string }) => {
 		try {
 			await approveUser(profile._id, "approve");
 			toggleApproveModal();
-			toast.success(`${profile.name} approved successfully`);
+			toast.success(`${profile.name} approved as ${profile.role} successfully`);
 			fetchData();
 		} catch (error) {
 			toast.error("Failed to approve user");
@@ -110,6 +121,7 @@ const UserProfile = ({ id }: { id: string }) => {
 	};
 
 	const fetchData = async () => {
+		setLoading(true);
 		try {
 			const response = await getUserProfile(id);
 			setProfile(response);
@@ -126,12 +138,52 @@ const UserProfile = ({ id }: { id: string }) => {
 			setMentors(response);
 		} catch (error) {
 			console.error("Failed to fetch mentors:", error);
+			toast.error("Failed to fetch mentors");
 		}
 	};
+
+	const fetchMentorBatches = async () => {
+		try {
+			const allBatches = await getBatches();
+			console.log(allBatches);
+
+			const assignedBatches = allBatches.batches?.filter(
+				(batch: BatchProps) => batch?.mentor?._id === id
+			);
+			console.log(assignedBatches);
+			setAssignedBatches(assignedBatches);
+		} catch (error) {
+			toast.error("Failed to fetch mentor batches");
+			console.log(error);
+		}
+	};
+
+	const getInterestName = async (wannaBeInterest: string) => {
+		try {
+			const allRes = await getWannaBeInterests();
+			const interest = allRes.find(
+				(i: WannaBeInterest) => i._id === wannaBeInterest
+			);
+			return interest.title;
+		} catch (error) {
+			toast.error("Failed to fetch interests");
+			return "-";
+		}
+	};
+	const mentorOptions = mentors.map((m) => ({
+		value: m._id,
+		label: m.name,
+	}));
+	const defaultMentors = mentorOptions.filter((opt) =>
+		profile?.assignedMentors?.includes(opt.value)
+	);
+	const [selectedMentorOptions, setSelectedMentorOptions] =
+		useState(defaultMentors);
 
 	useEffect(() => {
 		fetchData();
 		fetchMentors();
+		fetchMentorBatches();
 	}, []);
 
 	if (loading) return <div>Loading...</div>;
@@ -153,11 +205,14 @@ const UserProfile = ({ id }: { id: string }) => {
 				title='Profile'
 			/>
 			<Card className='p-4'>
-				<Row className=''>
+				<Row className='align-items-center'>
 					<Col
 						md={5}
 						xl={3}
-						className='text-center'>
+						className='card d-flex justify-content-center align-items-center'
+						style={{
+							cursor: "pointer",
+						}}>
 						<Image
 							src={
 								profile.photo
@@ -170,165 +225,19 @@ const UserProfile = ({ id }: { id: string }) => {
 							style={{ borderRadius: "12px", objectFit: "cover" }}
 							onClick={togglePhotoModal}
 						/>
-					</Col>
-
-					<Col
-						md={5}
-						xl={7}>
-						<h4 className='fw-bold text-uppercase mt-3'>{profile.name}</h4>
-						<p className='text-muted'>{profile.role}</p>
-						<Row className='mb-2 fw-light fs-6'>
-							{profile.email && (
-								<Col md={6}>
-									<strong>Email:</strong> {profile.email}
-								</Col>
-							)}
-							{profile.contactNumber && (
-								<Col md={6}>
-									<strong>Contact:</strong> {profile.contactNumber}
-								</Col>
-							)}
-							{profile.dob && (
-								<Col md={6}>
-									<strong>DOB:</strong> {new Date(profile.dob).toDateString()}
-								</Col>
-							)}
-							{profile.address && (
-								<Col md={6}>
-									<strong>Address:</strong> {profile.address}
-								</Col>
-							)}
-							{profile.createdAt && (
-								<Col md={6}>
-									<strong>Joined:</strong>{" "}
-									{new Date(profile.createdAt).toDateString()}
-								</Col>
-							)}
-						</Row>
-						<Row>
-							{isStudent && profile.wannaBeInterest && (
-								<Col md={6}>
-									<strong>WannaBe Interest:</strong> {profile.wannaBeInterest}
-								</Col>
-							)}
-							{isMentor && profile.expertise && (
-								<Col md={6}>
-									<strong>Expertise:</strong> {profile.expertise}
-								</Col>
-							)}
-							{isPublisher && profile.bio && (
-								<Col md={6}>
-									<strong>Bio:</strong> {profile.bio}
-								</Col>
-							)}
-							{isEmployer && profile.companyName && (
-								<Col md={6}>
-									<strong>Company:</strong> {profile.companyName}
-								</Col>
-							)}
-							{(isManager || isCourseCreator || isMentor || isPublisher) &&
-								profile.workingMode && (
-									<Col md={6}>
-										<strong>Mode:</strong> {profile.workingMode}
-									</Col>
-								)}
-							{isManager && (
-								<Col md={6}>
-									<strong>Assigned Mentors:</strong>
-									{profile.assignedMentors?.length > 0 ? (
-										profile.assignedMentors?.map((mentorId: string) => (
-											<div
-												key={mentorId}
-												className='d-flex'>
-												<div>
-													{
-														mentors.find((mentor) => mentor._id === mentorId)
-															?.name
-													}
-												</div>
-												<div
-													className='bg-danger text-white rounded-circle d-flex justify-content-center align-items-center'
-													style={{
-														width: "20px",
-														height: "20px",
-														marginTop: "5px",
-														marginLeft: "5px",
-													}}
-													onClick={async () => {
-														try {
-															const updatedMentorIds =
-																profile.assignedMentors.filter(
-																	(id: string) => id !== mentorId
-																);
-															await updateAssignedMentors({
-																managerId: profile._id,
-																mentorIds: updatedMentorIds,
-															});
-															toast.success("Mentor removed successfully");
-															fetchData(); // Refresh profile data
-														} catch (error) {
-															console.error("Failed to remove mentor:", error);
-															toast.error("Failed to remove mentor");
-														}
-													}}>
-													<Trash2 size={10} />
-												</div>
-											</div>
-										))
-									) : (
-										<>
-											<div>No assigned mentors</div>
-										</>
-									)}
-								</Col>
-							)}
-						</Row>
-
-						<div className='mt-3 d-flex gap-2 flex-wrap'>
-							{!profile.isApproved && profile.role !== "Student" && (
-								<Button
-									color='success'
-									onClick={toggleApproveModal}>
-									Approve
-								</Button>
-							)}
-							<Button
-								color={profile.status === "Active" ? "warning" : "success"}
-								onClick={() =>
-									openStatusChangeModal(
-										profile.status === "Active" ? "Inactive" : "Active"
-									)
-								}>
-								{profile.status === "Active" ? "Deactivate" : "Activate"}
-							</Button>
-							<Button
-								color='danger'
-								onClick={() => openStatusChangeModal("Banned")}>
-								Ban
-							</Button>
-							{isManager && (
-								<Button
-									color='dark'
-									onClick={openAssignModal}>
-									Assign Mentors
-								</Button>
-							)}
-						</div>
-					</Col>
-					<Col md={1}>
-						<div className='d-flex gap-2'>
+						<div className='d-flex align-items-center justify-content-center mt-2'>
 							{/* Approval Dot */}
 							{profile.role !== "Student" && (
 								<>
 									<div
 										id={`approved-dot-${profile._id}`}
 										style={{
-											width: "30px",
-											height: "30px",
+											width: "20px",
+											height: "20px",
 											borderRadius: "50%",
 											backgroundColor: profile.isApproved
 												? "#28a745"
-												: "#dc3545", // green or red
+												: "#dc3545",
 											cursor: "pointer",
 										}}></div>
 									<UncontrolledTooltip
@@ -343,8 +252,8 @@ const UserProfile = ({ id }: { id: string }) => {
 							<div
 								id={`status-dot-${profile._id}`}
 								style={{
-									width: "30px",
-									height: "30px",
+									width: "20px",
+									height: "20px",
 									borderRadius: "50%",
 									backgroundColor:
 										profile.status === "Active"
@@ -360,41 +269,340 @@ const UserProfile = ({ id }: { id: string }) => {
 								{profile.status}
 							</UncontrolledTooltip>
 						</div>
-						<UncontrolledDropdown>
-							<DropdownToggle
-								tag='button'
-								className='btn btn-light btn-icon'
-								style={{ boxShadow: "none", border: "none" }}>
-								<MoreVertical size={20} />
-							</DropdownToggle>
-							<DropdownMenu end>
-								{!profile.isApproved && profile.role !== "Student" && (
-									<DropdownItem onClick={toggleApproveModal}>
-										Approve
-									</DropdownItem>
+					</Col>
+
+					<Col
+						md={6}
+						xl={9}>
+						<Row className='mb-2 fw-light text-md-start align-items-center justify-content-center text-sm-center'>
+							<Col md={12}>
+								<h4 className='fw-bold text-uppercase mt-3 d-flex align-items-center justify-content-between text-sm-center'>
+									{profile.name}
+									<UncontrolledDropdown className='d-inline-block'>
+										<DropdownToggle
+											tag='button'
+											className='btn btn-white btn-icon'
+											style={{ boxShadow: "none", border: "none" }}>
+											<MoreVertical size={20} />
+										</DropdownToggle>
+										<DropdownMenu end>
+											{!profile.isApproved && profile.role !== "Student" && (
+												<DropdownItem
+													className='fs-5 py-3 text-dark '
+													onClick={toggleApproveModal}>
+													Approve
+												</DropdownItem>
+											)}
+											<DropdownItem
+												className='fs-5 py-3 text-dark '
+												onClick={() =>
+													openStatusChangeModal(
+														profile.status === "Active" ? "Inactive" : "Active"
+													)
+												}>
+												{profile.status === "Active"
+													? "Deactivate"
+													: "Activate"}
+											</DropdownItem>
+											<DropdownItem
+												className='fs-5 py-3 text-dark '
+												onClick={() => openStatusChangeModal("Banned")}>
+												Ban
+											</DropdownItem>
+										</DropdownMenu>
+									</UncontrolledDropdown>
+								</h4>
+								<p className='text-primary'>{profile.role}</p>
+							</Col>
+							<Col
+								md={12}
+								className='d-flex align-items-center justify-content-start mb-2 text-sm-center'>
+								{profile.address && (
+									<>
+										<MapPin size={16} />
+										<span className='ms-1'>{profile.address}</span>
+									</>
 								)}
-								<DropdownItem
-									onClick={() =>
-										openStatusChangeModal(
-											profile.status === "Active" ? "Inactive" : "Active"
-										)
-									}>
-									{profile.status === "Active" ? "Deactivate" : "Activate"}
-								</DropdownItem>
-								<DropdownItem onClick={() => openStatusChangeModal("Banned")}>
-									Ban
-								</DropdownItem>
-								{isManager && (
-									<DropdownItem onClick={openAssignModal}>
-										👥 Assign Mentors
-									</DropdownItem>
+							</Col>
+							<Col
+								md={12}
+								className='d-flex align-items-center justify-content-start mb-4 text-sm-center'>
+								{isPublisher && profile.bio && (
+									<>
+										<Row>
+											<strong className='d-flex align-items-center gap-1'>
+												{profile.bio}
+											</strong>
+										</Row>
+									</>
 								)}
-							</DropdownMenu>
-						</UncontrolledDropdown>
+							</Col>
+						</Row>
+						<Row className='mb-2 '>
+							{profile.email && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Mail size={17} /> Email
+									</strong>
+									{profile.email}
+								</Col>
+							)}
+							{profile.contactNumber && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Phone size={17} />
+										Phone
+									</strong>{" "}
+									{profile.contactNumber}
+								</Col>
+							)}
+							{profile.dob && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Calendar size={17} />
+										DOB
+									</strong>{" "}
+									{new Date(profile.dob).toDateString()}
+								</Col>
+							)}
+							{profile.education && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Calendar size={17} />
+										Education
+									</strong>{" "}
+									{profile.education}
+								</Col>
+							)}
+							{profile.preferredLanguages && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Calendar size={17} />
+										Languages
+									</strong>{" "}
+									{profile.preferredLanguages.join(", ")}
+								</Col>
+							)}
+							{profile.createdAt && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Calendar size={17} />
+										Joined
+									</strong>{" "}
+									{new Date(profile.createdAt).toDateString()}
+								</Col>
+							)}
+							{isStudent && profile.wannaBeInterest && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Briefcase size={17} />
+										WannaBe Interest
+									</strong>{" "}
+									{getInterestName(profile.wannaBeInterest)}
+								</Col>
+							)}
+							{isStudent && profile.experience && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Briefcase size={17} />
+										Experience
+									</strong>{" "}
+									{profile.experience.join(", ")}
+								</Col>
+							)}
+							{isMentor && profile.expertise && (
+								<Col
+									sm={5}
+									md={12}
+									className='my-2'>
+									<strong className='d-flex align-items-center gap-1'>
+										<Smile size={17} />
+										Expertise
+									</strong>{" "}
+									{profile.expertise}
+								</Col>
+							)}
+
+							{isEmployer && profile.companyName && (
+								<Col
+									sm={12}
+									md={6}
+									xl={4}
+									className='my-2'>
+									<strong>Company:</strong> {profile.companyName}
+								</Col>
+							)}
+							{(isManager || isCourseCreator || isMentor || isPublisher) &&
+								profile.workingMode && (
+									<Col
+										sm={3}
+										md={5}
+										className='my-2'>
+										<strong className='d-flex align-items-center gap-1'>
+											<Briefcase size={17} />
+											WorkingMode
+										</strong>{" "}
+										{profile.workingMode}
+									</Col>
+								)}
+						</Row>
+
+						<div className='mt-3 d-flex gap-2 flex-wrap'>
+							{isManager && (
+								<Button
+									color='dark'
+									onClick={openAssignModal}>
+									Assign Mentors
+								</Button>
+							)}
+						</div>
 					</Col>
 				</Row>
 			</Card>
 
+			{isManager && (
+				<Card>
+					<CardBody>
+						<Col
+							sm={3}
+							md={6}>
+							<strong className='d-flex align-items-center gap-1'>
+								<Users size={17} />
+								Assigned Mentors:
+							</strong>
+							{profile.assignedMentors?.length > 0 ? (
+								profile.assignedMentors?.map((mentorId: string) => (
+									<div
+										key={mentorId}
+										className='d-flex'>
+										<div>
+											{mentors.find((mentor) => mentor._id === mentorId)?.name}
+										</div>
+										<div
+											className='bg-danger text-white rounded-circle d-flex justify-content-center align-items-center'
+											style={{
+												width: "20px",
+												height: "20px",
+												marginTop: "5px",
+												marginLeft: "5px",
+											}}
+											onClick={async () => {
+												try {
+													const updatedMentorIds =
+														profile.assignedMentors.filter(
+															(id: string) => id !== mentorId
+														);
+													await updateAssignedMentors({
+														managerId: profile._id,
+														mentorIds: updatedMentorIds,
+													});
+													toast.success("Mentor removed successfully");
+													fetchData(); // Refresh profile data
+												} catch (error) {
+													console.error("Failed to remove mentor:", error);
+													toast.error("Failed to remove mentor");
+												}
+											}}>
+											<Trash2 size={10} />
+										</div>
+									</div>
+								))
+							) : (
+								<>
+									<div>No assigned mentors</div>
+								</>
+							)}
+						</Col>
+					</CardBody>
+				</Card>
+			)}
+			{isMentor && (
+				<Card
+					className='mt-4 shadow-lg'
+					color='light'>
+					<CardBody>
+						<h5 className='fw-semibold mb-3'>Assigned Batches</h5>
+						{assignedBatches.length > 0 ? (
+							<div style={{ overflowX: "auto", whiteSpace: "nowrap" }}>
+								<div className='d-flex gap-3 text-center'>
+									{assignedBatches.map((batch) => (
+										<div
+											key={batch._id}
+											className='shadow-sm rounded card bg- py-4 py-1'
+											style={{
+												minWidth: "370px",
+												cursor: "pointer",
+											}}
+											onClick={() => {
+												if (batch.slug) {
+													window.open(`/admin/batches/slug/${batch.slug}`);
+												} else {
+													toast.warning("This batch has no slug assigned");
+												}
+											}}>
+											<h6 className='fw-bold fs-6'>{batch.name}</h6>
+											<p className='mb-1 text-muted'>
+												{batch.course?.title || "No Course"}
+											</p>
+											<p className='mb-0'>
+												{new Date(batch.startDate || "").toLocaleDateString()} -{" "}
+												{new Date(batch.endDate || "").toLocaleDateString()}
+											</p>
+											<p
+												className='text-muted mb-0'
+												style={{ fontSize: "0.85rem" }}>
+												{batch.batchWeekType} | {batch.time}
+											</p>
+										</div>
+									))}
+								</div>
+							</div>
+						) : (
+							<div className='py-3 text-muted'>
+								<p>No batches assigned to mentor</p>
+								<Link href={`/admin/batches`}>
+									<Button color='dark'>View All Batches</Button>
+								</Link>
+							</div>
+						)}
+					</CardBody>
+				</Card>
+			)}
+			{isStudent && <StudentCards profile={profile} />}
+			{isPublisher && <PublisherCards profile={profile} />}
+			{isEmployer && <EmployerCards profile={profile} />}
 			{/* Modals */}
 			<Modal
 				isOpen={photoModalOpen}
@@ -496,31 +704,16 @@ const UserProfile = ({ id }: { id: string }) => {
 					{mentors.length === 0 ? (
 						<p>No mentors available.</p>
 					) : (
-						<Row>
-							{mentors.map((mentor) => (
-								<Col
-									md={6}
-									key={mentor._id}
-									className='mb-2'>
-									<FormGroup check>
-										<Label check>
-											<Input
-												type='checkbox'
-												onChange={() => handleMentorSelection(mentor._id)}
-											/>
-											{mentor.name} -
-											<Badge
-												pill
-												color={
-													mentor.status === "Active" ? "success" : "secondary"
-												}>
-												<span className='fs-6'> {mentor.email}</span>
-											</Badge>{" "}
-										</Label>
-									</FormGroup>
-								</Col>
-							))}
-						</Row>
+						<Select
+							isMulti
+							options={mentorOptions}
+							value={selectedMentorOptions}
+							onChange={(selected) => {
+								const mutableSelected = [...selected]; // convert readonly to mutable
+								setSelectedMentorOptions(mutableSelected);
+								setSelectedMentorIds(mutableSelected.map((s) => s.value));
+							}}
+						/>
 					)}
 				</ModalBody>
 				<ModalFooter>
