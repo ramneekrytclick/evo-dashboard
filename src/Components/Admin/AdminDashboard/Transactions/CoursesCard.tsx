@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 import { Button } from "reactstrap";
+import { useRouter } from "next/navigation";
 
 const CoursesCard = ({
 	courseData,
@@ -11,9 +12,10 @@ const CoursesCard = ({
 	courseData: any[];
 	category: any[];
 }) => {
-	// Create a map of categoryId -> count
-	const categoryCounts: Record<string, number> = {};
+	const router = useRouter();
 
+	// Map: categoryId => count
+	const categoryCounts: Record<string, number> = {};
 	courseData.forEach((course) => {
 		if (course.category) {
 			categoryCounts[course.category] =
@@ -21,9 +23,10 @@ const CoursesCard = ({
 		}
 	});
 
-	// Map category IDs to titles and counts
+	// Prepare data
 	const chartCategories = category.map((cat) => cat.title);
 	const chartData = category.map((cat) => categoryCounts[cat._id] || 0);
+	const categorySlugMap = category.map((cat) => cat.slug); // use slug instead of ID
 
 	const chartOptions: ApexOptions = {
 		series: [
@@ -37,6 +40,14 @@ const CoursesCard = ({
 			height: 315,
 			type: "bar",
 			toolbar: { show: false },
+			events: {
+				dataPointSelection: (event, chartContext, config) => {
+					const slug = categorySlugMap[config.dataPointIndex];
+					if (slug) {
+						router.push(`/admin/categories/courses/${slug}`);
+					}
+				},
+			},
 		},
 		plotOptions: {
 			bar: {
@@ -67,27 +78,26 @@ const CoursesCard = ({
 		},
 		colors: ["#237fff"],
 		dataLabels: { enabled: false },
-
 		grid: {
 			xaxis: { lines: { show: false } },
 			yaxis: { lines: { show: true } },
 		},
 		tooltip: {
 			custom: ({ series, seriesIndex, dataPointIndex }) => `
-        <div class="apex-tooltip p-2">
-          <span>
-            <span class="bg-primary"></span>
-            Courses in ${chartCategories[dataPointIndex]}
-            <h3>${series[seriesIndex][dataPointIndex]}</h3>
-          </span>
-        </div>`,
+				<div class="apex-tooltip p-2">
+					<span>
+						<span class="bg-primary"></span>
+						Courses in ${chartCategories[dataPointIndex]}
+						<h3>${series[seriesIndex][dataPointIndex]}</h3>
+					</span>
+				</div>`,
 		},
 	};
 
 	return (
 		<div className='card p-3'>
 			<div className='d-flex justify-content-between'>
-				<h5 className=' fw-medium'>{"Courses"}</h5>
+				<h5 className=' fw-medium'>Courses</h5>
 				<Link href={`/admin/courses`}>
 					<Button
 						color='primary'
@@ -98,7 +108,7 @@ const CoursesCard = ({
 				</Link>
 			</div>
 			<div style={{ overflow: "auto" }}>
-				<div style={{ minWidth: "700px" }}>
+				<div style={{ minWidth: "700px", cursor: "pointer" }}>
 					<ReactApexChart
 						options={chartOptions}
 						series={chartOptions.series as any}

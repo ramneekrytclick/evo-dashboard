@@ -1,17 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-	Container,
-	Row,
-	Col,
-	Card,
-	CardBody,
-	Button,
-	CardHeader,
-	CardTitle,
-	Spinner,
-} from "reactstrap";
+import { Container, Row, Col, Spinner } from "reactstrap";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import { AdminDashboardTitle, AdminTitle, DashboardTitle } from "@/Constant";
 import { getPlatformAnalytics } from "@/app/api/admin/analytics";
@@ -28,7 +18,10 @@ import QuickActions from "./QuickActions";
 import { getTransactions } from "@/app/api/admin/transactions";
 import Transactions from "./Transactions";
 import { getAllCategories, getAllCourses } from "@/app/api/cc";
-import { getCourses } from "@/app/api/admin/course";
+import Tables from "./Tables";
+import ItemDetailsModal from "./ItemDetailsModal";
+import AdminTicketModal from "@/Components/Support/AdminTicketModal";
+import JobDetailsModal from "../JobApproval/JobDetailsModal";
 
 interface Analytics {
 	totalUsers: number;
@@ -54,7 +47,10 @@ const AdminDashboardContainer = () => {
 	const [coursesData, setCoursesData] = useState<any>();
 	const [categories, setCategories] = useState<any>();
 	const navigation = useRouter();
-
+	const [modalOpen, setModalOpen] = useState(false);
+	const [selectedItem, setSelectedItem] = useState<any>(null);
+	const [modalTitle, setModalTitle] = useState<string>("");
+	const [ticketModal, setTicketModal] = useState(false);
 	const fetchData = async () => {
 		setLoading(true);
 		try {
@@ -160,7 +156,9 @@ const AdminDashboardContainer = () => {
 				{ label: "Role", path: "role" },
 			],
 			link: `/admin/pending`,
-			onClick: (item: ListItem) => navigation.push(`/admin/pending`),
+			onClick: (item: ListItem) => {
+				navigation.push(`/admin/users/${item._id}`);
+			},
 		},
 		{
 			title: "Support Tickets",
@@ -170,7 +168,10 @@ const AdminDashboardContainer = () => {
 				{ label: "Status", path: "status" },
 			],
 			link: `/admin/support/tickets`,
-			onClick: (item: ListItem) => navigation.push(`/admin/support/tickets`),
+			onClick: (item: ListItem) => {
+				setTicketModal(true);
+				setSelectedItem(item);
+			},
 		},
 		{
 			title: "Job Approvals",
@@ -181,17 +182,24 @@ const AdminDashboardContainer = () => {
 				{ label: "Status", path: "status" },
 			],
 			link: `/admin/job-approval`,
-			onClick: (item: ListItem) => navigation.push(`/admin/job-approval`),
+			onClick: (item: ListItem) => {
+				setSelectedItem(item);
+				setModalTitle("Job Approval");
+				setModalOpen(true);
+			},
 		},
 		{
 			title: "Blog Approvals",
 			data: blogs || [],
 			fields: [
+				{ label: "SLug", path: "slug" },
 				{ label: "Title", path: "title" },
 				{ label: "Status", path: "status" },
 			],
 			link: `/admin/blog-approval`,
-			onClick: (item: ListItem) => navigation.push(`/admin/blog-approval`),
+			onClick: (item: ListItem) => {
+				navigation.push(`/admin/blogs/${item.slug}`);
+			},
 		},
 	];
 	const cardData = data
@@ -305,40 +313,25 @@ const AdminDashboardContainer = () => {
 								coursesData={coursesData}
 								category={categories}
 							/>
-							{tables.map(({ title, data, fields, link, onClick }, index) => (
-								<Col
-									md={6}
-									xl={6}
-									className='h-100'
-									key={index}>
-									<Card
-										className='shadow-sm border-0'
-										style={{ height: "30em", overflow: "hidden" }}>
-										<CardHeader className='d-flex justify-content-between align-items-center'>
-											<CardTitle
-												tag='h6'
-												className='fw-medium'>
-												{title}
-											</CardTitle>
-											<Link href={link}>
-												<Button
-													color='primary'
-													className='px-3'
-													outline>
-													View All
-												</Button>
-											</Link>
-										</CardHeader>
-										<CardBody
-											style={{
-												overflow: "auto",
-												height: "calc(100% - 4.5rem)",
-											}}>
-											{renderTable(data.reverse(), fields, onClick)}
-										</CardBody>
-									</Card>
-								</Col>
-							))}
+							<Tables
+								tables={tables}
+								renderTable={renderTable}
+							/>
+							{selectedItem && (
+								<AdminTicketModal
+									modalOpen={ticketModal}
+									toggleModal={() => setTicketModal(!ticketModal)}
+									selectedRow={selectedItem}
+									fetchTickets={fetchData}
+								/>
+							)}
+							{modalOpen && selectedItem && (
+								<JobDetailsModal
+									modalOpen={modalOpen}
+									setModalOpen={setModalOpen}
+									selectedJob={selectedItem}
+								/>
+							)}
 						</Row>
 					</>
 				)}

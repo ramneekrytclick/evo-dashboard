@@ -16,6 +16,7 @@ export interface BlogProps {
 	status: BlogStatus;
 	creator: BlogCreator;
 	createdAt: string;
+	slug?: string;
 	updatedAt: string;
 	__v?: number;
 }

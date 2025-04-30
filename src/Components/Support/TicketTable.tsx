@@ -14,20 +14,16 @@ import {
 	ModalBody,
 	ModalFooter,
 	ModalHeader,
-	Form,
-	FormGroup,
-	Input,
-	Label,
 	Badge,
 	Container,
 	Spinner,
 } from "reactstrap";
 import Link from "next/link";
-import { respondToTicket } from "@/app/api/admin/support";
 import { useAuth } from "@/app/AuthProvider";
 import { toast } from "react-toastify";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import { Trash } from "react-feather";
+import AdminTicketModal from "./AdminTicketModal";
 
 const TicketTable = () => {
 	const auth = useAuth();
@@ -38,19 +34,15 @@ const TicketTable = () => {
 		null
 	);
 	const [modalOpen, setModalOpen] = useState(false);
-	const [responseText, setResponseText] = useState("");
-	const [status, setStatus] = useState("Open");
+
 	const [loading, setLoading] = useState(true);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [ticketToDelete, setTicketToDelete] =
 		useState<SupportTicketProps | null>(null);
-
 	const toggleDeleteModal = () => setDeleteModalOpen(!deleteModalOpen);
 	const toggleModal = () => setModalOpen(!modalOpen);
 	const openModal = (row: SupportTicketProps) => {
 		setSelectedRow(row);
-		setResponseText(row.adminResponse || "");
-		setStatus(row.status || "Open");
 		setModalOpen(true);
 	};
 	const handleDelete = async () => {
@@ -80,19 +72,6 @@ const TicketTable = () => {
 			console.error(error);
 		} finally {
 			setLoading(false);
-		}
-	};
-
-	const handleAction = async () => {
-		if (!selectedRow) return;
-		try {
-			await respondToTicket(selectedRow._id || "", status, responseText);
-			toggleModal();
-			toast.success("Ticket responded successfully!");
-			fetchTickets();
-		} catch (error) {
-			console.error("Error responding to ticket:", error);
-			toast.error("Error responding to ticket!");
 		}
 	};
 
@@ -263,7 +242,9 @@ const TicketTable = () => {
 		);
 	}
 	return (
-		<div className='table-responsive custom-scrollbar'>
+		<div
+			className='table-responsive custom-scrollbar'
+			style={{ cursor: "pointer" }}>
 			{role !== "Admin" && <CreateTicketModal fetchData={fetchTickets} />}
 			<DataTable
 				columns={
@@ -272,55 +253,19 @@ const TicketTable = () => {
 				data={data}
 				striped
 				pagination
+				onRowClicked={(row) => {
+					setSelectedRow(row);
+					toggleModal();
+				}}
 			/>
 
 			{role === "Admin" && selectedRow && (
-				<Modal
-					isOpen={modalOpen}
-					toggle={toggleModal}
-					centered>
-					<ModalHeader toggle={toggleModal}>
-						Respond to Ticket #{selectedRow._id}
-					</ModalHeader>
-					<ModalBody>
-						<Form>
-							<FormGroup>
-								<Label for='responseText'>Admin Response</Label>
-								<Input
-									id='responseText'
-									type='textarea'
-									value={responseText}
-									onChange={(e) => setResponseText(e.target.value)}
-									placeholder='Write your response here...'
-								/>
-							</FormGroup>
-							<FormGroup>
-								<Label for='statusSelect'>Ticket Status</Label>
-								<Input
-									type='select'
-									id='statusSelect'
-									value={status}
-									onChange={(e) => setStatus(e.target.value)}>
-									<option value='Open'>Open</option>
-									<option value='In Progress'>In Progress</option>
-									<option value='Resolved'>Resolved</option>
-								</Input>
-							</FormGroup>
-						</Form>
-					</ModalBody>
-					<ModalFooter>
-						<Button
-							color='outline-primary'
-							onClick={toggleModal}>
-							Cancel
-						</Button>
-						<Button
-							color='primary'
-							onClick={handleAction}>
-							Submit Response
-						</Button>
-					</ModalFooter>
-				</Modal>
+				<AdminTicketModal
+					modalOpen={modalOpen}
+					toggleModal={toggleModal}
+					selectedRow={selectedRow}
+					fetchTickets={fetchTickets}
+				/>
 			)}
 			{deleteModalOpen && ticketToDelete && (
 				<Modal

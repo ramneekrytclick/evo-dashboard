@@ -13,6 +13,8 @@ import Link from "next/link";
 import { customTableStyles } from "../Batches/BatchesList";
 import { Edit2, Trash } from "react-feather";
 import UpdatePathModal from "./UpdatePathModal";
+import { getImageURL } from "@/CommonComponent/imageURL";
+import Image from "next/image";
 const PathCards = () => {
 	const [paths, setPaths] = useState<PathProps[]>([]);
 	const [filterText, setFilterText] = useState("");
@@ -39,6 +41,20 @@ const PathCards = () => {
 		);
 	});
 	const pathTableColumns: TableColumn<PathProps>[] = [
+		{
+			name: "Photo",
+			selector: (row: PathProps) => getImageURL(row.photo || "") || "N/A",
+			cell: (row: PathProps) => (
+				<Image
+					width={100}
+					height={100}
+					src={getImageURL(row.photo || "")}
+					alt={row.title}
+					className='img-fluid'
+					style={{ maxWidth: "100px", maxHeight: "100px" }}
+				/>
+			),
+		},
 		{
 			name: "Title",
 			selector: (row: PathProps) => row.title || "N/A",

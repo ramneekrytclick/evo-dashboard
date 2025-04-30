@@ -22,9 +22,12 @@ import {
 	getAllReviews,
 	updateReview,
 	deleteReview,
+	getCourses,
 } from "@/app/api/admin/course";
 import { customTableStyles } from "../Batches/BatchesList";
 import { Edit2, Trash, Star } from "react-feather";
+import { addReview } from "@/app/api/admin/review";
+import { getAllCourses } from "@/app/api/cc";
 
 interface Review {
 	_id: string;
@@ -46,11 +49,20 @@ const ReviewsContainer = () => {
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [comment, setComment] = useState("");
 	const [rating, setRating] = useState(5);
-
+	const [createModal, setCreateModal] = useState(false);
+	const [newReview, setNewReview] = useState({
+		name: "",
+		courseId: "",
+		comment: "",
+		rating: 5,
+	});
+	const [courses, setCourses] = useState([]);
 	const fetchData = async () => {
 		setLoading(true);
 		try {
+			const courseRes = await getAllCourses();
 			const res = await getAllReviews();
+			setCourses(courseRes.courses);
 			setReviews(res.reviews);
 		} catch (error) {
 			toast.error("Error fetching reviews");
@@ -174,6 +186,13 @@ const ReviewsContainer = () => {
 			/>
 			<Card>
 				<CardBody>
+					<Button
+						className='mb-3'
+						color='primary'
+						onClick={() => setCreateModal(true)}>
+						<i className='ri-add-line align-middle me-2'></i>
+						Add Review
+					</Button>
 					<DataTable
 						columns={columns}
 						data={reviews}
@@ -243,6 +262,104 @@ const ReviewsContainer = () => {
 					<Button
 						color='outline-primary'
 						onClick={() => setModal(false)}>
+						Cancel
+					</Button>
+				</ModalFooter>
+			</Modal>
+			<Modal
+				isOpen={createModal}
+				toggle={() => setCreateModal(false)}
+				centered
+				size='lg'>
+				<ModalHeader toggle={() => setCreateModal(false)}>
+					Add Review
+				</ModalHeader>
+				<ModalBody>
+					<Form>
+						<FormGroup>
+							<Label>Reviewer Name</Label>
+							<Input
+								value={newReview.name}
+								onChange={(e) =>
+									setNewReview({ ...newReview, name: e.target.value })
+								}
+							/>
+						</FormGroup>
+						<FormGroup>
+							<Label>Course</Label>
+							<Input
+								type='select'
+								value={newReview.courseId}
+								onChange={(e) =>
+									setNewReview({ ...newReview, courseId: e.target.value })
+								}>
+								<option value=''>Select a course</option>
+								{courses.map((course: any) => (
+									<option
+										key={course._id}
+										value={course._id}>
+										{course.title}
+									</option>
+								))}
+							</Input>
+						</FormGroup>
+						<FormGroup>
+							<Label>Rating</Label>
+							<div>
+								{[1, 2, 3, 4, 5].map((i) => (
+									<Star
+										key={i}
+										size={24}
+										fill={i <= newReview.rating ? "#FFC107" : "#e4e5e9"}
+										color={i <= newReview.rating ? "#FFC107" : "#e4e5e9"}
+										className='me-2 cursor-pointer'
+										onClick={() => setNewReview({ ...newReview, rating: i })}
+									/>
+								))}
+							</div>
+						</FormGroup>
+						<FormGroup>
+							<Label>Comment</Label>
+							<Input
+								type='textarea'
+								rows={4}
+								value={newReview.comment}
+								onChange={(e) =>
+									setNewReview({ ...newReview, comment: e.target.value })
+								}
+							/>
+						</FormGroup>
+					</Form>
+				</ModalBody>
+				<ModalFooter>
+					<Button
+						color='primary'
+						onClick={async () => {
+							try {
+								await addReview(
+									newReview.courseId,
+									newReview.rating,
+									newReview.comment,
+									newReview.name
+								);
+								toast.success("Review created successfully");
+								setCreateModal(false);
+								setNewReview({
+									name: "",
+									courseId: "",
+									comment: "",
+									rating: 5,
+								});
+								fetchData();
+							} catch {
+								toast.error("Failed to create review");
+							}
+						}}>
+						Create
+					</Button>
+					<Button
+						color='outline-primary'
+						onClick={() => setCreateModal(false)}>
 						Cancel
 					</Button>
 				</ModalFooter>

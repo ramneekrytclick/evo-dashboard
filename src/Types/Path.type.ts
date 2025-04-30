@@ -8,5 +8,5 @@ export interface PathProps {
 	price: number;
 	courses: string[];
 	wannaBeInterest: string[];
-	photo?: File;
+	photo?: string;
 }
