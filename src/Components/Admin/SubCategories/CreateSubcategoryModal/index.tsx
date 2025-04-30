@@ -9,11 +9,11 @@ const CreateSubcategoryModal = ({
 	sm,
 }: {
 	fetchData: () => Promise<void>;
-	category: { id?: string; categoryName?: string };
+	category?: { id?: string; categoryName?: string };
 	sm?: boolean;
 }) => {
 	const [modal, setModal] = useState(false);
-	const { id, categoryName } = category;
+	const { id, categoryName } = category || {};
 	const toggle = () => {
 		setModal(!modal);
 	};
