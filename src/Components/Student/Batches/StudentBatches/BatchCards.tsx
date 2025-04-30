@@ -12,6 +12,7 @@ import {
 	CardText,
 	CardTitle,
 	Col,
+	Container,
 	Row,
 	Spinner,
 } from "reactstrap";
@@ -36,9 +37,12 @@ const BatchCards = () => {
 		fetchCourses();
 	}, []);
 	return (
-		<Row>
+		<Container>
 			{loading ? (
-				<>Loading</>
+				<div className='d-flex justify-content-center align-items-center h-100 text-primary gap-3 fs-4'>
+					Loading
+					<Spinner />
+				</div>
 			) : (
 				<>
 					{batches.length > 0 ? (
@@ -109,15 +113,25 @@ const BatchCards = () => {
 						))
 					) : (
 						<>
-							<p className='text-center text-muted h6'>
-								Not assigned batches yet. Enroll in a course and Contact the
-								Admin if still not assigned.
-							</p>
+							<Card className='text-center card text-muted h6 h-100 py-5 flex flex-column justify-content-center align-items-center gap-3'>
+								No Batches assigned to you.
+								<Link
+									href={`/student/my-courses`}
+									className='btn btn-outline-primary px-2 py-1'>
+									Enroll in a course
+								</Link>
+								OR
+								<Link
+									href={`/student/support/tickets`}
+									className='btn btn-outline-primary px-2 py-1'>
+									Contact the Admin
+								</Link>
+							</Card>
 						</>
 					)}
 				</>
 			)}
-		</Row>
+		</Container>
 	);
 };
 

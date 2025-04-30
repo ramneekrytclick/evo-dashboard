@@ -95,7 +95,7 @@ const MyEnrolledCourses = () => {
 	const subcategoryMap = new Map(subcategories.map((s) => [s._id, s.title]));
 	const progressMap = new Map(progress.map((p) => [p.courseId, p]));
 
-	if (loading) {
+	if (loading || !enrolledCourses) {
 		return (
 			<>
 				<Container className='d-flex gap-2 text-primary justify-content-center align-items-center'>
@@ -104,6 +104,22 @@ const MyEnrolledCourses = () => {
 			</>
 		);
 	}
+	if (enrolledCourses.length === 0) {
+		return (
+			<Container className='d-flex gap-2 text-primary justify-content-center align-items-center card'>
+				<div className='text-center py-4'>
+					<h5 className='mb-2 fw-semibold'>👋 Welcome to EVO!</h5>
+					<p className='text-muted'>You haven’t enrolled in any courses yet.</p>
+					<Link
+						href={`${process.env.NEXT_PUBLIC_MAIN_URL}courses`}
+						className='btn btn-primary mt-2'>
+						Explore Courses
+					</Link>
+				</div>
+			</Container>
+		);
+	}
+
 	return (
 		<Container style={{ height: "80vh", overflow: "auto" }}>
 			<Row>

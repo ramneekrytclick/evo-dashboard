@@ -5,7 +5,8 @@ import { getMyCertificates } from "@/app/api/student";
 import { toast } from "react-toastify";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import { Container, Spinner } from "reactstrap";
+import { Card, Container, Spinner } from "reactstrap";
+import Link from "next/link";
 interface CerticateProps {
 	_id: string;
 	course: {
@@ -50,7 +51,13 @@ const StudentCertificatesContainer = () => {
 						<Spinner size={30} />
 					</Container>
 				) : certificates.length === 0 ? (
-					<p className='text-muted'>No certificates found.</p>
+					<Card className='text-center text-muted h6 h-100 py-5'>
+						<p className='text-muted'>
+							You have not been issued a certificate yet. Complete your{" "}
+							<Link href={`/student/my-courses`}>courses</Link> to earn a
+							certificate.
+						</p>
+					</Card>
 				) : (
 					<div className='row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4'>
 						{certificates.map((cert: CerticateProps) => (

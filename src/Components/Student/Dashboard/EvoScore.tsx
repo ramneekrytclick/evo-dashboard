@@ -24,7 +24,11 @@ const EvoScore = ({
 				typeof response?.evoScore === "number" ? response.evoScore : 0;
 			setEvoScore(score);
 		} catch (error: any) {
-			toast.error(error.response?.data?.message || "Failed to load EvoScore");
+			{
+				error.response?.data?.message
+					? toast(error.response?.data?.message)
+					: toast.error("Failed to load EvoScore");
+			}
 		}
 		setLoading(false);
 	};

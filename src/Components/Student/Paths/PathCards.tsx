@@ -49,65 +49,67 @@ const MyLearningPaths = () => {
 	}, []);
 
 	return (
-		<Container className='py-4'>
+		<Container className='card'>
 			{loading ? (
 				<Container className='d-flex gap-2 text-primary justify-content-center align-items-center'>
 					<Spinner size={30} />
 				</Container>
 			) : (
 				<>
-					<h4 className='mb-3 fw-bold'>
-						🎓 Suggested Learning Paths Based on Your Enrollments
-					</h4>
-					<p className='text-muted mb-4'>
-						These paths are personalized journeys based on your enrolled
-						courses. Follow them to master topics in a structured way and
-						achieve your goals faster.
-					</p>
 					<Row className='g-4'>
 						{learningPaths.length === 0 ? (
 							<Col xs={12}>
-								<p className='text-center text-muted'>
+								<Card className='text-center text-muted h6 h-100 py-5'>
 									No learning paths available for your current enrollments.
-								</p>
+								</Card>
 							</Col>
 						) : (
-							learningPaths.map((path) => {
-								return (
-									<Col
-										xl={3}
-										sm={12}
-										key={path._id}>
-										<Link
-											href={`/student/paths/${path._id}`}
-											className='text-decoration-none text-dark'>
-											<Card className='shadow-sm h-100 hover-shadow'>
-												<CardBody className='d-flex flex-column justify-content-between h-100 align-items-center'>
-													<Image
-														width={200}
-														height={200}
-														className='rounded w-100'
-														style={{ objectFit: "cover" }}
-														src={getImageURL(path.photo || "")}
-														alt={path.title}
-													/>
-													<CardTitle
-														tag='h3'
-														className='fw-bold'>
-														{path.title}
-													</CardTitle>
+							<>
+								<h4 className='mb-3 fw-bold'>
+									🎓 Suggested Learning Paths Based on Your Enrollments
+								</h4>
+								<p className='text-muted mb-4'>
+									These paths are personalized journeys based on your enrolled
+									courses. Follow them to master topics in a structured way and
+									achieve your goals faster.
+								</p>
+								{learningPaths.map((path) => {
+									return (
+										<Col
+											xl={3}
+											sm={12}
+											key={path._id}>
+											<Link
+												href={`/student/paths/${path._id}`}
+												className='text-decoration-none text-dark'>
+												<Card className='shadow-sm h-100 hover-shadow'>
+													<CardBody className='d-flex flex-column justify-content-between h-100 align-items-center'>
+														<Image
+															width={200}
+															height={200}
+															className='rounded w-100'
+															style={{ objectFit: "cover" }}
+															src={getImageURL(path.photo || "")}
+															alt={path.title}
+														/>
+														<CardTitle
+															tag='h3'
+															className='fw-bold'>
+															{path.title}
+														</CardTitle>
 
-													<span
-														className='text-muted mb-0 fs-6'
-														style={{ minHeight: 50 }}>
-														{path.description}
-													</span>
-												</CardBody>
-											</Card>
-										</Link>
-									</Col>
-								);
-							})
+														<span
+															className='text-muted mb-0 fs-6'
+															style={{ minHeight: 50 }}>
+															{path.description}
+														</span>
+													</CardBody>
+												</Card>
+											</Link>
+										</Col>
+									);
+								})}
+							</>
 						)}
 					</Row>
 				</>
