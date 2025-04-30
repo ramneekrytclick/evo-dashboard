@@ -97,7 +97,7 @@ export interface BatchProps {
 		photo: string;
 	};
 	chatMessages?: ChatMessage[];
-	slug: string;
+	slug?: string;
 	scheduledSessions?: {
 		_id: string;
 		date: string;
