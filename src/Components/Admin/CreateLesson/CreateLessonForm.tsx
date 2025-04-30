@@ -182,7 +182,7 @@ const CreateLessonForm = () => {
 									color='info'
 									type='button'
 									size='sm'
-									className='mt-2'
+									className='mt-1 text-white'
 									onClick={addResourceField}>
 									+ Add Link
 								</Button>

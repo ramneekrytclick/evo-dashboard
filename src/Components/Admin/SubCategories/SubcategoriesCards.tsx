@@ -109,7 +109,7 @@ const SubcategoriesCards = ({
 							xl={4}
 							md={6}
 							key={item._id}>
-							<Card className='shadow-sm rounded-3 border-0'>
+							<Card className='shadow-sm rounded-3 border-0 text-center'>
 								<Image
 									src={getImageURL(item.photo || "")}
 									width={400}
@@ -140,7 +140,7 @@ const SubcategoriesCards = ({
 										</Button>
 									</Link>
 								</CardBody>
-								<CardFooter className='d-flex justify-content-end gap-2'>
+								<CardFooter className='d-flex justify-content-center gap-2'>
 									<ButtonGroup>
 										<Button
 											color='success'

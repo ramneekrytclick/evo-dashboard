@@ -86,7 +86,7 @@ const CategoriesCards = () => {
 							sm={6}
 							key={item._id}>
 							<Card
-								className='shadow-sm rounded-3 border-0'
+								className='shadow-sm rounded-3 border-0 text-center'
 								style={{ height: "100%" }}>
 								<Link
 									className='fs-5'
