@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { getCourses } from "@/app/api/admin/course";
 import { createLesson } from "@/app/api/admin/lessons/lesson";
 import { CourseProps } from "@/Types/Course.type";
+import { Trash, Trash2 } from "react-feather";
 
 const CreateLessonForm = () => {
 	const [courses, setCourses] = useState<CourseProps[]>([]);
@@ -164,10 +165,15 @@ const CreateLessonForm = () => {
 											<Button
 												color='danger'
 												size='sm'
+												className='d-flex align-items-center justify-content-center p-2'
+												style={{
+													width: "30px",
+													height: "30px",
+												}}
 												type='button'
 												onClick={() => removeResourceField(index)}
 												disabled={formData.resources.length === 1}>
-												🗑️
+												<Trash size={16} />
 											</Button>
 										</Col>
 									</Row>

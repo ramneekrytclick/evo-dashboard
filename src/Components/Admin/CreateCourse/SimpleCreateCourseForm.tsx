@@ -8,7 +8,10 @@ import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { toast } from "react-toastify";
 import { createCourse } from "@/app/api/admin/course";
 import { useAuth } from "@/app/AuthProvider";
-
+import Select from "react-select";
+import CreateCategoryModal from "../Categories/CreateCategoryModal";
+import CreateSubcategoryModal from "../SubCategories/CreateSubcategoryModal";
+import { Category } from "@/Types/Category.type";
 const SimpleCreateCourseForm = () => {
 	const { user } = useAuth();
 	const name = user?.name || "id";
@@ -20,7 +23,7 @@ const SimpleCreateCourseForm = () => {
 		timing: "",
 		categoryId: "",
 		subcategoryId: "",
-		wannaBeInterestId: "",
+		wannaBeInterestIds: [],
 		realPrice: "",
 		discountedPrice: "",
 		tags: "",
@@ -30,7 +33,7 @@ const SimpleCreateCourseForm = () => {
 	const [photoFile, setPhotoFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string>("");
 
-	const [categories, setCategories] = useState([]);
+	const [categories, setCategories] = useState<Category[]>([]);
 	const [subcategories, setSubcategories] = useState([]);
 	const [interests, setInterests] = useState([]);
 
@@ -83,7 +86,11 @@ const SimpleCreateCourseForm = () => {
 
 		const payload = new FormData();
 		for (const key in formData) {
-			payload.append(key, formData[key]);
+			if (Array.isArray(formData[key])) {
+				payload.append(key, formData[key].join(","));
+			} else {
+				payload.append(key, formData[key]);
+			}
 		}
 		payload.append("photo", photoFile);
 
@@ -98,7 +105,7 @@ const SimpleCreateCourseForm = () => {
 				timing: "",
 				categoryId: "",
 				subcategoryId: "",
-				wannaBeInterestId: "",
+				wannaBeInterestIds: [],
 				realPrice: "",
 				discountedPrice: "",
 				tags: "",
@@ -115,7 +122,10 @@ const SimpleCreateCourseForm = () => {
 	useEffect(() => {
 		fetchInitialData();
 	}, []);
-
+	const interestOptions = interests.map((int: any) => ({
+		label: int.title,
+		value: int._id,
+	}));
 	return (
 		<Form
 			onSubmit={handleSubmit}
@@ -210,60 +220,100 @@ const SimpleCreateCourseForm = () => {
 				</Col>
 
 				<Col md={6}>
-					<Label>Category</Label>
-					<Input
-						type='select'
-						name='categoryId'
-						value={formData.categoryId}
-						onChange={handleChange}
-						required>
-						<option value=''>Select Category</option>
-						{categories.map((cat: any) => (
-							<option
-								key={cat._id}
-								value={cat._id}>
-								{cat.title}
-							</option>
-						))}
-					</Input>
+					<Row className='align-items-center'>
+						<Col md={9}>
+							<Label>Category</Label>
+							<Input
+								type='select'
+								name='categoryId'
+								value={formData.categoryId}
+								onChange={handleChange}
+								required>
+								<option
+									value=''
+									hidden>
+									Select Category
+								</option>
+								{categories.map((cat: any) => (
+									<option
+										key={cat._id}
+										value={cat._id}>
+										{cat.title}
+									</option>
+								))}
+							</Input>
+						</Col>
+						<Col md={3}>
+							<CreateCategoryModal
+								sm
+								fetchData={fetchInitialData}
+							/>
+						</Col>
+					</Row>
 				</Col>
 
 				<Col md={6}>
-					<Label>Subcategory</Label>
-					<Input
-						type='select'
-						name='subcategoryId'
-						value={formData.subcategoryId}
-						onChange={handleChange}
-						required>
-						<option value=''>Select Subcategory</option>
-						{subcategories.map((sub: any) => (
-							<option
-								key={sub._id}
-								value={sub._id}>
-								{sub.title}
-							</option>
-						))}
-					</Input>
+					<Row className='align-items-center'>
+						<Col md={9}>
+							<Label>Subcategory</Label>
+							<Input
+								type='select'
+								name='subcategoryId'
+								value={formData.subcategoryId}
+								onChange={handleChange}
+								required>
+								<option
+									value=''
+									hidden>
+									Select Subcategory
+								</option>
+								{subcategories.map((sub: any) => (
+									<option
+										key={sub._id}
+										value={sub._id}>
+										{sub.title}
+									</option>
+								))}
+							</Input>
+						</Col>
+						<Col md={3}>
+							{categories && (
+								<CreateSubcategoryModal
+									category={{
+										id: formData.categoryId,
+										categoryName:
+											categories.find(
+												(cat: Category) => cat._id === formData.categoryId
+											)?.title || "",
+									}}
+									sm
+									fetchData={async () => {
+										await fetchSubcategories(formData.categoryId);
+									}}
+								/>
+							)}
+						</Col>
+					</Row>
 				</Col>
 
 				<Col md={6}>
-					<Label>Wanna Be Interest</Label>
-					<Input
-						type='select'
-						name='wannaBeInterestId'
-						value={formData.wannaBeInterestId}
-						onChange={handleChange}
-						required>
-						<option value=''>Select Interest</option>
-						{interests.map((int: any) => (
-							<option
-								key={int._id}
-								value={int._id}>
-								{int.title}
-							</option>
-						))}
-					</Input>
+					<Label>Wanna Be Interests</Label>
+					<Select
+						isMulti
+						name='wannaBeInterestIds'
+						options={interestOptions}
+						value={interestOptions.filter((i) =>
+							formData.wannaBeInterestIds.includes(i.value)
+						)}
+						onChange={(selected) =>
+							setFormData({
+								...formData,
+								wannaBeInterestIds: selected.map((s) => s.value),
+							})
+						}
+						className='basic-multi-select'
+						classNamePrefix='select'
+					/>
 				</Col>
 
 				<Col md={6}>
@@ -283,6 +333,11 @@ const SimpleCreateCourseForm = () => {
 							style={{ height: 100 }}
 						/>
 					)}
+					<small
+						className='text-muted'
+						style={{ fontSize: "14px", marginLeft: "30px" }}>
+						Under 2MB
+					</small>
 				</Col>
 
 				<Col

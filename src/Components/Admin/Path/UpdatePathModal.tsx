@@ -12,14 +12,12 @@ import {
 	Row,
 	Col,
 	Button,
-	ListGroup,
-	ListGroupItem,
 } from "reactstrap";
-import ScrollBar from "react-perfect-scrollbar";
 import { getCourses } from "@/app/api/admin/course";
 import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { getPathById, updatePath } from "@/app/api/admin/path";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const UpdatePathModal = ({
 	id,
@@ -88,24 +86,6 @@ const UpdatePathModal = ({
 		}));
 	};
 
-	const toggleCourse = (courseId: string) => {
-		setFormData((prev) => ({
-			...prev,
-			courses: prev.courses.includes(courseId)
-				? prev.courses.filter((id) => id !== courseId)
-				: [...prev.courses, courseId],
-		}));
-	};
-
-	const toggleWannaBe = (wannaBeId: string) => {
-		setFormData((prev) => ({
-			...prev,
-			wannaBeInterest: prev.wannaBeInterest.includes(wannaBeId)
-				? prev.wannaBeInterest.filter((id) => id !== wannaBeId)
-				: [...prev.wannaBeInterest, wannaBeId],
-		}));
-	};
-
 	const handleUpdate = async () => {
 		if (
 			!formData.title ||
@@ -138,6 +118,12 @@ const UpdatePathModal = ({
 			toast.error("Failed to update path");
 		}
 	};
+
+	const courseOptions = courses.map((c) => ({ label: c.title, value: c._id }));
+	const interestOptions = wannaBeInterests.map((i) => ({
+		label: i.title,
+		value: i._id,
+	}));
 
 	return (
 		<Modal
@@ -180,41 +166,43 @@ const UpdatePathModal = ({
 								onChange={(e) => setPhoto(e.target.files?.[0] || null)}
 							/>
 						</Col>
-
 						<Col md={6}>
 							<Label>Courses *</Label>
-							<ScrollBar style={{ height: "150px" }}>
-								<ListGroup>
-									{courses.map((course) => (
-										<ListGroupItem key={course._id}>
-											<Input
-												type='checkbox'
-												checked={formData.courses.includes(course._id)}
-												onChange={() => toggleCourse(course._id)}
-											/>
-											<span className='ms-2'>{course.title}</span>
-										</ListGroupItem>
-									))}
-								</ListGroup>
-							</ScrollBar>
+							<Select
+								isMulti
+								name='courses'
+								options={courseOptions}
+								value={courseOptions.filter((c) =>
+									formData.courses.includes(c.value)
+								)}
+								onChange={(selected) =>
+									setFormData({
+										...formData,
+										courses: selected.map((s) => s.value),
+									})
+								}
+								className='basic-multi-select'
+								classNamePrefix='select'
+							/>
 						</Col>
-
 						<Col md={6}>
 							<Label>WannaBe Interests *</Label>
-							<ScrollBar style={{ height: "150px" }}>
-								<ListGroup>
-									{wannaBeInterests.map((item) => (
-										<ListGroupItem key={item._id}>
-											<Input
-												type='checkbox'
-												checked={formData.wannaBeInterest.includes(item._id)}
-												onChange={() => toggleWannaBe(item._id)}
-											/>
-											<span className='ms-2'>{item.title}</span>
-										</ListGroupItem>
-									))}
-								</ListGroup>
-							</ScrollBar>
+							<Select
+								isMulti
+								name='wannaBeInterest'
+								options={interestOptions}
+								value={interestOptions.filter((i) =>
+									formData.wannaBeInterest.includes(i.value)
+								)}
+								onChange={(selected) =>
+									setFormData({
+										...formData,
+										wannaBeInterest: selected.map((s) => s.value),
+									})
+								}
+								className='basic-multi-select'
+								classNamePrefix='select'
+							/>
 						</Col>
 					</Row>
 				</Form>
@@ -226,7 +214,7 @@ const UpdatePathModal = ({
 					Update Path
 				</Button>
 				<Button
-					color='outline-secondary'
+					color='outline-primary'
 					onClick={toggle}>
 					Cancel
 				</Button>

@@ -7,8 +7,10 @@ import CreateCategoryForm from "./CreateCategoryForm";
 
 const CreateCategoryModal = ({
 	fetchData,
+	sm,
 }: {
 	fetchData: () => Promise<void>;
+	sm?: boolean;
 }) => {
 	const [modal, setModal] = useState(false);
 	const toggle = () => {
@@ -24,6 +26,8 @@ const CreateCategoryModal = ({
 		<>
 			<Button
 				color='primary'
+				outline={sm}
+				size={sm ? "sm" : ""}
 				className='w-100 '
 				onClick={toggle}>
 				{/* <i className="fa fa-plus me-2" /> */}

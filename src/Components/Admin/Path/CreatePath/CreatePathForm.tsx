@@ -7,16 +7,8 @@ import { PathProps } from "@/Types/Path.type";
 import { useEffect, useState } from "react";
 import ScrollBar from "react-perfect-scrollbar";
 import { toast } from "react-toastify";
-import {
-	Col,
-	Form,
-	Input,
-	Label,
-	Row,
-	Button,
-	ListGroup,
-	ListGroupItem,
-} from "reactstrap";
+import Select from "react-select";
+import { Col, Form, Input, Label, Row, Button } from "reactstrap";
 
 const CreatePathForm = () => {
 	const [formData, setFormData] = useState<PathProps>({
@@ -30,7 +22,10 @@ const CreatePathForm = () => {
 	const [courses, setCourses] = useState<CourseProps[]>([]);
 	const [wannaBeInterests, setWannaBeInterests] = useState<any[]>([]);
 	const [photo, setPhoto] = useState<File | null>(null);
-
+	const courseOptions = courses.map((c) => ({
+		label: c.title,
+		value: c._id,
+	}));
 	useEffect(() => {
 		(async () => {
 			try {
@@ -51,23 +46,10 @@ const CreatePathForm = () => {
 			[name]: name === "price" ? Number(value) : value,
 		});
 	};
-
-	const toggleCourse = (id: string) => {
-		const exists = formData.courses.includes(id);
-		const updated = exists
-			? formData.courses.filter((cid) => cid !== id)
-			: [...formData.courses, id];
-		setFormData({ ...formData, courses: updated });
-	};
-
-	const toggleWannaBe = (id: string) => {
-		const exists = formData.wannaBeInterest.includes(id);
-		const updated = exists
-			? formData.wannaBeInterest.filter((wid) => wid !== id)
-			: [...formData.wannaBeInterest, id];
-		setFormData({ ...formData, wannaBeInterest: updated });
-	};
-
+	const interestOptions = wannaBeInterests.map((w) => ({
+		label: w.title,
+		value: w._id,
+	}));
 	const handleSubmit = async () => {
 		if (
 			!formData.title ||
@@ -147,38 +129,43 @@ const CreatePathForm = () => {
 					/>
 				</Col>
 				<Col md={6}>
-					<Label>Courses *</Label>
-					<ScrollBar style={{ height: "150px" }}>
-						<ListGroup>
-							{courses?.map((course) => (
-								<ListGroupItem key={course._id}>
-									<Input
-										type='checkbox'
-										checked={formData.courses.includes(course._id!)}
-										onChange={() => toggleCourse(course._id!)}
-									/>
-									<span className='ms-2'>{course.title}</span>
-								</ListGroupItem>
-							))}
-						</ListGroup>
-					</ScrollBar>
+					<Label for='courses'>Courses</Label>
+					<Select
+						isMulti
+						name='courses'
+						options={courseOptions}
+						value={courseOptions.filter((c) =>
+							formData.courses.includes(c.value || "")
+						)}
+						onChange={(selected) =>
+							setFormData({
+								...formData,
+								courses: selected.map((s) => s.value || ""),
+							})
+						}
+						className='basic-multi-select'
+						classNamePrefix='select'
+					/>
 				</Col>
 				<Col md={6}>
 					<Label>WannaBe Interests *</Label>
-					<ScrollBar style={{ height: "150px" }}>
-						<ListGroup>
-							{wannaBeInterests?.map((item) => (
-								<ListGroupItem key={item._id}>
-									<Input
-										type='checkbox'
-										checked={formData.wannaBeInterest.includes(item._id)}
-										onChange={() => toggleWannaBe(item._id)}
-									/>
-									<span className='ms-2'>{item.title}</span>
-								</ListGroupItem>
-							))}
-						</ListGroup>
-					</ScrollBar>
+
+					<Select
+						isMulti
+						name='wannaBeInterest'
+						options={interestOptions}
+						value={interestOptions.filter((i) =>
+							formData.wannaBeInterest.includes(i.value)
+						)}
+						onChange={(selected) =>
+							setFormData({
+								...formData,
+								wannaBeInterest: selected.map((s) => s.value),
+							})
+						}
+						className='basic-multi-select'
+						classNamePrefix='select'
+					/>
 				</Col>
 				<Col
 					xs={12}

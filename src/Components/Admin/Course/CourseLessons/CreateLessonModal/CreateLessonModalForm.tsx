@@ -1,6 +1,7 @@
 "use client";
 import { createLesson } from "@/app/api/admin/lessons/lesson";
 import { useEffect, useState } from "react";
+import { Trash } from "react-feather";
 import { toast } from "react-toastify";
 import {
 	Button,
@@ -17,9 +18,11 @@ import {
 const CreateLessonForm = ({
 	courseId,
 	onSuccess,
+	courseName,
 }: {
 	courseId: string;
 	onSuccess: () => void;
+	courseName: string;
 }) => {
 	const [formData, setFormData] = useState<{
 		courseId: string;
@@ -80,7 +83,6 @@ const CreateLessonForm = ({
 	return (
 		<Card className='p-3'>
 			<CardBody>
-				<h4 className='mb-3'>Create New Lesson</h4>
 				<Form onSubmit={handleSubmit}>
 					<Row className='g-3'>
 						<Col md={6}>
@@ -90,7 +92,7 @@ const CreateLessonForm = ({
 									type='text'
 									name='courseId'
 									id='courseId'
-									value={formData.courseId}
+									value={courseName}
 									disabled
 								/>
 							</FormGroup>
@@ -154,10 +156,15 @@ const CreateLessonForm = ({
 										<Button
 											color='danger'
 											size='sm'
+											className='d-flex align-items-center justify-content-center p-2'
+											style={{
+												width: "30px",
+												height: "30px",
+											}}
 											type='button'
 											onClick={() => removeResourceField(index)}
 											disabled={formData.resources.length === 1}>
-											🗑️
+											<Trash size={16} />
 										</Button>
 									</Col>
 								</Row>

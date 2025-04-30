@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { getSubcategories } from "@/app/api/admin/subcategories";
 import { toast } from "react-toastify";
+import Select from "react-select";
 
 const UpdateCourseModal = ({
 	isOpen,
@@ -36,6 +37,7 @@ const UpdateCourseModal = ({
 		createdBy: "",
 		photo: null,
 	});
+
 	const [subcategories, setSubcategories] = useState<any[]>([]);
 
 	useEffect(() => {
@@ -46,42 +48,45 @@ const UpdateCourseModal = ({
 				whatYouWillLearn: course.whatYouWillLearn || "",
 				youtubeLink: course.youtubeLink || "",
 				timing: course.timing || "",
-				categoryId: course.category || "",
-				subcategoryId: course.subcategory || "",
+				categoryId: course.category?._id || course.category || "",
+				subcategoryId: course.subcategory?._id || course.subcategory || "",
 				wannaBeInterestIds: Array.isArray(course.wannaBeInterest)
-					? course.wannaBeInterest.map((id: string) => id.toString())
+					? course.wannaBeInterest.map((w: any) => w?._id || w)
 					: [],
 				realPrice: course.realPrice || "",
 				discountedPrice: course.discountedPrice || "",
-				tags: course.tags?.join(", ") || "",
+				tags: Array.isArray(course.tags)
+					? course.tags.join(", ")
+					: course.tags || "",
 				createdBy: course.createdBy || "",
 				photo: null,
 			});
 		}
 	}, [course]);
 
-	// Fetch subcategories on category change
+	// ✅ Fix subcategories not loading: actually invoke the async function
 	useEffect(() => {
-		if (formData.categoryId !== "") {
-			async () => {
-				const response = await getSubcategories(formData.categoryId);
-				setSubcategories(response.subcategories);
-			};
-		}
+		const fetchSubs = async () => {
+			try {
+				if (formData.categoryId) {
+					const res = await getSubcategories(formData.categoryId);
+					setSubcategories(res);
+				}
+			} catch (error) {
+				console.log("Error fetching subcategories:", error);
+			}
+		};
+		fetchSubs();
 	}, [formData.categoryId]);
 
 	const handleChange = (key: string, value: any) => {
 		setFormData((prev: any) => ({ ...prev, [key]: value }));
 	};
 
-	const toggleInterest = (id: string) => {
-		setFormData((prev: any) => ({
-			...prev,
-			wannaBeInterestIds: prev.wannaBeInterestIds.includes(id)
-				? prev.wannaBeInterestIds.filter((i: string) => i !== id)
-				: [...prev.wannaBeInterestIds, id],
-		}));
-	};
+	const interestOptions = wannabe.map((w: any) => ({
+		label: w.title,
+		value: w._id,
+	}));
 
 	return (
 		<Modal
@@ -98,6 +103,7 @@ const UpdateCourseModal = ({
 						onChange={(e) => handleChange("title", e.target.value)}
 					/>
 				</FormGroup>
+
 				<FormGroup>
 					<Label>Description</Label>
 					<Input
@@ -106,30 +112,7 @@ const UpdateCourseModal = ({
 						onChange={(e) => handleChange("description", e.target.value)}
 					/>
 				</FormGroup>
-				{/* <FormGroup>
-					<Label>What You Will Learn</Label>
-					<Input
-						type='textarea'
-						value={formData.whatYouWillLearn}
-						onChange={(e) => handleChange("whatYouWillLearn", e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup>
-					<Label>YouTube Link</Label>
-					<Input
-						type='url'
-						value={formData.youtubeLink}
-						onChange={(e) => handleChange("youtubeLink", e.target.value)}
-					/>
-				</FormGroup>
-				<FormGroup>
-					<Label>Timing</Label>
-					<Input
-						type='text'
-						value={formData.timing}
-						onChange={(e) => handleChange("timing", e.target.value)}
-					/>
-				</FormGroup> */}
+
 				<FormGroup>
 					<Label>Category</Label>
 					<Input
@@ -137,7 +120,7 @@ const UpdateCourseModal = ({
 						value={formData.categoryId}
 						onChange={(e) => {
 							handleChange("categoryId", e.target.value);
-							handleChange("subcategoryId", ""); // Reset subcategory
+							handleChange("subcategoryId", "");
 						}}>
 						<option value=''>Select Category</option>
 						{categories.map((cat: any) => (
@@ -149,6 +132,7 @@ const UpdateCourseModal = ({
 						))}
 					</Input>
 				</FormGroup>
+
 				<FormGroup>
 					<Label>Subcategory</Label>
 					<Input
@@ -165,25 +149,24 @@ const UpdateCourseModal = ({
 						))}
 					</Input>
 				</FormGroup>
+
 				<FormGroup>
 					<Label>WannaBe Interests</Label>
-					<div className='d-flex flex-wrap gap-2'>
-						{wannabe.map((w: any) => (
-							<FormGroup
-								check
-								key={w._id}>
-								<Label check>
-									<Input
-										type='checkbox'
-										checked={formData.wannaBeInterestIds.includes(w._id)}
-										onChange={() => toggleInterest(w._id)}
-									/>
-									{w.title}
-								</Label>
-							</FormGroup>
-						))}
-					</div>
+					<Select
+						isMulti
+						options={interestOptions}
+						value={interestOptions.filter((i: any) =>
+							formData.wannaBeInterestIds.includes(i.value)
+						)}
+						onChange={(selected) =>
+							handleChange(
+								"wannaBeInterestIds",
+								selected.map((s) => s.value)
+							)
+						}
+					/>
 				</FormGroup>
+
 				<FormGroup>
 					<Label>Real Price</Label>
 					<Input
@@ -192,6 +175,7 @@ const UpdateCourseModal = ({
 						onChange={(e) => handleChange("realPrice", e.target.value)}
 					/>
 				</FormGroup>
+
 				<FormGroup>
 					<Label>Discounted Price</Label>
 					<Input
@@ -200,6 +184,7 @@ const UpdateCourseModal = ({
 						onChange={(e) => handleChange("discountedPrice", e.target.value)}
 					/>
 				</FormGroup>
+
 				<FormGroup>
 					<Label>Tags (comma separated)</Label>
 					<Input
@@ -208,13 +193,14 @@ const UpdateCourseModal = ({
 						onChange={(e) => handleChange("tags", e.target.value)}
 					/>
 				</FormGroup>
-				<FormGroup>
+
+				{/* <FormGroup>
 					<Label>Course Image (optional)</Label>
 					<Input
 						type='file'
 						onChange={(e) => handleChange("photo", e.target.files?.[0])}
 					/>
-				</FormGroup>
+				</FormGroup> */}
 			</ModalBody>
 			<ModalFooter>
 				<Button

@@ -90,6 +90,7 @@ const LessonsPageContainer = ({ id }: { id: string }) => {
 					toggle={() => setShowCreateModal(false)}
 					refresh={fetchLessons}
 					courseId={id}
+					courseName={course.title}
 				/>
 			</>
 		);

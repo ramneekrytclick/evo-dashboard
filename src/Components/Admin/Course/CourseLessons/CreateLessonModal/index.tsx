@@ -6,18 +6,20 @@ const CreateLessonModal = ({
 	toggle,
 	refresh,
 	courseId,
+	courseName,
 }: {
 	isOpen: boolean;
 	toggle: () => void;
 	refresh: () => void;
 	courseId: string;
+	courseName: string;
 }) => {
 	return (
 		<Modal
 			isOpen={isOpen}
 			toggle={toggle}
-			size="lg">
-			<ModalHeader toggle={toggle}>Add New Lesson</ModalHeader>
+			size='lg'>
+			<ModalHeader toggle={toggle}>Add New Lesson in {courseName}</ModalHeader>
 			<ModalBody>
 				<CreateLessonForm
 					courseId={courseId}
@@ -25,6 +27,7 @@ const CreateLessonModal = ({
 						toggle();
 						refresh();
 					}}
+					courseName={courseName}
 				/>
 			</ModalBody>
 		</Modal>
