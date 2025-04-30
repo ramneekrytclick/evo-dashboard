@@ -19,7 +19,6 @@ import { getTransactions } from "@/app/api/admin/transactions";
 import Transactions from "./Transactions";
 import { getAllCategories, getAllCourses } from "@/app/api/cc";
 import Tables from "./Tables";
-import ItemDetailsModal from "./ItemDetailsModal";
 import AdminTicketModal from "@/Components/Support/AdminTicketModal";
 import JobDetailsModal from "../JobApproval/JobDetailsModal";
 
