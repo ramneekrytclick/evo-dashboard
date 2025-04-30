@@ -128,6 +128,7 @@ const LessonSidebar = ({
 				toggle={() => setShowModal(false)}
 				courseId={courseId}
 				refresh={handleSuccess}
+				courseName={"Course"}
 			/>
 		</CardBody>
 	);
