@@ -24,3 +24,7 @@ export const updateSubcategory = async (id: string, data: FormData) => {
 		})
 	).data;
 };
+export const getSubcategoryBySlug = async (slug: string) => {
+	const response = await apiClient.get(`/subcategories/slug/${slug}`);
+	return response.data;
+};

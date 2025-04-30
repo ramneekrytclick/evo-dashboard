@@ -119,16 +119,27 @@ const CategoriesCards = () => {
 										</p>
 									)}
 								</CardBody>
-								<CardFooter className='d-flex justify-content-between gap-2'>
+								<CardFooter className='d-flex flex-column justify-content-center align-items-center gap-2'>
 									<Link
-										className='fs-5'
+										className='fs-5 w-100'
 										href={`subcategories/${item._id}`}>
 										<Button
-											className='fs-6'
+											className='fs-6 w-100'
 											color='primary'>
 											View Subcategories
 										</Button>
 									</Link>
+									<Link
+										className='fs-5 w-100'
+										href={`categories/courses/${item.slug}`}>
+										<Button
+											className='fs-6 w-100'
+											outline
+											color='primary'>
+											View courses
+										</Button>
+									</Link>
+
 									<ButtonGroup>
 										<Button
 											color='success'

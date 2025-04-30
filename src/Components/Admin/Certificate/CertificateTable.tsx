@@ -109,11 +109,15 @@ const CertificateTable = () => {
 
 	const columns = [
 		{ name: "Name", selector: (row: any) => row.name, sortable: true },
-		{ name: "Email", selector: (row: any) => row.email, wrap: true },
+		{
+			name: "Email",
+			selector: (row: any) => row.email,
+			center: true,
+		},
 		{
 			name: "Course Title",
 			selector: (row: any) => row.courseTitle,
-			wrap: true,
+			center: true,
 		},
 		{
 			name: "Lessons",
@@ -148,6 +152,7 @@ const CertificateTable = () => {
 					<Button
 						color='primary'
 						size='sm'
+						className='fs-6'
 						onClick={() => {
 							setSelectedRow(row);
 							setModalOpen(true);
@@ -155,7 +160,16 @@ const CertificateTable = () => {
 						Issue
 					</Button>
 				) : (
-					<span className='text-muted'>Not eligible till 70%</span>
+					<Button
+						color='warning'
+						size='sm'
+						className='fs-6'
+						onClick={() => {
+							setSelectedRow(row);
+							setModalOpen(true);
+						}}>
+						Issue
+					</Button>
 				);
 			},
 			center: true,

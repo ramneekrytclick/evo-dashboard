@@ -24,6 +24,9 @@ import Image from "next/image";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import UpdateSubcategoryModal from "./UpdateSubcategory";
 import { Edit2, Trash } from "react-feather";
+import Link from "next/link";
+import { Category } from "@/Types/Category.type";
+import { getCategories, getCategoryBySlug } from "@/app/api/admin/categories";
 
 export interface SubCategory {
 	_id: string;
@@ -31,9 +34,16 @@ export interface SubCategory {
 	description?: string;
 	category: string;
 	photo?: string;
+	slug?: string;
 }
 
-const SubcategoriesCards = ({ id }: { id: string }) => {
+const SubcategoriesCards = ({
+	id,
+	category,
+}: {
+	id: string;
+	category: Category;
+}) => {
 	const [subcategories, setSubcategories] = useState<SubCategory[]>([]);
 	const [deleteModal, setDeleteModal] = useState(false);
 	const [subcategoryToDelete, setSubcategoryToDelete] =
@@ -83,7 +93,7 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 				className='ms-1 mb-4'>
 				<CreateSubcategoryModal
 					fetchData={fetchSubcategories}
-					id={id}
+					category={{ id: id, categoryName: category?.title || "" }}
 				/>
 			</Row>
 
@@ -119,6 +129,16 @@ const SubcategoriesCards = ({ id }: { id: string }) => {
 									{item.description && (
 										<p className='text-muted small'>{item.description}</p>
 									)}
+									<Link
+										className='fs-5 w-100'
+										href={`courses/${item.slug}`}>
+										<Button
+											className='fs-6 w-100'
+											outline
+											color='primary'>
+											View courses
+										</Button>
+									</Link>
 								</CardBody>
 								<CardFooter className='d-flex justify-content-end gap-2'>
 									<ButtonGroup>

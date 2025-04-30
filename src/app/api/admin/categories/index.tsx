@@ -26,3 +26,6 @@ export const updateCategory = async (id: string, data: FormData) => {
 		})
 	).data;
 };
+export const getCategoryBySlug = async (slug: string) => {
+	return (await apiClient.get(`/categories/slug/${slug}`)).data;
+};
