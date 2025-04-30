@@ -225,7 +225,7 @@ const UserProfile = ({ id }: { id: string }) => {
 							style={{ borderRadius: "12px", objectFit: "cover" }}
 							onClick={togglePhotoModal}
 						/>
-						<div className='d-flex align-items-center justify-content-center mt-2'>
+						<div className='d-flex align-items-center justify-content-center mt-2 gap-1'>
 							{/* Approval Dot */}
 							{profile.role !== "Student" && (
 								<>
@@ -390,7 +390,7 @@ const UserProfile = ({ id }: { id: string }) => {
 									{profile.education}
 								</Col>
 							)}
-							{profile.preferredLanguages && (
+							{!isEmployer && profile.preferredLanguages && (
 								<Col
 									sm={12}
 									md={6}

@@ -54,7 +54,7 @@ const EmployerCards = ({ profile }: { profile: any }) => {
 		);
 
 	return (
-		<div className='my-3'>
+		<div className='my-3 card card-body bg-light text-dark shadow-lg'>
 			<h5 className='fw-bold mb-3'>Job Postings</h5>
 			{allJobs.length === 0 ? (
 				<p className='text-muted'>No jobs posted by {profile.name} yet.</p>
@@ -63,8 +63,8 @@ const EmployerCards = ({ profile }: { profile: any }) => {
 					{allJobs.map((job) => (
 						<Card
 							key={job._id}
-							className='shadow-sm cursor-pointer'
-							style={{ minWidth: "250px", flex: "0 0 auto" }}
+							className='shadow-sm'
+							style={{ minWidth: "250px", flex: "0 0 auto", cursor: "pointer" }}
 							onClick={() => openJobModal(job)}>
 							<CardHeader className='fw-semibold text-primary text-truncate'>
 								{job.title}
