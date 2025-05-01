@@ -37,7 +37,9 @@ const BatchCards = () => {
 		fetchCourses();
 	}, []);
 	return (
-		<Container>
+		<Row
+			className='g-4'
+			style={{ height: "76vh", overflowY: "scroll" }}>
 			{loading ? (
 				<div className='d-flex justify-content-center align-items-center h-100 text-primary gap-3 fs-4'>
 					Loading
@@ -52,7 +54,7 @@ const BatchCards = () => {
 								md={6}
 								sm={12}
 								key={batch._id}>
-								<Card className='border-0 shadow rounded-4 h-100 '>
+								<Card className='border-0 shadow rounded-4 h-100 my-3'>
 									<CardBody className='d-flex flex-column justify-content-between align-items-center'>
 										{/* Course title + Batch chat link */}
 										<Link href={`/student/batches/${batch._id}`}>
@@ -114,7 +116,7 @@ const BatchCards = () => {
 					) : (
 						<>
 							<Card
-								className='text-center text-white h6 h-100 py-5 rounded-full position-relative overflow-hidden'
+								className='text-center text-white h6 h-50 py-5 rounded-full position-relative overflow-hidden'
 								style={{
 									backgroundImage: "url(/assets/images/knowledgebase/bg_2.jpg)",
 									backgroundSize: "cover",
@@ -150,7 +152,7 @@ const BatchCards = () => {
 					)}
 				</>
 			)}
-		</Container>
+		</Row>
 	);
 };
 

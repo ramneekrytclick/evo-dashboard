@@ -43,7 +43,6 @@ const BatchCards = () => {
 					key={batch._id}>
 					<Card className='border-0 shadow rounded-4 h-100 '>
 						<CardBody className='d-flex flex-column'>
-							{/* Course title + Batch chat link */}
 							<Link href={`/mentor/batches/${batch._id}`}>
 								<CardTitle
 									tag='h5'
@@ -55,7 +54,6 @@ const BatchCards = () => {
 								<strong>Course: </strong>
 								{batch.course?.title || "N/A"}
 							</p>
-							{/* Batch schedule info */}
 							<div className='mb-2'>
 								<Badge
 									color='info'
