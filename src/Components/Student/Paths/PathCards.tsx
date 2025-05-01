@@ -49,7 +49,7 @@ const MyLearningPaths = () => {
 	}, []);
 
 	return (
-		<Container className='card'>
+		<Container>
 			{loading ? (
 				<Container className='d-flex gap-2 text-primary justify-content-center align-items-center'>
 					<Spinner size={30} />
@@ -59,20 +59,35 @@ const MyLearningPaths = () => {
 					<Row className='g-4'>
 						{learningPaths.length === 0 ? (
 							<Col xs={12}>
-								<Image
-									src={`/assets/images/knowledgebase/bg_1.jpg`}
-									height={100}
-									width={100}
+								<Card
+									className='text-center text-white h6 h-100 py-5 rounded-full position-relative overflow-hidden'
 									style={{
-										objectFit: "cover",
-										width: "100%",
-										height: "100%",
-									}}
-									alt='bg_1'
-								/>
-								<Card className='text-center text-muted h6 h-100 py-5'>
-									No learning paths available for your current enrollments.
-									<Link href={`${mainURL}paths`}>Explore All Paths</Link>
+										backgroundImage:
+											"url(/assets/images/knowledgebase/bg_1.jpg)",
+										backgroundSize: "cover",
+										backgroundPosition: "center",
+										backgroundRepeat: "no-repeat",
+										minHeight: "300px",
+									}}>
+									<div
+										className='position-absolute top-0 start-0 w-100 h-100'
+										style={{
+											backgroundColor: "rgba(0, 0, 0, 0.5)",
+											zIndex: 1,
+										}}></div>
+
+									<div
+										className='position-relative'
+										style={{ zIndex: 2 }}>
+										<p className='mb-3 fs-5 fw-semibold'>
+											No learning paths available for your current enrollments.
+										</p>
+										<Link
+											className='btn btn-primary'
+											href={`${mainURL}paths`}>
+											Explore All Paths
+										</Link>
+									</div>
 								</Card>
 							</Col>
 						) : (

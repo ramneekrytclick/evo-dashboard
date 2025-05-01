@@ -51,12 +51,34 @@ const StudentCertificatesContainer = () => {
 						<Spinner size={30} />
 					</Container>
 				) : certificates.length === 0 ? (
-					<Card className='text-center text-muted h6 h-100 py-5'>
-						<p className='text-muted'>
-							You have not been issued a certificate yet. Complete your{" "}
-							<Link href={`/student/my-courses`}>courses</Link> to earn a
-							certificate.
-						</p>
+					<Card
+						className='text-center text-white h6 h-100 py-5 rounded-full position-relative overflow-hidden'
+						style={{
+							backgroundImage: "url(/assets/images/knowledgebase/bg_3.jpg)",
+							backgroundSize: "cover",
+							backgroundPosition: "center",
+							backgroundRepeat: "no-repeat",
+							minHeight: "300px",
+						}}>
+						<div
+							className='position-absolute top-0 start-0 w-100 h-100'
+							style={{
+								backgroundColor: "rgba(0, 0, 0, 0.4)",
+								zIndex: 1,
+							}}></div>
+						<div
+							className='position-relative'
+							style={{ zIndex: 2 }}>
+							<p className='text-light'>
+								You have not been issued a certificate yet. Complete your{" "}
+								<Link
+									className='text-primary'
+									href={`/student/my-courses`}>
+									courses
+								</Link>{" "}
+								to earn a certificate.
+							</p>
+						</div>
 					</Card>
 				) : (
 					<div className='row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4'>

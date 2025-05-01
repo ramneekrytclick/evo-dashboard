@@ -113,19 +113,38 @@ const BatchCards = () => {
 						))
 					) : (
 						<>
-							<Card className='text-center card text-muted h6 h-100 py-5 flex flex-column justify-content-center align-items-center gap-3'>
-								No Batches assigned to you.
-								<Link
-									href={`/student/my-courses`}
-									className='btn btn-outline-primary px-2 py-1'>
-									Enroll in a course
-								</Link>
-								OR
-								<Link
-									href={`/student/support/tickets`}
-									className='btn btn-outline-primary px-2 py-1'>
-									Contact the Admin
-								</Link>
+							<Card
+								className='text-center text-white h6 h-100 py-5 rounded-full position-relative overflow-hidden'
+								style={{
+									backgroundImage: "url(/assets/images/knowledgebase/bg_2.jpg)",
+									backgroundSize: "cover",
+									backgroundPosition: "center",
+									backgroundRepeat: "no-repeat",
+									minHeight: "300px",
+								}}>
+								<div
+									className='position-absolute top-0 start-0 w-100 h-100'
+									style={{
+										backgroundColor: "rgba(0, 0, 0, 0.5)",
+										zIndex: 1,
+									}}></div>
+
+								<div
+									className='position-relative d-flex flex-column justify-content-center align-items-center gap-3'
+									style={{ zIndex: 2 }}>
+									No Batches assigned to you.
+									<Link
+										href={`/student/my-courses`}
+										className='btn btn-primary px-2 py-1'>
+										Enroll in a course
+									</Link>
+									OR
+									<Link
+										href={`/student/support/tickets`}
+										className='btn btn-primary px-2 py-1'>
+										Contact the Admin
+									</Link>
+								</div>
 							</Card>
 						</>
 					)}
