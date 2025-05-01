@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { getImageURL } from "@/CommonComponent/imageURL";
-
+const mainURL = process.env.NEXT_PUBLIC_MAIN_URL;
 export interface PathProps {
 	_id?: string;
 	title: string;
@@ -59,8 +59,20 @@ const MyLearningPaths = () => {
 					<Row className='g-4'>
 						{learningPaths.length === 0 ? (
 							<Col xs={12}>
+								<Image
+									src={`/assets/images/knowledgebase/bg_1.jpg`}
+									height={100}
+									width={100}
+									style={{
+										objectFit: "cover",
+										width: "100%",
+										height: "100%",
+									}}
+									alt='bg_1'
+								/>
 								<Card className='text-center text-muted h6 h-100 py-5'>
 									No learning paths available for your current enrollments.
+									<Link href={`${mainURL}paths`}>Explore All Paths</Link>
 								</Card>
 							</Col>
 						) : (

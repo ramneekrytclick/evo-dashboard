@@ -17,6 +17,7 @@ import { getAllCourses } from "@/app/api/cc";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import Image from "next/image";
 import { ArrowLeftCircle, ArrowRightCircle } from "react-feather";
+import WelcomeCard from "./Welcome";
 
 const ContinueWatching = ({
 	loading,
@@ -90,27 +91,17 @@ const ContinueWatching = ({
 		});
 	}, [progressData]);
 	return (
-		<div
-			className='col-12  position-relative bg-white card p-3 shadow-sm border-0 rounded-4'
-			style={{ height: "350px" }}>
+		<div style={{ height: "350px" }}>
 			{loading && loadingLessons ? (
 				<div
-					className='d-flex justify-content-center align-items-center'
+					className='d-flex justify-content-center align-items-center col-12  position-relative bg-white card p-3 shadow-sm border-0 rounded-4'
 					style={{ height: "150px" }}>
 					<Spinner color='primary' />
 				</div>
 			) : progressData.length === 0 ? (
-				<div className='text-center py-4'>
-					<h5 className='mb-2 fw-semibold'>👋 Welcome to EVO!</h5>
-					<p className='text-muted'>You haven’t enrolled in any courses yet.</p>
-					<Link
-						href={`${process.env.NEXT_PUBLIC_MAIN_URL}/courses`}
-						className='btn btn-primary mt-2'>
-						Explore Courses
-					</Link>
-				</div>
+				<WelcomeCard content='Welcome to the EVO! Begin your EVOlution journey with a bang!' />
 			) : (
-				<>
+				<div className='col-12  position-relative bg-white card p-3 shadow-sm border-0 rounded-4'>
 					<h4 className='fw-bold mb-4 text-muted'>Continue Your Learning</h4>
 
 					{progressData.length > 2 && (
@@ -217,7 +208,7 @@ const ContinueWatching = ({
 							);
 						})}
 					</div>
-				</>
+				</div>
 			)}
 		</div>
 	);

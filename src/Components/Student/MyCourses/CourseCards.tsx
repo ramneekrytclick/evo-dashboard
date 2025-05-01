@@ -21,6 +21,7 @@ import {
 	Spinner,
 } from "reactstrap";
 import CourseCard from "../CourseCard";
+import WelcomeCard from "../Dashboard/Welcome";
 
 const MyEnrolledCourses = () => {
 	const [loading, setLoading] = useState(true);
@@ -107,16 +108,11 @@ const MyEnrolledCourses = () => {
 	}
 	if (enrolledCourses.length === 0) {
 		return (
-			<Container className='d-flex gap-2 text-primary justify-content-center align-items-center card'>
-				<div className='text-center py-4'>
-					<h5 className='mb-2 fw-semibold'>👋 Welcome to EVO!</h5>
-					<p className='text-muted'>You haven’t enrolled in any courses yet.</p>
-					<Link
-						href={`${process.env.NEXT_PUBLIC_MAIN_URL}courses`}
-						className='btn btn-primary mt-2'>
-						Explore Courses
-					</Link>
-				</div>
+			<Container className='d-flex gap-2 text-primary justify-content-center align-items-center default-dashboard'>
+				<WelcomeCard
+					title='Welcome to EVO!'
+					content=" You haven't enrolled in any courses yet. Explore our courses and start today!"
+				/>
 			</Container>
 		);
 	}

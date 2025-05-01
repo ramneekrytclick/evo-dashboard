@@ -83,15 +83,14 @@ export const getMyBatches = async () => {
 export const getMyMentors = async () => {
 	const { batches }: { batches: BatchProps[] } = await getMyBatches();
 
-	const mentors = await Promise.all(
-		batches.map(async (b) => {
-			const { mentors } = await getBatchByID(b._id || "");
-			return mentors; // Only mentors extracted
-		})
+	const batchDetails = await Promise.all(
+		batches.map((b) => getBatchByID(b._id || ""))
 	);
+	console.log(batchDetails);
 
-	// flatten if needed
-	return mentors.flat();
+	const mentors = batchDetails.map((batch) => batch?.batch.mentor);
+
+	return mentors;
 };
 export const getBatchByID = async (id: string) => {
 	return (await apiClient.get(`/students/batches/${id}`)).data;

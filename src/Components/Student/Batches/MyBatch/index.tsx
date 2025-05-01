@@ -186,18 +186,11 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 				</Row>
 			</Card>
 
-			{/* Modal for Booking Session */}
-			<Modal
-				isOpen={modalOpen}
-				toggle={toggleModal}>
-				<ModalHeader toggle={toggleModal}>Book Mentor Session</ModalHeader>
-				<ModalBody>
-					<BookSessionForm
-						toggle={toggleModal}
-						mentorIdProp={batch.mentor?._id || ""}
-					/>
-				</ModalBody>
-			</Modal>
+			<BookSessionForm
+				modalOpen={modalOpen}
+				toggle={toggleModal}
+				mentorIdProp={batch.mentor?._id || ""}
+			/>
 		</>
 	);
 };

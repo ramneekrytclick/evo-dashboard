@@ -291,7 +291,7 @@ $badge-light-color in (primary, $primary-color),
       }
     }
     h1 {
-      color: $white;
+      color: $primary-color;
       font-weight: 600;
     }
     p {
@@ -301,7 +301,7 @@ $badge-light-color in (primary, $primary-color),
       margin-bottom: 0;
       margin-right: 125px;
       letter-spacing: 0;
-      color: $dark-all-font-color !important;
+      color: $dark-color !important;
     }
     .btn {
       margin-top: 50px;
@@ -483,6 +483,134 @@ $badge-light-color in (primary, $primary-color),
           }
         }
       }
+    }
+  }
+  .evo-card {
+    position: relative;
+    overflow: hidden;
+  
+    // Removed forceful left alignment
+    // text-align: left !important;
+  
+    &:hover {
+      transform: translateY(-5px);
+    }
+  
+    .card-body {
+      background-image: url(../../images/dashboard/bg2.png);
+      background-repeat: no-repeat;
+      background-position: right center;
+      background-size: cover;
+      display: block;
+      direction: ltr;
+      height: 320px;
+      border-radius: 15px;
+  
+      .d-flex {
+        .flex-grow-1 {
+          margin-top: 20px;
+        }
+  
+        .flex-shrink-0 {
+          position: absolute;
+          top: 69px;
+          right: -20px;
+  
+          img {
+            animation: move2 1.2s infinite alternate;
+          }
+        }
+      }
+    }
+  
+    h4 {
+      color: $light-color;
+      font-weight: 600;
+    }
+  
+    p {
+      font-size: 16px;
+      margin-top: 8px;
+      font-weight: 500;
+      margin-bottom: 0;
+      margin-inline-end: 125px;
+      letter-spacing: 0;
+      color: $primary-color !important;
+    }
+  
+    .btn {
+      margin-top: 50px;
+      color: $white;
+      border-radius: 5px;
+      padding: 11px 22px;
+      border: 2px solid $white;
+    }
+  
+    // Clock styles
+    .clockbox {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+  
+      svg {
+        width: 35px;
+        height: 35px;
+      }
+  
+      .badge {
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  
+    .circle {
+      fill: $white;
+      stroke: var(--theme-secondary);
+      stroke-width: 40px;
+      stroke-miterlimit: 10;
+    }
+  
+    .mid-circle {
+      fill: var(--theme-secondary);
+    }
+  
+    .hour-marks {
+      fill: none;
+      stroke: $theme-body-sub-title-color;
+      stroke-width: 9;
+      stroke-miterlimit: 10;
+    }
+  
+    .hour-hand {
+      fill: none;
+      stroke: #405B6C;
+      stroke-width: 17;
+      stroke-miterlimit: 10;
+    }
+  
+    .minute-hand {
+      fill: none;
+      stroke: #405B6C;
+      stroke-width: 11;
+      stroke-miterlimit: 10;
+    }
+  
+    .second-hand {
+      fill: none;
+      stroke: #86DCFF;
+      stroke-width: 15px;
+      stroke-miterlimit: 10;
+    }
+  
+    .sizing-box {
+      fill: none;
+    }
+  
+    #hour,
+    #minute,
+    #second {
+      transform-origin: 300px 300px;
+      transition: transform 0.5s ease-in-out;
     }
   }
   .recent {

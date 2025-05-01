@@ -1,10 +1,12 @@
 "use client";
+
 import { getStudentProfile } from "@/app/api/student";
 import { ApexOptions } from "apexcharts";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 import { toast } from "react-toastify";
-import { Container, Spinner } from "reactstrap";
+import { Card, CardBody, CardHeader, Spinner } from "reactstrap";
 
 const EvoScore = ({
 	loading,
@@ -14,8 +16,10 @@ const EvoScore = ({
 	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
 	const [evoScore, setEvoScore] = useState<number>(0);
+	const [scoreLoaded, setScoreLoaded] = useState(false);
 	const evoColor = getEvoColor(evoScore);
 	const evoComment = getEvoComment(evoScore);
+
 	const fetchEvoScore = async () => {
 		setLoading(true);
 		try {
@@ -23,19 +27,20 @@ const EvoScore = ({
 			const score =
 				typeof response?.evoScore === "number" ? response.evoScore : 0;
 			setEvoScore(score);
+			setScoreLoaded(true);
 		} catch (error: any) {
-			{
-				error.response?.data?.message
-					? toast(error.response?.data?.message)
-					: toast.error("Failed to load EvoScore");
-			}
+			error.response?.data?.message
+				? toast(error.response?.data?.message)
+				: toast.error("Failed to load EvoScore");
+		} finally {
+			setLoading(false);
 		}
-		setLoading(false);
 	};
 
 	useEffect(() => {
 		fetchEvoScore();
 	}, []);
+
 	const chartOptions: ApexOptions = {
 		chart: { type: "radialBar", height: 350 },
 		plotOptions: {
@@ -59,41 +64,69 @@ const EvoScore = ({
 		labels: ["EVO Score"],
 		colors: [evoColor],
 	};
-	if (loading) {
+
+	if (evoScore === 0) {
 		return (
-			<>
-				<Container className='d-flex gap-2 fs-3 justify-content-center align-items-center text-primary'>
-					<Spinner />
-				</Container>
-			</>
+			<Card className='text-dark evo-card'>
+				<CardBody>
+					<CardHeader className='border-0 bg-transparent px-0 pb-2'>
+						<h4 className='fw-bold text-muted'>EVO Score</h4>
+					</CardHeader>
+					<p className='fs-6 text-light'>
+						Start learning to begin tracking your growth!
+					</p>
+					<Link
+						className='btn btn-primary'
+						href={`/student/courses`}>
+						{"Explore Courses"}
+					</Link>
+				</CardBody>
+			</Card>
 		);
 	}
+
+	if (loading) {
+		return (
+			<Card className='shadow-sm p-4 text-center'>
+				<Spinner color='primary' />
+			</Card>
+		);
+	}
+
 	return (
-		<div
-			className='card shadow-sm p-3'
-			style={{
-				height: "350px",
-				overflow: "scroll",
-			}}>
-			<h4 className='fw-bold text-muted'>EVO Score</h4>
-			<ReactApexChart
-				options={chartOptions}
-				series={[evoScore * 10]} // scale to percentage for chart
-				type='radialBar'
-				height={240}
-			/>
-			<p
-				className={`mt-2 fw-semibold text-center fs-6`}
-				style={{
-					color: evoColor,
-				}}>
-				{evoComment}
-			</p>
-		</div>
+		<Card className='text-dark'>
+			<CardBody>
+				<CardHeader className='border-0 bg-transparent px-0 pb-2'>
+					<h4 className='fw-bold text-muted'>EVO Score</h4>
+				</CardHeader>
+				{scoreLoaded && evoScore === 0 ? (
+					<p className='fs-6 text-muted'>
+						EVO Score is calculated based on your overall performance, including
+						course progress, quiz results, assignments, and engagement. Start
+						learning to begin tracking your growth!
+					</p>
+				) : (
+					<>
+						<ReactApexChart
+							options={chartOptions}
+							series={[evoScore * 10]}
+							type='radialBar'
+							height={240}
+						/>
+						<p
+							className={`mt-3 fw-semibold text-center fs-6`}
+							style={{ color: evoColor }}>
+							{evoComment}
+						</p>
+					</>
+				)}
+			</CardBody>
+		</Card>
 	);
 };
 
 export default EvoScore;
+
 const getEvoComment = (score: number) => {
 	const score10 = score * 10;
 	const comments = {

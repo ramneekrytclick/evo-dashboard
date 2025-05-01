@@ -18,7 +18,7 @@ const StudentDashboardContainer = () => {
 				parent='Student'
 				title='Dashboard'
 			/>
-			<div className='pt-1'>
+			<div className='pt-1 default-dashboard'>
 				<Row>
 					<Col
 						sm={12}

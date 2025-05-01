@@ -3,9 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { getMyMentorBookings, getMyMentors } from "@/app/api/student";
 import { toast } from "react-toastify";
-import { Button, Card, CardBody, CardTitle, Spinner } from "reactstrap";
+import { Badge, Button, Card, CardBody, CardTitle, Spinner } from "reactstrap";
 import Link from "next/link";
 import { ArrowLeftCircle, ArrowRightCircle } from "react-feather";
+import NewMentorBooking from "./NewMentorBooking";
+import Image from "next/image";
+import SessionBookingCard from "./SessionBookingCard";
 
 const YourMentorBookings = ({
 	loading,
@@ -16,7 +19,6 @@ const YourMentorBookings = ({
 }) => {
 	const [mentorBookings, setMentorBookings] = useState<any[]>([]);
 	const scrollRef = useRef<HTMLDivElement>(null);
-	const [myMentors, setMyMentors] = useState<any[]>([]);
 
 	const scroll = (direction: "left" | "right") => {
 		if (scrollRef.current) {
@@ -35,22 +37,9 @@ const YourMentorBookings = ({
 			setLoading(false);
 		}
 	};
-	const fetchMyMentors = async () => {
-		try {
-			const response = await getMyMentors();
-			setMyMentors(response);
-			console.log("Mentorss:", response);
-		} catch (error: any) {
-			console.log(error);
-			toast.error(error.response?.data?.message || "Failed to load mentors");
-		} finally {
-			setLoading(false);
-		}
-	};
 
 	useEffect(() => {
 		fetchMentorBookings();
-		fetchMyMentors();
 	}, []);
 
 	return (
@@ -71,21 +60,13 @@ const YourMentorBookings = ({
 						<Link href={`/student/batches`}>batches</Link> to book a 1:1 mentor
 						session.
 					</p>
-					<Link
-						href='/student/batches'
-						className='btn btn-primary mt-2'>
-						Book Now
-					</Link>
+					<NewMentorBooking />
 				</div>
 			) : (
 				<>
 					<div className='d-flex justify-content-between align-items-center mb-3'>
 						<h4 className='fw-bold mb-0 text-muted'>Your Mentor Bookings</h4>
-						<Link
-							href='/student/batches'
-							className='btn btn-primary'>
-							Schedule 1:1 Mentor Session
-						</Link>
+						<NewMentorBooking />
 					</div>
 
 					{/* Scroll Arrows */}
@@ -130,53 +111,10 @@ const YourMentorBookings = ({
 							scrollBehavior: "smooth",
 						}}>
 						{mentorBookings.map((booking) => (
-							<Card
+							<SessionBookingCard
 								key={booking._id}
-								className='flex-shrink-0 p-3 border shadow-sm rounded-4 bg-white text-dark'
-								style={{ width: "280px", scrollSnapAlign: "start" }}>
-								<CardBody className='p-0 d-flex flex-column h-100 justify-content-between'>
-									<div>
-										<CardTitle
-											tag='h6'
-											className='text-primary fw-semibold mb-2'>
-											<span className='text-dark'>
-												Session: {booking.mentor?.name || "Unnamed Mentor"}
-											</span>
-										</CardTitle>
-										<p className='fw-normal fs-6 mb-1 text-dark'>
-											{booking.message || "—"}
-										</p>
-									</div>
-									<div className='mt-3 fs-6'>
-										<p className='mb-1 small'>
-											<strong>Date:</strong>{" "}
-											{new Date(booking.date).toLocaleDateString("en-IN")}
-										</p>
-										<p className='mb-1 small'>
-											<strong>Time:</strong> {booking.timeSlot || "—"}
-										</p>
-										<p className='mb-1 small'>
-											<strong>Status:</strong>{" "}
-											<span
-												className={`badge bg-${
-													booking.status === "Confirmed"
-														? "success"
-														: booking.status === "Rejected"
-														? "danger"
-														: "warning"
-												}`}>
-												{booking.status}
-											</span>
-										</p>
-										<p className='mb-0 small text-dark'>
-											<strong>Mentor Reply:</strong>{" "}
-											<span className='text-muted'>
-												{booking.replyFromMentor || "No reply yet"}
-											</span>
-										</p>
-									</div>
-								</CardBody>
-							</Card>
+								booking={booking}
+							/>
 						))}
 					</div>
 				</>
