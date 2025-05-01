@@ -20,6 +20,7 @@ import {
 	Row,
 	Spinner,
 } from "reactstrap";
+import CourseCard from "../CourseCard";
 
 const MyEnrolledCourses = () => {
 	const [loading, setLoading] = useState(true);
@@ -135,68 +136,14 @@ const MyEnrolledCourses = () => {
 							sm={12}
 							className='mb-4'
 							key={course._id}>
-							<Card className='border-0 shadow rounded-4 overflow-hidden h-100 '>
-								<Image
-									width={200}
-									height={200}
-									className='w-100'
-									src={getImageURL(course.photo)}
-									alt={course.title}
-									style={{ objectFit: "cover" }}
-								/>
-								<CardBody
-									className='p-4 d-flex flex-column align-items-center justify-content-between'
-									style={{
-										textWrap: "pretty",
-									}}>
-									<Link
-										className='text-dark text-decoration-none'
-										href={`/student/learning/course/${course._id}`}>
-										<h3
-											className='fw-bold text-dark mb-1 text-center'
-											style={{
-												whiteSpace: "nowrap",
-												overflow: "hidden",
-												textOverflow: "ellipsis",
-												width: "100%",
-											}}>
-											{course.title || "Untitled Course"}
-										</h3>
-									</Link>
-									<div className='mb-4'>
-										<Badge
-											color='info'
-											className='me-2'>
-											{subcategoryMap.get(course.subcategory) ||
-												"Unknown Subcategory"}
-										</Badge>
-										<Badge color='warning'>
-											{categoryMap.get(course.category) || "Unknown Category"}
-										</Badge>
-									</div>
-
-									<div className='text-center w-100'>
-										<Progress
-											value={percent}
-											style={{ height: "8px", width: "100%" }}
-											className='rounded-pill mt-1'
-											color='success'
-										/>
-										<span className='text-muted h6'>{percent}% Completed</span>
-										<p className='text-muted small'>
-											({prog?.completedLessons || "0"} of{" "}
-											{prog?.totalLessons || "0"} Lessons)
-										</p>
-									</div>
-									<Button
-										color='primary'
-										className='w-100 mb-2 rounded-pill'
-										tag={Link}
-										href={`/student/learning/course/${course._id}`}>
-										Continue Learning
-									</Button>
-								</CardBody>
-							</Card>
+							<CourseCard
+								prog={prog}
+								percent={percent}
+								course={course}
+								enrolled
+								categoryMap={categoryMap}
+								subcategoryMap={subcategoryMap}
+							/>
 						</Col>
 					);
 				})}

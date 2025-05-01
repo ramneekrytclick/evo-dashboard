@@ -40,7 +40,7 @@ const EvoScore = ({
 		chart: { type: "radialBar", height: 350 },
 		plotOptions: {
 			radialBar: {
-				hollow: { size: "70%" },
+				hollow: { size: "60%" },
 				dataLabels: {
 					name: {
 						show: true,
@@ -49,8 +49,9 @@ const EvoScore = ({
 					},
 					value: {
 						show: true,
-						fontSize: "16px",
-						formatter: () => `${evoScore.toFixed(1)} / 10`,
+						fontSize: "32px",
+						fontWeight: "bold",
+						formatter: () => `${(evoScore * 10).toFixed(1)}`,
 					},
 				},
 			},

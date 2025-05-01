@@ -37,6 +37,7 @@ export interface CourseProps {
 	subcategory: string;
 	wannaBeInterest: string[];
 	tags: string[];
+	slug?: string;
 	reviews: {
 		student: string | null;
 		rating: number;

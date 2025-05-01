@@ -207,7 +207,6 @@ const ContinueWatching = ({
 											<Progress
 												value={parseInt(item.progressPercent || 0)}
 												color='success'
-												animated
 											/>
 											<CardText className='text-muted mt-1'>
 												{item.progressPercent || 0}% Completed
