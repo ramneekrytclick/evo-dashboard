@@ -3,15 +3,13 @@ import { getCourses } from "@/app/api/admin/course";
 import { createPath } from "@/app/api/admin/path";
 import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { CourseProps } from "@/Types/Course.type";
-import { PathProps } from "@/Types/Path.type";
 import { useEffect, useState } from "react";
-import ScrollBar from "react-perfect-scrollbar";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { Col, Form, Input, Label, Row, Button } from "reactstrap";
 
 const CreatePathForm = () => {
-	const [formData, setFormData] = useState<PathProps>({
+	const [formData, setFormData] = useState<any>({
 		title: "",
 		description: "",
 		timing: "",
@@ -21,7 +19,7 @@ const CreatePathForm = () => {
 	});
 	const [courses, setCourses] = useState<CourseProps[]>([]);
 	const [wannaBeInterests, setWannaBeInterests] = useState<any[]>([]);
-	const [photo, setPhoto] = useState<File | null>(null);
+	const [photo, setPhoto] = useState<any>(null);
 	const courseOptions = courses.map((c) => ({
 		label: c.title,
 		value: c._id,
@@ -67,7 +65,7 @@ const CreatePathForm = () => {
 			if (Array.isArray(value)) {
 				payload.append(key, value.join(","));
 			} else {
-				payload.append(key, value.toString());
+				payload.append(key, String(value));
 			}
 		});
 		if (photo) payload.append("photo", photo);
