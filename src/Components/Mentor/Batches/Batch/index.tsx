@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { getBatchByID } from "@/app/api/mentor";
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
 import {
+	Badge,
 	Button,
+	ButtonGroup,
 	Card,
 	Col,
 	FormGroup,
@@ -20,7 +22,7 @@ import GroupChat from "./GroupChat";
 import { BatchProps } from "@/Types/Course.type";
 import { apiClient } from "@/utils/api";
 import { toast } from "react-toastify";
-import { Info } from "react-feather";
+import { Edit2, Info, Trash, X } from "react-feather";
 
 const MentorBatchContainer = ({ id }: { id: string }) => {
 	const [batch, setBatch] = useState<BatchProps>();
@@ -116,112 +118,110 @@ const MentorBatchContainer = ({ id }: { id: string }) => {
 				parent='Batches'
 				title={`${batch.name}`}
 			/>
+			<Row style={{ height: "100%", gap: 0 }}>
+				<Col
+					sm={12}
+					lg={2}
+					className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center pt-5'>
+					<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 p-3'>
+						<p className='text-dark-subtle fw-light d-flex align-items-center justify-content-center gap-2'>
+							<Info size={15} />
+							Batch Details
+						</p>
+						<h3 className='fw-bold'>{batch.name}</h3>
+						<p className='text-muted mb-2'>{batch.description}</p>
 
-			<Card
-				color='light'
-				style={{ height: "80vh" }}>
-				<Row style={{ height: "100%", gap: 0 }}>
-					<Col
-						sm={12}
-						lg={10}
-						className='h-100'>
-						<GroupChat
-							batchId={id}
-							batch={batch}
-						/>
-					</Col>
-					<Col
-						sm={12}
-						lg={2}
-						className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center pt-5'>
-						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 p-3'>
-							<p className='text-dark-subtle fw-light d-flex align-items-center justify-content-center gap-2'>
-								<Info size={15} />
-								Batch Details
-							</p>
-							<h3 className='fw-bold'>{batch.name}</h3>
-							<p className='text-muted mb-2'>{batch.description}</p>
-
-							<div className='mb-3'>
-								<p className='mb-0'>
-									{new Date(batch.startDate || new Date()).toLocaleDateString(
-										"en-IN",
-										{
-											day: "numeric",
-											month: "short",
-											year: "numeric",
-										}
-									)}
-									-
-									{new Date(batch.endDate || new Date()).toLocaleDateString(
-										"en-IN",
-										{
-											day: "numeric",
-											month: "short",
-											year: "numeric",
-										}
-									)}
-								</p>
-							</div>
+						<div className='mb-3'>
 							<p className='mb-0'>
-								<strong>Timings:</strong> {batch.time} {batch.batchWeekType}
+								{new Date(batch.startDate || new Date()).toLocaleDateString(
+									"en-IN",
+									{
+										day: "numeric",
+										month: "short",
+										year: "numeric",
+									}
+								)}
+								-
+								{new Date(batch.endDate || new Date()).toLocaleDateString(
+									"en-IN",
+									{
+										day: "numeric",
+										month: "short",
+										year: "numeric",
+									}
+								)}
 							</p>
-						</Card>
+						</div>
+						<p className='mb-0'>
+							<strong>Timings:</strong> {batch.time} {batch.batchWeekType}
+						</p>
+					</Card>
 
-						{todaySession ? (
-							<Card className='shadow-sm bg-light-subtle text-dark text-center mt-3 p-3'>
-								<h6 className='text-dark fw-bold mb-3'>Scheduled for Today</h6>
-								<p className='mb-1'>
-									<strong>Topic:</strong> {todaySession.topic || "N/A"}
-								</p>
-								<p className='mb-1'>
-									<strong>Time:</strong> {todaySession.time || "Not specified"}
-								</p>
-								<p className='text-dark fw-bold'>
-									Comment:{" "}
-									<span className='text-muted fw-light'>
-										{todaySession.comment}
-									</span>
-								</p>
-								<div className='d-flex flex-column align-items-center justify-content-center gap-3'>
+					{todaySession ? (
+						<Card className='shadow-sm bg-light-subtle text-dark text-center mt-3 p-3'>
+							<h6 className='text-dark fw-bold mb-3'>Scheduled for Today</h6>
+							<div className='d-flex flex-column justify-content-center align-items-center text-center'>
+								<h6 className='fw-semibold'>{todaySession.topic}</h6>
+							</div>
+
+							<div className='d-flex flex-column justify-content-center align-items-center text-center'>
+								<span>{todaySession.comment || "No comment"}</span>
+							</div>
+							<Badge
+								color='light'
+								className='text-dark d-flex justify-content-center gap-2 fs-6'>
+								<span>{new Date(todaySession.date).toLocaleDateString()}</span>
+								{todaySession.time}
+							</Badge>
+							<div className='d-flex flex-column align-items-center justify-content-center gap-3'>
+								<Button
+									outline
+									color='dark'
+									className='w-100'
+									onClick={() => window.open(todaySession.link, "_blank")}>
+									Join
+								</Button>
+								<ButtonGroup>
 									<Button
-										color='info'
-										className='w-100'
-										onClick={() => window.open(todaySession.link, "_blank")}>
-										Join
-									</Button>
-									<Button
-										color='warning'
-										className='w-100'
+										color='success'
+										size='sm'
+										className='p-2'
 										onClick={() => handleEditOpen(todaySession)}>
-										Edit
+										<Edit2 size={16} />
 									</Button>
 									<Button
 										color='danger'
-										className='w-100'
+										size='sm'
+										className='p-2'
 										onClick={() => confirmCancel(todaySession._id)}>
-										Cancel
+										<X size={16} />
 									</Button>
-								</div>
-							</Card>
-						) : (
-							<>
-								<Button
-									color='info'
-									block
-									onClick={() => setModalOpen(true)}
-									disabled={!!todaySession}>
-									Schedule Today’s Class
-								</Button>
-								<p className='text-muted text-center mt-3'>
-									Not scheduled yet.
-								</p>
-							</>
-						)}
-					</Col>
-				</Row>
-			</Card>
-
+								</ButtonGroup>
+							</div>
+						</Card>
+					) : (
+						<>
+							<Button
+								color='info'
+								block
+								onClick={() => setModalOpen(true)}
+								disabled={!!todaySession}>
+								Schedule Today’s Class
+							</Button>
+							<p className='text-muted text-center mt-3'>Not scheduled yet.</p>
+						</>
+					)}
+				</Col>
+				<Col
+					sm={12}
+					lg={10}
+					className='h-100'>
+					<GroupChat
+						batchId={id}
+						batch={batch}
+					/>
+				</Col>
+			</Row>
 			{/* Schedule Modal */}
 			<Modal
 				isOpen={modalOpen}

@@ -166,25 +166,24 @@ const GroupChat = ({
 	const groupedMessages = groupMessagesByDate(messages);
 
 	return (
-		<Card className='d-flex flex-column h-100 w-100 shadow-sm border-0 rounded-4'>
-			<CardHeader className='bg-white border-bottom w-100'>
-				<h6 className='mb-0 text-center fw-semibold'>Group Chat</h6>
-				<div className='d-flex w-100 justify-content-between align-items-center'>
+		<Card className='d-flex flex-column h-100 w-100 shadow-sm border-0 rounded-4 right-sidebar-chat'>
+			{/* Header */}
+			<CardHeader className='bg-white border-bottom w-100 right-sidebar-title'>
+				<h6 className='mb-0 w-25 text-start fw-semibold'>{batch.name}</h6>
+				<div className='d-flex flex-column w-100 justify-content-between align-items-end'>
 					<h6 className='mb-0 text-muted fs-6'>
-						<strong>Course:</strong>
-						{batch.course?.title}
+						<strong>Course:</strong> {batch.course?.title}
 					</h6>
 					<h6
 						className='mb-0 text-muted fs-6'
-						style={{
-							cursor: "pointer",
-						}}
+						style={{ cursor: "pointer" }}
 						onClick={toggleModal}>
 						{batch.students?.length || "0"} Students
 					</h6>
 				</div>
 			</CardHeader>
 
+			{/* Pinned Message */}
 			{pinnedMessage && (
 				<div className='bg-warning-subtle p-3 border-bottom w-100'>
 					<h6 className='text-dark mb-1'>
@@ -204,7 +203,8 @@ const GroupChat = ({
 				</div>
 			)}
 
-			<CardBody className='flex-grow-1 overflow-auto bg-light-subtle px-4 py-3 w-100'>
+			{/* Chat Messages */}
+			<div className='bg-light-subtle w-100 right-sidebar-Chats'>
 				{loading ? (
 					<div className='text-center mt-4'>
 						<Spinner color='primary' />
@@ -212,42 +212,47 @@ const GroupChat = ({
 				) : Object.keys(groupedMessages).length === 0 ? (
 					<p className='text-center text-muted'>No messages yet</p>
 				) : (
-					Object.entries(groupedMessages).map(([date, msgs]) => {
-						const dayMsgs = msgs as any[];
-						return (
-							<div
-								key={date}
-								className='mb-4'>
-								<div className='text-center small text-muted fw-semibold mb-3'>
-									<span
-										style={{
-											background: "#f1f5f9",
-											padding: "4px 12px",
-											borderRadius: "999px",
-											fontSize: "12px",
-										}}>
-										{date}
-									</span>
+					<div className='msger msger-chat'>
+						{Object.entries(groupedMessages).map(([date, msgs]) => {
+							const dayMsgs = msgs as any[];
+							return (
+								<div
+									key={date}
+									className='mb-4'>
+									<div className='text-center small text-muted fw-semibold mb-3'>
+										<span
+											style={{
+												background: "#f1f5f9",
+												padding: "4px 12px",
+												borderRadius: "999px",
+												fontSize: "12px",
+											}}>
+											{date}
+										</span>
+									</div>
+									{dayMsgs.map((msg, index) => (
+										<ChatMessageBubble
+											key={index}
+											msg={msg}
+											isMe={msg.sender?._id === userId}
+											isOnline={onlineUsers.some(
+												(u: any) => u.userId === msg.sender?._id
+											)}
+											onPin={
+												msg.senderType === "mentor" ? handlePin : undefined
+											}
+										/>
+									))}
 								</div>
-								{dayMsgs.map((msg, index) => (
-									<ChatMessageBubble
-										key={index}
-										msg={msg}
-										isMe={msg.sender?._id === userId}
-										isOnline={onlineUsers.some(
-											(u: any) => u.userId === msg.sender?._id
-										)}
-										onPin={msg.senderType === "mentor" ? handlePin : undefined}
-									/>
-								))}
-							</div>
-						);
-					})
+							);
+						})}
+						<div ref={messagesEndRef} />
+					</div>
 				)}
-				<div ref={messagesEndRef} />
-			</CardBody>
+			</div>
 
-			<div className='border-top p-3 w-100'>
+			{/* Message Input */}
+			<div className='border-top p-3 w-100 msger-inputarea'>
 				<InputGroup className='rounded-pill shadow-sm overflow-hidden'>
 					<Input
 						type='text'
@@ -255,25 +260,29 @@ const GroupChat = ({
 						value={newMessage}
 						onChange={handleMessageChange}
 						onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-						className='border-0 px-4'
+						className='border-0 px-4 msger-input'
 						style={{ height: "44px" }}
 					/>
 					<Button
 						color='primary'
 						onClick={handleSendMessage}
 						disabled={sending || !newMessage.trim()}
-						className='px-4 d-flex align-items-center justify-content-center'
+						className='px-4 d-flex align-items-center justify-content-center msger-send-btn'
 						style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-						<Send size={18} />
+						<i className='fa fa-location-arrow' />
 					</Button>
 				</InputGroup>
 			</div>
+
+			{/* Modal: Batch Students */}
 			<Modal
 				isOpen={modalOpen}
-				toggle={() => setModalOpen(false)}
+				toggle={toggleModal}
 				centered
 				size='lg'>
-				<ModalHeader toggle={() => setModalOpen(false)}>
+				<ModalHeader
+					toggle={toggleModal}
+					className='fw-bold'>
 					Batch Students
 				</ModalHeader>
 				<ModalBody style={{ maxHeight: "70vh", overflowY: "auto" }}>
@@ -285,8 +294,10 @@ const GroupChat = ({
 								<ListGroupItem
 									key={student._id}
 									className='mb-3'>
-									<Row className='w-100'>
-										<Col md='2'>
+									<Row className='w-100 '>
+										<Col
+											md='12'
+											xl='2'>
 											<Image
 												width={100}
 												height={100}
@@ -300,7 +311,9 @@ const GroupChat = ({
 												}}
 											/>
 										</Col>
-										<Col md='10'>
+										<Col
+											md='10'
+											className='d-flex flex-column justify-content-center'>
 											<h5 className='mb-1'>{student.name}</h5>
 											<p className='mb-1'>
 												<strong>Email:</strong> {student.email}

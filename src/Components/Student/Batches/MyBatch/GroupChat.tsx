@@ -6,18 +6,26 @@ import { toast } from "react-toastify";
 import {
 	Button,
 	Card,
-	CardBody,
 	CardHeader,
 	Input,
 	InputGroup,
 	Spinner,
 	Badge,
+	Modal,
+	ModalHeader,
+	ModalBody,
+	ListGroup,
+	ListGroupItem,
+	Row,
+	Col,
 } from "reactstrap";
 import { format, isToday, isYesterday } from "date-fns";
 import { useAuth } from "@/app/AuthProvider";
 import io from "socket.io-client";
 import ChatMessageBubble from "@/CommonComponent/ChatBubble";
 import { BatchProps } from "@/Types/Course.type";
+import Image from "next/image";
+import { getImageURL } from "@/CommonComponent/imageURL";
 
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL as string);
 
@@ -34,7 +42,10 @@ const GroupChat = ({
 	const [sending, setSending] = useState(false);
 	const [pinnedMessage, setPinnedMessage] = useState<any>(null);
 	const messagesEndRef = useRef<HTMLDivElement | null>(null);
-
+	const [modalOpen, setModalOpen] = useState(false);
+	const toggleModal = () => {
+		setModalOpen(!modalOpen);
+	};
 	const { user } = useAuth();
 	const userId = user?.id;
 	const getDateLabel = (dateString: string) => {
@@ -74,7 +85,12 @@ const GroupChat = ({
 		setSending(true);
 
 		const messagePayload = {
-			sender: { _id: userId, name: user?.name },
+			sender: {
+				_id: userId,
+				name: user?.name,
+				photo: batch.students?.find((student) => student.userId === userId)
+					?.photo,
+			},
 			message: newMessage,
 			senderType: "student",
 			timestamp: new Date(),
@@ -148,16 +164,18 @@ const GroupChat = ({
 	}, []);
 
 	return (
-		<Card className='d-flex flex-column h-100 w-100 shadow-sm border-0 rounded-4'>
+		<Card className='d-flex flex-column w-100 shadow-sm border-0 rounded-4 right-sidebar-chat'>
 			{/* Header */}
-			<CardHeader className='bg-white border-bottom w-100'>
-				<h6 className='mb-0 text-center fw-semibold'>Group Chat</h6>
-				<div className='d-flex w-100 justify-content-between align-items-center'>
+			<CardHeader className='border-bottom w-100 right-sidebar-title'>
+				<h6 className='mb-0 w-25 text-start fw-semibold'>{batch.name}</h6>
+				<div className='d-flex flex-column w-100 justify-content-between align-items-end'>
 					<h6 className='mb-0 text-muted fs-6'>
-						<strong>Course:</strong>
-						{batch.course?.title}
+						<strong>Course: </strong> {batch.course?.title}
 					</h6>
-					<h6 className='mb-0 text-muted fs-6'>
+					<h6
+						className='mb-0 text-muted fs-6'
+						style={{ cursor: "pointer" }}
+						onClick={toggleModal}>
 						{batch.students?.length || "0"} Students
 					</h6>
 				</div>
@@ -184,7 +202,7 @@ const GroupChat = ({
 			)}
 
 			{/* Messages */}
-			<CardBody className='flex-grow-1 overflow-auto bg-light-subtle px-4 py-3 w-100'>
+			<div className='bg-light-subtle w-100 right-sidebar-Chats'>
 				{loading ? (
 					<div className='text-center mt-4'>
 						<Spinner color='primary' />
@@ -192,43 +210,45 @@ const GroupChat = ({
 				) : messages.length === 0 ? (
 					<p className='text-center text-muted'>No messages yet</p>
 				) : (
-					Object.entries(groupedMessages).map(([date, msgs]) => {
-						const messagesArray = msgs as any[]; // or: as MessageType[] if you have a defined type
+					<div className='msger msger-chat'>
+						{Object.entries(groupedMessages).map(([date, msgs]) => {
+							const messagesArray = msgs as any[]; // or: as MessageType[] if you have a defined type
 
-						return (
-							<div
-								key={date}
-								className='mb-3'>
-								<div className='text-center small text-muted fw-semibold mb-3'>
-									<span
-										style={{
-											background: "#f1f5f9",
-											padding: "4px 12px",
-											borderRadius: "999px",
-											fontSize: "12px",
-										}}>
-										{date}
-									</span>
+							return (
+								<div
+									key={date}
+									className='mb-3 '>
+									<div className='text-center small text-muted fw-semibold mb-3'>
+										<span
+											style={{
+												background: "#f1f5f9",
+												padding: "4px 12px",
+												borderRadius: "999px",
+												fontSize: "12px",
+											}}>
+											{date}
+										</span>
+									</div>
+									{messagesArray.map((msg, index) => (
+										<ChatMessageBubble
+											key={index}
+											msg={msg}
+											isMe={msg.sender?._id === userId}
+											isOnline={onlineUsers.some(
+												(u: any) => u.userId === msg.sender?._id
+											)}
+										/>
+									))}
 								</div>
-								{messagesArray.map((msg, index) => (
-									<ChatMessageBubble
-										key={index}
-										msg={msg}
-										isMe={msg.sender?._id === userId}
-										isOnline={onlineUsers.some(
-											(u: any) => u.userId === msg.sender?._id
-										)}
-									/>
-								))}
-							</div>
-						);
-					})
+							);
+						})}
+						<div ref={messagesEndRef} />
+					</div>
 				)}
-				<div ref={messagesEndRef} />
-			</CardBody>
+			</div>
 
 			{/* Message Input */}
-			<div className='border-top p-3 w-100'>
+			<div className='border-top w-100 msger-inputarea'>
 				<InputGroup className='rounded-pill shadow-sm overflow-hidden'>
 					<Input
 						type='text'
@@ -236,19 +256,70 @@ const GroupChat = ({
 						value={newMessage}
 						onChange={handleMessageChange}
 						onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-						className='border-0 px-4'
+						className='border-0 px-4 msger-input'
 						style={{ height: "44px" }}
 					/>
 					<Button
 						color='primary'
 						onClick={handleSendMessage}
 						disabled={sending || !newMessage.trim()}
-						className='px-4 d-flex align-items-center justify-content-center'
+						className='px-4 d-flex align-items-center justify-content-center msger-send-btn'
 						style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-						<Send size={18} />
+						<i className='fa fa-location-arrow' />
 					</Button>
 				</InputGroup>
 			</div>
+			<Modal
+				isOpen={modalOpen}
+				toggle={toggleModal}
+				centered
+				size='lg'>
+				<ModalHeader
+					toggle={toggleModal}
+					className='fw-bold'>
+					Batch Students
+				</ModalHeader>
+				<ModalBody style={{ maxHeight: "70vh", overflowY: "auto" }}>
+					{batch.students?.length === 0 ? (
+						<p>No students found in this batch.</p>
+					) : (
+						<ListGroup>
+							{batch.students?.map((student, idx) => (
+								<ListGroupItem
+									key={student._id}
+									className='mb-3'>
+									<Row className='w-100 '>
+										<Col
+											md='12'
+											xl='2'>
+											<Image
+												width={100}
+												height={100}
+												src={getImageURL(student.photo)}
+												alt={student.name}
+												style={{
+													borderRadius: "10px",
+													objectFit: "cover",
+													height: "100px",
+													width: "100px",
+												}}
+											/>
+										</Col>
+										<Col
+											md='10'
+											className='d-flex flex-column justify-content-center'>
+											<h5 className='mb-1'>{student.name}</h5>
+											<p className='mb-1'>
+												<strong>Email:</strong> {student.email}
+											</p>
+										</Col>
+									</Row>
+								</ListGroupItem>
+							))}
+						</ListGroup>
+					)}
+				</ModalBody>
+			</Modal>
 		</Card>
 	);
 };

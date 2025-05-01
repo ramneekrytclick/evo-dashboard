@@ -14,11 +14,13 @@ import {
 	CardHeader,
 	Row,
 	Col,
+	Badge,
 } from "reactstrap";
 import GroupChat from "./GroupChat";
 import BookSessionForm from "./BookSessionForm"; // Ensure correct path
 import { BatchProps } from "@/Types/Course.type";
 import { Info } from "react-feather";
+import Link from "next/link";
 
 const MyBatchContainer = ({ id }: { id: string }) => {
 	const [batch, setBatch] = useState<BatchProps>();
@@ -44,31 +46,14 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 				parent={"Batches"}
 				title={`Batch: ${batch.name}`}
 			/>
-			<Card
-				color='light'
-				style={{ height: "80vh", gap: 0 }}>
-				<Row style={{ height: "100%", gap: 0 }}>
-					{/* Left: Group Chat */}
-					<Col
-						sm={12}
-						lg={10}
-						className='h-100'>
-						<GroupChat
-							batchId={id}
-							batch={batch}
-						/>
-					</Col>
-
-					{/* Right: Mentor Card */}
-					<Col
-						sm={12}
-						lg={2}
-						className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center pt-5'
-						style={{
-							height: "100%",
-							overflowY: "auto",
-						}}>
-						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 p-3'>
+			<Row>
+				<Col
+					sm={12}
+					lg={2}
+					className='left-sidebar-wrapper rounded-4'
+					style={{ height: "85vh", overflow: "auto" }}>
+					<div className='chat-options-tab'>
+						<Card className='shadow-sm text-dark text-center rounded-4 p-3'>
 							<p className='text-dark-subtle fw-light d-flex align-items-center justify-content-center gap-2'>
 								<Info size={15} />
 								Batch Details
@@ -98,18 +83,12 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 								</p>
 							</div>
 							<p className='mb-0'>
-								<strong>Timings:</strong> {batch.time} {batch.batchWeekType}
+								{batch.time} {batch.batchWeekType}
 							</p>
 						</Card>
 
 						<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 p-3'>
 							<h6 className='text-dark fw-bold mb-3'>Today's Class</h6>
-							{
-								<p className='text-muted text-center mt-3'>
-									{" "}
-									Not scheduled yet.
-								</p>
-							}
 							{batch.scheduledSessions ? (
 								batch.scheduledSessions?.length > 0 ? (
 									<>
@@ -123,31 +102,30 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 												<div
 													key={idx}
 													className='text-dark fs-4'>
-													<p className='mb-1 text-dark'>
-														<strong>Topic:</strong>{" "}
-														{session.topic || "Not specified"}
-													</p>
-													<p className='mb-1'>
-														<strong>Time:</strong>{" "}
-														{session.time || "Not specified"}
-													</p>
-													<p className='mb-1'>
-														<strong>Date:</strong>{" "}
-														{new Date(session.date).toDateString() ||
-															"Not specified"}
-													</p>
-													<Button
-														color='info'
-														className='my-1'
-														onClick={() => window.open(session.link, "_blank")}>
-														Join
-													</Button>
-													<p className='text-dark fw-bold'>
-														Note from Mentor:{" "}
-														<span className='text-muted fw-light'>
-															{session.comment}
+													<div className='d-flex flex-column justify-content-center align-items-center text-center'>
+														<h6 className='fw-semibold'>{session.topic}</h6>
+													</div>
+
+													<div className='d-flex flex-column justify-content-center align-items-center text-center'>
+														<span>{session.comment || "No comment"}</span>
+													</div>
+													<Badge
+														color='light'
+														className='text-dark d-flex justify-content-center gap-2 fs-6'>
+														<span>
+															{new Date(session.date).toLocaleDateString()}
 														</span>
-													</p>
+														{session.time}
+													</Badge>
+													<Link
+														href={session.link}
+														target='_blank'>
+														<Button
+															outline
+															color='dark'>
+															Join Session
+														</Button>
+													</Link>
 												</div>
 											))}
 									</>
@@ -182,9 +160,17 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 								</Button>
 							</CardBody>
 						</Card>
-					</Col>
-				</Row>
-			</Card>
+					</div>
+				</Col>
+				<Col
+					sm={12}
+					lg={10}>
+					<GroupChat
+						batchId={id}
+						batch={batch}
+					/>
+				</Col>
+			</Row>
 
 			<BookSessionForm
 				modalOpen={modalOpen}
