@@ -93,12 +93,12 @@ const Notifications = () => {
 					<p className='text-muted'>No announcements yet.</p>
 				) : (
 					<div
-						className='d-flex flex-column gap-3 col '
+						className='d-flex flex-column gap-3 col'
 						style={{ maxHeight: "300px", overflow: "auto" }}>
 						{announcements.map((item, index) => (
 							<Row
 								key={index}
-								className='border-bottom pb-2'>
+								className='border-bottom pb-2 w-100'>
 								<Col className='col-8'>
 									<Link
 										href={item.link || "#"}

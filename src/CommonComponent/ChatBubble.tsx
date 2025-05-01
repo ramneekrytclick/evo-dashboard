@@ -5,11 +5,10 @@ import { ImagePath } from "@/Constant";
 
 const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 	const bubbleClass = isMe ? "right" : "left";
-	const participatorImage = msg?.sender?.image;
 
 	return (
 		<div className={`msg ${bubbleClass}-msg mb-4`}>
-			{!isMe && participatorImage ? (
+			{/* {!isMe && participatorImage ? (
 				<Image
 					src={`${ImagePath}/${participatorImage}`}
 					className='rounded-circle img-30 h-auto msg-img'
@@ -19,7 +18,7 @@ const ChatMessageBubble = ({ msg, isMe, isOnline, onPin }: any) => {
 				/>
 			) : (
 				<div className='msg-img' />
-			)}
+			)} */}
 
 			<div className='msg-bubble'>
 				<div className='msg-info d-flex align-items-center gap-2'>

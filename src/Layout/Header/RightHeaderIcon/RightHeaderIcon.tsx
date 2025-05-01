@@ -16,7 +16,7 @@ const RightHeaderIcon = () => {
 				{/* <Language /> */}
 				<ZoomInOut />
 				{/* <HeaderBookmark /> */}
-				<DarkMode />
+				{/* <DarkMode /> */}
 				{/* <HeaderMessage /> */}
 				{/* <HeaderCart /> */}
 				{/* <HeaderCartCourse /> */}
