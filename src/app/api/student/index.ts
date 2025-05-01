@@ -122,3 +122,6 @@ export const getStudentLessonSubmissions = async (lessonId: string) => {
 export const getMyUpcomingSessions = async () => {
 	return (await apiClient.get(`/chat/student/upcoming-sessions`)).data;
 };
+export const getStudentTransactions = async (userId: string) => {
+	return (await apiClient.get(`/admin/user/${userId}/transactions`)).data;
+};

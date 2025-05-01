@@ -90,7 +90,7 @@ const CourseCards = () => {
 								percent={percent}
 								prog={prog}
 								course={course}
-								enrolled={isEnrolled(course._id)}
+								enrolled={enrolled}
 								categoryMap={categoryMap}
 								subcategoryMap={subcategoryMap}
 							/>

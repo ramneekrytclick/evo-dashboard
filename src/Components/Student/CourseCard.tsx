@@ -12,7 +12,7 @@ const CourseCard = ({
 	categoryMap,
 	subcategoryMap,
 }: {
-	enrolled: boolean;
+	enrolled: any;
 	course: CourseProps;
 	percent: number;
 	prog: any;
