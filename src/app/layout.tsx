@@ -24,7 +24,6 @@ const roboto = Outfit({
 export const generateMetadata = () => ({
 	title: {
 		default: "EVO Portal",
-		template: "%s | EVO Learning Platform",
 	},
 	description:
 		"EVO is a modern learning and job platform for students, mentors, employers, and creators.",

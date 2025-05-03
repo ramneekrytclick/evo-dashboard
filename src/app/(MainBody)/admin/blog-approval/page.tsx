@@ -1,10 +1,12 @@
 import BlogsPageContainer from "@/Components/Admin/Blogs";
-export function generateMetadata() {
-	return {
-		title: "Blog Approval",
-		description: "Moderate and publish submitted blog content.",
-	};
-}
+import { generateSEOMetadata } from "@/utils/seo";
+
+export const metadata = generateSEOMetadata({
+	title: "Blog Approval",
+	description: "Approve Blogs",
+	pathname: "/admin/batches",
+	keywords: ["admin", "batches", "courses", "evo", "learning", "dashboard"],
+});
 const BlogApprovalPage = () => {
 	return <BlogsPageContainer />;
 };

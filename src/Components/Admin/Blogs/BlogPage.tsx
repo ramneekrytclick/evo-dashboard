@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
 	Button,
+	Card,
+	CardBody,
 	Modal,
 	ModalBody,
 	ModalFooter,
@@ -60,108 +62,110 @@ const BlogPage = ({ slug }: { slug: string }) => {
 		);
 	}
 	return (
-		<>
-			<Breadcrumbs
-				title={"Blogs"}
-				mainTitle={selectedBlog.title}
-				parent={"Admin"}
-			/>
-			<div className='p-4'>
-				{/* <h2 className='text-dark fw-bold py-3'>{selectedBlog.title}</h2> */}
-
-				{selectedBlog.image && (
-					<div className='my-4 text-center'>
-						<Image
-							src={getImageURL(selectedBlog.image, "blogs")}
-							alt={selectedBlog.title}
-							width={800}
-							height={400}
-							style={{
-								width: "500px",
-								height: "250px",
-								objectFit: "cover",
-								borderRadius: "8px",
-							}}
-						/>
-					</div>
-				)}
-
-				<div
-					style={{
-						lineHeight: "1.8",
-						fontSize: "1.1rem",
-						color: "#333",
-						wordBreak: "break-word",
-					}}
-					dangerouslySetInnerHTML={{ __html: selectedBlog.content }}
+		<Card>
+			<CardBody>
+				<Breadcrumbs
+					title={"Blogs"}
+					mainTitle={selectedBlog.title}
+					parent={"Admin"}
 				/>
+				<div className='p-4'>
+					{/* <h2 className='text-dark fw-bold py-3'>{selectedBlog.title}</h2> */}
 
-				{selectedBlog.conclusion && (
-					<>
-						<hr />
-						<h5>Conclusion</h5>
-						<p>{selectedBlog.conclusion}</p>
-					</>
-				)}
+					{selectedBlog.image && (
+						<div className='my-4 text-center'>
+							<Image
+								src={getImageURL(selectedBlog.image, "blogs")}
+								alt={selectedBlog.title}
+								width={800}
+								height={400}
+								style={{
+									width: "500px",
+									height: "250px",
+									objectFit: "cover",
+									borderRadius: "8px",
+								}}
+							/>
+						</div>
+					)}
 
-				<div className='d-flex gap-2 mt-4'>
-					{selectedBlog.status !== "Approved" && (
-						<Button
-							color='success'
-							onClick={() => {
-								setPendingStatus("Approved");
-								setConfirmModalOpen(true);
-							}}>
-							Approve
-						</Button>
+					<div
+						style={{
+							lineHeight: "1.8",
+							fontSize: "1.1rem",
+							color: "#333",
+							wordBreak: "break-word",
+						}}
+						dangerouslySetInnerHTML={{ __html: selectedBlog.content }}
+					/>
+
+					{selectedBlog.conclusion && (
+						<>
+							<hr />
+							<h5>Conclusion</h5>
+							<p>{selectedBlog.conclusion}</p>
+						</>
 					)}
-					{selectedBlog.status !== "Rejected" && (
-						<Button
-							color='danger'
-							onClick={() => {
-								setPendingStatus("Rejected");
-								setConfirmModalOpen(true);
-							}}>
-							Reject
-						</Button>
-					)}
+
+					<div className='d-flex gap-2 mt-4'>
+						{selectedBlog.status !== "Approved" && (
+							<Button
+								color='success'
+								onClick={() => {
+									setPendingStatus("Approved");
+									setConfirmModalOpen(true);
+								}}>
+								Approve
+							</Button>
+						)}
+						{selectedBlog.status !== "Rejected" && (
+							<Button
+								color='danger'
+								onClick={() => {
+									setPendingStatus("Rejected");
+									setConfirmModalOpen(true);
+								}}>
+								Reject
+							</Button>
+						)}
+					</div>
 				</div>
-			</div>
-			<Modal
-				isOpen={confirmModalOpen}
-				toggle={() => {
-					setConfirmModalOpen(false);
+				<Modal
+					isOpen={confirmModalOpen}
+					toggle={() => {
+						setConfirmModalOpen(false);
 
-					fetchBlog();
-				}}
-				centered>
-				<ModalHeader toggle={() => setConfirmModalOpen(false)}>
-					Confirm {pendingStatus} Blog
-				</ModalHeader>
-				<ModalBody>
-					Are you sure you want to{" "}
-					<strong>{pendingStatus?.toLowerCase()}</strong> this blog titled{" "}
-					<strong>{selectedBlog?.title}</strong>?
-				</ModalBody>
-				<ModalFooter>
-					<Button
-						color='outline-primary'
-						onClick={() => setConfirmModalOpen(false)}>
-						Cancel
-					</Button>
-					<Button
-						color={pendingStatus === "Approved" ? "success" : "danger"}
-						onClick={async () => {
-							if (selectedBlog && pendingStatus) {
-								await handleApproval(selectedBlog._id, pendingStatus);
-								setConfirmModalOpen(false);
-							}
-						}}>
-						Yes, {pendingStatus}
-					</Button>
-				</ModalFooter>
-			</Modal>
-		</>
+						fetchBlog();
+					}}
+					centered>
+					<ModalHeader toggle={() => setConfirmModalOpen(false)}>
+						Confirm {pendingStatus} Blog
+					</ModalHeader>
+					<ModalBody>
+						Are you sure you want to{" "}
+						<strong>{pendingStatus?.toLowerCase()}</strong> this blog titled{" "}
+						<strong>{selectedBlog?.title}</strong>?
+					</ModalBody>
+					<ModalFooter>
+						<Button
+							color='outline-primary'
+							onClick={() => setConfirmModalOpen(false)}>
+							Cancel
+						</Button>
+						<Button
+							color={pendingStatus === "Approved" ? "success" : "danger"}
+							onClick={async () => {
+								if (selectedBlog && pendingStatus) {
+									await handleApproval(selectedBlog._id, pendingStatus);
+									setConfirmModalOpen(false);
+								}
+							}}>
+							Yes, {pendingStatus}
+						</Button>
+					</ModalFooter>
+				</Modal>
+			</CardBody>
+		</Card>
 	);
 };
 

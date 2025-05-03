@@ -1,10 +1,13 @@
 import BatchesPageContainer from "@/Components/Admin/Batches";
-export async function generateMetadata() {
-	return {
-		title: "Batches - Admin EVO",
-		description: "Manage course batches here.",
-	};
-}
+import { generateSEOMetadata } from "@/utils/seo";
+
+export const metadata = generateSEOMetadata({
+	title: "Batches",
+	description:
+		"Manage and review all batches for different courses and their students and mentor in the admin panel.",
+	pathname: "/admin/batches",
+	keywords: ["admin", "batches", "courses", "evo", "learning", "dashboard"],
+});
 const BatchesPage = () => {
 	return <BatchesPageContainer />;
 };
