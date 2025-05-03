@@ -12,9 +12,11 @@ import {
 	Input,
 	Label,
 	FormGroup,
+	Spinner,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { getImageURL } from "@/CommonComponent/imageURL";
+import { customTableStyles } from "@/Components/Admin/Batches/BatchesList";
 const AssignmentList = () => {
 	const [assignments, setAssignments] = useState<any[]>([]);
 	const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
@@ -22,6 +24,7 @@ const AssignmentList = () => {
 	const [isGradeModalOpen, setIsGradeModalOpen] = useState(false);
 	const [score, setScore] = useState<number>(0);
 	const [feedback, setFeedback] = useState<string>("");
+	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchAssignments = async () => {
 		try {
@@ -29,6 +32,8 @@ const AssignmentList = () => {
 			setAssignments(response.reverse());
 		} catch (error) {
 			console.error("Error fetching assignments:", error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -113,6 +118,14 @@ const AssignmentList = () => {
 				),
 		},
 	];
+	if (isLoading) {
+		return (
+			<h5 className='text-center text-primary d-flex justify-content-center align-items-center gap-1'>
+				Loading
+				<Spinner />
+			</h5>
+		);
+	}
 
 	return (
 		<div className='p-2'>
@@ -120,6 +133,7 @@ const AssignmentList = () => {
 				columns={columns}
 				data={assignments}
 				pagination
+				customStyles={customTableStyles}
 			/>
 
 			{/* Submission View Modal */}

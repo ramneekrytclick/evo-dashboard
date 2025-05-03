@@ -7,9 +7,9 @@ const ScheduleSessionContainer = () => {
 	return (
 		<>
 			<Breadcrumbs
-				mainTitle={"Scheduled Sessions"}
+				mainTitle={"1:1 Booking Sessions"}
 				parent={MentorTitle}
-				title={"Scheduled Sessions"}
+				title={"Sessions"}
 			/>
 			<Container fluid>
 				<Row>

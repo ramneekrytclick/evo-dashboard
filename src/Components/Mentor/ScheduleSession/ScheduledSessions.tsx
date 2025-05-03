@@ -11,99 +11,36 @@ import { useAuth } from "@/app/AuthProvider";
 import {
 	Card,
 	CardBody,
-	CardTitle,
-	CardText,
-	Row,
-	Col,
+	Badge,
 	Button,
-	Input,
-	Spinner,
-	FormGroup,
-	Label,
 	Modal,
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
-	Badge,
+	Input,
+	Spinner,
+	Col,
+	Row,
 } from "reactstrap";
-import { toast } from "react-toastify";
 import { Trash2 } from "react-feather";
+import { toast } from "react-toastify";
 
 const ScheduledSessions = () => {
 	const [sessions, setSessions] = useState<any[]>([]);
 	const { user } = useAuth();
+	const [modalOpen, setModalOpen] = useState(false);
+	const [selectedSession, setSelectedSession] = useState<any>(null);
 	const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
-	const [statusUpdates, setStatusUpdates] = useState<{ [key: string]: string }>(
-		{}
-	);
-	const [replies, setReplies] = useState<{ [key: string]: string }>({});
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [sessionToDelete, setSessionToDelete] = useState<any>(null);
+	const [updatedStatus, setUpdatedStatus] = useState("Pending");
 
 	const fetchSessions = async () => {
 		try {
 			const response = await getBookedSessions(user?.id || "");
 			setSessions(response.reverse());
-		} catch (error) {
-			console.error(error);
+		} catch (err) {
 			toast.error("Failed to load sessions.");
-		}
-	};
-
-	const handleStatusChange = (bookingId: string, newStatus: string) => {
-		setStatusUpdates((prev) => ({ ...prev, [bookingId]: newStatus }));
-	};
-
-	const handleReplyChange = (bookingId: string, reply: string) => {
-		setReplies((prev) => ({ ...prev, [bookingId]: reply }));
-	};
-
-	const handleUpdateStatus = async (bookingId: string) => {
-		try {
-			setLoading((prev) => ({ ...prev, [bookingId]: true }));
-			await updateBookingStatus(bookingId, statusUpdates[bookingId]);
-			toast.success("Status updated successfully!");
-			await fetchSessions();
-		} catch (err) {
-			console.error(err);
-			toast.error("Failed to update status.");
-		} finally {
-			setLoading((prev) => ({ ...prev, [bookingId]: false }));
-		}
-	};
-
-	const handleSendReply = async (bookingId: string) => {
-		if (!replies[bookingId]) {
-			toast.warning("Reply message cannot be empty.");
-			return;
-		}
-		try {
-			setLoading((prev) => ({ ...prev, [bookingId]: true }));
-			await replyToSessionBooking(replies[bookingId], bookingId);
-			toast.success("Reply sent successfully!");
-			setReplies((prev) => ({ ...prev, [bookingId]: "" }));
-		} catch (err) {
-			console.error(err);
-			toast.error("Failed to send reply.");
-		} finally {
-			setLoading((prev) => ({ ...prev, [bookingId]: false }));
-		}
-	};
-
-	const confirmDeleteSession = async () => {
-		if (!sessionToDelete) return;
-		try {
-			setLoading((prev) => ({ ...prev, [sessionToDelete._id]: true }));
-			await deleteBookedSession(sessionToDelete._id);
-			toast.success("Session deleted successfully");
-			setDeleteModalOpen(false);
-			setSessionToDelete(null);
-			await fetchSessions();
-		} catch (err) {
-			console.error(err);
-			toast.error("Failed to delete session");
-		} finally {
-			setLoading((prev) => ({ ...prev, [sessionToDelete._id]: false }));
 		}
 	};
 
@@ -111,123 +48,206 @@ const ScheduledSessions = () => {
 		if (user?.id) fetchSessions();
 	}, [user]);
 
-	if (sessions.length === 0) {
-		return (
-			<p className='text-center text-muted mt-4'>No sessions booked yet.</p>
-		);
-	}
+	const updateStatus = async (session: any, status: string) => {
+		try {
+			setLoading((p) => ({ ...p, [session._id]: true }));
+			await updateBookingStatus(session._id, status);
+			toast.success("Status updated");
+			await fetchSessions();
+		} catch {
+			toast.error("Update failed");
+		} finally {
+			setLoading((p) => ({ ...p, [session._id]: false }));
+		}
+	};
+
+	const sendReply = async (session: any, message: string) => {
+		try {
+			setLoading((p) => ({ ...p, [session._id]: true }));
+			await replyToSessionBooking(message, session._id);
+			toast.success("Reply sent");
+			await fetchSessions();
+		} catch {
+			toast.error("Reply failed");
+		} finally {
+			setLoading((p) => ({ ...p, [session._id]: false }));
+		}
+	};
+
+	const handleDelete = async () => {
+		try {
+			setLoading((p) => ({ ...p, [sessionToDelete._id]: true }));
+			await deleteBookedSession(sessionToDelete._id);
+			toast.success("Deleted successfully");
+			setDeleteModalOpen(false);
+			await fetchSessions();
+		} catch {
+			toast.error("Delete failed");
+		} finally {
+			setLoading((p) => ({ ...p, [sessionToDelete._id]: false }));
+		}
+	};
+
+	const getStatusStep = (status: "Pending" | "Confirmed" | "Cancelled") => {
+		const steps = {
+			Pending: {
+				title: "Session Requested",
+				detail: "Awaiting your confirmation.",
+				color: "warning",
+			},
+			Confirmed: {
+				title: "Session Confirmed",
+				detail: "You have confirmed this session.",
+				color: "success",
+			},
+			Cancelled: {
+				title: "Session Cancelled",
+				detail: "You rejected the session.",
+				color: "danger",
+			},
+		};
+		if (["Pending", "Confirmed", "Cancelled"].includes(status)) {
+			return steps[status];
+		}
+		return steps.Pending;
+	};
 
 	return (
-		<div
-			className='container'
-			style={{ height: "76vh", overflowY: "scroll" }}>
-			<Row>
-				{sessions.map((session) => (
+		<Row
+			className='d-flex flex-wrap'
+			style={{
+				height: "200px",
+			}}>
+			{sessions.map((booking) => {
+				const step = getStatusStep(booking.status);
+				return (
 					<Col
+						key={booking._id}
+						className='h-100 my-2'
+						xl='3'
 						md='6'
-						lg='4'
-						className='mb-4'
-						key={session._id}>
-						<Card className='shadow-sm h-100'>
-							<CardBody className='d-flex flex-column justify-content-between align-content-center'>
-								<div className='w-100'>
-									<CardTitle
-										tag='h3'
-										className='mb-3 text-primary fw-bold'>
-										{session.message?.trim() || "No message"}
-									</CardTitle>
-
-									<CardText className='mb-3 fs-5'>
-										<strong>Student:</strong> {session.student.name} <br />
-										<strong>Email:</strong> {session.student.email} <br />
-										<strong>Date:</strong>{" "}
-										{new Date(session.date).toLocaleDateString()} <br />
-										<strong>Time:</strong> {session.timeSlot} <br />
-										<strong>Status:</strong>{" "}
-										<Badge
-											color='info'
-											className='text-uppercase'>
-											{session.status}
-										</Badge>
-									</CardText>
+						sm='12'>
+						<Card
+							onClick={() => {
+								setSelectedSession(booking);
+								setModalOpen(true);
+							}}
+							className='flex-shrink-0 p-3 border shadow-sm rounded-4 bg-white text-dark text-center h-100'
+							style={{
+								scrollSnapAlign: "start",
+								cursor: "pointer",
+							}}>
+							<CardBody className='p-0 d-flex flex-column h-100 justify-content-between align-items-center'>
+								<div className='d-flex mb-3 text-start'>
+									<div
+										className={`flex-shrink-0 bg-${step.color} rounded-circle`}
+										style={{ width: 30, height: 30 }}></div>
+									<div className='flex-grow-1 ps-3'>
+										<h6 className='fw-bold mb-1 fs-5'>{step.title}</h6>
+										<p className='small text-muted mb-0 fs-6'>{step.detail}</p>
+									</div>
 								</div>
 
-								<hr />
-
-								<FormGroup className='mb-3 w-100'>
-									<Label className='fw-semibold'>Update Status</Label>
-									<div className='d-flex gap-2 align-items-center'>
-										<Input
-											type='select'
-											value={statusUpdates[session._id] || session.status}
-											onChange={(e) =>
-												handleStatusChange(session._id, e.target.value)
-											}
-											style={{ maxWidth: "160px" }}>
-											<option value='Pending'>Pending</option>
-											<option value='Confirmed'>Confirmed</option>
-											<option value='Cancelled'>Cancelled</option>
-										</Input>
-										<Button
-											color='primary'
-											size='sm'
-											disabled={
-												loading[session._id] ||
-												statusUpdates[session._id] === session.status
-											}
-											onClick={() => handleUpdateStatus(session._id)}>
-											{loading[session._id] ? <Spinner size='sm' /> : "Update"}
-										</Button>
-									</div>
-								</FormGroup>
-
-								<FormGroup className='mb-2 w-100'>
-									<Label className='fw-semibold fs-6'>
-										Write Your Reply (Add Meeting Link)
-									</Label>
-									<Input
-										type='textarea'
-										rows={2}
-										value={replies[session._id] || ""}
-										onChange={(e) =>
-											handleReplyChange(session._id, e.target.value)
-										}
-										placeholder='Type your message...'
-									/>
-								</FormGroup>
-
-								<div className='d-flex justify-content-between mt-2 w-100'>
-									<Button
-										color='success'
-										onClick={() => handleSendReply(session._id)}
-										disabled={loading[session._id]}>
-										{loading[session._id] ? (
-											<Spinner size='sm' />
-										) : (
-											"Send Reply"
-										)}
-									</Button>
-
-									<Button
-										color='danger'
-										onClick={() => {
-											setSessionToDelete(session);
-											setDeleteModalOpen(true);
-										}}>
-										<Trash2
-											size={14}
-											className='me-1'
-										/>
-										Delete
-									</Button>
+								<div className='mt-auto'>
+									<p className='mb-1 small text-dark'>
+										{booking.message || "—"}
+									</p>
+									<Badge
+										pill
+										color='light'
+										className='text-dark d-flex justify-content-center gap-2 fs-6'>
+										<span>{new Date(booking.date).toLocaleDateString()}</span>
+										{booking.timeSlot}
+									</Badge>
 								</div>
 							</CardBody>
 						</Card>
 					</Col>
-				))}
-			</Row>
+				);
+			})}
 
-			{/* Delete Confirmation Modal */}
+			{/* Modal */}
+			<Modal
+				isOpen={modalOpen}
+				toggle={() => setModalOpen(false)}
+				centered
+				size='md'>
+				<ModalHeader toggle={() => setModalOpen(false)}>
+					<span className='fw-semibold'>
+						Session with {selectedSession?.student.name}
+					</span>
+				</ModalHeader>
+				<ModalBody className='text-center d-flex flex-column align-items-center justify-content-center gap-3'>
+					<Badge
+						pill
+						color='light'
+						className='text-dark fs-6'>
+						{new Date(selectedSession?.date).toLocaleDateString()} —{" "}
+						{selectedSession?.timeSlot}
+					</Badge>
+					<p>
+						<strong>Email:</strong> {selectedSession?.student.email}
+					</p>
+					<p>
+						<strong>Current Status:</strong> {selectedSession?.status}
+					</p>
+					<div className='w-100 d-flex flex-column gap-2 align-items-center'>
+						<Input
+							type='textarea'
+							placeholder='Write reply...'
+							value={selectedSession?.replyFromMentor || ""}
+							onChange={(e) =>
+								setSelectedSession({
+									...selectedSession,
+									replyFromMentor: e.target.value,
+								})
+							}
+							rows={3}
+						/>
+						<Button
+							color='success'
+							onClick={() =>
+								sendReply(selectedSession, selectedSession.replyFromMentor)
+							}>
+							Send Reply/Link
+						</Button>
+					</div>
+
+					{/* Status Dropdown */}
+					<div className='w-100 d-flex align-items-center'>
+						<label className='fw-medium mb-2'>Status</label>
+						<Input
+							type='select'
+							defaultValue={selectedSession?.status}
+							onChange={(e) => setUpdatedStatus(e.target.value)}>
+							<option value='Pending'>Pending</option>
+							<option value='Confirmed'>Confirmed</option>
+							<option value='Cancelled'>Cancelled</option>
+						</Input>
+
+						<Button
+							color='primary'
+							onClick={(e) => updateStatus(selectedSession, updatedStatus)}>
+							Update
+						</Button>
+					</div>
+
+					{/* Action Buttons */}
+					<div className='d-flex gap-2 justify-content-center align-items-center mt-3'>
+						<Button
+							color='danger'
+							onClick={() => {
+								setSessionToDelete(selectedSession);
+								setDeleteModalOpen(true);
+							}}
+							disabled={new Date(selectedSession?.date) > new Date()}>
+							Delete Session
+						</Button>
+					</div>
+				</ModalBody>
+			</Modal>
+
+			{/* Delete Modal */}
 			<Modal
 				isOpen={deleteModalOpen}
 				toggle={() => setDeleteModalOpen(false)}
@@ -248,12 +268,12 @@ const ScheduledSessions = () => {
 					</Button>
 					<Button
 						color='danger'
-						onClick={confirmDeleteSession}>
+						onClick={handleDelete}>
 						Delete
 					</Button>
 				</ModalFooter>
 			</Modal>
-		</div>
+		</Row>
 	);
 };
 

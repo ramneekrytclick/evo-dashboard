@@ -13,10 +13,13 @@ import {
 	CardTitle,
 	Col,
 	Row,
+	Spinner,
 } from "reactstrap";
+import BatchCard from "./BatchCard";
 
 const BatchCards = () => {
 	const [batches, setBatches] = useState<BatchProps[]>([]);
+	const [loading, setLoading] = useState(true);
 
 	const fetchBatches = async () => {
 		try {
@@ -24,13 +27,22 @@ const BatchCards = () => {
 			setBatches(response.batches);
 		} catch (error) {
 			toast.error("Error fetching batches");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		fetchBatches();
 	}, []);
-
+	if (loading) {
+		return (
+			<h5 className='text-center text-primary d-flex justify-content-center align-items-center gap-1'>
+				Loading
+				<Spinner />
+			</h5>
+		);
+	}
 	return (
 		<Row
 			className='g-4'
@@ -41,62 +53,7 @@ const BatchCards = () => {
 					xl={4}
 					md={6}
 					key={batch._id}>
-					<Card className='border-0 shadow rounded-4 h-100 '>
-						<CardBody className='d-flex flex-column'>
-							<Link href={`/mentor/batches/${batch._id}`}>
-								<CardTitle
-									tag='h5'
-									className='fw-bold text-dark mb-2'>
-									{batch.name || "N/A"}
-								</CardTitle>
-							</Link>
-							<p className='fs-6'>
-								<strong>Course: </strong>
-								{batch.course?.title || "N/A"}
-							</p>
-							<div className='mb-2'>
-								<Badge
-									color='info'
-									className='me-2'>
-									{batch.batchWeekType}
-								</Badge>
-								<Badge color='warning'>{batch.time}</Badge>
-							</div>
-
-							{/* Description */}
-							<CardText className='text-muted small mb-2'>
-								{batch.description || "No description provided."}
-							</CardText>
-
-							{/* Dates */}
-							<CardText className='text-muted small mb-1'>
-								<strong>Duration:</strong>{" "}
-								{new Date(batch.startDate || new Date()).toLocaleDateString(
-									"en-IN",
-									{
-										day: "numeric",
-										month: "short",
-										year: "numeric",
-									}
-								)}
-								-
-								{new Date(batch.endDate || new Date()).toLocaleDateString(
-									"en-IN",
-									{
-										day: "numeric",
-										month: "short",
-										year: "numeric",
-									}
-								)}
-							</CardText>
-
-							{/* Students Count */}
-							<CardText className='text-muted small mt-auto'>
-								<strong>Students Enrolled:</strong>{" "}
-								{batch.students?.length || 0}
-							</CardText>
-						</CardBody>
-					</Card>
+					<BatchCard batch={batch} />
 				</Col>
 			))}
 		</Row>

@@ -23,6 +23,7 @@ import {
 } from "@/app/api/mentor";
 import { useAuth } from "@/app/AuthProvider";
 import DataTable from "react-data-table-component";
+import MyCardWithIcon from "@/CommonComponent/MyCards/MyCardWithIcon";
 
 const MentorDashboardContainer = () => {
 	const [sessions, setSessions] = useState<any[]>([]);
@@ -91,7 +92,31 @@ const MentorDashboardContainer = () => {
 		},
 		{ name: "Score", selector: (row: any) => row.score ?? "Not Graded" },
 	];
-
+	const cardData = [
+		{
+			amount: batches.length,
+			title: "Total Batches",
+			link: "/mentor/batches",
+			icon: "customers",
+			color: "primary",
+		},
+		{
+			amount: pendingAssignments.length,
+			title: "Pending Assignments",
+			link: "/mentor/assignments",
+			icon: "user-visitor",
+			color: "danger",
+			divClass: "up-sales",
+		},
+		{
+			amount: sessionsTodayOrUpcoming.length,
+			title: "Upcoming Sessions",
+			link: "/mentor/schedule-session",
+			icon: "bag",
+			color: "info",
+			divClass: "total-product",
+		},
+	];
 	return (
 		<>
 			<Breadcrumbs
@@ -109,37 +134,21 @@ const MentorDashboardContainer = () => {
 					</div>
 				) : (
 					<>
-						<Row className='mb-4'>
-							{[
-								{
-									count: batches.length,
-									label: "Batches Assigned",
-									link: "/mentor/batches",
-								},
-								{
-									count: pendingAssignments.length,
-									label: "Pending Assignments",
-									link: "/mentor/assignments",
-								},
-								{
-									count: sessionsTodayOrUpcoming.length,
-									label: "Upcoming Sessions",
-									link: "/mentor/schedule-session",
-								},
-							].map((item, index) => (
+						<Row className='mb-4 general-widget'>
+							{cardData.map((item, index) => (
 								<Col
 									xs={6}
 									md={4}
 									key={index}>
 									<Link href={item.link}>
-										<Card className='text-center shadow-sm border-0 p-3'>
-											<h2
-												className='text-dark mb-1'
-												style={{ fontSize: "2rem" }}>
-												{item.count}
-											</h2>
-											<p className='text-muted mb-0'>{item.label}</p>
-										</Card>
+										<MyCardWithIcon
+											icon={item.icon}
+											title={item.title}
+											amount={item.amount}
+											color={item.color}
+											link={item.link}
+											divClass={item.divClass}
+										/>
 									</Link>
 								</Col>
 							))}
