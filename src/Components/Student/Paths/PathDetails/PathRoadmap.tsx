@@ -9,6 +9,7 @@ import { BookOpen, Award } from "react-feather";
 import { Button, Card, CardBody } from "reactstrap";
 import Link from "next/link";
 import { Path } from ".";
+const mainURL = process.env.NEXT_PUBLIC_MAIN_URL;
 
 interface PathRoadmapProps {
 	role: string;
@@ -33,7 +34,7 @@ const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 						const buttonColor = isEnrolled ? "success" : "primary";
 						const courseLink = isEnrolled
 							? `/student/learning/course/${course.id}`
-							: `/student/dashboard/`; //has to be changed
+							: `${mainURL}courses/${course.slug}`;
 
 						return (
 							<VerticalTimelineElement
@@ -47,15 +48,17 @@ const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 									{course.title}
 								</h4>
 								<p>{course.description}</p>
-								{role !== "Admin" && (
-									<Link href={courseLink}>
+								<Link
+									href={courseLink}
+									className='ms-2 ms-md-0'>
+									{role !== "Admin" && (
 										<Button
 											color={buttonColor}
 											size='sm'>
 											{buttonLabel}
 										</Button>
-									</Link>
-								)}
+									)}
+								</Link>
 							</VerticalTimelineElement>
 						);
 					})}
@@ -66,10 +69,14 @@ const PathRoadmap = ({ path, enrolledCourses, role }: PathRoadmapProps) => {
 						iconStyle={{ background: "#28a745", color: "#fff" }}
 						contentStyle={{ background: "#e6f4ea", color: "#000" }}
 						contentArrowStyle={{ borderRight: "7px solid #28a745" }}>
-						<h4 className='vertical-timeline-element-title'>Become:</h4>
+						<h6 className='vertical-timeline-element-title'>Become:</h6>
 						<ul className='mb-0'>
 							{path.wannaBeInterest.map((wanna) => (
-								<li key={wanna}>{wanna}</li>
+								<li
+									key={wanna}
+									className='fw-bold fs-5 text-success'>
+									{wanna}
+								</li>
 							))}
 						</ul>
 					</VerticalTimelineElement>

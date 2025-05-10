@@ -14,7 +14,7 @@ export interface Path {
 	description: string;
 	timing: string;
 	price: number;
-	courses: { id: string; title: string; description: string }[];
+	courses: { id: string; title: string; description: string; slug: string }[];
 	wannaBeInterest: string[];
 }
 const PathDetails = ({ id }: { id: string }) => {
