@@ -1,25 +1,13 @@
 "use client";
 
 import { getStudentProfile } from "@/app/api/student";
-import { ApexOptions } from "apexcharts";
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
-import { toast } from "react-toastify";
+import Link from "next/link";
 import { Card, CardBody, CardHeader, Spinner } from "reactstrap";
-
-const EvoScore = ({
-	loading,
-	setLoading,
-}: {
-	loading: boolean;
-	setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-	const [evoScore, setEvoScore] = useState<number>(0);
+import GaugeChart from "./Speedometer";
+const EvoScore = ({ loading, setLoading }: any) => {
+	const [evoScore, setEvoScore] = useState(0);
 	const [scoreLoaded, setScoreLoaded] = useState(false);
-	const evoColor = getEvoColor(evoScore);
-	const evoComment = getEvoComment(evoScore);
-
 	const fetchEvoScore = async () => {
 		setLoading(true);
 		try {
@@ -28,10 +16,8 @@ const EvoScore = ({
 				typeof response?.evoScore === "number" ? response.evoScore : 0;
 			setEvoScore(score);
 			setScoreLoaded(true);
-		} catch (error: any) {
-			error.response?.data?.message
-				? toast(error.response?.data?.message)
-				: toast.error("Failed to load EvoScore");
+		} catch (error) {
+			setScoreLoaded(true);
 		} finally {
 			setLoading(false);
 		}
@@ -41,84 +27,38 @@ const EvoScore = ({
 		fetchEvoScore();
 	}, []);
 
-	const chartOptions: ApexOptions = {
-		chart: { type: "radialBar", height: 350 },
-		plotOptions: {
-			radialBar: {
-				hollow: { size: "60%" },
-				dataLabels: {
-					name: {
-						show: true,
-						fontSize: "18px",
-						offsetY: -10,
-					},
-					value: {
-						show: true,
-						fontSize: "32px",
-						fontWeight: "bold",
-						formatter: () => `${(evoScore * 10).toFixed(1)}`,
-					},
-				},
-			},
-		},
-		labels: ["EVO Score"],
-		colors: [evoColor],
-	};
-
-	if (evoScore === 0) {
-		return (
-			<Card className='text-dark evo-card'>
-				<CardBody>
-					<CardHeader className='border-0 bg-transparent px-0 pb-2'>
-						<h4 className='fw-bold text-muted'>EVO Score</h4>
-					</CardHeader>
-					<p className='fs-6 text-light'>
-						Start learning to begin tracking your growth!
-					</p>
-					<Link
-						className='btn btn-primary'
-						href={`/student/courses`}>
-						{"Explore Courses"}
-					</Link>
-				</CardBody>
-			</Card>
-		);
-	}
-
-	if (loading) {
-		return (
-			<Card className='shadow-sm p-4 text-center'>
-				<Spinner color='primary' />
-			</Card>
-		);
-	}
-
 	return (
 		<Card className='text-dark'>
-			<CardBody>
+			<CardBody className='text-center position-relative'>
 				<CardHeader className='border-0 bg-transparent px-0 pb-2'>
 					<h4 className='fw-bold text-muted'>EVO Score</h4>
 				</CardHeader>
-				{scoreLoaded && evoScore === 0 ? (
-					<p className='fs-6 text-muted'>
-						EVO Score is calculated based on your overall performance, including
-						course progress, quiz results, assignments, and engagement. Start
-						learning to begin tracking your growth!
-					</p>
-				) : (
+				{loading ? (
+					<Spinner color='primary' />
+				) : evoScore === 0 ? (
 					<>
-						<ReactApexChart
-							options={chartOptions}
-							series={[evoScore * 10]}
-							type='radialBar'
-							height={240}
-						/>
-						<p
-							className={`mt-3 fw-semibold text-center fs-6`}
-							style={{ color: evoColor }}>
-							{evoComment}
+						<p className='fs-6 text-light'>
+							Start learning to begin tracking your growth!
 						</p>
+						<Link
+							className='btn btn-primary'
+							href={`/student/courses`}>
+							Explore Courses
+						</Link>
 					</>
+				) : (
+					<div className='py-1 position-relative'>
+						<GaugeChart score={evoScore * 10} />
+						{scoreLoaded && (
+							<div className='d-flex justify-content-center align-items-center gap-2 mt-4'>
+								<p
+									className='fw-semibold fs-6 mb-0'
+									style={{ color: getEvoColor(evoScore) }}>
+									{getEvoComment(evoScore)}
+								</p>
+							</div>
+						)}
+					</div>
 				)}
 			</CardBody>
 		</Card>
@@ -126,7 +66,6 @@ const EvoScore = ({
 };
 
 export default EvoScore;
-
 const getEvoComment = (score: number) => {
 	const score10 = score * 10;
 	const comments = {

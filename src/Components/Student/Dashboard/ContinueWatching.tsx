@@ -101,7 +101,9 @@ const ContinueWatching = ({
 			) : progressData.length === 0 ? (
 				<WelcomeCard content='Welcome to the EVO! Begin your EVOlution journey with a bang!' />
 			) : (
-				<div className='col-12  position-relative bg-white card p-3 shadow-sm border-0 rounded-4'>
+				<div
+					className='col-12  position-relative bg-white card p-3 shadow-sm border-0 rounded-4'
+					style={{ height: "389px" }}>
 					<h4 className='fw-bold mb-4 text-muted'>Continue Your Learning</h4>
 
 					{progressData.length > 2 && (

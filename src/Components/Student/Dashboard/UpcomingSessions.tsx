@@ -64,26 +64,28 @@ const UpcomingSessions = ({
 	return (
 		<>
 			<Card className='shadow-sm border-0 rounded-4'>
-				<CardHeader className='fw-bold text-muted fs-5'>
-					Today's Schedule
-				</CardHeader>
-				<CardBody
-					style={{ height: "300px", overflowY: "auto", cursor: "pointer" }}>
-					<FullCalendar
-						plugins={[timeGridPlugin, interactionPlugin]}
-						themeSystem='bootstrap5'
-						initialView='timeGridDay'
-						allDaySlot={false}
-						events={events}
-						eventClick={(info) => {
-							setSelectedEvent(info.event.extendedProps);
-							setModalOpen(true);
-						}}
-						height='auto'
-						slotMinTime='00:00:00'
-						slotMaxTime='23:59:59'
-					/>
-				</CardBody>
+				<Card>
+					<CardHeader className='fw-bold text-muted fs-5'>
+						Today's Schedule
+					</CardHeader>
+					<CardBody
+						style={{ height: "300px", overflowY: "auto", cursor: "pointer" }}>
+						<FullCalendar
+							plugins={[timeGridPlugin, interactionPlugin]}
+							themeSystem='bootstrap5'
+							initialView='timeGridDay'
+							allDaySlot={false}
+							events={events}
+							eventClick={(info: any) => {
+								setSelectedEvent(info.event.extendedProps);
+								setModalOpen(true);
+							}}
+							height='auto'
+							slotMinTime='00:00:00'
+							slotMaxTime='23:59:59'
+						/>
+					</CardBody>
+				</Card>
 			</Card>
 
 			<Modal

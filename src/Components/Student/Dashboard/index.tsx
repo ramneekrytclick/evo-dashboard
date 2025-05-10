@@ -40,17 +40,17 @@ const StudentDashboardContainer = () => {
 				<Row>
 					<Col
 						sm={12}
-						lg={9}>
-						{/* Mentor Bookings */}
-						<YourMentorBookings
+						lg={3}>
+						<EvoScore
 							loading={loading}
 							setLoading={setLoading}
 						/>
 					</Col>
 					<Col
 						sm={12}
-						lg={3}>
-						<EvoScore
+						lg={9}>
+						{/* Mentor Bookings */}
+						<YourMentorBookings
 							loading={loading}
 							setLoading={setLoading}
 						/>
