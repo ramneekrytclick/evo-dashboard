@@ -3,26 +3,34 @@ import { useAppDispatch, useAppSelector } from "@/Redux/Hooks";
 import { setDarkMode } from "@/Redux/Reducers/Layout/LayoutSlice";
 
 const DarkMode = () => {
-  const { darkMode } = useAppSelector((state) => state.layout);
-  const dispatch = useAppDispatch();
+	const { darkMode } = useAppSelector((state) => state.layout);
+	const dispatch = useAppDispatch();
 
-  const handleDarkMode = () => {
-    dispatch(setDarkMode(!darkMode));
-    if (darkMode) {
-      document.body.classList.add("light");
-      document.body.classList.remove("dark-only");
-    } else {
-      document.body.classList.add("dark-only");
-      document.body.classList.remove("light");
-    }
-  };
+	const handleDarkMode = () => {
+		dispatch(setDarkMode(!darkMode));
+		if (darkMode) {
+			document.body.classList.add("light");
+			document.body.classList.remove("dark-only");
+		} else {
+			document.body.classList.add("dark-only");
+			document.body.classList.remove("light");
+		}
+	};
 
-  return (
-    <li onClick={handleDarkMode}>
-      <div className={`mode ${darkMode ? "active" : ""}`}>
-        <SVG iconId="fill-dark" />
-      </div>
-    </li>
-  );
+	return (
+		<li onClick={handleDarkMode}>
+			<div
+				className={`mode ${darkMode ? "active" : ""}`}
+				style={{
+					cursor: "pointer",
+					fontSize: "1.2rem",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}>
+				<SVG iconId='fill-dark' />
+			</div>
+		</li>
+	);
 };
 export default DarkMode;

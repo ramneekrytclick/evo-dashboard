@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Card, CardBody, CardHeader, Spinner } from "reactstrap";
 import GaugeChart from "./Speedometer";
+import { toast } from "react-toastify";
 const EvoScore = ({ loading, setLoading }: any) => {
 	const [evoScore, setEvoScore] = useState(0);
 	const [scoreLoaded, setScoreLoaded] = useState(false);
@@ -13,7 +14,7 @@ const EvoScore = ({ loading, setLoading }: any) => {
 		try {
 			const response = await getStudentProfile();
 			const score =
-				typeof response?.evoScore === "number" ? response.evoScore : 0;
+				typeof response?.evoScore === "number" ? response.evoScore : 10;
 			setEvoScore(score);
 			setScoreLoaded(true);
 		} catch (error) {
@@ -26,7 +27,25 @@ const EvoScore = ({ loading, setLoading }: any) => {
 	useEffect(() => {
 		fetchEvoScore();
 	}, []);
-
+	if (evoScore === 0) {
+		return (
+			<Card className='text-dark evo-card'>
+				<CardBody>
+					<CardHeader className='border-0 bg-transparent px-0 pb-2'>
+						<h4 className='fw-bold text-muted'>EVO Score</h4>
+					</CardHeader>
+					<p className='fs-6 text-light'>
+						Start learning to begin tracking your growth!
+					</p>
+					<Link
+						className='btn btn-primary'
+						href={`/student/courses`}>
+						{"Explore Courses"}
+					</Link>
+				</CardBody>
+			</Card>
+		);
+	}
 	return (
 		<Card className='text-dark'>
 			<CardBody className='text-center position-relative'>

@@ -14,20 +14,35 @@ export const getEnrolledCourses = async () => {
 };
 export const getEnrolledPaths = async () => {
 	const enrolledCoursesRes = await apiClient.get(`/students/enrolled-courses`);
+	const profile = await getStudentProfile();
+
 	const enrolledCourseIds = enrolledCoursesRes.data.enrolledCourses.map(
 		(item: any) => item.course._id
 	);
 
-	// Fetch all paths
+	const userInterestId = profile.user.wannaBeInterest;
+
 	const allPathsRes = await getPaths();
 	const allPaths = allPathsRes.paths;
 
-	// Filter paths that include at least one enrolled course
-	const filteredPaths = allPaths.filter((path: any) =>
+	// Paths where user has enrolled in at least one course
+	const fromEnrolledCourses = allPaths.filter((path: any) =>
 		path.courses?.some((course: any) => enrolledCourseIds.includes(course._id))
 	);
 
-	return filteredPaths;
+	// Paths where path.wannaBeInterest matches user interests
+	const fromUserInterests = allPaths.filter((path: any) =>
+		path.wannaBeInterest?.some(
+			(interest: any) => userInterestId === interest._id
+		)
+	);
+
+	const combined = [...fromEnrolledCourses, ...fromUserInterests];
+	const uniquePaths = Array.from(
+		new Map(combined.map((path: any) => [path._id, path])).values()
+	);
+
+	return uniquePaths;
 };
 export const enrollInCourse = async (courseId: string) => {
 	return (await apiClient.post(`/students/course`, { courseId })).data;

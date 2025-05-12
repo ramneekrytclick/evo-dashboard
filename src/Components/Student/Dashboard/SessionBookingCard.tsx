@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState } from "react";
 import {
 	Card,
@@ -38,6 +39,7 @@ const SessionBookingCard = ({ booking }: { booking: any }) => {
 	};
 
 	const step = getStatusStep(booking.status);
+	const sessionLink = booking?.replyFromMentor?.split("https://");
 
 	return (
 		<>
@@ -103,10 +105,27 @@ const SessionBookingCard = ({ booking }: { booking: any }) => {
 							{booking.replyFromMentor || "No reply yet"}
 						</span>
 					</span>
-					<div
-						className={`flex-shrink-0 bg-light text-${step.color} rounded-pill p-2 px-3 mt-3`}>
-						{step.title}
-					</div>
+					{step.title === "Session Confirmed" ? (
+						<>
+							<Button
+								color='primary'
+								tag={Link}
+								href={sessionLink}>
+								JOIN MEET
+							</Button>
+							<div
+								className={`flex-shrink-0 bg-light text-${step.color} rounded-pill p-2 px-3 mt-3 cursor-pointer`}>
+								{step.title}
+							</div>
+						</>
+					) : (
+						<>
+							<div
+								className={`flex-shrink-0 bg-light text-${step.color} rounded-pill p-2 px-3 mt-3`}>
+								{step.title}
+							</div>
+						</>
+					)}
 				</ModalBody>
 			</Modal>
 		</>

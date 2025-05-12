@@ -1,15 +1,12 @@
 "use client";
 
 import { getEnrolledPaths } from "@/app/api/student";
-import { Href, ImagePath } from "@/Constant";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
-	Badge,
 	Card,
 	CardBody,
-	CardFooter,
 	CardTitle,
 	Col,
 	Container,
@@ -38,7 +35,7 @@ const MyLearningPaths = () => {
 			setPaths(response);
 		} catch (error) {
 			toast.error("Error fetching your learning paths.");
-			console.error("Error fetching learning paths:", error);
+			console.log("Error fetching learning paths:", error);
 		} finally {
 			setLoading(false);
 		}
@@ -56,7 +53,7 @@ const MyLearningPaths = () => {
 				</Container>
 			) : (
 				<>
-					<Row className='g-4'>
+					<Row className='g-4 mb-5'>
 						{learningPaths.length === 0 ? (
 							<Col xs={12}>
 								<Card
@@ -93,12 +90,14 @@ const MyLearningPaths = () => {
 						) : (
 							<>
 								<h4 className='mb-3 fw-bold'>
-									🎓 Suggested Learning Paths Based on Your Enrollments
+									🎓 Personalized Learning Paths Tailored to Your Courses &
+									Interests
 								</h4>
 								<p className='text-muted mb-4'>
-									These paths are personalized journeys based on your enrolled
-									courses. Follow them to master topics in a structured way and
-									achieve your goals faster.
+									Explore curated learning journeys based on your enrolled
+									courses and selected interests. These paths help you build
+									deep expertise step by step and reach your goals with focus
+									and confidence.
 								</p>
 								{learningPaths.map((path) => {
 									return (

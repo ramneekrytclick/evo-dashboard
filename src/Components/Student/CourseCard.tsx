@@ -26,7 +26,8 @@ const CourseCard = ({
 				enrolled
 					? `/student/learning/course/${course._id}`
 					: `${mainURL}courses/${course.slug}`
-			}>
+			}
+			target='_blank'>
 			<Card className='border-0 shadow rounded-4 overflow-hidden h-100'>
 				<Image
 					width={200}
