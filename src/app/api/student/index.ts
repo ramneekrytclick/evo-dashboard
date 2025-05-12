@@ -2,6 +2,7 @@ import { apiClient } from "@/utils/api";
 import { getPaths } from "../admin/path";
 import { getLessonById } from "../admin/students";
 import { BatchProps } from "@/Types/Course.type";
+import { getMyProfile } from "..";
 
 export const getStudentProfile = async () => {
 	return (await apiClient.get(`/students/me`)).data;
@@ -14,7 +15,7 @@ export const getEnrolledCourses = async () => {
 };
 export const getEnrolledPaths = async () => {
 	const enrolledCoursesRes = await apiClient.get(`/students/enrolled-courses`);
-	const profile = await getStudentProfile();
+	const profile = await getMyProfile("Student");
 
 	const enrolledCourseIds = enrolledCoursesRes.data.enrolledCourses.map(
 		(item: any) => item.course._id
