@@ -66,7 +66,7 @@ const EvoScore = ({ loading, setLoading }: any) => {
 						</Link>
 					</>
 				) : (
-					<div className='py-1 position-relative'>
+					<div className='py-1 position-relative px-sm-5 px-md-4 px-0 px-lg-0'>
 						<GaugeChart score={evoScore * 10} />
 						{scoreLoaded && (
 							<div className='d-flex justify-content-center align-items-center gap-2 mt-4'>

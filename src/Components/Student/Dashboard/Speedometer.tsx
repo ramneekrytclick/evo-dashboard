@@ -5,7 +5,6 @@ import { Tooltip, Modal, ModalHeader, ModalBody } from "reactstrap";
 
 const GaugeChart = ({ score }: { score: number }) => {
 	const [animatedScore, setAnimatedScore] = useState(0);
-	const [tooltipOpen, setTooltipOpen] = useState(false);
 	const [modalOpen, setModalOpen] = useState(false);
 
 	useEffect(() => {
@@ -31,110 +30,138 @@ const GaugeChart = ({ score }: { score: number }) => {
 		<div
 			style={{
 				position: "relative",
-				width: 300,
-				height: 200,
-				margin: "0 auto",
-				cursor: "pointer",
+				width: "100%",
+				paddingTop: "66%",
+				cursor: "default",
 			}}
-			id='gauge-chart-wrapper'
-			onClick={() => setModalOpen(true)}
-			onMouseEnter={() => setTooltipOpen(true)}
-			onMouseLeave={() => setTooltipOpen(false)}>
-			{/* Colored semi-circular zones */}
-			<svg
-				width='300'
-				height='150'>
-				{zones.map((zone, i) => {
-					const startAngle = -180 + i * 45;
-					const endAngle = startAngle + 45;
-					const radius = 140;
-
-					const startX = 150 + radius * Math.cos((Math.PI * startAngle) / 180);
-					const startY = 150 + radius * Math.sin((Math.PI * startAngle) / 180);
-					const endX = 150 + radius * Math.cos((Math.PI * endAngle) / 180);
-					const endY = 150 + radius * Math.sin((Math.PI * endAngle) / 180);
-
-					const midAngle = (startAngle + endAngle) / 2;
-					const labelX =
-						150 + (radius - 40) * Math.cos((Math.PI * midAngle) / 180);
-					const labelY =
-						150 + (radius - 40) * Math.sin((Math.PI * midAngle) / 180);
-
-					return (
-						<g key={i}>
-							<path
-								d={`M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`}
-								stroke={zone.color}
-								strokeWidth='12'
-								fill='none'
-							/>
-							<text
-								x={labelX}
-								y={labelY}
-								textAnchor='middle'
-								alignmentBaseline='middle'
-								fontSize='12'
-								fontWeight='bold'
-								fill={zone.color}>
-								{zone.label}
-							</text>
-						</g>
-					);
-				})}
-			</svg>
-
-			{/* Needle */}
+			id='gauge-chart-wrapper'>
 			<div
 				style={{
 					position: "absolute",
-					left: "50%",
-					bottom: "20%",
-					width: "4px",
-					height: "100px",
-					backgroundColor: "black",
-					borderRadius: "2px",
-					transform: `rotate(${angle}deg) translateX(-50%)`,
-					transformOrigin: "bottom center",
-					transition: "transform 0.5s ease-in-out",
-					boxShadow: "0 0 4px rgba(0,0,0,0.6)",
-					zIndex: 2,
-				}}
-			/>
-			{/* Center Circle for Needle Pivot */}
-			<div
-				style={{
-					position: "absolute",
-					left: "calc(50% - 8px)",
-					bottom: "calc(20% - 8px)",
-					width: "16px",
-					height: "16px",
-					borderRadius: "50%",
-					backgroundColor: "#000",
-					zIndex: 3,
-					boxShadow: "0 0 5px rgba(0,0,0,0.5)",
-				}}
-			/>
-
-			{/* Score Number */}
-			<div
-				style={{
-					position: "absolute",
-					top: "calc(100% - 30px)",
-					left: "50%",
-					transform: "translateX(-50%)",
-					textAlign: "center",
-					fontWeight: "bold",
-					fontSize: 24,
-					color:
-						score > 75
-							? "#1890FF"
-							: score > 50
-							? "#52C41A"
-							: score > 25
-							? "#FAAD14"
-							: "#FF4D4F",
+					top: 0,
+					left: 0,
+					width: "100%",
+					height: "100%",
 				}}>
-				{animatedScore}
+				<svg
+					width='100%'
+					height='100%'
+					viewBox='0 0 300 150'
+					preserveAspectRatio='xMidYMid meet'>
+					{zones.map((zone, i) => {
+						const startAngle = -180 + i * 45;
+						const endAngle = startAngle + 45;
+						const radius = 140;
+
+						const startX =
+							150 + radius * Math.cos((Math.PI * startAngle) / 180);
+						const startY =
+							150 + radius * Math.sin((Math.PI * startAngle) / 180);
+						const endX = 150 + radius * Math.cos((Math.PI * endAngle) / 180);
+						const endY = 150 + radius * Math.sin((Math.PI * endAngle) / 180);
+
+						const midAngle = (startAngle + endAngle) / 2;
+						const labelX =
+							150 + (radius - 40) * Math.cos((Math.PI * midAngle) / 180);
+						const labelY =
+							150 + (radius - 40) * Math.sin((Math.PI * midAngle) / 180);
+
+						return (
+							<g key={i}>
+								<path
+									d={`M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`}
+									stroke={zone.color}
+									strokeWidth='12'
+									fill='none'
+								/>
+								<text
+									x={labelX}
+									y={labelY}
+									textAnchor='middle'
+									alignmentBaseline='middle'
+									fontSize='12'
+									fontWeight='bold'
+									fill={zone.color}>
+									{zone.label}
+								</text>
+							</g>
+						);
+					})}
+				</svg>
+
+				<div
+					style={{
+						position: "absolute",
+						left: "50%",
+						bottom: "20%",
+						width: "4px",
+						height: "50%", // relative to container
+						backgroundColor: "black",
+						borderRadius: "2px",
+						transform: `rotate(${angle}deg) translateX(-50%)`,
+						transformOrigin: "bottom center",
+						transition: "transform 0.5s ease-in-out",
+						boxShadow: "0 0 4px rgba(0,0,0,0.6)",
+						zIndex: 2,
+					}}
+				/>
+
+				<div
+					style={{
+						position: "absolute",
+						left: "calc(50% - 8px)",
+						bottom: "calc(20% - 8px)",
+						width: "16px",
+						height: "16px",
+						borderRadius: "50%",
+						backgroundColor: "#000",
+						zIndex: 3,
+						boxShadow: "0 0 5px rgba(0,0,0,0.5)",
+					}}
+				/>
+				<div
+					style={{
+						position: "absolute",
+						bottom: "-20px",
+						left: "50%",
+						transform: "translateX(-50%)",
+						textAlign: "center",
+						fontWeight: "bold",
+						fontSize: "1.5rem",
+						color:
+							score > 75
+								? "#1890FF"
+								: score > 50
+								? "#52C41A"
+								: score > 25
+								? "#FAAD14"
+								: "#FF4D4F",
+					}}>
+					{animatedScore}
+				</div>
+				<div
+					style={{
+						position: "absolute",
+						bottom: "76%",
+						left: "5%",
+						transform: "translateX(-50%)",
+						textAlign: "center",
+						fontWeight: "bolder",
+						fontSize: "1rem",
+						border: "2px solid grey",
+						borderRadius: "50%",
+						backgroundColor: "white",
+						color: "grey",
+						height: "20px",
+						width: "20px",
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center",
+						cursor: "pointer",
+					}}
+					onClick={() => setModalOpen(true)}>
+					i
+				</div>
 			</div>
 
 			{/* Modal */}
