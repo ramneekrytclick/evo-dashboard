@@ -105,7 +105,7 @@ const TransactionHistoryBody: React.FC<TransactionHistoryBodyProps> = ({
 									₹{txn?.amount}
 								</strong>
 								<small className='text-muted'>
-									{txn?.course || txn?.course?.title || "Course: -"}
+									{txn?.course?.title || "Course: -"}
 								</small>
 							</div>
 							<div>
