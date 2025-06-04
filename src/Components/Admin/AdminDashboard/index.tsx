@@ -307,11 +307,15 @@ const AdminDashboardContainer = () => {
 						</Row>
 						{/* Data Cards */}
 						<Row className='h-100 general-widget'>
-							<Transactions
-								transactionsData={transactionData}
-								coursesData={coursesData}
-								category={categories}
-							/>
+							{transactionData ? (
+								<Transactions
+									transactionsData={transactionData}
+									coursesData={coursesData}
+									category={categories}
+								/>
+							) : (
+								<></>
+							)}
 							<Tables
 								tables={tables}
 								renderTable={renderTable}

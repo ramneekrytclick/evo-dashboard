@@ -99,14 +99,18 @@ const TransactionHistoryBody: React.FC<TransactionHistoryBodyProps> = ({
 						<Link href='/admin/transactions'>
 							<div className='d-flex justify-content-between'>
 								<strong
-									className={`d-block fs-6 text-${getStatusColor(txn.status)}`}>
-									₹{txn.amount}
+									className={`d-block fs-6 text-${getStatusColor(
+										txn?.status
+									)}`}>
+									₹{txn?.amount}
 								</strong>
-								<small className='text-muted'>{txn.course.title}</small>
+								<small className='text-muted'>
+									{txn?.course || txn?.course?.title || "Course: -"}
+								</small>
 							</div>
 							<div>
 								<small className='text-muted'>
-									{dayjs(txn.createdAt).format("MMM DD, YYYY, h:mm A")}
+									{dayjs(txn?.createdAt).format("MMM DD, YYYY, h:mm A")}
 								</small>
 							</div>
 						</Link>
