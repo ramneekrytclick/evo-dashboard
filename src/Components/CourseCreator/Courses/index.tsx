@@ -28,7 +28,7 @@ const CoursesContainerCC = () => {
 			getAllSubcategories(),
 			getAllWannaBeInterests(),
 		]);
-		setCourses(courseRes.courses.reverse());
+		setCourses(courseRes.courses);
 		setCategories(catRes.categories);
 		setSubcategories(subcatRes.subcategories);
 		setWannaBe(wannaRes.interests);

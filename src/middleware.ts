@@ -17,9 +17,13 @@ export function middleware(request: NextRequest) {
 
 			if (exp * 1000 > Date.now()) {
 				if (pathname === "/auth/login") {
-					return NextResponse.redirect(
-						new URL(`/${role.toLowerCase()}/dashboard`, request.url)
-					);
+					return role.toLowerCase() == "Course Creator".toLowerCase()
+						? NextResponse.redirect(
+								new URL(`/course-creator/dashboard`, request.url)
+						  )
+						: NextResponse.redirect(
+								new URL(`/${role.toLowerCase()}/dashboard`, request.url)
+						  );
 				}
 				if (
 					(pathname.startsWith("/admin") && role !== "Admin") ||
