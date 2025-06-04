@@ -39,7 +39,9 @@ const SessionBookingCard = ({ booking }: { booking: any }) => {
 	};
 
 	const step = getStatusStep(booking.status);
-	const sessionLink = booking?.replyFromMentor?.split("https://");
+	const sessionLinkMatch =
+		booking?.replyFromMentor?.match(/https?:\/\/[^\s"]+/);
+	const sessionLink = sessionLinkMatch ? sessionLinkMatch[0] : null;
 
 	return (
 		<>
