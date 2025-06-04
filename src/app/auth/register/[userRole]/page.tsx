@@ -12,16 +12,22 @@ const UserRegister = ({ params }: { params: { userRole: string } }) => {
 				break;
 			case "mentor":
 				setRole("mentors");
+				break;
 			case "publisher":
 				setRole("publishers/auth");
+				break;
 			case "cc":
 				setRole("course-creators/auth");
+				break;
 			case "manager":
 				setRole("managers/auth");
+				break;
 			case "student":
 				setRole("students");
+				break;
 			case "employer":
 				setRole("jobs");
+				break;
 			default:
 				setRole("students");
 				break;
