@@ -29,7 +29,7 @@ const UserForm = ({
 		setLoading(true);
 		try {
 			const response = await login(email, password, role);
-			if (response?.status === 200) {
+			if (response) {
 				switch (role) {
 					case "admin":
 						router.push(`/admin/dashboard`); // or route based on role

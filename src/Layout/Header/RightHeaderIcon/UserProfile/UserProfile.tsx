@@ -8,12 +8,13 @@ import { getImageURL } from "@/CommonComponent/imageURL";
 import { FaEnvelope } from "react-icons/fa";
 import { useState, useRef, useEffect } from "react";
 import clsx from "clsx"; // Optional: classnames utility (you can remove if not using it)
+import { useRouter } from "next/navigation";
 
 const UserProfile = () => {
 	const { user, logout } = useAuth();
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const dropdownRef = useRef<HTMLLIElement>(null);
-
+	const router = useRouter();
 	const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
 	// Click outside to close
@@ -134,7 +135,10 @@ const UserProfile = () => {
 							</Link>
 						</li>
 						<li
-							onClick={() => logout()}
+							onClick={() => {
+								logout();
+								router.push("/");
+							}}
 							style={{ cursor: "pointer" }}>
 							<div className='d-flex justify-content-center align-items-center gap-2 btn btn-danger w-100 mt-2'>
 								<span>Logout</span>
