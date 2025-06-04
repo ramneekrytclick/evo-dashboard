@@ -5,6 +5,7 @@ const nextConfig = {
 			"lh3.googleusercontent.com",
 			"localhost",
 			"evo-backend-new.onrender.com",
+			"backend.evoskillgrowth.com",
 		],
 	},
 	reactStrictMode: false,
