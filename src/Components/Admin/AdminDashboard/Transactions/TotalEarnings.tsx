@@ -80,7 +80,7 @@ const TotalEarnings: React.FC<TransactionsProps> = ({ transactionsData }) => {
         <div class="apex-tooltip p-2">
           <span>
             <span class="bg-primary"></span>
-            Project Created
+            Transaction Created
             <h3>₹${series[seriesIndex][dataPointIndex]}</h3>
           </span>
         </div>`,
