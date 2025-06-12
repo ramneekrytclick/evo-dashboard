@@ -162,6 +162,13 @@ export const MenuList: MenuItem[] | undefined = [
 				path: "/admin/tagcodes",
 			},
 			{
+				title: "API Keys",
+				icon: "task",
+				type: "link",
+				lanClass: "lan-6",
+				path: "/admin/api-keys",
+			},
+			{
 				path: "/admin/support/tickets",
 				icon: "support-tickets",
 				title: "Support",
