@@ -12,10 +12,28 @@ import Select from "react-select";
 import CreateCategoryModal from "../Categories/CreateCategoryModal";
 import CreateSubcategoryModal from "../SubCategories/CreateSubcategoryModal";
 import { Category } from "@/Types/Category.type";
+
+const MAX_IMAGE_SIZE_MB = 2;
+
 const SimpleCreateCourseForm = () => {
 	const { user } = useAuth();
-	const name = user?.name || "id";
-	const [formData, setFormData] = useState<any>({
+	const name = user?.name || "Unknown";
+
+	const [formData, setFormData] = useState<{
+		title: string;
+		description: string;
+		whatYouWillLearn: string;
+		youtubeLink: string;
+		timing: string;
+		categoryId: string;
+		subcategoryId: string;
+		wannaBeInterestIds: string[];
+		realPrice: string;
+		discountedPrice: string;
+		tags: string;
+		createdBy: string;
+		review: string;
+	}>({
 		title: "",
 		description: "",
 		whatYouWillLearn: "",
@@ -30,18 +48,20 @@ const SimpleCreateCourseForm = () => {
 		createdBy: name,
 		review: "No reviews yet",
 	});
+
 	const [photoFile, setPhotoFile] = useState<File | null>(null);
 	const [previewUrl, setPreviewUrl] = useState<string>("");
 
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [subcategories, setSubcategories] = useState([]);
 	const [interests, setInterests] = useState([]);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleChange = (
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
-		setFormData((prev: any) => ({ ...prev, [name]: value }));
+		setFormData((prev) => ({ ...prev, [name]: value }));
 
 		if (name === "categoryId") fetchSubcategories(value);
 	};
@@ -49,6 +69,10 @@ const SimpleCreateCourseForm = () => {
 	const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (file) {
+			if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+				toast.error("Image must be under 2MB");
+				return;
+			}
 			setPhotoFile(file);
 			setPreviewUrl(URL.createObjectURL(file));
 		}
@@ -76,56 +100,72 @@ const SimpleCreateCourseForm = () => {
 		}
 	};
 
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
-		const requiredFields = Object.keys(formData);
-		for (const field of requiredFields) {
-			if (!formData[field]) return toast.error("All fields are required");
-		}
-		if (!photoFile) return toast.error("Photo is required");
-
-		const payload = new FormData();
+	const validateForm = () => {
 		for (const key in formData) {
-			if (Array.isArray(formData[key])) {
-				payload.append(key, formData[key].join(","));
-			} else {
-				payload.append(key, formData[key]);
+			if (!formData[key as keyof typeof formData]) {
+				toast.error("All fields are required");
+				return false;
 			}
 		}
-		payload.append("photo", photoFile);
-
-		try {
-			await createCourse(payload);
-			toast.success("Course created successfully");
-			setFormData({
-				title: "",
-				description: "",
-				whatYouWillLearn: "",
-				youtubeLink: "",
-				timing: "",
-				categoryId: "",
-				subcategoryId: "",
-				wannaBeInterestIds: [],
-				realPrice: "",
-				discountedPrice: "",
-				tags: "",
-				createdBy: name,
-				review: "No reviews yet",
-			});
-			setPhotoFile(null);
-			setPreviewUrl("");
-		} catch (err) {
-			toast.error("Failed to create course");
+		if (!photoFile) {
+			toast.error("Course photo is required");
+			return false;
 		}
+		return true;
+	};
+
+	const handleSubmit = async (e: FormEvent) => {
+		e.preventDefault();
+		if (!validateForm()) return;
+
+		const payload = new FormData();
+		Object.entries(formData).forEach(([key, value]) => {
+			payload.append(
+				key,
+				Array.isArray(value) ? value.join(",") : value.toString()
+			);
+		});
+		payload.append("photo", photoFile!);
+
+		setIsSubmitting(true);
+		toast.promise(createCourse(payload), {
+			pending: "Creating course...",
+			success: {
+				render() {
+					setFormData({
+						title: "",
+						description: "",
+						whatYouWillLearn: "",
+						youtubeLink: "",
+						timing: "",
+						categoryId: "",
+						subcategoryId: "",
+						wannaBeInterestIds: [],
+						realPrice: "",
+						discountedPrice: "",
+						tags: "",
+						createdBy: name,
+						review: "No reviews yet",
+					});
+					setPhotoFile(null);
+					setPreviewUrl("");
+					return "Course created successfully";
+				},
+			},
+			error: "Failed to create course",
+		});
+		setIsSubmitting(false);
 	};
 
 	useEffect(() => {
 		fetchInitialData();
 	}, []);
+
 	const interestOptions = interests.map((int: any) => ({
 		label: int.title,
 		value: int._id,
 	}));
+
 	return (
 		<Form
 			onSubmit={handleSubmit}
@@ -339,14 +379,14 @@ const SimpleCreateCourseForm = () => {
 						Under 2MB
 					</small>
 				</Col>
-
 				<Col
 					md={12}
 					className='text-end'>
 					<Button
 						type='submit'
-						color='primary'>
-						Create Course
+						color='primary'
+						disabled={isSubmitting}>
+						{isSubmitting ? "Submitting..." : "Create Course"}
 					</Button>
 				</Col>
 			</Row>

@@ -12,7 +12,8 @@ import {
 	Input,
 	FormFeedback,
 } from "reactstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface ModalProps {
 	modalOpen: boolean;
@@ -30,11 +31,30 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 		description: "",
 		image: null as File | null,
 	});
+	const [preview, setPreview] = useState<string | null>(null);
+	const [errors, setErrors] = useState({ title: "", image: "" });
+	const [isValid, setIsValid] = useState(false);
 
-	const [errors, setErrors] = useState({
-		title: "",
-		image: "",
-	});
+	useEffect(() => {
+		// Generate image preview
+		if (formData.image) {
+			const reader = new FileReader();
+			reader.onloadend = () => setPreview(reader.result as string);
+			reader.readAsDataURL(formData.image);
+		} else {
+			setPreview(null);
+		}
+	}, [formData.image]);
+
+	useEffect(() => {
+		const titleValid = formData.title.trim() !== "";
+		const imageValid = formData.image !== null;
+		setIsValid(titleValid && imageValid);
+		setErrors({
+			title: titleValid ? "" : "Title is required",
+			image: imageValid ? "" : "Image is required",
+		});
+	}, [formData]);
 
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -45,19 +65,44 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files.length > 0) {
-			setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
+			const file = e.target.files[0];
+			if (file.size > 2 * 1024 * 1024) {
+				toast.error("File size exceeds 2MB limit.");
+				return;
+			}
+			setFormData((prev) => ({ ...prev, image: file }));
 		}
 	};
+
 	const onSubmit = async () => {
+		const titleValid = formData.title.trim() !== "";
+		const imageValid = formData.image !== null;
+
+		if (!titleValid || !imageValid) {
+			setErrors({
+				title: !titleValid ? "Title is required" : "",
+				image: !imageValid ? "Image is required" : "",
+			});
+			return;
+		}
+
 		const data = new FormData();
 		data.append("title", formData.title);
 		data.append("description", formData.description);
 		if (formData.image) data.append("image", formData.image);
 
-		await handleSubmit(data);
-		setFormData({ title: "", description: "", image: null });
-		setErrors({ title: "", image: "" });
-		toggleModal();
+		await toast
+			.promise(handleSubmit(data), {
+				pending: "Creating interest...",
+				success: "Interest created successfully!",
+				error: "Error creating interest!",
+			})
+			.then(() => {
+				setFormData({ title: "", description: "", image: null });
+				setErrors({ title: "", image: "" });
+				toggleModal();
+			})
+			.catch((err) => console.error(err));
 	};
 
 	return (
@@ -104,6 +149,21 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 						/>
 						<FormFeedback>{errors.image}</FormFeedback>
 					</FormGroup>
+
+					{preview && (
+						<div className='mt-2 text-center'>
+							<img
+								src={preview}
+								alt='Preview'
+								style={{
+									width: "100px",
+									height: "100px",
+									objectFit: "cover",
+									borderRadius: 8,
+								}}
+							/>
+						</div>
+					)}
 				</Form>
 			</ModalBody>
 			<ModalFooter>
@@ -114,7 +174,8 @@ const CreateInterestFormModal: React.FC<ModalProps> = ({
 				</Button>
 				<Button
 					color='primary'
-					onClick={onSubmit}>
+					onClick={onSubmit}
+					disabled={!isValid}>
 					Submit
 				</Button>
 			</ModalFooter>
