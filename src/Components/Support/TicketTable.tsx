@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import { Trash } from "react-feather";
 import AdminTicketModal from "./AdminTicketModal";
+import ReusableDataTable from "@/CommonComponent/Table";
 
 const TicketTable = () => {
 	const auth = useAuth();
@@ -232,21 +233,13 @@ const TicketTable = () => {
 	useEffect(() => {
 		fetchTickets();
 	}, []);
-	if (loading) {
-		return (
-			<>
-				<Container className='d-flex gap-2 text-primary justify-content-center align-items-center'>
-					<Spinner size={30} />
-				</Container>
-			</>
-		);
-	}
 	return (
 		<div
 			className='table-responsive custom-scrollbar'
 			style={{ cursor: "pointer" }}>
 			{role !== "Admin" && <CreateTicketModal fetchData={fetchTickets} />}
-			<DataTable
+			<ReusableDataTable
+				loading={loading}
 				columns={
 					role === "Admin" ? adminSupportTableColumns : userSupportTableColumns
 				}
