@@ -1,14 +1,18 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Select from "react-select";
+import { toast } from "react-toastify";
+import { Col, Form, Input, Label, Row, Button } from "reactstrap";
 import { getCourses } from "@/app/api/admin/course";
 import { createPath } from "@/app/api/admin/path";
 import { getWannaBeInterests } from "@/app/api/admin/wannabe";
 import { CourseProps } from "@/Types/Course.type";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import Select from "react-select";
-import { Col, Form, Input, Label, Row, Button } from "reactstrap";
+
+const MAX_IMAGE_SIZE_MB = 2;
 
 const CreatePathForm = () => {
+	const router = useRouter();
 	const [formData, setFormData] = useState<any>({
 		title: "",
 		description: "",
@@ -19,16 +23,17 @@ const CreatePathForm = () => {
 	});
 	const [courses, setCourses] = useState<CourseProps[]>([]);
 	const [wannaBeInterests, setWannaBeInterests] = useState<any[]>([]);
-	const [photo, setPhoto] = useState<any>(null);
-	const courseOptions = courses.map((c) => ({
-		label: c.title,
-		value: c._id,
-	}));
+	const [photo, setPhoto] = useState<File | null>(null);
+	const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
 	useEffect(() => {
 		(async () => {
 			try {
-				const courseRes = await getCourses();
-				const wannaBeRes = await getWannaBeInterests();
+				const [courseRes, wannaBeRes] = await Promise.all([
+					getCourses(),
+					getWannaBeInterests(),
+				]);
 				setCourses(courseRes);
 				setWannaBeInterests(wannaBeRes);
 			} catch (err) {
@@ -37,6 +42,16 @@ const CreatePathForm = () => {
 		})();
 	}, []);
 
+	const courseOptions = courses.map((c) => ({
+		label: c.title,
+		value: c._id,
+	}));
+
+	const interestOptions = wannaBeInterests.map((w) => ({
+		label: w.title,
+		value: w._id,
+	}));
+
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		setFormData({
@@ -44,52 +59,68 @@ const CreatePathForm = () => {
 			[name]: name === "price" ? Number(value) : value,
 		});
 	};
-	const interestOptions = wannaBeInterests.map((w) => ({
-		label: w.title,
-		value: w._id,
-	}));
-	const handleSubmit = async () => {
-		if (
-			!formData.title ||
-			!formData.description ||
-			!formData.courses.length ||
-			!formData.wannaBeInterest.length
-		) {
-			toast.error(
-				"All fields are required, including at least one course and interest!"
-			);
+
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+			toast.error("Image must be less than 2MB");
 			return;
 		}
-		const payload = new FormData();
-		Object.entries(formData).forEach(([key, value]) => {
-			if (Array.isArray(value)) {
-				payload.append(key, value.join(","));
-			} else {
-				payload.append(key, String(value));
-			}
-		});
-		if (photo) payload.append("photo", photo);
 
-		try {
-			if (photo) {
-				await createPath({ ...formData, photo });
-			} else {
-				await createPath(formData);
-			}
+		setPhoto(file);
+		setPhotoPreview(URL.createObjectURL(file));
+	};
 
-			toast.success("Path created successfully");
-			setFormData({
-				title: "",
-				description: "",
-				timing: "",
-				price: 0,
-				courses: [],
-				wannaBeInterest: [],
-			});
-			setPhoto(null);
-		} catch (err) {
-			toast.error("Failed to create path");
+	const validateForm = () => {
+		if (!formData.title.trim()) return "Title is required";
+		if (!formData.description.trim()) return "Description is required";
+		if (!formData.timing.trim()) return "Timing is required";
+		if (formData.courses.length === 0) return "At least one course is required";
+		if (formData.wannaBeInterest.length === 0)
+			return "At least one interest is required";
+		return null;
+	};
+
+	const handleSubmit = async () => {
+		const errorMsg = validateForm();
+		if (errorMsg) {
+			toast.error(errorMsg);
+			return;
 		}
+
+		const submissionData = new FormData();
+		Object.entries(formData).forEach(([key, value]) => {
+			submissionData.append(
+				key,
+				Array.isArray(value) ? value.join(",") : String(value)
+			);
+		});
+		if (photo) submissionData.append("photo", photo);
+
+		setIsSubmitting(true);
+
+		await toast.promise(createPath(photo ? { ...formData, photo } : formData), {
+			pending: "Creating path...",
+			success: "Path created successfully!",
+			error: "Failed to create path",
+		});
+
+		// Reset state after success
+		setFormData({
+			title: "",
+			description: "",
+			timing: "",
+			price: 0,
+			courses: [],
+			wannaBeInterest: [],
+		});
+		setPhoto(null);
+		setPhotoPreview(null);
+		setIsSubmitting(false);
+
+		setTimeout(() => router.push("/admin/paths"), 1000);
 	};
 
 	return (
@@ -120,34 +151,43 @@ const CreatePathForm = () => {
 					/>
 				</Col>
 				<Col md={6}>
-					<Label>Photo</Label>
+					<Label>Photo (max 2MB)</Label>
 					<Input
 						type='file'
-						onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+						accept='image/*'
+						onChange={handleImageChange}
 					/>
+					{photoPreview && (
+						<img
+							src={photoPreview}
+							alt='preview'
+							style={{
+								marginTop: "10px",
+								maxWidth: "100%",
+								maxHeight: "200px",
+							}}
+						/>
+					)}
 				</Col>
 				<Col md={6}>
-					<Label for='courses'>Courses</Label>
+					<Label>Courses *</Label>
 					<Select
 						isMulti
 						name='courses'
 						options={courseOptions}
 						value={courseOptions.filter((c) =>
-							formData.courses.includes(c.value || "")
+							formData.courses.includes(c.value)
 						)}
 						onChange={(selected) =>
 							setFormData({
 								...formData,
-								courses: selected.map((s) => s.value || ""),
+								courses: selected.map((s) => s.value),
 							})
 						}
-						className='basic-multi-select'
-						classNamePrefix='select'
 					/>
 				</Col>
 				<Col md={6}>
 					<Label>WannaBe Interests *</Label>
-
 					<Select
 						isMulti
 						name='wannaBeInterest'
@@ -161,8 +201,6 @@ const CreatePathForm = () => {
 								wannaBeInterest: selected.map((s) => s.value),
 							})
 						}
-						className='basic-multi-select'
-						classNamePrefix='select'
 					/>
 				</Col>
 				<Col
@@ -170,8 +208,9 @@ const CreatePathForm = () => {
 					className='text-end mt-3'>
 					<Button
 						color='primary'
+						disabled={isSubmitting}
 						onClick={handleSubmit}>
-						Create Path
+						{isSubmitting ? "Submitting..." : "Create Path"}
 					</Button>
 				</Col>
 			</Row>

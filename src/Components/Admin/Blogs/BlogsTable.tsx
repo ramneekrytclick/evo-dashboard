@@ -10,19 +10,24 @@ import FilterComponent from "@/CommonComponent/FilterComponent";
 import { customTableStyles } from "../Batches/BatchesList";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ReusableDataTable from "@/CommonComponent/Table";
 
 const BlogsTable = () => {
 	const [filterText, setFilterText] = useState("");
 	const [blogs, setBlogs] = useState<BlogProps[]>([]);
 	const navigation = useRouter();
+	const [loading, setLoading] = useState(true);
 
 	const fetchBlogs = async () => {
 		try {
+			setLoading(true);
 			const response = await getBlogs();
 			setBlogs(response.blogs.reverse());
 		} catch (error) {
 			console.error(error);
 			toast.error("Failed to fetch blogs");
+		} finally {
+			setLoading(false);
 		}
 	};
 	useEffect(() => {
@@ -104,7 +109,7 @@ const BlogsTable = () => {
 					}
 					filterText={filterText}
 				/>
-				<DataTable
+				<ReusableDataTable
 					data={filteredItems}
 					columns={blogTableColumns}
 					striped
@@ -112,7 +117,7 @@ const BlogsTable = () => {
 					fixedHeader
 					className='display'
 					noDataComponent='No blogs found.'
-					customStyles={customTableStyles}
+					loading={loading}
 				/>
 			</CardBody>
 		</Card>

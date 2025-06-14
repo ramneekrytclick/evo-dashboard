@@ -28,6 +28,7 @@ import { customTableStyles } from "../Batches/BatchesList";
 import { Edit2, Trash, Star } from "react-feather";
 import { addReview } from "@/app/api/admin/review";
 import { getAllCourses } from "@/app/api/cc";
+import ReusableDataTable from "@/CommonComponent/Table";
 
 interface Review {
 	_id: string;
@@ -175,8 +176,6 @@ const ReviewsContainer = () => {
 		},
 	];
 
-	if (loading) return <h2>Loading reviews...</h2>;
-
 	return (
 		<>
 			<Breadcrumbs
@@ -193,15 +192,13 @@ const ReviewsContainer = () => {
 						<i className='ri-add-line align-middle me-2'></i>
 						Add Review
 					</Button>
-					<DataTable
+					<ReusableDataTable
 						columns={columns}
 						data={reviews}
 						pagination
 						highlightOnHover
 						striped
-						responsive
-						customStyles={customTableStyles}
-						noDataComponent={<p>No reviews found.</p>}
+						loading={loading}
 					/>
 				</CardBody>
 			</Card>

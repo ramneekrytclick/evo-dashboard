@@ -23,6 +23,7 @@ import { IAnnouncement } from "@/Types/Announcement.type";
 import { Trash, Trash2 } from "react-feather";
 import { toast } from "react-toastify";
 import { customTableStyles } from "../Batches/BatchesList";
+import ReusableDataTable from "@/CommonComponent/Table";
 
 const AnnouncementsListTable = () => {
 	const [filterText, setFilterText] = useState("");
@@ -167,20 +168,13 @@ const AnnouncementsListTable = () => {
 					<CreateAnnouncementModal fetchData={fetchAnnouncements} />
 				</div>
 				<div className='table-responsive custom-scrollbar mt-3'>
-					{loading ? (
-						<div>
-							<Spinner />
-							Loading...
-						</div>
-					) : (
-						<DataTable
-							data={filteredItems}
-							columns={announcementTableColumns}
-							striped
-							pagination
-							customStyles={customTableStyles}
-						/>
-					)}
+					<ReusableDataTable
+						data={filteredItems}
+						columns={announcementTableColumns}
+						striped
+						pagination
+						loading={loading}
+					/>
 				</div>
 				{deleteModalOpen && announcementToDelete && (
 					<Modal

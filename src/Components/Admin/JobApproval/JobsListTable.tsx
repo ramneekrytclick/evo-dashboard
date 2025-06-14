@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { customTableStyles } from "../Batches/BatchesList";
 import JobDetailsModal from "./JobDetailsModal";
+import ReusableDataTable from "@/CommonComponent/Table";
 
 interface Employer {
 	_id: string;
@@ -134,7 +135,7 @@ export default function JobTable(): JSX.Element {
 							setSelectedJob(row);
 							setModalOpen(true);
 						}}>
-						<i className='fa fa-eye me-1' /> View
+						View
 					</Button>
 					{row.status === "Pending" && (
 						<Button
@@ -153,15 +154,13 @@ export default function JobTable(): JSX.Element {
 		<>
 			<Card>
 				<CardBody>
-					<DataTable
+					<ReusableDataTable
 						columns={columns}
 						data={jobs}
-						progressPending={loading}
+						loading={loading}
 						pagination
-						responsive
 						striped
 						highlightOnHover
-						customStyles={customTableStyles}
 					/>
 
 					{/* Job Details Modal */}

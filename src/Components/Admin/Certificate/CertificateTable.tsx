@@ -20,6 +20,7 @@ import {
 } from "reactstrap";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import { customTableStyles } from "../Batches/BatchesList";
+import ReusableDataTable from "@/CommonComponent/Table";
 const CertificateTable = () => {
 	const [rows, setRows] = useState<any[]>([]);
 	const [loading, setLoading] = useState(true);
@@ -183,14 +184,13 @@ const CertificateTable = () => {
 					<Spinner color='primary' />
 				</div>
 			) : (
-				<DataTable
+				<ReusableDataTable
 					columns={columns}
 					data={rows}
 					pagination
 					highlightOnHover
 					dense
 					noDataComponent='No student progress found.'
-					customStyles={customTableStyles}
 				/>
 			)}
 

@@ -12,6 +12,7 @@ import Select from "react-select";
 import CreateCategoryModal from "../Categories/CreateCategoryModal";
 import CreateSubcategoryModal from "../SubCategories/CreateSubcategoryModal";
 import { Category } from "@/Types/Category.type";
+import { useRouter } from "next/navigation";
 
 const MAX_IMAGE_SIZE_MB = 2;
 
@@ -56,6 +57,7 @@ const SimpleCreateCourseForm = () => {
 	const [subcategories, setSubcategories] = useState([]);
 	const [interests, setInterests] = useState([]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const router = useRouter();
 
 	const handleChange = (
 		e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -149,11 +151,16 @@ const SimpleCreateCourseForm = () => {
 					});
 					setPhotoFile(null);
 					setPreviewUrl("");
+					setTimeout(() => {
+						router.push("/admin/courses");
+					}, 300);
+
 					return "Course created successfully";
 				},
 			},
 			error: "Failed to create course",
 		});
+
 		setIsSubmitting(false);
 	};
 

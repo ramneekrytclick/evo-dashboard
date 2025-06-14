@@ -26,6 +26,7 @@ import { FontSizeTitle } from "@/Constant";
 import { toast } from "react-toastify";
 import { Edit, Edit2, Trash, Trash2 } from "react-feather";
 import UpdateBatchModal from "./UpdateBatch";
+import ReusableDataTable from "@/CommonComponent/Table";
 export const customTableStyles = {
 	rows: { style: { fontSize: "1rem" } },
 	headCells: { style: { fontSize: "1.05rem", fontWeight: "600" } },
@@ -48,12 +49,17 @@ const BatchesList = () => {
 	const [updateBatchModalOpen, setUpdateBatchModalOpen] = useState(false);
 	const [batchToDelete, setBatchToDelete] = useState<BatchProps | null>(null);
 	const [confirmBatchName, setConfirmBatchName] = useState("");
+	const [loading, setLoading] = useState(false);
 	const fetchBatches = async () => {
 		try {
+			setLoading(true);
 			const response = await getBatches();
 			setBatches(response.batches.reverse() || []);
 		} catch (error) {
+			toast.error("Error fetching batches");
 			console.error("Error fetching batches:", error);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -247,12 +253,12 @@ const BatchesList = () => {
 						<CreateBatchModal fetchData={fetchBatches} />
 					</div>
 					<div className='table-responsive custom-scrollbar user-datatable mt-3'>
-						<DataTable
+						<ReusableDataTable
 							data={filteredItems}
 							columns={columns}
-							striped
 							pagination
 							fixedHeader
+							loading={loading}
 							persistTableHead
 							className='display'
 							noDataComponent='No batches found.'
@@ -261,7 +267,6 @@ const BatchesList = () => {
 								setSelectedBatchForDetails(row);
 							}}
 							highlightOnHover
-							customStyles={customTableStyles}
 							pointerOnHover
 						/>
 					</div>

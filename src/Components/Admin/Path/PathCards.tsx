@@ -15,6 +15,7 @@ import { Edit2, Trash } from "react-feather";
 import UpdatePathModal from "./UpdatePathModal";
 import { getImageURL } from "@/CommonComponent/imageURL";
 import Image from "next/image";
+import ReusableDataTable from "@/CommonComponent/Table";
 const PathCards = () => {
 	const [paths, setPaths] = useState<PathProps[]>([]);
 	const [filterText, setFilterText] = useState("");
@@ -24,13 +25,18 @@ const PathCards = () => {
 	};
 	const [updateModal, setUpdateModal] = useState(false);
 	const [selectedBlogForDelete, setSelectedBlogForDelete] = useState("");
+	const [loading, setLoading] = useState(true);
 	const fetchPaths = async () => {
 		try {
+			setLoading(true);
 			const response = await getPaths();
 			setPaths(response.paths);
 			console.log(response.paths);
 		} catch (error) {
 			toast.error("Error in fetching paths");
+			console.error("Error fetching paths:", error);
+		} finally {
+			setLoading(false);
 		}
 	};
 	const filteredItems: PathProps[] = paths.filter((item: PathProps) => {
@@ -147,14 +153,14 @@ const PathCards = () => {
 						</Link>
 					</div>
 					<div className='table-responsive custom-scrollbar user-datatable mt-3'>
-						<DataTable
+						<ReusableDataTable
 							data={filteredItems}
 							columns={pathTableColumns}
 							striped={true}
 							fixedHeader
 							pagination
 							className='display'
-							customStyles={customTableStyles}
+							loading={loading}
 						/>
 					</div>
 				</CardBody>

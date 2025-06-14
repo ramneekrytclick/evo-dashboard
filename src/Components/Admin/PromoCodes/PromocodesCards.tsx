@@ -10,6 +10,7 @@ import {
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
+	Spinner,
 } from "reactstrap";
 import { getPromoCodes, deletePromocode } from "@/app/api/admin/promo-codes";
 import { PromoCodeProps } from "@/Types/Course.type";
@@ -22,13 +23,18 @@ const PromocodesCards = () => {
 	const [promocodes, setPromocodes] = useState<PromoCodeProps[]>([]);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 	const [selectedPromoId, setSelectedPromoId] = useState<string | null>(null);
+	const [loading, setLoading] = useState(true);
 
 	const fetchPromoCodes = async () => {
 		try {
+			setLoading(true);
 			const response = await getPromoCodes();
 			setPromocodes(response.promoCodes);
 		} catch (err) {
+			toast.error("Failed to fetch promo codes");
 			console.error("Failed to fetch promo codes", err);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -56,6 +62,14 @@ const PromocodesCards = () => {
 
 	const isCourseSpecific = (promo: PromoCodeProps) => !!promo.course;
 
+	if (loading) {
+		return (
+			<div className='text-center py-5'>
+				<Spinner color='primary' />
+				<p className='mt-3'>Loading promo codes...</p>
+			</div>
+		);
+	}
 	return (
 		<Col>
 			<Row className='ms-1 mb-4'>

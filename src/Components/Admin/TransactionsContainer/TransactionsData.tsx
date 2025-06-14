@@ -21,6 +21,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { customTableStyles } from "../Batches/BatchesList";
+import ReusableDataTable from "@/CommonComponent/Table";
 
 interface Transaction {
 	_id: string;
@@ -149,21 +150,17 @@ const TransactionsData = ({
 				<Col sm={12}>
 					<Card>
 						<CardBody>
-							{loading ? (
-								<div className='text-center'>
-									<Spinner color='primary' />
-								</div>
-							) : error ? (
+							{error ? (
 								<p className='text-danger'>{error}</p>
 							) : (
-								<DataTable
+								<ReusableDataTable
 									columns={columns}
 									data={data}
 									pagination
 									striped
 									highlightOnHover
 									onRowClicked={handleRowClick}
-									customStyles={customTableStyles}
+									loading={loading}
 								/>
 							)}
 						</CardBody>

@@ -19,6 +19,8 @@ import { getPathById, updatePath } from "@/app/api/admin/path";
 import { toast } from "react-toastify";
 import Select from "react-select";
 
+const MAX_IMAGE_SIZE_MB = 2;
+
 const UpdatePathModal = ({
 	id,
 	fetchData,
@@ -39,8 +41,10 @@ const UpdatePathModal = ({
 		wannaBeInterest: [] as string[],
 	});
 	const [photo, setPhoto] = useState<File | null>(null);
+	const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 	const [courses, setCourses] = useState<any[]>([]);
 	const [wannaBeInterests, setWannaBeInterests] = useState<any[]>([]);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		const fetchInitialData = async () => {
@@ -75,6 +79,11 @@ const UpdatePathModal = ({
 
 		if (modal) {
 			fetchInitialData();
+		} else {
+			// Reset on close
+			setPhoto(null);
+			setPhotoPreview(null);
+			setIsSubmitting(false);
 		}
 	}, [modal, id]);
 
@@ -86,16 +95,33 @@ const UpdatePathModal = ({
 		}));
 	};
 
+	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const file = e.target.files?.[0];
+		if (!file) return;
+
+		if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+			toast.error("Image must be less than 2MB");
+			return;
+		}
+
+		setPhoto(file);
+		setPhotoPreview(URL.createObjectURL(file));
+	};
+
+	const validateForm = () => {
+		if (!formData.title.trim()) return "Title is required";
+		if (!formData.description.trim()) return "Description is required";
+		if (!formData.timing.trim()) return "Timing is required";
+		if (formData.courses.length === 0) return "At least one course is required";
+		if (formData.wannaBeInterest.length === 0)
+			return "At least one interest is required";
+		return null;
+	};
+
 	const handleUpdate = async () => {
-		if (
-			!formData.title ||
-			!formData.description ||
-			!formData.courses.length ||
-			!formData.wannaBeInterest.length
-		) {
-			toast.error(
-				"All fields are required, including at least one course and interest!"
-			);
+		const error = validateForm();
+		if (error) {
+			toast.error(error);
 			return;
 		}
 
@@ -108,15 +134,17 @@ const UpdatePathModal = ({
 		payload.append("wannaBeInterestIds", formData.wannaBeInterest.join(","));
 		if (photo) payload.append("photo", photo);
 
-		try {
-			await updatePath(id, payload);
-			toast.success("Path updated successfully");
-			toggle();
-			fetchData();
-		} catch (err) {
-			console.error(err);
-			toast.error("Failed to update path");
-		}
+		setIsSubmitting(true);
+
+		await toast.promise(updatePath(id, payload), {
+			pending: "Updating path...",
+			success: "Path updated successfully",
+			error: "Failed to update path",
+		});
+
+		toggle();
+		fetchData();
+		setIsSubmitting(false);
 	};
 
 	const courseOptions = courses.map((c) => ({ label: c.title, value: c._id }));
@@ -160,11 +188,22 @@ const UpdatePathModal = ({
 							/>
 						</Col>
 						<Col md={6}>
-							<Label>Photo</Label>
+							<Label>Photo (max 2MB)</Label>
 							<Input
 								type='file'
-								onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+								onChange={handleImageChange}
 							/>
+							{photoPreview && (
+								<img
+									src={photoPreview}
+									alt='preview'
+									style={{
+										marginTop: "10px",
+										maxWidth: "100%",
+										maxHeight: "200px",
+									}}
+								/>
+							)}
 						</Col>
 						<Col md={6}>
 							<Label>Courses *</Label>
@@ -176,13 +215,11 @@ const UpdatePathModal = ({
 									formData.courses.includes(c.value)
 								)}
 								onChange={(selected) =>
-									setFormData({
-										...formData,
+									setFormData((prev) => ({
+										...prev,
 										courses: selected.map((s) => s.value),
-									})
+									}))
 								}
-								className='basic-multi-select'
-								classNamePrefix='select'
 							/>
 						</Col>
 						<Col md={6}>
@@ -195,13 +232,11 @@ const UpdatePathModal = ({
 									formData.wannaBeInterest.includes(i.value)
 								)}
 								onChange={(selected) =>
-									setFormData({
-										...formData,
+									setFormData((prev) => ({
+										...prev,
 										wannaBeInterest: selected.map((s) => s.value),
-									})
+									}))
 								}
-								className='basic-multi-select'
-								classNamePrefix='select'
 							/>
 						</Col>
 					</Row>
@@ -210,12 +245,14 @@ const UpdatePathModal = ({
 			<ModalFooter>
 				<Button
 					color='primary'
-					onClick={handleUpdate}>
-					Update Path
+					onClick={handleUpdate}
+					disabled={isSubmitting}>
+					{isSubmitting ? "Updating..." : "Update Path"}
 				</Button>
 				<Button
 					color='outline-primary'
-					onClick={toggle}>
+					onClick={toggle}
+					disabled={isSubmitting}>
 					Cancel
 				</Button>
 			</ModalFooter>
