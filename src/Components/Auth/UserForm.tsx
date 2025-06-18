@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import { Button, Form, FormGroup, Input, Label } from "reactstrap";
+import { toast } from "react-toastify";
+import { Button, Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import imageOne from "../../../public/assets/images/logo/logo-1.png";
 import imageTwo from "../../../public/assets/images/logo/logo.png";
 import { useAuth } from "@/app/AuthProvider";
@@ -17,8 +17,8 @@ const UserForm = ({
 	route: string;
 }) => {
 	const [show, setShow] = useState(false);
-	const [email, setEmail] = useState("admin@evo.com");
-	const [password, setPassword] = useState("1234");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const { login } = useAuth();
 	const router = useRouter();
@@ -68,35 +68,35 @@ const UserForm = ({
 		}
 	};
 	//TO BE REMOVED
-	useEffect(() => {
-		switch (role) {
-			case "admin":
-				setEmail("admin@evo.com");
-				break;
-			case "students":
-				setEmail("singhrrammy@gmail.com");
-				break;
-			case "mentors":
-				setEmail("mentor@evo.com");
-				setPassword("123");
-				break;
-			case "jobs":
-				setEmail("emp2@evo.com");
-				break;
-			case "publishers/auth":
-				setEmail("publisher@evo.com");
-				break;
-			case "course-creators/auth":
-				setEmail("cc@evo.com");
-				break;
-			case "managers/auth":
-				setEmail("manager@evo.com");
-				break;
-			default:
-				setEmail("admin@evo.com");
-				break;
-		}
-	}, [role]);
+	// useEffect(() => {
+	// 	switch (role) {
+	// 		case "admin":
+	// 			setEmail("admin@evo.com");
+	// 			break;
+	// 		case "students":
+	// 			setEmail("singhrrammy@gmail.com");
+	// 			break;
+	// 		case "mentors":
+	// 			setEmail("mentor@evo.com");
+	// 			setPassword("123");
+	// 			break;
+	// 		case "jobs":
+	// 			setEmail("emp2@evo.com");
+	// 			break;
+	// 		case "publishers/auth":
+	// 			setEmail("publisher@evo.com");
+	// 			break;
+	// 		case "course-creators/auth":
+	// 			setEmail("cc@evo.com");
+	// 			break;
+	// 		case "managers/auth":
+	// 			setEmail("manager@evo.com");
+	// 			break;
+	// 		default:
+	// 			setEmail("admin@evo.com");
+	// 			break;
+	// 	}
+	// }, [role]);
 
 	return (
 		<div>
@@ -123,62 +123,76 @@ const UserForm = ({
 				</Link>
 			</div>
 
-			<div className='login-main'>
-				<Form
-					className='theme-form'
-					onSubmit={formSubmitHandle}>
-					<h4>Sign In to Your Account</h4>
-					<p>Enter your email & password to login</p>
+			<Row className='login-main p-0 overflow-hidden'>
+				<Col className='p-4 col-md-6'>
+					<Form
+						className='theme-form'
+						onSubmit={formSubmitHandle}>
+						<h4>Sign In to Your Account</h4>
+						<p>Enter your email & password to login</p>
 
-					<FormGroup>
-						<Label className='col-form-label fs-5'>Email Address</Label>
-						<Input
-							type='email'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							placeholder='Enter your email'
-							required
-						/>
-					</FormGroup>
-
-					<FormGroup>
-						<Label className='col-form-label fs-5'>Password</Label>
-						<div className='form-input position-relative'>
+						<FormGroup>
+							<Label className='col-form-label fs-6'>Email Address</Label>
 							<Input
-								type={show ? "text" : "password"}
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								placeholder='Enter your password'
+								type='email'
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								placeholder='Enter your email'
 								required
 							/>
-							<div
-								className='show-hide'
-								onClick={() => setShow(!show)}>
-								<span className='show' />
-							</div>
-						</div>
-					</FormGroup>
+						</FormGroup>
 
-					<div className='mt-4 text-center'>
-						<Button
-							type='submit'
-							color='primary'
-							disabled={loading}
-							block>
-							Sign In
-							{loading && (
-								<span
-									className='spinner-border spinner-border-sm me-2'
-									role='status'
-									aria-hidden='true'
+						<FormGroup>
+							<Label className='col-form-label fs-6'>Password</Label>
+							<div className='form-input position-relative'>
+								<Input
+									type={show ? "text" : "password"}
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+									placeholder='Enter your password'
+									required
 								/>
-							)}
-						</Button>
-						<Link href={`/auth/register/${route}`}>Register User</Link>
-					</div>
-				</Form>
-			</div>
-			{/* <ToastContainer /> */}
+								<div
+									className='show-hide'
+									onClick={() => setShow(!show)}>
+									<span className='show' />
+								</div>
+							</div>
+						</FormGroup>
+
+						<div className='mt-4 text-center'>
+							<Button
+								type='submit'
+								color='primary'
+								disabled={loading}
+								block>
+								Sign In
+								{loading && (
+									<span
+										className='spinner-border spinner-border-sm me-2'
+										role='status'
+										aria-hidden='true'
+									/>
+								)}
+							</Button>
+							<p className='mt-2 mb-0'>
+								Don't have an account?{" "}
+								<Link href={`/auth/register/${route}`}>Register</Link>
+							</p>
+						</div>
+					</Form>
+				</Col>
+				<Col className='p-0 d-none d-md-flex col-md-6 login-img justify-content-end align-items-center'>
+					<Image
+						priority
+						width={500}
+						height={500}
+						className='img-fluid p-0'
+						src='/assets/images/login/login.png'
+						alt='login image'
+					/>
+				</Col>
+			</Row>
 		</div>
 	);
 };

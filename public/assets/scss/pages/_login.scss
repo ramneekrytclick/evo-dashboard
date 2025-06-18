@@ -8,6 +8,7 @@
   justify-content: center;
   margin: 0 auto;
   background: url('../../images/login/login_bg.jpg');
+  backdrop-filter: hue-rotate(200deg);  
   background-position: center;
   padding: 30px 12px;
   .logo {
@@ -30,7 +31,7 @@
     }
   }
   .login-main {
-    width: 450px;
+    width: 850px;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 37px rgba(8, 21, 66, 0.05);
