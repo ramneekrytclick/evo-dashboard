@@ -72,7 +72,6 @@ const UserProfile = ({ id }: { id: string }) => {
 	>("Active");
 	const [approveModalOpen, setApproveModalOpen] = useState(false);
 	const [assignedBatches, setAssignedBatches] = useState<BatchProps[]>([]);
-	const [interests, setInterests] = useState([]);
 
 	const toggleModal = () => setModalOpen(!modalOpen);
 	const togglePhotoModal = () => setPhotoModalOpen(!photoModalOpen);
@@ -162,9 +161,15 @@ const UserProfile = ({ id }: { id: string }) => {
 	const getInterestName = async (wannaBeInterest: string) => {
 		try {
 			const allRes = await getWannaBeInterests();
+			console.log("finding interest...");
+			console.log(allRes);
+			console.log(wannaBeInterest);
 			const interest = allRes.find(
 				(i: WannaBeInterest) => i._id === wannaBeInterest
-			);
+			) || { title: "-" };
+			console.log("interest");
+			console.log(interest);
+
 			return interest.title;
 		} catch (error) {
 			toast.error("Failed to fetch interests");
@@ -229,10 +234,11 @@ const UserProfile = ({ id }: { id: string }) => {
 							cursor: "pointer",
 						}}>
 						<Image
+							priority
 							src={
 								profile.photo
 									? getImageURL(profile.photo)
-									: "/assets/images/user/1.jpg"
+									: "/assets/avatar-placeholder.png"
 							}
 							width={300}
 							height={300}
