@@ -8,6 +8,7 @@ import {
 	DropdownMenu,
 	DropdownItem,
 	CardBody,
+	Spinner,
 } from "reactstrap";
 import {
 	AtSign,
@@ -186,9 +187,23 @@ const UserProfile = ({ id }: { id: string }) => {
 		fetchMentorBatches();
 	}, []);
 
-	if (loading) return <div>Loading...</div>;
-	if (error) return <div>{error}</div>;
-	if (!profile) return <div>No profile found.</div>;
+	if (loading)
+		return (
+			<div className='text-center py-5'>
+				<Spinner color='primary' />
+				<p className='mt-3'>Loading user data...</p>
+			</div>
+		);
+	if (error)
+		return (
+			<div className='text-center py-5 text-danger'>
+				{"Error fetching user data"}
+			</div>
+		);
+	if (!profile)
+		return (
+			<div className='text-center py-5 text-danger'>No profile found.</div>
+		);
 
 	const isStudent = profile.role === "Student";
 	const isMentor = profile.role === "Mentor";

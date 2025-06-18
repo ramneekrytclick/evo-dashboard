@@ -15,17 +15,21 @@ import { toast } from "react-toastify";
 import { getCourses } from "@/app/api/admin/course";
 import { createLesson } from "@/app/api/admin/lessons/lesson";
 import { CourseProps } from "@/Types/Course.type";
-import { Trash, Trash2 } from "react-feather";
+import { Trash } from "react-feather";
+import { useRouter } from "next/navigation";
+
+const initialFormData = {
+	courseId: "",
+	title: "",
+	content: "",
+	videoUrl: "",
+	resources: [""],
+};
 
 const CreateLessonForm = () => {
 	const [courses, setCourses] = useState<CourseProps[]>([]);
-	const [formData, setFormData] = useState({
-		courseId: "",
-		title: "",
-		content: "",
-		videoUrl: "",
-		resources: [""],
-	});
+	const [formData, setFormData] = useState({ ...initialFormData });
+	const [submitting, setSubmitting] = useState(false);
 
 	const fetchCourses = async () => {
 		try {
@@ -61,21 +65,44 @@ const CreateLessonForm = () => {
 	};
 
 	const removeResourceField = (index: number) => {
-		const updatedResources = [...formData.resources];
-		updatedResources.splice(index, 1);
+		if (formData.resources.length === 1) return;
+		const updatedResources = formData.resources.filter((_, i) => i !== index);
 		setFormData((prev) => ({ ...prev, resources: updatedResources }));
 	};
 
+	const router = useRouter();
+
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		try {
-			await createLesson(formData);
-			console.log("Submitted:", formData);
-			toast.success("Lesson Created Successfully in Course");
-		} catch (error) {
-			toast.error("Failed to create lesson");
-			console.error("Error creating lesson:", error);
-		}
+		setSubmitting(true);
+
+		const trimmedData = {
+			...formData,
+			title: formData.title.trim(),
+			content: formData.content.trim(),
+			videoUrl: formData.videoUrl.trim(),
+			resources: formData.resources.map((r) => r.trim()).filter(Boolean),
+		};
+
+		await toast.promise(createLesson(trimmedData), {
+			pending: "Creating lesson...",
+			success: {
+				render() {
+					// Reset and redirect only after toast success
+					setFormData({ ...initialFormData });
+					router.push(`/admin/course/${trimmedData.courseId}`);
+					return "Lesson created successfully!";
+				},
+			},
+			error: {
+				render({ data }: { data: any }) {
+					console.error("Error creating lesson:", data);
+					return data?.response?.data?.message || "Failed to create lesson";
+				},
+			},
+		});
+
+		setSubmitting(false);
 	};
 
 	return (
@@ -166,10 +193,7 @@ const CreateLessonForm = () => {
 												color='danger'
 												size='sm'
 												className='d-flex align-items-center justify-content-center p-2'
-												style={{
-													width: "30px",
-													height: "30px",
-												}}
+												style={{ width: "30px", height: "30px" }}
 												type='button'
 												onClick={() => removeResourceField(index)}
 												disabled={formData.resources.length === 1}>
@@ -192,8 +216,9 @@ const CreateLessonForm = () => {
 						<Col md={12}>
 							<Button
 								type='submit'
-								color='primary'>
-								Submit Lesson
+								color='primary'
+								disabled={submitting}>
+								{submitting ? "Submitting..." : "Submit Lesson"}
 							</Button>
 						</Col>
 					</Row>
