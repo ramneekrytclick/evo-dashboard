@@ -19,7 +19,7 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 	return (
 		<Row className='g-3'>
 			<Col sm={6}>
-				<Label>Full Name</Label>
+				<Label className='fs-6'>Full Name</Label>
 				<Input
 					type='text'
 					name='name'
@@ -31,7 +31,7 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 			</Col>
 
 			<Col sm={6}>
-				<Label>Email Address</Label>
+				<Label className='fs-6'>Email Address</Label>
 				<Input
 					type='email'
 					name='email'
@@ -43,7 +43,7 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 			</Col>
 
 			<Col sm={6}>
-				<Label>Password</Label>
+				<Label className='fs-6'>Password</Label>
 				<Input
 					type='password'
 					name='password'
@@ -55,7 +55,7 @@ const BasicInfoForm: React.FC<BasicInfoProps> = ({
 			</Col>
 
 			<Col sm={6}>
-				<Label>Confirm Password</Label>
+				<Label className='fs-6'>Confirm Password</Label>
 				<Input
 					type='password'
 					name='confirmPassword'
@@ -126,7 +126,11 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 
 	const handleEditToggle = () => {
 		setIsEditable((prev) => !prev);
-		setShowOtp(false); // Hide OTP when editing form
+		if (!isEditable) {
+			setShowOtp(false);
+		} else {
+			setShowOtp(true);
+		}
 	};
 
 	return (
@@ -210,7 +214,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 			</Col>
 			<Col sm={6}>
 				<FormGroup>
-					<Label>Wanna Be Interest</Label>
+					<Label>Choose your Interest</Label>
 					<Input
 						type='select'
 						name='wannaBeInterest'
@@ -241,43 +245,42 @@ export const StudentForm: React.FC<StudentFormProps> = ({
 					/>
 				</FormGroup>
 			</Col>
-
-			{/* OTP Logic Section */}
 			{otpSent && (
-				<Col
-					sm={12}
-					className='d-flex justify-content-between align-items-center'>
-					<Button
-						color='secondary'
-						onClick={handleEditToggle}>
-						{isEditable ? "Lock Form" : "Edit Form"}
-					</Button>
-					{!isEditable && (
+				<>
+					{/* Edit/Lock buttons */}
+					<Col
+						sm={12}
+						className='d-flex justify-content-between align-items-center'>
 						<Button
-							color='success'
-							onClick={handleVerifyOtp}>
-							Verify OTP
+							color='secondary'
+							onClick={handleEditToggle}>
+							{isEditable ? "Lock Form" : "Edit Form"}
 						</Button>
+						{!isEditable && (
+							<Button
+								color='success'
+								onClick={handleVerifyOtp}>
+								Verify OTP
+							</Button>
+						)}
+					</Col>
+
+					{showOtp && (
+						<Col sm={12}>
+							<FormGroup>
+								<Label>Enter OTP sent to your email</Label>
+								<Input
+									type='text'
+									placeholder='Enter 6-digit OTP'
+									value={otp}
+									onChange={(e) => setOtp(e.target.value)}
+								/>
+							</FormGroup>
+						</Col>
 					)}
-				</Col>
+				</>
 			)}
 
-			{/* OTP Input Box */}
-			{showOtp && (
-				<Col sm={12}>
-					<FormGroup>
-						<Label>Enter OTP sent to your email</Label>
-						<Input
-							type='text'
-							placeholder='Enter 6-digit OTP'
-							value={otp}
-							onChange={(e) => setOtp(e.target.value)}
-						/>
-					</FormGroup>
-				</Col>
-			)}
-
-			{/* Send OTP Button */}
 			{!otpSent && (
 				<Col
 					sm={12}

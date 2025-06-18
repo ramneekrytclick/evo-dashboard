@@ -235,111 +235,135 @@ const MultiStepRegister = ({
 				</Link>
 			</div>
 			<Card>
-				<CardBody>
-					<Form className='form-wizard'>
-						{step === 1 && (
-							<BasicInfoForm
-								formData={formData}
-								handleChange={handleChange}
-								role={role}
-							/>
+				<Form className='login-main'>
+					{step === 1 && (
+						<BasicInfoForm
+							formData={formData}
+							handleChange={handleChange}
+							role={role}
+						/>
+					)}
+					{step === 2 && isMultiStep && (
+						<Row className='g-3 avatar-upload'>
+							<Col xs={12}>
+								<div className='avatar-edit'>
+									<Input
+										onChange={handleChange}
+										innerRef={fileInputRef}
+										type='file'
+										accept='.png, .jpg, .jpeg'
+										name='photo'
+									/>
+									<Label
+										htmlFor='photo'
+										onClick={() => fileInputRef.current?.click()}
+									/>
+								</div>
+								<div className='avatar-preview'>
+									<div
+										id='image'
+										style={{
+											backgroundImage: photoPreview
+												? `url(${photoPreview})`
+												: `url(${ImagePath}/forms/user.png)`,
+										}}
+									/>
+								</div>
+								<h3 className='mt-2 text-center'>Upload Profile Photo</h3>
+							</Col>
+						</Row>
+					)}
+					{step === 3 && isMultiStep && role === "students" && (
+						<StudentForm
+							formData={formData}
+							handleChange={handleChange}
+							otpSent={otpSent}
+							handleSendOtp={handleSendOtp}
+							otp={otp}
+							setOtp={setOtp}
+							handleVerifyOtp={handleVerifyOtp}
+						/>
+					)}
+					{step === 3 && isMultiStep && role !== "students" && getRoleForm()}
+					<div className='text-end pt-3'>
+						{step > 1 && step < 4 && (
+							<Button
+								color='warning'
+								onClick={handleBack}
+								className='me-1'>
+								Back
+							</Button>
 						)}
-						{step === 2 && isMultiStep && (
-							<Row className='g-3 avatar-upload'>
-								<Col xs={12}>
-									<div className='avatar-edit'>
-										<Input
-											onChange={handleChange}
-											innerRef={fileInputRef}
-											type='file'
-											accept='.png, .jpg, .jpeg'
-											name='photo'
-										/>
-										<Label
-											htmlFor='photo'
-											onClick={() => fileInputRef.current?.click()}
-										/>
-									</div>
-									<div className='avatar-preview'>
-										<div
-											id='image'
-											style={{
-												backgroundImage: photoPreview
-													? `url(${photoPreview})`
-													: `url(${ImagePath}/forms/user.png)`,
-											}}
-										/>
-									</div>
-									<h3 className='mt-2 text-center'>Upload Profile Photo</h3>
-								</Col>
-							</Row>
-						)}
-						{step === 3 && isMultiStep && getRoleForm()}
-						<div className='text-end pt-3'>
-							{step > 1 && step < 4 && (
-								<Button
-									color='warning'
-									onClick={handleBack}
-									className='me-1'>
-									Back
-								</Button>
-							)}
-							{step < 4 && (
-								<Button
-									color='primary'
-									onClick={() => {
-										if (role === "admin" && step === 1) {
-											handleSubmitAdmin();
-										} else if (role === "students" && step === 3) {
-											otpSent ? handleVerifyOtp() : handleSendOtp();
-										} else if (
-											isMultiStep &&
-											step === 3 &&
-											role !== "students"
-										) {
-											handleSubmit();
-										} else {
-											handleNext();
-										}
-									}}
-									disabled={
-										sendingOtp || formData.password !== formData.confirmPassword
-									}>
-									{sendingOtp ? (
-										<>
-											<Spinner
-												size='sm'
-												className='me-1'
-											/>{" "}
-											Sending...
-										</>
-									) : role === "students" && step === 3 ? (
-										otpSent ? (
-											"Verify OTP"
-										) : (
-											"Send OTP"
-										)
-									) : (role === "admin" && step === 1) ||
-									  (isMultiStep && step === 3) ? (
-										"Submit"
-									) : step === 2 && !formData.photo ? (
-										"Skip"
+						{step < 4 && (
+							<Button
+								color='primary'
+								onClick={() => {
+									if (role === "admin" && step === 1) {
+										handleSubmitAdmin();
+									} else if (role === "students" && step === 3) {
+										otpSent ? handleVerifyOtp() : handleSendOtp();
+									} else if (isMultiStep && step === 3 && role !== "students") {
+										handleSubmit();
+									} else {
+										handleNext();
+									}
+								}}
+								disabled={
+									sendingOtp || formData.password !== formData.confirmPassword
+								}>
+								{sendingOtp ? (
+									<>
+										<Spinner
+											size='sm'
+											className='me-1'
+										/>{" "}
+										Sending...
+									</>
+								) : role === "students" && step === 3 ? (
+									otpSent ? (
+										"Verify OTP"
 									) : (
-										"Next"
-									)}
-								</Button>
-							)}
-						</div>
-						<div className='text-center mt-3'>
+										"Send OTP"
+									)
+								) : (role === "admin" && step === 1) ||
+								  (isMultiStep && step === 3) ? (
+									"Submit"
+								) : step === 2 && !formData.photo ? (
+									"Skip"
+								) : (
+									"Next"
+								)}
+							</Button>
+						)}
+					</div>
+					<div className='text-center mt-3 text-muted'>
+						<p>
+							Already have an account?{" "}
 							<Link
 								href={`/auth/login/${route}`}
 								className='text-primary'>
-								Already have an account? Login
+								Login
 							</Link>
-						</div>
-					</Form>
-				</CardBody>
+						</p>
+					</div>
+				</Form>
 			</Card>
+			<div className='text-center mb-4'>
+				<p className='mt-3'>
+					By signing up, you agree to our{" "}
+					<Link
+						href='https://evoskillgrowth.com/tnc'
+						className='text-primary'>
+						Terms of Service
+					</Link>{" "}
+					and{" "}
+					<Link
+						href='https://evoskillgrowth.com/privacy-policy'
+						className='text-primary'>
+						Privacy Policy
+					</Link>
+				</p>
+			</div>
 		</Col>
 	);
 };

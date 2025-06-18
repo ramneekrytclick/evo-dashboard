@@ -122,13 +122,19 @@ const UserForm = ({
 					/>
 				</Link>
 			</div>
-
 			<Row className='login-main p-0 overflow-hidden'>
 				<Col className='p-4 col-md-6'>
 					<Form
 						className='theme-form'
 						onSubmit={formSubmitHandle}>
-						<h4>Sign In to Your Account</h4>
+						<h4>
+							{route !== "student"
+								? route === "employer"
+									? "Employer"
+									: ""
+								: "Student"}{" "}
+							Sign In
+						</h4>
 						<p>Enter your email & password to login</p>
 
 						<FormGroup>
@@ -175,7 +181,7 @@ const UserForm = ({
 									/>
 								)}
 							</Button>
-							<p className='mt-2 mb-0'>
+							<p className='mt-2 mb-0 text-muted'>
 								Don't have an account?{" "}
 								<Link href={`/auth/register/${route}`}>Register</Link>
 							</p>
@@ -193,6 +199,14 @@ const UserForm = ({
 					/>
 				</Col>
 			</Row>
+			<p className='mt-2 mb-0 text-muted text-center'>
+				Are you {route === "student" ? "an employer" : "a student"}?{" "}
+				<Link
+					href={`/auth/login/${route === "student" ? "employer" : "student"}`}
+					className='text-muted'>
+					Login as {route === "student" ? "Employer" : "Student"}
+				</Link>
+			</p>
 		</div>
 	);
 };
