@@ -11,16 +11,14 @@ import {
 	Row,
 	Col,
 	Badge,
-	Spinner,
 	Modal,
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
 	Button,
 } from "reactstrap";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { customTableStyles } from "../Batches/BatchesList";
 import ReusableDataTable from "@/CommonComponent/Table";
 
 interface Transaction {
@@ -145,7 +143,6 @@ const TransactionsData = ({
 
 	return (
 		<>
-			<ToastContainer position='top-right' />
 			<Row>
 				<Col sm={12}>
 					<Card>

@@ -1,12 +1,9 @@
 "use client";
 import React, { useEffect } from "react";
-import { ToastContainer } from "react-toastify";
 import { RootLayoutProps } from "@/Types/Layout.type";
 import TapTop from "@/Layout/TapTop";
-import Footer from "@/Layout/Footer/Footer";
 import { SideBar } from "@/Layout/Sidebar/Sidebar";
 import Header from "@/Layout/Header/Header";
-import ThemeCustomizer from "@/Layout/ThemeCustomizer/ThemeCustomizer";
 import { useAppDispatch, useAppSelector } from "@/Redux/Hooks";
 import { setToggleSidebar } from "@/Redux/Reducers/Layout/LayoutSlice";
 import { setLayout } from "@/Redux/Reducers/ThemeCustomizerSlice";
@@ -49,11 +46,8 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
 				<div className={`page-body-wrapper`}>
 					<SideBar />
 					<div className='page-body '>{children}</div>
-					{/* <Footer /> */}
 				</div>
 			</div>
-			{/* <ThemeCustomizer /> */}
-			{/* <ToastContainer /> */}
 			<TapTop />
 		</>
 	);

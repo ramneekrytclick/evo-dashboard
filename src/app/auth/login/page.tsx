@@ -1,81 +1,56 @@
 "use client";
+import UserForm from "@/Components/Auth/UserForm";
+import { useEffect, useState } from "react";
+import { Col, Container, Row } from "reactstrap";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Button, Container } from "reactstrap";
-import imageOne from "../../../../public/assets/images/logo/logo-1.png";
-import imageTwo from "../../../../public/assets/images/logo/logo.png";
-export default function Home() {
-	const router = useRouter();
-
-	const handleRedirect = (role: string) => {
-		router.push(`/auth/login/${role}`);
-	};
-
+const UserLogin = ({ params }: { params: { userRole: string } }) => {
+	const [role, setRole] = useState("admin");
+	useEffect(() => {
+		switch (params.userRole) {
+			case "admin":
+				setRole("admin");
+				break;
+			case "mentor":
+				setRole("mentors");
+				break;
+			case "publisher":
+				setRole("publishers/auth");
+				break;
+			case "cc":
+				setRole("course-creators/auth");
+				break;
+			case "manager":
+				setRole("managers/auth");
+				break;
+			case "student":
+				setRole("students");
+				break;
+			case "employer":
+				setRole("jobs");
+				break;
+			default:
+				setRole("students");
+				break;
+		}
+	}, [params.userRole]);
 	return (
-		<Container className='d-flex flex-column align-items-center justify-content-center text-center vh-100'>
-			<div>
-				<Link
-					className='logo'
-					href='/admin/dashboard'>
-					<Image
-						priority
-						width={200}
-						height={34}
-						className='img-fluid for-light'
-						src={imageOne}
-						alt='login page'
-					/>
-					<Image
-						priority
-						width={200}
-						height={34}
-						className='img-fluid for-dark'
-						src={imageTwo}
-						alt='login page'
-					/>
-				</Link>
-			</div>
-			<div className='login-main bg-light text-dark p-2 card'>
-				<div className='d-flex flex-wrap gap-3 justify-content-center'>
-					<Button
-						color='success'
-						onClick={() => handleRedirect("student")}>
-						Student
-					</Button>
-					<Button
-						color='success'
-						onClick={() => handleRedirect("mentor")}>
-						Mentor
-					</Button>
-					<Button
-						color='success'
-						onClick={() => handleRedirect("admin")}>
-						Admin
-					</Button>
-					<Button
-						color='success'
-						onClick={() => handleRedirect("manager")}>
-						Manager
-					</Button>
-					<Button
-						color='success'
-						onClick={() => handleRedirect("publisher")}>
-						Publisher
-					</Button>
-					<Button
-						color='success'
-						onClick={() => handleRedirect("cc")}>
-						Course Creator
-					</Button>
-					<Button
-						color='success'
-						onClick={() => handleRedirect("employer")}>
-						Employer
-					</Button>
-				</div>
-			</div>
+		<Container
+			fluid
+			className='p-0'>
+			<Row className='m-0'>
+				<Col
+					xs={12}
+					className='p-0'>
+					<div className='login-card login-dark'>
+						<UserForm
+							role={role}
+							route={params.userRole}
+						/>
+					</div>
+				</Col>
+			</Row>
 		</Container>
 	);
-}
+};
+
+export default UserLogin;
