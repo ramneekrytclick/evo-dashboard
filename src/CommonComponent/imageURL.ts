@@ -9,12 +9,12 @@ export const getImageURL = (photo: string, type?: string) => {
 		: resolvedPhoto.startsWith("/uploads")
 		? `${backendURL}${resolvedPhoto}`
 		: `${backendURL}/uploads/${resolvedPhoto}`;
-	const photoURL = photo ? profilePhotoUrl : "/assets/image-nf.png";
+	const photoURL = photo ? profilePhotoUrl : "/assets/avatar-placeholder.png";
 	if (!photo?.includes("/") && type) {
 		return `${backendURL}/uploads/${type}/${resolvedPhoto}`;
 	}
 	if (photo == "") {
-		return "/assets/image-nf.png";
+		return "/assets/avatar-placeholder.png";
 	}
 	return photoURL;
 };
