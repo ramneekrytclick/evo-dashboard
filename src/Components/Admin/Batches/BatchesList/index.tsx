@@ -12,7 +12,7 @@ import {
 	ModalFooter,
 	ButtonGroup,
 } from "reactstrap";
-import DataTable, { TableColumn } from "react-data-table-component";
+import { TableColumn } from "react-data-table-component";
 
 import { deleteBatch, getBatches } from "@/app/api/admin/batches";
 import { BatchProps } from "@/Types/Course.type";
@@ -22,9 +22,8 @@ import AssignStudentsModal from "./AssignStudents";
 import AssignMentorModal from "./AssignMentor";
 import BatchDetails from "./BatchDetails";
 import Link from "next/link";
-import { FontSizeTitle } from "@/Constant";
 import { toast } from "react-toastify";
-import { Edit, Edit2, Trash, Trash2 } from "react-feather";
+import { Edit2, Trash } from "react-feather";
 import UpdateBatchModal from "./UpdateBatch";
 import ReusableDataTable from "@/CommonComponent/Table";
 export const customTableStyles = {

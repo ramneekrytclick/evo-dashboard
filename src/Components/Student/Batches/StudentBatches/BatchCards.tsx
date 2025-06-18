@@ -1,22 +1,11 @@
 "use client";
 import { getMyBatches } from "@/app/api/student";
-import { getCourseName } from "@/CommonComponent/imageURL";
 import BatchCard from "@/Components/Mentor/Batches/BatchCard";
 import { BatchProps } from "@/Types/Course.type";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {
-	Badge,
-	Card,
-	CardBody,
-	CardText,
-	CardTitle,
-	Col,
-	Container,
-	Row,
-	Spinner,
-} from "reactstrap";
+import { Card, Col, Row, Spinner } from "reactstrap";
 
 const BatchCards = () => {
 	const [batches, setBatches] = useState<BatchProps[]>([]);
@@ -40,7 +29,7 @@ const BatchCards = () => {
 	return (
 		<Row
 			className='g-4'
-			style={{ height: "76vh", overflowY: "scroll" }}>
+			style={{ height: "35vh", overflowY: "scroll" }}>
 			{loading ? (
 				<div className='d-flex justify-content-center align-items-center h-100 text-primary gap-3 fs-4'>
 					Loading

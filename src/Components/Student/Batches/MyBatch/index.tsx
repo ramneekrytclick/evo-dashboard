@@ -15,20 +15,30 @@ import {
 	Row,
 	Col,
 	Badge,
+	Spinner,
 } from "reactstrap";
 import GroupChat from "./GroupChat";
 import BookSessionForm from "./BookSessionForm"; // Ensure correct path
 import { BatchProps } from "@/Types/Course.type";
 import { Info } from "react-feather";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const MyBatchContainer = ({ id }: { id: string }) => {
 	const [batch, setBatch] = useState<BatchProps>();
 	const [modalOpen, setModalOpen] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const fetchData = async () => {
-		const response = await getBatchByID(id);
-		setBatch(response.batch);
+		setLoading(true);
+		try {
+			const response = await getBatchByID(id);
+			setBatch(response.batch);
+		} catch (error) {
+			toast.error("Error fetching batch details");
+			console.error("Error fetching batch details:", error);
+		}
+		setLoading(false);
 	};
 
 	useEffect(() => {
@@ -37,7 +47,18 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 
 	const toggleModal = () => setModalOpen(!modalOpen);
 
-	if (!batch) return <p>Loading...</p>;
+	if (loading) {
+		return (
+			<div className='text-center py-5'>
+				<Spinner color='primary' />
+				<p className='mt-3'>Loading batch data...</p>
+			</div>
+		);
+	}
+	if (!batch)
+		return (
+			<p className='text-center mt-4'>No batch found with the provided ID.</p>
+		);
 
 	return (
 		<>
@@ -50,7 +71,7 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 				<Col
 					sm={12}
 					lg={2}
-					className='left-sidebar-wrapper rounded-4'
+					className='left-sidebar-wrapper rounded-4 order-2 order-lg-1'
 					style={{ height: "85vh", overflow: "auto" }}>
 					<div className='chat-options-tab'>
 						<Card className='shadow-sm text-dark text-center rounded-4 p-3'>
@@ -164,7 +185,8 @@ const MyBatchContainer = ({ id }: { id: string }) => {
 				</Col>
 				<Col
 					sm={12}
-					lg={10}>
+					lg={10}
+					className='order-1 order-lg-2'>
 					<GroupChat
 						batchId={id}
 						batch={batch}

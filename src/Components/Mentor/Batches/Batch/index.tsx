@@ -17,6 +17,7 @@ import {
 	ModalFooter,
 	ModalHeader,
 	Row,
+	Spinner,
 } from "reactstrap";
 import GroupChat from "./GroupChat";
 import { BatchProps } from "@/Types/Course.type";
@@ -35,9 +36,17 @@ const MentorBatchContainer = ({ id }: { id: string }) => {
 	const [time, setTime] = useState("00:22");
 	const [cancelModalOpen, setCancelModalOpen] = useState(false);
 	const [cancelSessionId, setCancelSessionId] = useState<string | null>(null);
+	const [loading, setLoading] = useState(true);
 	const fetchData = async () => {
-		const response = await getBatchByID(id);
-		setBatch(response.batch);
+		setLoading(true);
+		try {
+			const response = await getBatchByID(id);
+			setBatch(response.batch);
+		} catch (error) {
+			toast.error("Error fetching batch details");
+		} finally {
+			setLoading(false);
+		}
 	};
 	const confirmCancel = (sessionId: string) => {
 		setCancelSessionId(sessionId);
@@ -104,8 +113,18 @@ const MentorBatchContainer = ({ id }: { id: string }) => {
 		setComment(session.comment);
 		setEditModalOpen(true);
 	};
-
-	if (!batch) return <p className='text-center mt-4'>Loading...</p>;
+	if (loading) {
+		return (
+			<div className='text-center py-5'>
+				<Spinner color='primary' />
+				<p className='mt-3'>Loading batch data...</p>
+			</div>
+		);
+	}
+	if (!batch)
+		return (
+			<p className='text-center mt-4'>No batch found with the provided ID.</p>
+		);
 
 	const todaySession = batch.scheduledSessions?.find(
 		(s) => new Date(s.date).toDateString() === new Date().toDateString()
@@ -118,11 +137,11 @@ const MentorBatchContainer = ({ id }: { id: string }) => {
 				parent='Batches'
 				title={`${batch.name}`}
 			/>
-			<Row style={{ height: "100%", gap: 0 }}>
+			<Row style={{ height: "80%", gap: 0 }}>
 				<Col
 					sm={12}
 					lg={2}
-					className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center pt-5'>
+					className='d-flex flex-column justify-content-start align-items-start h-100 align-items-center pt-5 order-2 order-lg-1'>
 					<Card className='shadow-sm bg-light-subtle text-dark text-center rounded-4 p-3'>
 						<p className='text-dark-subtle fw-light d-flex align-items-center justify-content-center gap-2'>
 							<Info size={15} />
@@ -215,7 +234,7 @@ const MentorBatchContainer = ({ id }: { id: string }) => {
 				<Col
 					sm={12}
 					lg={10}
-					className='h-100'>
+					className='h-100 order-1 order-lg-2'>
 					<GroupChat
 						batchId={id}
 						batch={batch}

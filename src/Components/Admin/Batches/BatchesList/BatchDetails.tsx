@@ -11,9 +11,6 @@ import {
 } from "reactstrap";
 import { BatchProps } from "@/Types/Course.type";
 import Link from "next/link";
-import { toast } from "react-toastify";
-import { deleteBatch } from "@/app/api/admin/batches";
-
 const BatchDetails = ({
 	batch,
 	isOpen,
@@ -128,7 +125,6 @@ const BatchDetails = ({
 								</Row>
 							</Col>
 
-							{/* Assigned Students - Scrollable Right Section */}
 							<Col
 								md='5'
 								className='border-start ps-4'>

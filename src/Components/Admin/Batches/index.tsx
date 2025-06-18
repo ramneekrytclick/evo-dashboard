@@ -1,9 +1,6 @@
 import Breadcrumbs from "@/CommonComponent/BreadCrumbs";
-import CommonCardHeader from "@/CommonComponent/CommonCardHeader";
 import { AdminTitle, BatchesTitle } from "@/Constant";
-import { Card, CardBody, Col, Container, Row } from "reactstrap";
-
-import CreateBatchModal from "./CreateBatchModal";
+import { Col, Container, Row } from "reactstrap";
 import BatchesList from "./BatchesList";
 
 const BatchesPageContainer = () => {

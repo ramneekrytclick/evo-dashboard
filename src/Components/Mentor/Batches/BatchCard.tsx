@@ -1,8 +1,13 @@
-import { getCourseName } from "@/CommonComponent/imageURL";
+import { getAllCourses } from "@/app/api/cc";
 import { BatchProps } from "@/Types/Course.type";
 import Link from "next/link";
 import { Calendar } from "react-feather";
 import { Badge, Card, CardBody, CardText, CardTitle } from "reactstrap";
+const getCourseName = async (id: string) => {
+	const response = await getAllCourses();
+	const course = response.courses.find((course: any) => course._id === id);
+	return course?.title || "N/A";
+};
 
 const BatchCard = ({ batch }: { batch: BatchProps }) => {
 	return (
@@ -22,7 +27,6 @@ const BatchCard = ({ batch }: { batch: BatchProps }) => {
 				<p className='fs-6'>
 					{batch.course.title || getCourseName(batch.course)}
 				</p>
-				{/* Batch schedule info */}
 				<div className='mb-2'>
 					<Badge
 						color='light'
@@ -37,7 +41,6 @@ const BatchCard = ({ batch }: { batch: BatchProps }) => {
 					{batch.description || "No description provided."}
 				</CardText>
 
-				{/* Dates */}
 				<CardText className='text-muted small mb-1 d-flex align-items-center gap-2'>
 					<Calendar size={16} />
 					{new Date(batch.startDate || new Date()).toLocaleDateString("en-IN", {
@@ -53,7 +56,6 @@ const BatchCard = ({ batch }: { batch: BatchProps }) => {
 					})}
 				</CardText>
 
-				{/* Students Count */}
 				<CardText className='text-muted small mt-auto'>
 					<strong>Students Enrolled:</strong> {batch.students?.length || 0}
 				</CardText>
