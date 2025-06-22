@@ -29,33 +29,32 @@ const UserForm = ({
 		setLoading(true);
 		try {
 			const response = await login(email, password, role);
-			if (response) {
-				switch (role) {
-					case "admin":
-						router.push(`/admin/dashboard`); // or route based on role
-						break;
-					case "students":
-						router.push(`/student/dashboard`); // or route based on role
-						break;
-					case "mentors":
-						router.push(`/mentor/dashboard`); // or route based on role
-						break;
-					case "jobs":
-						router.push(`/employer/dashboard`); // or route based on role
-						break;
-					case "publishers/auth":
-						router.push(`/publisher/dashboard`); // or route based on role
-						break;
-					case "course-creators/auth":
-						router.push(`/course-creator/dashboard`); // or route based on role
-						break;
-					case "managers/auth":
-						router.push(`/manager/dashboard`); // or route based on role
-						break;
-					default:
-						router.push(`/${role}/dashboard`); // or route based on role
-						break;
-				}
+
+			switch (role) {
+				case "admin":
+					router.push(`/admin/dashboard`); // or route based on role
+					break;
+				case "students":
+					router.push(`/student/dashboard`); // or route based on role
+					break;
+				case "mentors":
+					router.push(`/mentor/dashboard`); // or route based on role
+					break;
+				case "jobs":
+					router.push(`/employer/dashboard`); // or route based on role
+					break;
+				case "publishers/auth":
+					router.push(`/publisher/dashboard`); // or route based on role
+					break;
+				case "course-creators/auth":
+					router.push(`/course-creator/dashboard`); // or route based on role
+					break;
+				case "managers/auth":
+					router.push(`/manager/dashboard`); // or route based on role
+					break;
+				default:
+					router.push(`/${role}/dashboard`); // or route based on role
+					break;
 			}
 		} catch (error: any) {
 			const errorMsg =
@@ -97,7 +96,21 @@ const UserForm = ({
 	// 			break;
 	// 	}
 	// }, [role]);
-
+	if (loading) {
+		return (
+			<>
+				<div className='loader-wrapper'>
+					<div className='loader'>
+						<div className='box' />
+						<div className='box' />
+						<div className='box' />
+						<div className='box' />
+						<div className='box' />
+					</div>
+				</div>
+			</>
+		);
+	}
 	return (
 		<div>
 			<div>
