@@ -39,15 +39,7 @@ const Error403Container = () => {
 							<Button
 								tag='a'
 								color='primary'
-								onClick={() =>
-									router.push(
-										`/${
-											role?.toLowerCase() !== "Course Creator"
-												? role.toLowerCase()
-												: "course-creator"
-										}/dashboard`
-									)
-								}>
+								onClick={() => router.push("/auth/login")}>
 								{BackToHomePage}
 							</Button>
 						)}
