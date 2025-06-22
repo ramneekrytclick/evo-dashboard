@@ -137,7 +137,7 @@ const MentorListTable = () => {
 			sortable: false,
 			center: true,
 			cell: (row) => (
-				<div className='d-flex gap-1'>
+				<div className='d-flex gap-1 text-nowrap'>
 					<Button
 						color={row.status === "Active" ? "warning" : "success"}
 						size='sm'

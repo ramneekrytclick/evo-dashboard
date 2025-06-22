@@ -40,15 +40,26 @@ const PromocodesCards = () => {
 
 	const handleDelete = async () => {
 		if (!selectedPromoId) return;
-		try {
-			await deletePromocode(selectedPromoId);
-			toast.success("Promo code deleted successfully");
-			setDeleteModalOpen(false);
-			setSelectedPromoId(null);
-			await fetchPromoCodes();
-		} catch (err) {
-			toast.error("Failed to delete promo code");
-		}
+		setLoading(true);
+		toast.promise(deletePromocode(selectedPromoId), {
+			pending: "Deleting promo code...",
+			success: {
+				render() {
+					setDeleteModalOpen(false);
+					setSelectedPromoId(null);
+					fetchPromoCodes();
+					setLoading(false);
+					return "Promo code deleted successfully";
+				},
+			},
+			error: {
+				render({ data }) {
+					setLoading(false);
+					console.error(data);
+					return "Failed to delete promo code.";
+				},
+			},
+		});
 	};
 
 	useEffect(() => {
@@ -184,8 +195,9 @@ const PromocodesCards = () => {
 					</Button>
 					<Button
 						color='danger'
+						disabled={loading}
 						onClick={handleDelete}>
-						Yes, Delete
+						{loading ? "Deleting..." : "Yes, Delete"}
 					</Button>
 				</ModalFooter>
 			</Modal>

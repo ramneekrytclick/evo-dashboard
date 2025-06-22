@@ -75,6 +75,7 @@ const ReusableDataTable = <T extends object>({
 			pointerOnHover={pointerOnHover}
 			dense={dense}
 			customStyles={customTableStyles}
+			responsive
 		/>
 	);
 };

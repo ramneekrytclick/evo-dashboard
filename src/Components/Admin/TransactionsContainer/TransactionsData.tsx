@@ -158,6 +158,7 @@ const TransactionsData = ({
 									highlightOnHover
 									onRowClicked={handleRowClick}
 									loading={loading}
+									pointerOnHover
 								/>
 							)}
 						</CardBody>

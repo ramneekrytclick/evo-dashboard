@@ -9,6 +9,7 @@ import {
 	Card,
 	CardBody,
 	CardTitle,
+	Spinner,
 } from "reactstrap";
 import { toast } from "react-toastify";
 import { CourseProps, PromoCodeProps } from "@/Types/Course.type";
@@ -32,7 +33,7 @@ const PromoCodeCreationForm = ({
 		course: { _id: "", title: "" },
 		usageLimit: undefined,
 	});
-
+	const [loading, setLoading] = useState(false);
 	const [courses, setCourses] = useState<CourseProps[]>([]);
 	const [isOverall, setIsOverall] = useState(false);
 
@@ -55,23 +56,35 @@ const PromoCodeCreationForm = ({
 			toast.error("Set course or usage limit for overall promo");
 			return;
 		}
-
-		try {
-			await createPromoCode({
+		setLoading(true);
+		toast.promise(
+			createPromoCode({
 				code: formData.code || "",
 				discountPercentage: formData.discountPercentage || 0,
 				validUntil: formData.validUntil || "",
 				isActive: formData.isActive ?? true,
 				course: isOverall ? undefined : formData.course || undefined,
 				usageLimit: isOverall ? formData.usageLimit || 1 : undefined,
-			});
-			toast.success("Promo code created!");
-			fetchData();
-			toggle();
-		} catch (error) {
-			console.error(error);
-			toast.error("Failed to create promo code.");
-		}
+			}),
+			{
+				pending: "Creating promo code...",
+				success: {
+					render() {
+						fetchData();
+						setLoading(false);
+						toggle();
+						return "Promo code created!";
+					},
+				},
+				error: {
+					render({ data }) {
+						setLoading(false);
+						console.error(data);
+						return "Failed to create promo code.";
+					},
+				},
+			}
+		);
 	};
 
 	const handleChange = (
@@ -101,26 +114,26 @@ const PromoCodeCreationForm = ({
 	};
 
 	return (
-		<Card className="shadow border-0">
+		<Card className='shadow border-0'>
 			<CardBody>
 				<Form onSubmit={handleSubmit}>
-					<Row className="g-4">
+					<Row className='g-4'>
 						<Col md={12}>
-							<Label className="fw-semibold">Promo Code</Label>
+							<Label className='fw-semibold'>Promo Code</Label>
 							<Input
-								name="code"
-								type="text"
+								name='code'
+								type='text'
 								value={formData.code || ""}
 								onChange={handleChange}
-								placeholder="E.g. WELCOME50"
+								placeholder='E.g. WELCOME50'
 								required
 							/>
 						</Col>
 						<Col md={6}>
-							<Label className="fw-semibold">Discount (%)</Label>
+							<Label className='fw-semibold'>Discount (%)</Label>
 							<Input
-								name="discountPercentage"
-								type="number"
+								name='discountPercentage'
+								type='number'
 								value={formData.discountPercentage || 0}
 								onChange={handleChange}
 								min={1}
@@ -129,10 +142,11 @@ const PromoCodeCreationForm = ({
 							/>
 						</Col>
 						<Col md={6}>
-							<Label className="fw-semibold">Valid Until</Label>
+							<Label className='fw-semibold'>Valid Until</Label>
 							<Input
-								name="validUntil"
-								type="date"
+								name='validUntil'
+								type='date'
+								min={new Date().toISOString().split("T")[0]}
 								value={formData.validUntil?.toString().split("T")[0] || ""}
 								onChange={handleChange}
 								required
@@ -142,10 +156,10 @@ const PromoCodeCreationForm = ({
 						<Col md={12}>
 							<Label
 								check
-								className="fw-semibold">
+								className='fw-semibold'>
 								<Input
-									type="checkbox"
-									name="isOverall"
+									type='checkbox'
+									name='isOverall'
 									checked={isOverall}
 									onChange={handleChange}
 								/>{" "}
@@ -155,10 +169,10 @@ const PromoCodeCreationForm = ({
 
 						{!isOverall && (
 							<Col md={12}>
-								<Label className="fw-semibold">Apply to Course</Label>
+								<Label className='fw-semibold'>Apply to Course</Label>
 								<Input
-									type="select"
-									name="course"
+									type='select'
+									name='course'
 									value={formData.course?._id || ""}
 									onChange={(e) =>
 										setFormData({
@@ -168,7 +182,7 @@ const PromoCodeCreationForm = ({
 												: undefined,
 										})
 									}>
-									<option value="">-- Select Course --</option>
+									<option value=''>-- Select Course --</option>
 									{courses?.map((course) => (
 										<option
 											key={course._id}
@@ -182,10 +196,10 @@ const PromoCodeCreationForm = ({
 
 						{isOverall && (
 							<Col md={12}>
-								<Label className="fw-semibold">Usage Limit</Label>
+								<Label className='fw-semibold'>Usage Limit</Label>
 								<Input
-									name="usageLimit"
-									type="number"
+									name='usageLimit'
+									type='number'
 									value={formData.usageLimit || 1}
 									min={1}
 									onChange={handleChange}
@@ -196,11 +210,18 @@ const PromoCodeCreationForm = ({
 
 						<Col
 							md={12}
-							className="text-end">
+							className='text-end'>
 							<Button
-								color="primary"
-								type="submit">
-								Create Promo Code
+								color='primary'
+								disabled={loading}
+								type='submit'>
+								{loading ? (
+									<>
+										<Spinner />
+									</>
+								) : (
+									"Create Promo Code"
+								)}
 							</Button>
 						</Col>
 					</Row>

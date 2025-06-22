@@ -67,7 +67,7 @@ const BlogsTable = () => {
 			cell: (row) => (
 				<Link
 					href={`/admin/users/${row.creator?._id}`}
-					className='text-dark fw-medium'>
+					className='text-black text-decoration-none fw-bold'>
 					{row.creator?.name || "Unknown"}
 				</Link>
 			),

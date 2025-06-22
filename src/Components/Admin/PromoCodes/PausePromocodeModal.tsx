@@ -17,19 +17,24 @@ const PausePromoModal = ({ id, isActive, fetchData }: PausePromoModalProps) => {
 	const [loading, setLoading] = useState(false);
 
 	const handleToggle = async () => {
-		try {
-			setLoading(true);
-			await updatePromoStatus(id, !isActive);
-			toast.success(
-				`Promo code ${!isActive ? "activated" : "paused"} successfully`
-			);
-			toggle();
-			await fetchData();
-		} catch (err) {
-			toast.error("Failed to update status");
-		} finally {
-			setLoading(false);
-		}
+		setLoading(true);
+		toast
+			.promise(updatePromoStatus(id, !isActive), {
+				pending: `${!isActive ? "Activating" : "Pausing"} promo code...`,
+				success: {
+					render() {
+						toggle();
+						fetchData();
+						return `Promo code ${
+							!isActive ? "activated" : "paused"
+						} successfully`;
+					},
+				},
+				error: "Failed to update status",
+			})
+			.finally(() => {
+				setLoading(false);
+			});
 	};
 
 	return (
@@ -37,7 +42,7 @@ const PausePromoModal = ({ id, isActive, fetchData }: PausePromoModalProps) => {
 			<Button
 				color={isActive ? "warning" : "success"}
 				onClick={toggle}
-				className=' p-2 d-flex  align-items-center justify-content-center'
+				className=' p-2 d-flex  align-items-center justify-content-center text-nowrap'
 				style={{ height: "35px" }}>
 				<i className={`me-1 ${isActive ? "icon-pause" : "icon-play"}`} />
 				{isActive ? "Pause" : "Activate"}

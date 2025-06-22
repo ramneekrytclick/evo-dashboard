@@ -315,7 +315,7 @@ const UserProfile = ({ id }: { id: string }) => {
 												</DropdownItem>
 											)}
 											<DropdownItem
-												className='fs-5 py-3 text-dark '
+												className='fs-5 py-3 text-dark text-nowrap'
 												onClick={() =>
 													openStatusChangeModal(
 														profile.status === "Active" ? "Inactive" : "Active"

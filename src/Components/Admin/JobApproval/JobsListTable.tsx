@@ -101,14 +101,31 @@ export default function JobTable(): JSX.Element {
 	};
 
 	const columns: TableColumn<Job>[] = [
-		{ name: "Title", selector: (row) => row.title, sortable: true },
+		{
+			name: "Title",
+			selector: (row) => row.title,
+			sortable: true,
+			cell: (row) => (
+				<span
+					className='p-0 text-primary fw-medium'
+					style={{ cursor: "pointer" }}
+					onClick={() => {
+						setSelectedJob(row);
+						setModalOpen(true);
+					}}>
+					{row.title}
+				</span>
+			),
+		},
 		{
 			name: "Employer",
 			selector: (row) => row.employer?.companyName || row.companyName || "-",
 			sortable: true,
 			center: true,
 			cell: (row) => (
-				<Link href={`/admin/users/${row.employer?._id}`}>
+				<Link
+					href={`/admin/users/${row.employer?._id}`}
+					className='text-black text-decoration-none fw-bold'>
 					{row.employer?.name || "-"}
 				</Link>
 			),
