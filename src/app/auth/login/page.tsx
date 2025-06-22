@@ -6,16 +6,6 @@ import { Col, Container, Row } from "reactstrap";
 
 const UserLogin = ({ params }: { params: { userRole: string } }) => {
 	const [role, setRole] = useState("admin");
-	const validRoles = [
-		"admin",
-		"mentor",
-		"publisher",
-		"cc",
-		"manager",
-		"student",
-		"employer",
-	];
-	const router = useRouter();
 	useEffect(() => {
 		switch (params.userRole) {
 			case "admin":
@@ -42,9 +32,6 @@ const UserLogin = ({ params }: { params: { userRole: string } }) => {
 			default:
 				setRole("students");
 				break;
-		}
-		if (!validRoles.includes(params.userRole)) {
-			router.push("/404");
 		}
 	}, [params.userRole]);
 	return (

@@ -137,7 +137,7 @@ const UserProfile = () => {
 						<li
 							onClick={() => {
 								logout();
-								router.push("/");
+								router.push("/auth/login");
 							}}
 							style={{ cursor: "pointer" }}>
 							<div className='d-flex justify-content-center align-items-center gap-2 btn btn-danger w-100 mt-2'>
